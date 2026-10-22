@@ -1,0 +1,8 @@
+PASS redis-cache: port 13000 PING ok
+PASS redis-queue: port 11000 PING ok
+PASS site-http: /ping 200
+PASS desk-boot: boot lang=ar
+PASS desk-boot: __messages entries=13666
+PASS desk-boot-key: 'Add Items in the Purpose Table' present in boot
+PASS desk-boot: UAT session logged out
+UAT PREFLIGHT: PASS

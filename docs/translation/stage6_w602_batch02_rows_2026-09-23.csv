@@ -1,0 +1,49 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+Address,العنوان,erpnext/selling/doctype/quotation/quotation.js:73,selling,1
+POS has been closed at {0}. Please refresh the page.,,erpnext/selling/page/point_of_sale/pos_controller.js:187,selling,0
+POS invoice {0} created successfully,,erpnext/selling/page/point_of_sale/pos_controller.js:491,selling,0
+Parent Item {0} must not be a Fixed Asset,,erpnext/selling/doctype/product_bundle/product_bundle.py:81,selling,0
+Payment of {0} received successfully. Waiting for other requests to complete...,,erpnext/selling/page/point_of_sale/pos_payment.js:373,selling,0
+Percentage you are allowed to sell beyond the Blanket Order quantity.,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Please contact any of the following users to extend the credit limits for {0}: {1},,erpnext/selling/doctype/customer/customer.py:585,selling,0
+Please contact your administrator to extend the credit limits for {0}.,,erpnext/selling/doctype/customer/customer.py:578,selling,0
+Please enter a valid number of deliveries,,erpnext/selling/doctype/sales_order/sales_order.js:717,selling,0
+Please enter at least one delivery date and quantity,,erpnext/selling/doctype/sales_order/sales_order.js:652,selling,0
+Please enter the first delivery date,,erpnext/selling/doctype/sales_order/sales_order.js:713,selling,0
+Please save the Sales Order before adding a delivery schedule.,,erpnext/selling/doctype/sales_order/sales_order.js:859,selling,0
+Please select a frequency for delivery schedule,,erpnext/selling/doctype/sales_order/sales_order.js:709,selling,0
+Please select atleast one item to continue,,erpnext/selling/doctype/sales_order/sales_order.js:1288,selling,0
+Quarter {0} {1},,erpnext/selling/report/sales_analytics/sales_analytics.py:437; erpnext/stock/report/stock_analytics/stock_analytics.py:116,selling,0
+Reason for hold:,,erpnext/selling/doctype/sales_order/sales_order.js:1767,selling,0
+Restrict Items Based On,,erpnext/selling/doctype/party_specific_item/party_specific_item.json:None,selling,0
+Row #{0}: BOM not found for FG Item {1},,erpnext/selling/doctype/sales_order/sales_order.py:288,selling,0
+Row #{0}: Quantity cannot be a non-positive number. Please increase the quantity or remove the Item {1},,erpnext/selling/doctype/product_bundle/product_bundle.py:96,selling,0
+Sales Invoice {0} must be deleted before cancelling this Sales Order,,erpnext/selling/doctype/sales_order/sales_order.py:576,selling,0
+Sales Opportunities by Campaign,,erpnext/selling/page/sales_funnel/sales_funnel.js:150,selling,0
+Sales Opportunities by Medium,,erpnext/selling/page/sales_funnel/sales_funnel.js:152,selling,0
+Sales Opportunities by Source,,erpnext/selling/page/sales_funnel/sales_funnel.js:148,selling,0
+"Sales Order {0} already exists against Customer's Purchase Order {1}. To allow multiple Sales Orders, Enable {2} in {3}",,erpnext/selling/doctype/sales_order/sales_order.py:342,selling,0
+Sales Partner Target Variance Based On Item Group,,erpnext/selling/workspace/selling/selling.json:None,selling,0
+Sales Pipeline by Stage,,erpnext/selling/page/sales_funnel/sales_funnel.js:154,selling,0
+Select an item from each set to be used in the Sales Order.,,erpnext/selling/doctype/quotation/quotation.js:348,selling,0
+Serial numbers unavailable for Item {0} under warehouse {1}. Please try changing warehouse.,,erpnext/selling/page/point_of_sale/pos_item_details.js:449,selling,0
+Show Aggregate Value from Subsidiary Companies,,erpnext/selling/report/sales_analytics/sales_analytics.js:103,selling,0
+Sold by,,erpnext/selling/page/point_of_sale/pos_past_order_summary.js:86,selling,0
+Stock quantity not enough for Item Code: {0} under warehouse {1}. Available quantity {2} {3}.,,erpnext/selling/page/point_of_sale/pos_controller.js:859,selling,0
+Successfully linked to Supplier,,erpnext/selling/doctype/customer/customer.js:271,selling,0
+Supplier is required for all selected Items,,erpnext/selling/doctype/sales_order/sales_order.js:1675,selling,0
+Supplier numbers assigned by the customer,,erpnext/selling/doctype/customer/customer.json:None,selling,0
+The current POS opening entry is outdated. Please close it and create a new one.,,erpnext/selling/page/point_of_sale/pos_controller.js:209,selling,0
+This Sales Order has been fully subcontracted.,,erpnext/selling/doctype/sales_order/sales_order.py:2006,selling,0
+This item filter has already been applied for the {0},,erpnext/selling/doctype/party_specific_item/party_specific_item.py:35,selling,0
+Total Only,,erpnext/selling/report/sales_analytics/sales_analytics.js:96,selling,0
+Total Picked Quantity {0} is more than ordered qty {1}. You can set the Over Picking Allowance in Stock Settings.,,erpnext/selling/doctype/sales_order/sales_order.py:712,selling,0
+Total quantity in delivery schedule cannot be greater than the item quantity,,erpnext/selling/doctype/sales_order/sales_order.js:665,selling,0
+Use Legacy (Client side) Reactivity,,erpnext/selling/doctype/selling_settings/selling_settings.json:None,selling,0
+Week {0} {1},,erpnext/selling/report/sales_analytics/sales_analytics.py:433; erpnext/stock/report/stock_analytics/stock_analytics.py:112,selling,0
+You have unsaved changes. Do you want to save the invoice?,,erpnext/selling/page/point_of_sale/pos_controller.js:308,selling,0
+discount applied,,erpnext/selling/page/point_of_sale/pos_item_cart.js:450,selling,0
+doc_type,,erpnext/selling/report/sales_person_commission_summary/sales_person_commission_summary.py:46; erpnext/selling/report/sales_person_wise_transaction_summary/sales_person_wise_transaction_summary.py:58,selling,0
+doctype,,erpnext/selling/report/sales_partner_commission_summary/sales_partner_commission_summary.py:25; erpnext/selling/report/sales_partner_transaction_summary/sales_partner_transaction_summary.py:25,selling,0
+quotation_item,,erpnext/selling/doctype/sales_order_item/sales_order_item.json:None,selling,0
+{}  To Deliver,,erpnext/selling/workspace/selling/selling.json:None,selling,0

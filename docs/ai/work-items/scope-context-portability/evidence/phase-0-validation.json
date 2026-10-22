@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-10T21:39:52.757501+00:00",
+  "python": "3.12.3",
+  "requirements_sha256": "889df95f5178512c85207a17896b2bab44180d9c297b3ef0594c3ff613859d38",
+  "versions": {
+    "langgraph": "1.2.11",
+    "langgraph-checkpoint-sqlite": "3.1.1",
+    "pydantic": "2.13.5",
+    "pytest": "9.1.1",
+    "jsonschema": "4.26.0",
+    "build": "1.6.1",
+    "flit-core": "3.12.0",
+    "setuptools": "82.0.1"
+  },
+  "checks": {
+    "contract_tests": "43 passed",
+    "dependency_consistency": "54 packages compatible",
+    "structure": "CONTRACTS_ONLY; no checkpoint exists"
+  },
+  "limitations": [
+    "Does not verify graph/restart/commit behavior",
+    "Packaging proof is pending Phase 1",
+    "All native capability gates and owner prompt review remain required"
+  ]
+}

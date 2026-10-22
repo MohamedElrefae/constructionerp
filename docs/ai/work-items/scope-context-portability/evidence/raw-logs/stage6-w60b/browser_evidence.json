@@ -1,0 +1,178 @@
+{
+ "batch": "stage6-w60b-batch1",
+ "started_utc": "2026-09-22T10:48:36Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 10984
+  },
+  {
+   "name": "translate:Ledger",
+   "ok": true,
+   "detail": {
+    "expected": "دفتر الأستاذ",
+    "got": "دفتر الأستاذ"
+   }
+  },
+  {
+   "name": "translate:On Payment Failed",
+   "ok": true,
+   "detail": {
+    "expected": "عند فشل الدفع",
+    "got": "عند فشل الدفع"
+   }
+  },
+  {
+   "name": "translate:On Payment Paid",
+   "ok": true,
+   "detail": {
+    "expected": "عند الدفع",
+    "got": "عند الدفع"
+   }
+  },
+  {
+   "name": "translate:Posting Timestamp",
+   "ok": true,
+   "detail": {
+    "expected": "طابع زمني للترحيل",
+    "got": "طابع زمني للترحيل"
+   }
+  },
+  {
+   "name": "translate:Select Currency",
+   "ok": true,
+   "detail": {
+    "expected": "تحديد العملة",
+    "got": "تحديد العملة"
+   }
+  },
+  {
+   "name": "translate:Default display currency",
+   "ok": true,
+   "detail": {
+    "expected": "عملة العرض الافتراضية",
+    "got": "عملة العرض الافتراضية"
+   }
+  },
+  {
+   "name": "translate:On Payment Authorization",
+   "ok": true,
+   "detail": {
+    "expected": "عند تفويض الدفع",
+    "got": "عند تفويض الدفع"
+   }
+  },
+  {
+   "name": "translate:On Payment Charge Processed",
+   "ok": true,
+   "detail": {
+    "expected": "عند معالجة الرسوم",
+    "got": "عند معالجة الرسوم"
+   }
+  },
+  {
+   "name": "translate:On Payment Mandate Acquisition Processed",
+   "ok": true,
+   "detail": {
+    "expected": "عند معالجة اكتساب التفويض",
+    "got": "عند معالجة اكتساب التفويض"
+   }
+  },
+  {
+   "name": "translate:On Payment Mandate Charge Processed",
+   "ok": true,
+   "detail": {
+    "expected": "عند معالجة رسوم التفويض",
+    "got": "عند معالجة رسوم التفويض"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "10/10"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "لا توجد حقول عملة في Currency",
+    "got": "لا توجد حقول عملة في Currency"
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Ledger": "دفتر الأستاذ",
+    "On Payment Failed": "عند فشل الدفع",
+    "On Payment Paid": "عند الدفع",
+    "Posting Timestamp": "طابع زمني للترحيل"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "سطح المكتب"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-22T10:48:47Z",
+ "summary": {
+  "pass": 19,
+  "fail": 0
+ }
+}

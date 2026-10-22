@@ -1,0 +1,42 @@
+{
+  "timestamp": "20260902_104925",
+  "site": "v16.localhost",
+  "counts": {
+    "catalog": 15122,
+    "runtime": 2719,
+    "total_ar": 17841,
+    "missing_ar": 7355,
+    "packaged": 28,
+    "digest_unique": true,
+    "has_drift": false
+  },
+  "checksums": {
+    "frappe/ar.po": "cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502",
+    "frappe/ar.mo": null,
+    "erpnext/ar.po": "2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275",
+    "erpnext/ar.mo": null,
+    "construction/ar.po": "eb80514ab9197dca53c066e1fc1557f31303cd737eadf56a2aa22cdc2c014bff",
+    "construction/ar.mo": null
+  },
+  "glossary": {
+    "path": "construction/data/glossary/egyptian_construction_glossary.json",
+    "sha256": "aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4",
+    "bytes": 24380,
+    "terms": 47,
+    "version": "2.0"
+  },
+  "commits": {
+    "construction": "c0bf9ba09906e3a8a62216b6b941fc3ff7b278c0",
+    "frappe": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
+    "erpnext": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5"
+  },
+  "frappe_status": "",
+  "construction_status": "",
+  "erpnext_status": "",
+  "backup_location": "sites/v16.localhost/private/backups/translation-stabilization-20260902_104925",
+  "database_backup": "sites/v16.localhost/private/backups/translation-stabilization-20260902_104925/_6d52b48c328b294e-database-20260902_104925.sql.gz",
+  "targeted_export": "sites/v16.localhost/private/backups/translation-stabilization-20260902_104925/arabic_translation_export.csv",
+  "database_backup_sha256": "53043217f85b3f6d1915fa7955f6a7960700f48b7af4fde6ce9865d71c6b9b71",
+  "targeted_export_sha256": "13c294af8e002d2f771e141560927252221c70ebbe9b7fc8444de6e99ccd9545",
+  "restore_instructions": "Restore database: gunzip < sites/v16.localhost/private/backups/translation-stabilization-20260902_104925/_6d52b48c328b294e-database-20260902_104925.sql.gz | mysql --socket=/run/mysqld/mysqld.sock -u _6d52b48c328b294e -p[pass] _6d52b48c328b294e  OR bench --site v16.localhost restore sites/v16.localhost/private/backups/translation-stabilization-20260902_104925/_6d52b48c328b294e-database-20260902_104925.sql.gz ; For targeted restore, use csv import or bench console"
+}

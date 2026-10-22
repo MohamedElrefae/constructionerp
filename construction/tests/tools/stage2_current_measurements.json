@@ -1,0 +1,448 @@
+{
+  "record_kind": "CURRENT MEASUREMENTS (executed)",
+  "schema": "stage2-current-measurements/v1",
+  "not_a_historical_record": "This file records CURRENT measurements only. It is separate from the historical evidence set under docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2, which is bound to its own root, HEAD and 2026-09-29 expectation and is never rewritten.",
+  "recorded_by": "F44 Qualified Successor <successor@f44.invalid>",
+  "recorded_utc": "2026-10-20T01:55:00Z",
+  "review": {
+    "reviewer": "F44 Qualified Successor <successor@f44.invalid>",
+    "reviewed_utc": "2026-10-20T01:55:00Z",
+    "latest_review_utc": "2026-10-22T05:57:37Z",
+    "contract_id": "stage2-current-contract/2026-10-22",
+    "contract_constants": "scripts/check_localization_gates.py (CURRENT_EXPECTED_GATE, CURRENT_EXPECTED_MODULES, CURRENT_SOURCE_PINS)",
+    "legacy_contract_preserved": "stage2-legacy-contract/2026-09-29 (LEGACY_EXPECTED_GATE, LEGACY_EXPECTED_MODULES)",
+    "review_history": [
+      {
+        "contract_id": "stage2-current-contract/2026-10-20",
+        "reviewed_utc": "2026-10-20T01:55:00Z",
+        "frozen_gate": {"catalog": 1052, "files": 328, "wrapped": 861, "json_labels": 77, "missing": 0},
+        "note": "The original frozen contract. Superseded for the extract FILE COUNT ONLY (328 -> 329). Every measurement, raw artefact and digest it cites is preserved unchanged, and the frozen block itself is kept verbatim under previous_frozen_contract_kept_as_history."
+      },
+      {
+        "contract_id": "stage2-current-contract/2026-10-22",
+        "reviewed_utc": "2026-10-22T05:57:37Z",
+        "frozen_gate": {"catalog": 1052, "files": 329, "wrapped": 861, "json_labels": 77, "missing": 0},
+        "note": "Bounded current-contract reconciliation (measurement M1B below). The extract file count moved 328 -> 329 because the reviewed JE candidate added exactly one NEW production module; every other measured value, the module set, the module counts, the dry-run arithmetic and the source pins are unchanged. See current_contract_reconciliation_2026_10_22."
+      }
+    ]
+  },
+  "environment": {
+    "working_directory": "/tmp/opencode/f44-bench/apps/construction",
+    "root": "/tmp/opencode/f44-bench/apps/construction",
+    "site": "v16-protocol.localhost",
+    "site_db": "_9dc78eb5bb385977",
+    "site_installed_apps": ["frappe", "erpnext", "construction"],
+    "app_source": "/tmp/opencode/protocol-roundtrip (branch codex/f44-protocol-roundtrip-20261019), rsync-synced into the owned bench app copy",
+    "app_head_sha": "73b49077c0395d370752bb1591a6536584a76566",
+    "app_tree_sha": "e9cc7ec8f68039c04ad45b39b6f156a3ea23a6a1",
+    "vendor_heads": {
+      "frappe": "2871914b69b6e14a4b023d9b7cc52dc3e269cc1b",
+      "erpnext": "7474d9e786277383de1242ab882f16856d17a9c9"
+    },
+    "python": "/home/mohamed/frappe-bench/env/bin/python (CPython 3.14.5)",
+    "notes": [
+      "The bench is the owned /tmp/opencode/f44-bench; apps/frappe and apps/erpnext are read-only symlinks to the shared checkout, apps/construction is the app copy under measurement.",
+      "PYTHONPATH=/tmp/opencode/f44-bench/apps/construction was exported for every bench invocation so `import construction` resolves to the app copy under measurement and not to the shared checkout.",
+      "The shared bench, the protected sites and the other listed paths were never written to."
+    ]
+  },
+  "measurements": [
+    {
+      "id": "M1",
+      "what": "checker source-scan counts (the checker's own scan path)",
+      "command": "cd /tmp/opencode/f44-bench/apps/construction && STAGE2_EVIDENCE_BOOTSTRAP=1 /home/mohamed/frappe-bench/env/bin/python scripts/check_localization_gates.py --root=/tmp/opencode/f44-bench/apps/construction --skip-evidence",
+      "exit_code": 0,
+      "result": {
+        "catalog": 1052,
+        "files": 328,
+        "wrapped": 861,
+        "json_labels": 77,
+        "missing": 0,
+        "csv_rows": 4337,
+        "raw_text": {"files": 7, "missing": 0, "texts": 2},
+        "errors": 0
+      },
+      "raw_stdout_tail": "checked={\"construction/locale/ar.po\": 1052, \"csv_rows\": 4337, \"extract\": {\"files\": 328, \"json_labels\": 77, \"missing\": 0, \"wrapped\": 861}, \"raw_text\": {\"files\": 7, \"missing\": 0, \"texts\": 2}} errors=0",
+      "artifact": "construction/tests/tools/measurements/2026-10-20-current/m1_source_scan.txt",
+      "artifact_sha256": "6c63f5834a441ad047eebdeefde3d91856d39b404bc3e36972986174224b33eb"
+    },
+    {
+      "id": "M1B",
+      "what": "checker source-scan counts RE-MEASURED on the reviewed JE candidate, whose source set gained exactly ONE NEW production module (construction/services/boq_journal_project.py)",
+      "command": "cd /tmp/f44-je-private-ci-preparation-20261022/apps/construction && GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only",
+      "exit_code": 0,
+      "result": {
+        "catalog": 1052,
+        "files": 329,
+        "wrapped": 861,
+        "json_labels": 77,
+        "missing": 0,
+        "csv_rows": 4337,
+        "raw_text": {"files": 7, "missing": 0, "texts": 2},
+        "errors": 0
+      },
+      "raw_stdout_tail": "checked={\"construction/locale/ar.po\": 1052, \"csv_rows\": 4337, \"extract\": {\"files\": 329, \"json_labels\": 77, \"missing\": 0, \"wrapped\": 861}, \"raw_text\": {\"files\": 7, \"missing\": 0, \"texts\": 2}} errors=0",
+      "artifact": "construction/tests/tools/measurements/2026-10-22-je-current/m1_source_scan.txt",
+      "artifact_sha256": "8d9109845421d44ef8d87d60877c25f8448870b743ed4f35b5428902fa3a6d36",
+      "measurement_environment": {
+        "root": "/tmp/f44-je-private-ci-preparation-20261022/apps/construction",
+        "source_head": "a7686c518ce7be7d91758a0cc8854199e1304e45",
+        "source_tree": "5ebd6ba9a5b22a50c51efa0aa91a43cfc98a4960",
+        "branch": "codex/customer-release-ci-je-project-20261022",
+        "parents": 0,
+        "tracked_files": 2381,
+        "clean": true,
+        "python": "python3 (CPython 3.14.5)",
+        "measured_utc": "2026-10-22T05:57:37Z",
+        "measured_utc_note": "The mtime of the recorded raw artefact in the primary evidence directory (qualified62-je-private-ci-parent/source-only-corrected.log). It is the primary's OWN actual run; this record does not re-date or relabel it.",
+        "notes": [
+          "The measurement was taken at the source HEAD a7686c518ce7be7d91758a0cc8854199e1304e45, BEFORE this metadata amendment. This record therefore binds the measurement to a768..., not to any commit that does not exist yet.",
+          "The recorded artefact is a byte-for-byte copy of the primary's actual source-only-corrected.log (sha256 8d9109845421d44ef8d87d60877c25f8448870b743ed4f35b5428902fa3a6d36). It is NOT the 2026-10-20 raw log relabelled: the 2026-10-20 artefact (sha256 6c63f5834a441ad047eebdeefde3d91856d39b404bc3e36972986174224b33eb) is preserved unchanged at its own path and differs in exactly one number (files 328 vs 329).",
+          "The six SKIP lines in the raw artefact are the checker's own static markup/print-format classification (a markup/code blob excluded from the string gate). They are NOT skipped tests and NOT a skipped gate.",
+          "This run used the CI source-only mode (--ci-source-only with GITHUB_ACTIONS=true). That mode performs the full source scan and reports the counts; it does not compare them against the frozen contract. The contract comparison is exercised separately by the evidence-envelope validation and by the required protocol checks."
+        ]
+      },
+      "relation_to_M1": "M1 is PRESERVED unchanged at its own date, root and HEAD (files=328). M1B is a separate, later, executed re-measurement of the same checker scan path on the candidate that contains one new production module. Neither record replaces the other and no old stdout was rewritten.",
+      "cause_of_the_delta": {
+        "new_file": "construction/services/boq_journal_project.py",
+        "new_file_sha256": "6874a97a474676e33c05d9717bdd848a7c97d9d8b12eb0995a251e89f4e36a12",
+        "why_it_moves_the_count": "The source scan counts every localizable file under construction/ (.py/.js/.html/.vue plus the UI JSON set). One NEW .py production module therefore adds exactly 1 to extract.files and to nothing else.",
+        "ablation_proof": "Removing only that one file from the candidate tree reproduces files=328 with catalog=1052, csv_rows=4337, wrapped=861, json_labels=77, missing=0, raw_text 7/0/2, errors=0 and exit 0; restoring it reproduces files=329 byte-identically. No other file was added, removed or changed.",
+        "unchanged_counts": ["catalog", "csv_rows", "wrapped", "json_labels", "missing", "raw_text", "errors"]
+      }
+    },
+    {
+      "id": "M2",
+      "what": "standalone localization gate suite (the count the standalone envelope records)",
+      "command": "cd /tmp/opencode/f44-bench/apps/construction && /home/mohamed/frappe-bench/env/bin/python construction/tests/test_localization_gates.py -v",
+      "exit_code": 0,
+      "result": {"ran": 101, "outcome": "OK", "failures": 0, "errors": 0, "skipped": 0},
+      "raw_stdout_tail": "Ran 101 tests in 19.830s\nOK",
+      "artifact": "construction/tests/tools/measurements/2026-10-20-current/m2_gate_standalone.txt",
+      "artifact_sha256": "9055ba9a5165d685f8cf759de865c337b7954744a51243f5b416a45b99af93b0"
+    },
+    {
+      "id": "M3",
+      "what": "released-override dry run (the dry-run arithmetic the envelope records)",
+      "command": "cd /tmp/opencode/f44-bench && bench --site v16-protocol.localhost console  # import construction.translation_service as ts; ts.import_released_overrides(dry_run=True)",
+      "exit_code": 0,
+      "result": {"total": 4337, "created": 0, "updated": 0, "skipped": 4337, "drift": 0},
+      "raw_stdout_tail": "DRY_RESULT {'total': 4337, 'created': 0, 'updated': 0, 'skipped': 4337, 'drift': 0, 'preview': [], 'dry_run': True}",
+      "artifact": "construction/tests/tools/measurements/2026-10-20-current/m3_dryrun.txt",
+      "artifact_sha256": "e8747647414ec8ea80f68a6f4034a2ada89c5f9ab718dc66cca17590297261eb"
+    },
+    {
+      "id": "M4",
+      "what": "independent live extraction (AST cross-check of the module counts; never reads the evidence or the contract constants)",
+      "command": "cd /tmp/opencode/f44-bench/apps/construction && /home/mohamed/frappe-bench/env/bin/python construction/tests/tools/stage2_measure_extract_counts.py /tmp/opencode/f44-bench/apps/construction",
+      "exit_code": 0,
+      "result": {"aggregate": 283, "agrees_with_M5": true},
+      "artifact": "construction/tests/tools/measurements/2026-10-20-current/m4_static_extraction.txt",
+      "artifact_sha256": "c41c9d6c78636397be51a61314ee7fa10df33e31079613a5cee6efc115b748a6"
+    },
+    {
+      "id": "M5",
+      "what": "the FULL required module set (every module of the frozen contract), one bench run per module",
+      "command": "cd /tmp/opencode/f44-bench && PYTHONPATH=/tmp/opencode/f44-bench/apps/construction bench --site v16-protocol.localhost run-tests --app construction --module <module>",
+      "exit_code": 0,
+      "result": {
+        "aggregate": 283,
+        "modules": [
+          {"module": "construction.searchable_dropdown.tests.test_search_api", "ran": 13, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.searchable_dropdown.tests.test_integration", "ran": 6, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_bilingual_account_schema", "ran": 5, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_translation_catalog", "ran": 3, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_translation_stabilization_gates", "ran": 8, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_localization_gates", "ran": 101, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_bilingual_service", "ran": 38, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_bilingual_account_pilot", "ran": 53, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_stage4_account_language", "ran": 6, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_stage4_report_extension", "ran": 14, "outcome": "OK", "exit_code": 0},
+          {"module": "construction.tests.test_stage4_review_bundle", "ran": 36, "outcome": "OK", "exit_code": 0}
+        ]
+      },
+      "artifacts": [
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/01_construction.searchable_dropdown.tests.test_search_api.txt", "sha256": "fbd5b7130d6a07428e2d8c420fa8e26588d40e074c4f7984dfba0289843671e6"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/02_construction.searchable_dropdown.tests.test_integration.txt", "sha256": "0da1b3fb5ccec448985e7783655e35f633fdecc50bc78fa868e5799f74fd930e"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/03_construction.tests.test_bilingual_account_schema.txt", "sha256": "8c89715782d17a7a97f124838aa7843856d55333ecddf2095e0a00675bbc4508"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/04_construction.tests.test_translation_catalog.txt", "sha256": "67a57f331a2c99e1331ff827d0365492f7b9386c2ac56868825a955b797c372d"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/05_construction.tests.test_translation_stabilization_gates.txt", "sha256": "36d22092bd23af4b4b2551500e9c9c07240a8a7912ced0070e28f937e1a59ff1"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/06_construction.tests.test_localization_gates.txt", "sha256": "34a8f8114ae73e9baf9a060967fdcc7acae236b24b73f1cd3086e385f9e303ce"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/07_construction.tests.test_bilingual_service.txt", "sha256": "90e419ecd1c22392cb849339aaa3636deb7b9c579e63eecf2a4c557c1b534222"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/08_construction.tests.test_bilingual_account_pilot.txt", "sha256": "9cbf2ef3857cd1747247369c2578932a7b3904c18fa9ff6b7fa8af4c2561776e"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/09_construction.tests.test_stage4_account_language.txt", "sha256": "70ca1bee090e97ffcc5fa05b706380ae61d4b53aec7b33aabd279d2c7cbfa5fe"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/10_construction.tests.test_stage4_report_extension.txt", "sha256": "c889588f85d22dec3c1478715bd2885110958f25bd085c5aa0cadf1ef36e7b82"},
+        {"file": "construction/tests/tools/measurements/2026-10-20-current/modules/11_construction.tests.test_stage4_review_bundle.txt", "sha256": "f052b79ddf9be2c37426947a006c831c63ef233ffa9b5f5fbf7ab6cb4ff7da9a"}
+      ]
+    }
+  ],
+  "frozen_contract_from_these_measurements": {
+    "contract_id": "stage2-current-contract/2026-10-22",
+    "gate": {"catalog": 1052, "files": 329, "wrapped": 861, "json_labels": 77, "missing": 0},
+    "modules": {
+      "construction.searchable_dropdown.tests.test_search_api": 13,
+      "construction.searchable_dropdown.tests.test_integration": 6,
+      "construction.tests.test_bilingual_account_schema": 5,
+      "construction.tests.test_translation_catalog": 3,
+      "construction.tests.test_translation_stabilization_gates": 8,
+      "construction.tests.test_localization_gates": 101,
+      "construction.tests.test_bilingual_service": 38,
+      "construction.tests.test_bilingual_account_pilot": 53,
+      "construction.tests.test_stage4_account_language": 6,
+      "construction.tests.test_stage4_report_extension": 14,
+      "construction.tests.test_stage4_review_bundle": 36
+    },
+    "module_aggregate": 283,
+    "dryrun": {"total": 4337, "created": 0, "updated": 0, "skipped": 4337, "drift": 0},
+    "source_pins": {
+      "construction/locale/ar.po": "8b065ad4ae18b59421a24f230ce2069e94103a1b6f8249c87b06464fcb015c0b",
+      "construction/data/translations/approved_ar_overrides.csv": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
+      "construction/data/localization/localization_manifest.json": "816ccc57fb233a5ad95ea391c43bafba34809a5bc894cfe8a5cc3fe29d10b85e",
+      "construction/data/localization/vendor_catalog_baseline.json": "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69",
+      "construction/data/localization/stage2_inventory_manifest.json": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
+    },
+    "pin_note": "The pins are the content digests of the source artifacts the counts were measured from. A drifted pin is refused by the checker (evidence-contract-source-drift), so the frozen counts can never be silently stale.",
+    "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
+    "reconciled_utc": "2026-10-22T05:57:37Z",
+    "reconciliation_note": "The extract FILE COUNT was re-measured and re-reviewed on 2026-10-22 (measurement M1B above): the reviewed JE candidate added exactly one NEW production module, construction/services/boq_journal_project.py, and the source scan counts every localizable file under construction/, so files moved 328 -> 329. NOTHING ELSE moved: catalog, csv_rows, wrapped, json_labels, missing, raw_text, errors, the module set, every module count, the module aggregate, the dry-run arithmetic and all five source pins are byte-identical to the 2026-10-20 contract (all five pins were re-verified against the candidate and still match). The superseded 2026-10-20 frozen contract is preserved verbatim under previous_frozen_contract_kept_as_history. The historical 2026-09-29 contract and its legacy path are untouched."
+  },
+  "previous_frozen_contract_kept_as_history": {
+    "contract_id": "stage2-current-contract/2026-10-20",
+    "gate": {"catalog": 1052, "files": 328, "wrapped": 861, "json_labels": 77, "missing": 0},
+    "modules": {
+      "construction.searchable_dropdown.tests.test_search_api": 13,
+      "construction.searchable_dropdown.tests.test_integration": 6,
+      "construction.tests.test_bilingual_account_schema": 5,
+      "construction.tests.test_translation_catalog": 3,
+      "construction.tests.test_translation_stabilization_gates": 8,
+      "construction.tests.test_localization_gates": 101,
+      "construction.tests.test_bilingual_service": 38,
+      "construction.tests.test_bilingual_account_pilot": 53,
+      "construction.tests.test_stage4_account_language": 6,
+      "construction.tests.test_stage4_report_extension": 14,
+      "construction.tests.test_stage4_review_bundle": 36
+    },
+    "module_aggregate": 283,
+    "dryrun": {"total": 4337, "created": 0, "updated": 0, "skipped": 4337, "drift": 0},
+    "source_pins": {
+      "construction/locale/ar.po": "8b065ad4ae18b59421a24f230ce2069e94103a1b6f8249c87b06464fcb015c0b",
+      "construction/data/translations/approved_ar_overrides.csv": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
+      "construction/data/localization/localization_manifest.json": "816ccc57fb233a5ad95ea391c43bafba34809a5bc894cfe8a5cc3fe29d10b85e",
+      "construction/data/localization/vendor_catalog_baseline.json": "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69",
+      "construction/data/localization/stage2_inventory_manifest.json": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
+    },
+    "pin_note": "The pins are the content digests of the source artifacts the counts were measured from. A drifted pin is refused by the checker (evidence-contract-source-drift), so the frozen counts can never be silently stale.",
+    "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
+    "note": "The 2026-10-20 frozen contract is preserved VERBATIM as history. It was correct at its own measurement HEAD (73b49077c0395d370752bb1591a6536584a76566); its measurement artefacts and their digests are unchanged and still verify. It is NOT the active contract and it is never compared against the live source. It was superseded on 2026-10-22 for the extract file count only."
+  },
+  "historical_expectation_kept_separate": {
+    "contract_id": "stage2-legacy-contract/2026-09-29",
+    "gate": {"catalog": 817, "files": 265, "wrapped": 667, "json_labels": 29, "missing": 0},
+    "modules": {
+      "construction.searchable_dropdown.tests.test_search_api": 13,
+      "construction.searchable_dropdown.tests.test_integration": 6,
+      "construction.tests.test_bilingual_account_schema": 5,
+      "construction.tests.test_translation_catalog": 3,
+      "construction.tests.test_translation_stabilization_gates": 8,
+      "construction.tests.test_localization_gates": 92,
+      "construction.tests.test_bilingual_service": 38,
+      "construction.tests.test_bilingual_account_pilot": 53,
+      "construction.tests.test_stage4_account_language": 6,
+      "construction.tests.test_stage4_report_extension": 11,
+      "construction.tests.test_stage4_review_bundle": 36
+    },
+    "module_aggregate": 271,
+    "note": "Preserved verbatim from the recorded 2026-09-29 evidence set (docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2). It is reachable only through the explicit --evidence-contract=legacy path and is never overwritten by the current contract."
+  },
+  "independent_verification": {
+    "reviewed_by": "second reviewer (implementation sub-agent), independent of the first measurement pass",
+    "reviewed_utc": "2026-10-20T02:30:00Z",
+    "verified_at_head": "eca546d0c6a4031225ce10fb6ab6f70753c4065e",
+    "scope": "Site-independent re-execution and artefact re-verification of the record above. This block ADDS to the record; it does not replace it and does not rewrite any measurement it cites.",
+    "checks": [
+      {
+        "id": "V1",
+        "what": "checker source-scan counts re-executed",
+        "command": "STAGE2_EVIDENCE_BOOTSTRAP=1 python3 scripts/check_localization_gates.py --root=/tmp/opencode/f44-bench/apps/construction --skip-evidence",
+        "exit_code": 0,
+        "result": {
+          "catalog": 1052,
+          "files": 328,
+          "wrapped": 861,
+          "json_labels": 77,
+          "missing": 0,
+          "csv_rows": 4337,
+          "errors": 0
+        },
+        "agrees_with": "M1"
+      },
+      {
+        "id": "V2",
+        "what": "standalone localization gate suite re-executed",
+        "command": "python3 construction/tests/test_localization_gates.py -v",
+        "exit_code": 0,
+        "result": {
+          "ran": 101,
+          "outcome": "OK"
+        },
+        "agrees_with": "M2"
+      },
+      {
+        "id": "V3",
+        "what": "independent live extraction re-executed",
+        "command": "python3 construction/tests/tools/stage2_measure_extract_counts.py .",
+        "exit_code": 0,
+        "result": {
+          "aggregate": 283,
+          "drift_against_frozen_contract": 0
+        },
+        "agrees_with": "M4"
+      },
+      {
+        "id": "V4",
+        "what": "sha256 of every artefact this record cites",
+        "exit_code": 0,
+        "result": {
+          "artifacts_checked": 15,
+          "mismatches": 0
+        }
+      },
+      {
+        "id": "V5",
+        "what": "protocol round trip",
+        "command": "python3 construction/tests/tools/test_stage2_evidence_roundtrip.py -v",
+        "exit_code": 0,
+        "result": {
+          "ran": 8,
+          "outcome": "OK"
+        }
+      },
+      {
+        "id": "V6",
+        "what": "negative CLI matrix",
+        "command": "python3 construction/tests/tools/test_stage2_evidence_cli_matrix.py -v",
+        "exit_code": 0,
+        "result": {
+          "ran": 10,
+          "outcome": "OK"
+        }
+      },
+      {
+        "id": "V7",
+        "what": "required-CI fail-closed probe: the pinned frappe/public/js/frappe/form/script_manager.js removed from the pinned vendor tree",
+        "exit_code": 1,
+        "result": {
+          "outcome": "FAILED",
+          "skipped": false
+        },
+        "note": "A missing mandatory pinned input fails the required run; it never skips and never reports green."
+      },
+      {
+        "id": "V8",
+        "what": "the repository lint gate the Linters CI job runs",
+        "command": "pre-commit run --all-files",
+        "exit_code": 0,
+        "result": {
+          "outcome": "all hooks passed",
+          "hooks": [
+            "trailing whitespace",
+            "check for merge conflicts",
+            "check python ast",
+            "check json",
+            "check toml",
+            "check yaml",
+            "debug statements",
+            "ruff import sorter",
+            "ruff linter",
+            "ruff formatter",
+            "prettier",
+            "eslint",
+            "lint scope-dimension metadata"
+          ]
+        },
+        "note": "The branch as delivered was NOT pre-commit clean: ruff-format rejected three delivered files and the ruff linter rejected one (UP038 in stage2_measure_extract_counts.py). Those findings would have failed the required Linters CI job. They are corrected here; the corrections are formatting/lint only and change no measured value."
+      }
+    ],
+    "not_re_verified": {
+      "ids": [
+        "M3",
+        "M5"
+      ],
+      "reason": "The owned site v16-protocol.localhost and its database _9dc78eb5bb385977 were dropped from the owned bench while this review was in progress, so the site-backed dry run and the eleven site-backed module runs could not be re-executed. The committed M3/M5 artefacts are unchanged and their digests still verify (V4). M5 was executed at HEAD 73b49077c0395d370752bb1591a6536584a76566, which differs from the verified HEAD only by the measurement artefacts and this record: no file of the required module set and no file the source scan reads changed between them. A fresh site-backed run against the final qualified HEAD is still owed."
+    },
+    "measurement_pitfall_found": {
+      "what": "An unpinned bench run in the owned bench measures the SHARED checkout, not the owned app copy.",
+      "why": "apps/frappe and apps/erpnext in the owned bench are symlinks into the shared checkout, so Frappe's get_bench_path() resolves to /home/mohamed/frappe-bench and `import construction` resolves to /home/mohamed/frappe-bench/apps/construction.",
+      "observed": "An unpinned `bench --site v16-protocol.localhost run-tests --module construction.tests.test_localization_gates` reported 'Ran 92 tests ... FAILED (failures=3)' with the traceback under /home/mohamed/frappe-bench/apps/construction and the legacy catalog=817. That run is NOT a measurement of this candidate.",
+      "remedy": "Export PYTHONPATH=<owned app copy> for every bench invocation of this contract and record the resolved app path in the measurement record."
+    },
+    "added_guard": {
+      "what": "construction/tests/tools/test_stage2_contract_source_agreement.py",
+      "why": "The frozen contract is a reviewed input and nothing in the checker alone can prove it still matches the source: the contract constants and the code they describe are edited together. The guard re-derives the module counts with a second, independent extraction and fails closed, naming the module and both numbers, when the frozen counts drift from the source. It also proves the dated record matches the contract constants, that the recorded artefact digests are intact, and that the historical expectation is preserved verbatim and never compared against the live source.",
+      "negative_control": "With the frozen count of construction.tests.test_localization_gates changed from 101 to 96 in a throw-away clone, the guard fails with 2 failures and names the drift.",
+      "ci": "runs in the required stage2-evidence-protocol job of .github/workflows/ci.yml"
+    }
+  },
+  "current_contract_reconciliation_2026_10_22": {
+    "why": "The frozen CURRENT contract still said extract files=328 while the actual candidate source scan reports files=329. The upstream private-CI preparation was HELD (not pushed) for exactly this reason. This is a measured contract drift, not a new implementation.",
+    "scope": "Bounded correction of the CURRENT contract only. The LEGACY (2026-09-29) contract, its values, its ids and its comparison isolation are preserved exactly. No production code, no hook, no CI workflow, no client asset, no vendor tree, no role, no report, no schema and no ledger file is touched by this reconciliation.",
+    "measured_delta": {
+      "field": "CURRENT_EXPECTED_GATE.files",
+      "was": 328,
+      "now": 329,
+      "direction": "one NEW localizable source file entered the scanned set",
+      "not_a_weakening": "The gate is not relaxed: every other expected count (catalog, wrapped, json_labels, missing=0), the module set and every module count, the dry-run arithmetic, the source pins and the fail-closed source-drift behaviour are unchanged, and a capture carrying files=328 is still REFUSED by the current contract."
+    },
+    "cause": {
+      "new_file": "construction/services/boq_journal_project.py",
+      "new_file_sha256": "6874a97a474676e33c05d9717bdd848a7c97d9d8b12eb0995a251e89f4e36a12",
+      "introduced_by": "the reviewed JE project-preservation production patch carried in the reviewed candidate",
+      "mechanism": "iter_source_files() counts every .py/.js/.html/.vue file under construction/ and iter_json_ui_files() adds the UI JSON set, so one new .py production module adds exactly 1 to extract.files and to nothing else.",
+      "ablation": "Removing ONLY that file from the candidate tree yields files=328 with catalog=1052, csv_rows=4337, wrapped=861, json_labels=77, missing=0, raw_text 7/0/2, errors=0, exit 0. Restoring it yields files=329 with a byte-identical stdout. No other file was added, removed or changed."
+    },
+    "executed_measurement": {
+      "id": "M1B",
+      "command": "cd /tmp/f44-je-private-ci-preparation-20261022/apps/construction && GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only",
+      "exit_code": 0,
+      "root": "/tmp/f44-je-private-ci-preparation-20261022/apps/construction",
+      "source_head": "a7686c518ce7be7d91758a0cc8854199e1304e45",
+      "source_tree": "5ebd6ba9a5b22a50c51efa0aa91a43cfc98a4960",
+      "branch": "codex/customer-release-ci-je-project-20261022",
+      "tracked_files": 2381,
+      "raw_artifact": "construction/tests/tools/measurements/2026-10-22-je-current/m1_source_scan.txt",
+      "raw_artifact_sha256": "8d9109845421d44ef8d87d60877c25f8448870b743ed4f35b5428902fa3a6d36",
+      "raw_artifact_provenance": "byte-for-byte copy of the primary's own actual run (qualified62-je-private-ci-parent/source-only-corrected.log, sha256 8d9109845421d44ef8d87d60877c25f8448870b743ed4f35b5428902fa3a6d36). It was NOT reconstructed from a hash and NOT relabelled from the 2026-10-20 log.",
+      "counts": {
+        "catalog": 1052,
+        "files": 329,
+        "wrapped": 861,
+        "json_labels": 77,
+        "missing": 0,
+        "csv_rows": 4337,
+        "raw_text": {"files": 7, "missing": 0, "texts": 2},
+        "errors": 0
+      },
+      "measurement_bound_to": "a7686c518ce7be7d91758a0cc8854199e1304e45 — the source HEAD the measurement was taken at, BEFORE this metadata amendment. No binding to a commit that does not exist is claimed.",
+      "skip_lines_note": "The six SKIP lines in the raw stdout are the checker's own static markup/print-format classification (a markup/code blob excluded from the string gate, covered by the bilingual-output waves and leak detection). They are NOT skipped tests and NOT a skipped gate."
+    },
+    "contract_id": {
+      "was": "stage2-current-contract/2026-10-20",
+      "now": "stage2-current-contract/2026-10-22",
+      "why": "The frozen expectation was re-reviewed on 2026-10-22, so the contract identity must carry the new review date.",
+      "referenced_sites_updated": [
+        "scripts/check_localization_gates.py (CURRENT_CONTRACT_ID)",
+        "construction/tests/tools/stage2_current_measurements.json (review.contract_id, review.review_history, frozen_contract_from_these_measurements.contract_id)",
+        "construction/tests/tools/stage2_current_measurements.md (the frozen-contract section)"
+      ],
+      "no_hardcoded_dependent_needed_a_change": "Every other consumer reads the id dynamically: construction/tests/tools/stage2_evidence_assemble.py (CHECKER.CURRENT_CONTRACT_ID) and construction/tests/tools/test_stage2_contract_source_agreement.py (checker.CURRENT_CONTRACT_ID). The guard therefore still asserts record == constants and still passes.",
+      "legacy_untouched": "stage2-legacy-contract/2026-09-29 keeps its id, its values and its explicit --evidence-contract=legacy path."
+    },
+    "not_re_executed_and_still_owed": {
+      "M3": "released-override dry run (site-backed) — NOT EXECUTED for this reconciliation; the committed 2026-10-20 artefact and its digest are unchanged and still verify. It remains a fresh site-backed run owed against the final qualified HEAD.",
+      "M5": "the eleven site-backed required-module runs — NOT EXECUTED for this reconciliation; the committed 2026-10-20 artefacts and their digests are unchanged and still verify. No current M5 is claimed and no current M5 number was invented.",
+      "why_it_does_not_block_this_correction": "M1B is a SITE-LESS source-scan measurement and it is the only measurement whose value changed. The module set, every module count, the module aggregate, the dry-run arithmetic and the source pins were NOT touched by this reconciliation, so the M3/M5 numbers that were already recorded remain the recorded ones and are still owed a fresh run against the final qualified HEAD."
+    },
+    "consequence_for_the_unexecuted_full_gate": "The full site-aware evidence gate (--skip-evidence bootstrap capture plus the ten recorded envelopes) has NOT been re-executed against this candidate. A future capture of full-gate.txt must carry extract files=329; a capture that carries 328 is REFUSED by the current contract as evidence-schema (full-gate.txt file count differs from contract). The historical 2026-09-29 envelope set is unaffected because it is validated through the explicit legacy path. The unexecuted full gate therefore still owes a fresh site-backed capture against the final qualified HEAD; this reconciliation does not and cannot supply it.",
+    "no_approval_claimed": "This is a technical, measured contract correction for technical review. It is not a release approval, not a native (site/bench) acceptance, not a business acceptance and not an F44 closure."
+  }
+}

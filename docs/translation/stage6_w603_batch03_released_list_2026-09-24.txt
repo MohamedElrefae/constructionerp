@@ -1,0 +1,111 @@
+Row #{0}: Source, Target Warehouse and Inventory Dimensions cannot be the exact same for Material Transfer
+Row #{0}: Status is mandatory
+Row #{0}: Stock cannot be reserved for Item {1} against a disabled Batch {2}.
+Row #{0}: Stock cannot be reserved for a non-stock Item {1}
+Row #{0}: Stock cannot be reserved in group warehouse {1}.
+Row #{0}: Stock is already reserved for the Item {1}.
+Row #{0}: Stock is reserved for item {1} in warehouse {2}.
+Row #{0}: Stock not available to reserve for Item {1} against Batch {2} in Warehouse {3}.
+Row #{0}: Stock not available to reserve for the Item {1} in Warehouse {2}.
+Row #{0}: The warehouse {1} is not a child warehouse of a group warehouse {2}
+Row #{0}: {1} is not a valid reading field. Please refer to the field description.
+Row #{}: item {} has been picked already.
+Row #{}: {} {} doesn't belong to Company {}. Please select valid {}.
+Row {0} picked quantity is less than the required quantity, additional {1} {2} required.
+Row {0}# Item {1} cannot be transferred more than {2} against {3} {4}
+Row {0}# Item {1} not found in 'Raw Materials Supplied' table in {2} {3}
+Row {0}: As {1} is enabled, raw materials cannot be added to {2} entry. Use {3} entry to consume raw materials.
+Row {0}: Either Delivery Note Item or Packed Item reference is mandatory.
+Row {0}: Packed Qty must be equal to {1} Qty.
+Row {0}: Packing Slip is already created for Item {1}.
+Row {0}: Please provide a valid Delivery Note Item or Packed Item reference.
+Row {0}: Purchase Invoice {1} has no stock impact.
+Row {0}: Qty cannot be greater than {1} for the Item {2}.
+Row {0}: Qty in Stock UOM can not be zero.
+Row {0}: Qty must be greater than 0.
+Row {0}: Transferred quantity cannot be greater than the requested quantity.
+Row {0}: {2} Item {1} does not exist in {2} {3}
+SCO Supplied Item
+Same item and warehouse combination already entered.
+Scan mode enabled, existing quantity will not be fetched.
+Selected Serial and Batch Bundle entries have been fixed.
+Serial No and Batch Selector cannot be use when Use Serial / Batch Fields is enabled.
+Serial No and Batch Traceability
+Serial No {0} does not exists
+Serial No {0} is already Delivered. You cannot use them again in Manufacture / Repack entry.
+Serial No {0} is not present in the {1} {2}, hence you can't return it against the {1} {2}
+Serial Nos are created successfully
+Serial Nos are reserved in Stock Reservation Entries, you need to unreserve them before proceeding.
+Serial Nos {0} are already Delivered. You cannot use them again in Manufacture / Repack entry.
+Serial and Batch Bundle {0} is not submitted
+Set fieldname from which you want to fetch the data from the parent form.
+Set the status manually.
+Similar types of workstations where the same operations run in parallel.
+Since {0} are Serial No/Batch No items, you cannot enable 'Recreate Stock Ledgers' in Repost Item Valuation.
+Source Warehouse is mandatory for the Item {0}.
+Status set to rejected as there are one or more rejected readings.
+Stock Closing Entry {0} already exists for the selected date range
+Stock Closing Entry {0} has been queued for processing, system will take sometime to complete it.
+Stock Entries already created for Work Order {0}: {1}
+Stock Ledger Entries and GL Entries are reposted for the selected Purchase Receipts
+Stock Ledgers won’t be reposted.
+Stock Reservation Entry cannot be updated as it has been delivered.
+Stock Reservation can only be created against {0}.
+Stock cannot be reserved in group warehouse {0}.
+Stock cannot be reserved in the group warehouse {0}.
+Stock has been unreserved for work order {0}.
+Stock not available for Item {0} in Warehouse {1}.
+Stock transactions that are older than the mentioned days cannot be modified.
+Stock/Accounts can not be frozen as processing of backdated entries is going on. Please try again later.
+Successfully changed Stock UOM, please redefine conversion factors for new UOM.
+Table for Item that will be shown in Web Site
+Taxes row #{0}: {1} cannot be smaller than {2}
+The Process Loss Qty has reset as per job cards Process Loss Qty
+The Serial No at Row #{0}: {1} is not available in warehouse {2}.
+The Serial No {0} is reserved against the {1} {2} and cannot be used for any other transaction.
+The Work Order is mandatory for Disassembly Order
+The field {0} in row {1} is not set
+The following Items, having Putaway Rules, could not be accomodated:
+The items {0} and {1} are present in the following {2} :
+The percentage you are allowed to pick more items in the pick list than the ordered quantity.
+The reserved stock will be released. Are you certain you wish to proceed?
+The serial and batch bundle {0} not linked to {1} {2}
+The user cannot submit the Serial and Batch Bundle manually
+The users with this Role are allowed to create/modify a stock transaction, even though the transaction is frozen.
+The {0} prefix '{1}' already exists. Please change the Serial No Series, otherwise you will get a Duplicate Entry error.
+The {0} {1} created successfully
+There aren't any item variants for the selected item
+There must be atleast 1 Finished Good in this Stock Entry
+This field is used to set the 'Customer'.
+This is considered dangerous from accounting point of view.
+This option can be checked to edit the 'Posting Date' and 'Posting Time' fields.
+This table is used to set details about the 'Item', 'Qty', 'Basic Rate', etc.
+UOM conversion factor required for UOM: {0} in Item: {1}
+UOM {0} not found in Item {1}
+Upon submission of the Sales Order, Work Order, or Production Plan, the system will automatically reserve the stock.
+Users with this role are allowed to over deliver/receive against orders above the allowance percentage
+Using negative stock disables FIFO/Moving average valuation when inventory is negative.
+Valuation (I - K)
+Valuation rate for customer provided items has been set to zero.
+Value (G - D)
+Value ({0})
+Value of goods cannot be 0
+Warehouse Capacity for Item '{0}' must be greater than the existing stock level of {1} {2}.
+Warehouse {0} does not belong to Company {1}.
+Warehouse {0} does not exist
+Warehouse's Stock Value has already been booked in the following accounts:
+When creating an Item, entering a value for this field will automatically create an Item Price at the backend.
+You are not authorized to make/edit Stock Transactions for Item {0} under warehouse {1} before this time.
+You cannot repost item valuation before {}
+You have entered a duplicate Delivery Note on Row
+after
+image
+performing either one below:
+product bundle item row's name in sales order. Also indicates that picked item is to be used for a product bundle
+{0} account not found while submitting purchase receipt
+{0} units are reserved for Item {1} in Warehouse {2}, please un-reserve the same to {3} the Stock Reconciliation.
+{0} units of Item {1} is not available in any of the warehouses.
+{0} units of Item {1} is picked in another Pick List.
+{0} units of {1} are required in {2} with the inventory dimension: {3} on {4} {5} for {6} to complete the transaction.
+{0} units of {1} needed in {2} on {3} {4} to complete this transaction.
+{} To Bill

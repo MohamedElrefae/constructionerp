@@ -1,0 +1,199 @@
+{
+  "addresses_findings": [
+    "SCP-008"
+  ],
+  "candidate": {
+    "candidate_id": "d8be079d388472a42494d35a8e9ccc0b058d8163c55f21337ce3e3c5401554df",
+    "manifest": {
+      "base_commit": "fd9aecc372aec6a1341dd0cac4f779c1ec539756",
+      "branch": "feature/workspace-desk-coverage-v2",
+      "entries": [
+        {
+          "content_sha256": "ba2d839df0d922ba86181051d4cc52712684fb3b72b5b2f6f77ae6190407f3ca",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/freshness_evidence.json"
+        },
+        {
+          "content_sha256": "adbd3d8d40102b8517494b39f910531bb64d4cb8ea01f99f037cced0f31895dc",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/localization_manifest.json"
+        },
+        {
+          "content_sha256": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/stage2_inventory_manifest.json"
+        },
+        {
+          "content_sha256": "b433566a1fb0221c32d74cee5aad6cd7f0fc051e4d7e236be1d6f6b2bbb7949c",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/vendor_catalog_baseline.json"
+        },
+        {
+          "content_sha256": "af343ac233cac0e022aa1d84fef87943cd94eff78d364f842115614be56c3698",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/locale/ar.po"
+        },
+        {
+          "content_sha256": "a732aaae9f7bc00a67bbe5abd8f02047ce078c3aa7cc51d7e31b91dc0ea9d406",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/tests/tools/stage2_evidence_assemble.py"
+        },
+        {
+          "content_sha256": "7794fa70659850d74716bc2ac132f0a7cfee84025d63d7f02a886278df94ea8a",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/workspace/construction/construction.json"
+        },
+        {
+          "content_sha256": "3c5ef21a3ccf5e8acc027a431560e8ecd73ded93ccafdd0f4980e75c91bc5f9b",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/all-tests.txt"
+        },
+        {
+          "content_sha256": "7fec6188fa77ec73214d41026f8c76a0bff92744c96b7392eb5e5aa3fd19bd7c",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/final-dryrun.txt"
+        },
+        {
+          "content_sha256": "2750c592a0c9a3bfbc9279f868b30b698312f949520d2726329ac582ae697c88",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/freshness-envelope.txt"
+        },
+        {
+          "content_sha256": "faaa66930a435ed6e56e47c3c5ed2fa42cdd09c668f467cd535f9f899eb2bea4",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/full-gate.txt"
+        },
+        {
+          "content_sha256": "3153602f1c54b72eee5aa05aed2654d3ef412b7c9e85728eb2d8b2151a28a01f",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/gate-tests-standalone.txt"
+        },
+        {
+          "content_sha256": "5ba488db82309d0ee2d8183eebdacd7d21e118525a1c8d5327377246555b1611",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/index.txt"
+        },
+        {
+          "content_sha256": "52f4fb389c06d52c5d8a5f9075416e94b193101f55e9be652d1ee3a5d2fe9fe6",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/lints-diffcheck.txt"
+        },
+        {
+          "content_sha256": "652e83a964ff926fbc553760c3579480b4de422213985f4a3396cf1d11e29130",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/merkle.txt"
+        },
+        {
+          "content_sha256": "bc713f0fa7fa7a7ca1ee327e597dc3db2b2f5c76b76a15e46a35733deffa4d92",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/scoped-gate.txt"
+        },
+        {
+          "content_sha256": "9fa55904588902d862680a931d79cea3fa96032a5fff58617ae211167033a110",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/sync.txt"
+        },
+        {
+          "content_sha256": "ee5303a5783318986bd857fd03d53fca8da816d1195cc564ea418ea13d7f1e75",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/vendor-audit.txt"
+        },
+        {
+          "content_sha256": "54fa583cb250b4707c8dd8f88b6c1454c15fd16d6db6ff667ef7c0dcec0642bb",
+          "kind": "file",
+          "mode": "100644",
+          "path": "scripts/check_localization_gates.py"
+        }
+      ],
+      "kind": "code"
+    },
+    "tree_oid": "d354aac073c0b1dc1241b4f56e9689e0bff7ea9f"
+  },
+  "commands": [
+    {
+      "collected": 263,
+      "command": "orchestrator/.venv/bin/pytest tests/ -q --tb=short",
+      "cwd": "/home/mohamed/frappe-bench/worktrees/workspace-desk-coverage-v2/orchestrator",
+      "duration_seconds": 115.02,
+      "environment": {
+        "codex_binary": "/opt/codex-desktop/resources/codex",
+        "codex_version": "0.159.2",
+        "platform": "linux",
+        "pluggy": "1.6.0",
+        "pytest": "9.1.1",
+        "python": "3.12.3"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "id": "orchestrator-full-suite-v2-263",
+      "notes": "Executed inside the v2 worktree against base fd9aecc, which carries terminal-job context replay safety, blocked-role retry capture, the context_added event, and owner-directed resume targets.",
+      "outcome": "263 passed",
+      "raw_capture": {
+        "path": "docs/ai/work-items/workspace-desk-coverage-v2/evidence/raw-logs/orchestrator-regression-263-v2.txt",
+        "sha256": "e534ff1a07d71794299bb8d5e20ce4a64ae662c0ec6f01bc7427e9ba05cdf7da"
+      },
+      "source_hashes": {
+        "orchestrator/engine.py": "31b22ed232b5c9304698c1623e5eb223cfc26ceb43dc65b906169d332d41df42",
+        "orchestrator/tests/test_engine.py": "23d5dd6e47b1f5298f69c7137264a8e4b7e25dc9c016c37d1d5526e81b445af3"
+      },
+      "suite_scope": "full orchestrator suite, unfiltered, 0 deselected"
+    }
+  ],
+  "generated_utc": "2026-10-01T00:00:00Z",
+  "report_id": "scp008-base-suite-regression-v2-263",
+  "required_case_coverage": {
+    "absence_of_consumable_fields": "attestation asserts token_id and issued_utc are not present",
+    "builder_and_verifier_metadata": "test_decision_scope_acceptance_clears_gate asserts owner_approval_attestation for both roles",
+    "continued_builder_refusal": "engine.py raises WorkflowError(\"Standing PLAN grant evidence unavailable\") when role==builder and no grants; preserved verbatim through G1",
+    "missing_and_mismatched_grants": "test_decision_scope_rejected_on_content_hash_mismatch parametrizes candidate_id/plan_revision_hash/scope_hash/repository_id/branch/expected_parent_sha",
+    "preapproval_behavior": "test_decision_gate_mismatch / pre-approval attestation absence asserted"
+  },
+  "requirements": [
+    "WDC-R5"
+  ],
+  "residual_gaps": [
+    "Executed outside a builder dispatch. An authorized isolated harness with bounded temporary writes has not been granted. Offered as an executed capture under owner authorization, not as an in-dispatch run."
+  ],
+  "schema": "workspace-desk-coverage-v2/validation-report/v1",
+  "supersedes": {
+    "prior_captures_retained_as_historical_only": [
+      {
+        "candidate": "341715dd (retired)",
+        "path": ".../orchestrator-regression-236.txt"
+      },
+      {
+        "candidate": "23983cb2 (superseded)",
+        "path": ".../orchestrator-regression-257-v2.txt"
+      },
+      {
+        "candidate": "84d5b94e (superseded)",
+        "path": ".../orchestrator-regression-259-v2.txt"
+      }
+    ],
+    "reason": "Both prior reports named orchestrator/engine.py 42161cee.. and tests/test_engine.py 2fb47b5b.. which are NOT in this candidate, or named a superseded candidate/base. Neither can establish current governing-source regression coverage.",
+    "reports": [
+      "bound to retired candidate 341715dd at base 4123646b",
+      "bound to superseded candidate 23983cb2 at base c1f652c",
+      "bound to superseded candidate 84d5b94e at base 6041a4f"
+    ]
+  },
+  "verdict": "SATISFIES"
+}

@@ -1,0 +1,30 @@
+{
+  "review_date": "2026-10-13",
+  "review_kind": "static app-side fix review; no site requests/migrations/commits",
+  "construction_head": "1e464889465554a62ee87074bd7bdf9ac7ab2204",
+  "uncommitted_change": {
+    "file": "construction/config/workspace_sidebar_items.json",
+    "base_title": "Construction",
+    "reviewed_title": "Construction Home",
+    "module_app_items_unchanged": true,
+    "sha256": "05d1056c2b8d0fb915286542f6605b136ef7d144f999cb1effcbbd3635b47316"
+  },
+  "clean_vendor_heads": {
+    "frappe": "2871914b69b6e14a4b023d9b7cc52dc3e269cc1b",
+    "erpnext": "7474d9e786277383de1242ab882f16856d17a9c9"
+  },
+  "app_source_hashes": {
+    "construction/install.py": "e5ca7232e762030b9d8172f55855b1b1ef80397598122214553c66fa61108e76"
+  },
+  "vendor_reference_files": {
+    "frappe/desk/doctype/sidebar/sidebar.py": "1986bb5d4b73219fbf596d8de3b19944930b1e0995e4e9f65d7fcd03044a9625",
+    "frappe/desk/doctype/workspace_sidebar/workspace_sidebar.py": "b0c4419722940b6c2d36918c120a162332be37be08835d536c41758546f2ed93",
+    "frappe/patches/v16_0/convert_sidebars.py": "8b97c471c19b9bef905cee677d7e7bd99f9e5fcd902b24fdedbd06f57c488044"
+  },
+  "reported_runtime_evidence": "Owner handoff: two site migrations/sidebar saves/pong and four BOQ counts. Not re-executed by this review. Counts alone are not byte/financial-history equivalence.",
+  "findings": {
+    "F24-D002": "Current vendor Workspace Sidebar is inert archive; app setup/health remains on archived model, no Sidebar create/update path found. Fresh install/current live sync qualification and supported model adaptation required.",
+    "F24-D003": "verify_workspace_visibility checks literal Workspace Sidebar Construction and parent Construction even after config title Construction Home; logger can flag a false health failure while migration succeeds."
+  },
+  "disposition": "Title collision avoidance acceptable for reported existing-site repair; retain ENV-D001 closed for vendor cleanliness. Leave config uncommitted for F38. ENV-D002 re-baseline/F13 and new compatibility checks remain open."
+}

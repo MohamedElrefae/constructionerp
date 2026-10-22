@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "source": "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/scope-context-portability",
+  "base_commit": "e7be48855bde540464ea302e53c9bfca62b7c462",
+  "branch": "feature/scope-context-portability",
+  "documents": {
+    "CANONICAL_PLAN.md": "93e193cab827f67bbf6cfda794ef51429641e81b30facbbebbfa31eb9dfb2f89",
+    "IMPLEMENTATION_HANDOFF.md": "96f6065a00484c1079e3be163f3efa74eb4be1ca0d46eafc511ff5131b6b7eeb"
+  }
+}

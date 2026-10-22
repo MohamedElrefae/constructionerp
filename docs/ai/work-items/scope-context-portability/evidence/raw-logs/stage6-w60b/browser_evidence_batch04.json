@@ -1,0 +1,210 @@
+{
+ "batch": "stage6-w60b-batch4",
+ "started_utc": "2026-09-22T18:53:22Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 11741
+  },
+  {
+   "name": "translate:Click here",
+   "ok": true,
+   "detail": {
+    "expected": "انقر هنا",
+    "got": "انقر هنا"
+   }
+  },
+  {
+   "name": "translate:Desk Settings",
+   "ok": true,
+   "detail": {
+    "expected": "إعدادات المكتب",
+    "got": "إعدادات المكتب"
+   }
+  },
+  {
+   "name": "translate:Desk Theme",
+   "ok": true,
+   "detail": {
+    "expected": "سمة المكتب",
+    "got": "سمة المكتب"
+   }
+  },
+  {
+   "name": "translate:Desktop Settings",
+   "ok": true,
+   "detail": {
+    "expected": "إعدادات سطح المكتب",
+    "got": "إعدادات سطح المكتب"
+   }
+  },
+  {
+   "name": "translate:Download Template",
+   "ok": true,
+   "detail": {
+    "expected": "تنزيل القالب",
+    "got": "تنزيل القالب"
+   }
+  },
+  {
+   "name": "translate:Email Domain",
+   "ok": true,
+   "detail": {
+    "expected": "نطاق البريد الإلكتروني",
+    "got": "نطاق البريد الإلكتروني"
+   }
+  },
+  {
+   "name": "translate:Form Builder",
+   "ok": true,
+   "detail": {
+    "expected": "منشئ النماذج",
+    "got": "منشئ النماذج"
+   }
+  },
+  {
+   "name": "translate:Login Methods",
+   "ok": true,
+   "detail": {
+    "expected": "طرق تسجيل الدخول",
+    "got": "طرق تسجيل الدخول"
+   }
+  },
+  {
+   "name": "translate:MIT License",
+   "ok": true,
+   "detail": {
+    "expected": "ترخيص MIT",
+    "got": "ترخيص MIT"
+   }
+  },
+  {
+   "name": "translate:MariaDB Variables",
+   "ok": true,
+   "detail": {
+    "expected": "متغيرات MariaDB",
+    "got": "متغيرات MariaDB"
+   }
+  },
+  {
+   "name": "translate:Normalized Copies",
+   "ok": true,
+   "detail": {
+    "expected": "نسخ مُطبّعة",
+    "got": "نسخ مُطبّعة"
+   }
+  },
+  {
+   "name": "translate:Client ID",
+   "ok": true,
+   "detail": {
+    "expected": "معرف العميل",
+    "got": "معرف العميل"
+   }
+  },
+  {
+   "name": "translate:Delimiter options",
+   "ok": true,
+   "detail": {
+    "expected": "خيارات الفاصل",
+    "got": "خيارات الفاصل"
+   }
+  },
+  {
+   "name": "translate:Missing field",
+   "ok": true,
+   "detail": {
+    "expected": "حقل مفقود",
+    "got": "حقل مفقود"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "14/14"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "لا يمكن delete item.",
+    "got": "لا يمكن delete item."
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Click here": "انقر هنا",
+    "Desk Settings": "إعدادات المكتب",
+    "Desk Theme": "سمة المكتب",
+    "Desktop Settings": "إعدادات سطح المكتب"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-22T18:53:33Z",
+ "summary": {
+  "pass": 23,
+  "fail": 0
+ }
+}

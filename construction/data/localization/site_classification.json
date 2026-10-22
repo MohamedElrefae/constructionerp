@@ -1,0 +1,9 @@
+{
+  "basis": "Database identity was verified against the isolated target site configuration and found distinct from the protected v16.localhost and rehearsal site configurations. This classification applies only to the isolated foundation qualification site.",
+  "classification": "non-production test",
+  "production_mutation_authorized": false,
+  "recorded_by": "Codex consultant under owner technical delegation 2026-10-18",
+  "recorded_utc": "2026-10-18T01:00:06Z",
+  "schema": "site-classification/v1",
+  "site": "v16-correction.localhost"
+}

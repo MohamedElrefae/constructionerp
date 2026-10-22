@@ -1,0 +1,235 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+"Row #{0}: Source, Target Warehouse and Inventory Dimensions cannot be the exact same for Material Transfer",,erpnext/stock/doctype/stock_entry/stock_entry.py:988,stock,0
+Row #{0}: Status is mandatory,,erpnext/stock/doctype/quality_inspection/quality_inspection.py:205,stock,0
+Row #{0}: Stock cannot be reserved for Item {1} against a disabled Batch {2}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:403,stock,0
+Row #{0}: Stock cannot be reserved for a non-stock Item {1},,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1640,stock,0
+Row #{0}: Stock cannot be reserved in group warehouse {1}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1653,stock,0
+Row #{0}: Stock is already reserved for the Item {1}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1667,stock,0
+Row #{0}: Stock is reserved for item {1} in warehouse {2}.,,erpnext/stock/doctype/delivery_note/delivery_note.py:545,stock,0
+Row #{0}: Stock not available to reserve for Item {1} against Batch {2} in Warehouse {3}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:413,stock,0
+Row #{0}: Stock not available to reserve for the Item {1} in Warehouse {2}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1233; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1681,stock,0
+Row #{0}: The warehouse {1} is not a child warehouse of a group warehouse {2},,erpnext/stock/doctype/item/item.py:529,stock,0
+Row #{0}: {1} is not a valid reading field. Please refer to the field description.,,erpnext/stock/doctype/quality_inspection/quality_inspection.py:316,stock,0
+Row #{}: item {} has been picked already.,,erpnext/stock/doctype/pick_list/pick_list.py:198,stock,0
+Row #{}: {} {} doesn't belong to Company {}. Please select valid {}.,,erpnext/stock/doctype/item/item.py:1401,stock,0
+"Row {0} picked quantity is less than the required quantity, additional {1} {2} required.",,erpnext/stock/doctype/pick_list/pick_list.py:228,stock,0
+Row {0}# Item {1} cannot be transferred more than {2} against {3} {4},,erpnext/stock/doctype/stock_entry/stock_entry.py:1459,stock,0
+Row {0}# Item {1} not found in 'Raw Materials Supplied' table in {2} {3},,erpnext/stock/doctype/stock_entry/stock_entry.py:1483,stock,0
+"Row {0}: As {1} is enabled, raw materials cannot be added to {2} entry. Use {3} entry to consume raw materials.",,erpnext/stock/doctype/stock_entry/stock_entry.py:1146,stock,0
+Row {0}: Either Delivery Note Item or Packed Item reference is mandatory.,,erpnext/stock/doctype/packing_slip/packing_slip.py:128,stock,0
+Row {0}: Packed Qty must be equal to {1} Qty.,,erpnext/stock/doctype/delivery_note/delivery_note.py:602,stock,0
+Row {0}: Packing Slip is already created for Item {1}.,,erpnext/stock/doctype/packing_slip/packing_slip.py:147,stock,0
+Row {0}: Please provide a valid Delivery Note Item or Packed Item reference.,,erpnext/stock/doctype/packing_slip/packing_slip.py:141,stock,0
+Row {0}: Purchase Invoice {1} has no stock impact.,,erpnext/stock/doctype/landed_cost_voucher/landed_cost_voucher.py:129,stock,0
+Row {0}: Qty cannot be greater than {1} for the Item {2}.,,erpnext/stock/doctype/packing_slip/packing_slip.py:153,stock,0
+Row {0}: Qty in Stock UOM can not be zero.,,erpnext/stock/doctype/stock_entry/stock_entry.py:525,stock,0
+Row {0}: Qty must be greater than 0.,,erpnext/stock/doctype/packing_slip/packing_slip.py:124,stock,0
+Row {0}: Transferred quantity cannot be greater than the requested quantity.,,erpnext/stock/doctype/stock_entry/stock_entry.py:3243,stock,0
+Row {0}: {2} Item {1} does not exist in {2} {3},,erpnext/stock/doctype/landed_cost_voucher/landed_cost_voucher.py:102,stock,0
+SCO Supplied Item,,erpnext/stock/doctype/stock_entry_detail/stock_entry_detail.json:None,stock,0
+Same item and warehouse combination already entered.,,erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.py:597,stock,0
+Scan Mode,وضع المسح,erpnext/stock/doctype/pick_list/pick_list.json:None; erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.json:None,stock,1
+"Scan mode enabled, existing quantity will not be fetched.",,erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.js:109,stock,0
+Scheduling,الجدولة,erpnext/stock/doctype/stock_reposting_settings/stock_reposting_settings.json:None,stock,1
+Segregate Serial / Batch Bundle,فصل مجموعة التسلسل/الدفعة,erpnext/stock/report/stock_ledger/stock_ledger.js:122,stock,1
+Select an Item Group.,تحديد مجموعة أصناف.,erpnext/stock/doctype/item/item.js:1041,stock,1
+Select at least one value from each of the attributes.,حدد قيمة واحدة على الأقل من كل خاصية.,erpnext/stock/doctype/item/item.js:721,stock,1
+Selected Serial and Batch Bundle entries have been fixed.,,erpnext/stock/report/incorrect_serial_and_batch_bundle/incorrect_serial_and_batch_bundle.py:163,stock,0
+Self delivery,تسليم ذاتي,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Serial & Batch Item,صنف تسلسلي ودفعة,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Serial & Batch Item Settings,إعدادات الأصناف التسلسلية والدفعات,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Serial / Batch Bundle,مجموعة تسلسل/دفعة,erpnext/stock/doctype/stock_reconciliation_item/stock_reconciliation_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_supplied_item/subcontracting_receipt_supplied_item.json:None,stock,1
+Serial / Batch No,رقم تسلسلي/دفعة,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.json:None,stock,1
+Serial No (In/Out),الرقم التسلسلي (داخل/خارج),erpnext/stock/report/available_serial_no/available_serial_no.py:140,stock,1
+Serial No Ledger,دفتر أستاذ الرقم التسلسلي,erpnext/stock/report/serial_no_ledger/serial_no_ledger.json:None; erpnext/stock/workspace/stock/stock.json:None,stock,1
+Serial No Reserved,الرقم التسلسلي محجوز,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:2317,stock,1
+Serial No Series Overlap,تداخل سلسلة الرقم التسلسلي,erpnext/stock/doctype/item/item.py:426,stock,1
+Serial No and Batch Selector cannot be use when Use Serial / Batch Fields is enabled.,,erpnext/stock/doctype/stock_settings/stock_settings.js:28,stock,0
+Serial No and Batch Traceability,,erpnext/stock/report/serial_no_and_batch_traceability/serial_no_and_batch_traceability.json:None; erpnext/stock/workspace/stock/stock.json:None,stock,0
+Serial No is mandatory,الرقم التسلسلي إلزامي,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:1072,stock,1
+Serial No {0} does not exists,,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:3025,stock,0
+Serial No {0} is already Delivered. You cannot use them again in Manufacture / Repack entry.,,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:327,stock,0
+"Serial No {0} is not present in the {1} {2}, hence you can't return it against the {1} {2}",,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:399,stock,0
+Serial Nos are created successfully,,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:1636,stock,0
+"Serial Nos are reserved in Stock Reservation Entries, you need to unreserve them before proceeding.",,erpnext/stock/stock_ledger.py:2307,stock,0
+Serial Nos {0} are already Delivered. You cannot use them again in Manufacture / Repack entry.,,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:333,stock,0
+Serial and Batch,التسلسل والدفعة,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.json:None; erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.json:None,stock,1
+Serial and Batch Bundle created,تم إنشاء مجموعة التسلسل والدفعة,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:1858,stock,1
+Serial and Batch Bundle updated,تم تحديث مجموعة التسلسل والدفعة,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:1930,stock,1
+Serial and Batch Bundle {0} is not submitted,,erpnext/stock/serial_batch_bundle.py:351,stock,0
+Serial and Batch Entry,قيد التسلسل والدفعة,erpnext/stock/doctype/serial_and_batch_entry/serial_and_batch_entry.json:None,stock,1
+Serial and Batch No,التسلسل والدفعة,erpnext/stock/doctype/delivery_note_item/delivery_note_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,stock,1
+Serial and Batch Nos,الأرقام التسلسلية والدفعات,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.js:53,stock,1
+Serial and Batch Reservation,حجز التسلسل والدفعة,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.json:None; erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Serial and Batch Summary,ملخص التسلسل والدفعة,erpnext/stock/report/serial_and_batch_summary/serial_and_batch_summary.json:None,stock,1
+Set Serial and Batch Bundle Naming Based on Naming Series,تعيين تسمية مجموعة التسلسل والدفعة بناء على سلسلة التسمية,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Set fieldname from which you want to fetch the data from the parent form.,,erpnext/stock/doctype/inventory_dimension/inventory_dimension.json:None,stock,0
+Set the status manually.,,erpnext/stock/doctype/quality_inspection_reading/quality_inspection_reading.json:None,stock,0
+Setting Item Locations...,جار تعيين مواقع الأصناف...,erpnext/stock/doctype/pick_list/pick_list.js:95,stock,1
+Shelf Life in Days,مدة الصلاحية بالأيام,erpnext/stock/doctype/batch/batch.py:215,stock,1
+Shift Time (In Hours),وقت الوردية (بالساعات),erpnext/stock/doctype/item_lead_time/item_lead_time.json:None,stock,1
+Shipment,الشحنة,erpnext/stock/doctype/delivery_note/delivery_note.js:246; erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Shipment Amount,مبلغ الشحنة,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Shipment Delivery Note,إذن تسليم الشحنة,erpnext/stock/doctype/shipment/shipment.json:None; erpnext/stock/doctype/shipment_delivery_note/shipment_delivery_note.json:None,stock,1
+Shipment ID,معرف الشحنة,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Shipment Information,معلومات الشحنة,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Shipment Parcel,طرد الشحنة,erpnext/stock/doctype/shipment/shipment.json:None; erpnext/stock/doctype/shipment_parcel/shipment_parcel.json:None,stock,1
+Shipment Parcel Template,قالب طرد الشحنة,erpnext/stock/doctype/shipment_parcel_template/shipment_parcel_template.json:None,stock,1
+Shipment Type,نوع الشحنة,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Shipment details,تفاصيل الشحنة,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Shipping Address Template,قالب عنوان الشحن,erpnext/stock/doctype/purchase_receipt/purchase_receipt.json:None,stock,1
+Show Barcode Field in Stock Transactions,إظهار حقل الباركود في معاملات المخزون,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Show Dimension Wise Stock,إظهار المخزون حسب البُعد,erpnext/stock/report/stock_balance/stock_balance.js:137,stock,1
+Show Disabled Items,إظهار الأصناف المعطلة,erpnext/stock/report/stock_qty_vs_serial_no_count/stock_qty_vs_serial_no_count.js:29,stock,1
+Show Disabled Warehouses,إظهار المستودعات المعطلة,erpnext/stock/report/warehouse_wise_stock_balance/warehouse_wise_stock_balance.js:16,stock,1
+Show Item Name,إظهار اسم الصنف,erpnext/stock/report/available_batch_report/available_batch_report.js:86,stock,1
+Show pending entries,إظهار القيود المعلقة,erpnext/stock/utils.py:585,stock,1
+Similar types of workstations where the same operations run in parallel.,,erpnext/stock/doctype/item_lead_time/item_lead_time.json:None,stock,0
+"Since {0} are Serial No/Batch No items, you cannot enable 'Recreate Stock Ledgers' in Repost Item Valuation.",,erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.py:105,stock,0
+Source Document,المستند المصدر,erpnext/stock/doctype/serial_no/serial_no.json:None,stock,1
+Source Document No,رقم المستند المصدر,erpnext/stock/report/serial_no_and_batch_traceability/serial_no_and_batch_traceability.py:488,stock,1
+Source Fieldname,اسم حقل المصدر,erpnext/stock/doctype/inventory_dimension/inventory_dimension.json:None,stock,1
+Source Warehouse Address Link,رابط عنوان المستودع المصدر,erpnext/stock/doctype/stock_entry/stock_entry.json:None,stock,1
+Source Warehouse is mandatory for the Item {0}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1163,stock,0
+Start Reposting,بدء إعادة الترحيل,erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.js:99,stock,1
+Status set to rejected as there are one or more rejected readings.,,erpnext/stock/doctype/quality_inspection/quality_inspection.py:271,stock,0
+Stock Capacity,سعة المخزون,erpnext/stock/page/warehouse_capacity_summary/warehouse_capacity_summary_header.html:10,stock,1
+Stock Closing,إغلاق المخزون,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Stock Closing Balance,رصيد إغلاق المخزون,erpnext/stock/doctype/stock_closing_balance/stock_closing_balance.json:None,stock,1
+Stock Closing Entry,قيد إغلاق المخزون,erpnext/stock/doctype/stock_closing_balance/stock_closing_balance.json:None; erpnext/stock/doctype/stock_closing_entry/stock_closing_entry.json:None,stock,1
+Stock Closing Entry {0} already exists for the selected date range,,erpnext/stock/doctype/stock_closing_entry/stock_closing_entry.py:77,stock,0
+"Stock Closing Entry {0} has been queued for processing, system will take sometime to complete it.",,erpnext/stock/doctype/stock_closing_entry/stock_closing_entry.py:98,stock,0
+Stock Closing Log,سجل إغلاق المخزون,erpnext/stock/doctype/stock_closing_entry/stock_closing_entry_dashboard.py:9,stock,1
+Stock Entries already created for Work Order {0}: {1},,erpnext/stock/doctype/stock_entry/stock_entry.py:864,stock,0
+Stock Entry Item,عنصر قيد المخزون,erpnext/stock/doctype/landed_cost_item/landed_cost_item.json:None,stock,1
+Stock Frozen Up To,المخزون مجمد حتى,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Stock Ledger Entries and GL Entries are reposted for the selected Purchase Receipts,,erpnext/stock/doctype/landed_cost_voucher/landed_cost_voucher.js:9,stock,0
+Stock Ledger Invariant Check,فحص ثبات دفتر أستاذ المخزون,erpnext/stock/report/stock_ledger_invariant_check/stock_ledger_invariant_check.json:None,stock,1
+Stock Ledger Variance,انحراف دفتر أستاذ المخزون,erpnext/stock/report/stock_ledger_variance/stock_ledger_variance.json:None,stock,1
+Stock Ledgers won’t be reposted.,,erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.json:None,stock,0
+Stock Movement,حركة المخزون,erpnext/stock/doctype/item/item_dashboard.py:34,stock,1
+Stock Planning,تخطيط المخزون,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Stock Qty vs Batch Qty,كمية المخزون مقابل كمية الدفعة,erpnext/stock/report/stock_qty_vs_batch_qty/stock_qty_vs_batch_qty.json:None,stock,1
+Stock Reposting Settings,إعدادات إعادة نشر المخزون,erpnext/stock/doctype/stock_reposting_settings/stock_reposting_settings.json:None,stock,1
+Stock Reservation Entries Cancelled,تم إلغاء قيود حجز المخزون,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1824,stock,1
+Stock Reservation Entry cannot be updated as it has been delivered.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:571,stock,0
+Stock Reservation Warehouse Mismatch,عدم تطابق مستودع حجز المخزون,erpnext/stock/doctype/delivery_note/delivery_note.py:555,stock,1
+Stock Reservation can only be created against {0}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:683,stock,0
+Stock Transactions Settings,إعدادات معاملات المخزون,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Stock UOM Quantity,كمية وحدة قياس المخزون,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Stock Validations,تحققات المخزون,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Stock Value by Item Group,قيمة المخزون حسب مجموعة الأصناف,erpnext/stock/workspace/stock/stock.json:None,stock,1
+Stock cannot be reserved in group warehouse {0}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:255,stock,0
+Stock cannot be reserved in the group warehouse {0}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1588,stock,0
+Stock has been unreserved for work order {0}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:1130,stock,0
+Stock not available for Item {0} in Warehouse {1}.,,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:359,stock,0
+Stock transactions that are older than the mentioned days cannot be modified.,,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,0
+Stock/Accounts can not be frozen as processing of backdated entries is going on. Please try again later.,,erpnext/stock/utils.py:576,stock,0
+Subcontract BOM,قائمة مواد مقاول الباطن,erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,stock,1
+Subcontracted Purchase Order,أمر شراء مقاول باطن,erpnext/stock/doctype/material_request/material_request.js:212,stock,1
+Subcontracting Receipt Item,بند إيصال مقاولات باطن,erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,stock,1
+"Successfully changed Stock UOM, please redefine conversion factors for new UOM.",,erpnext/stock/doctype/item/item.py:339,stock,0
+Supplier Info,معلومات المورد,erpnext/stock/doctype/stock_entry/stock_entry.json:None,stock,1
+Table for Item that will be shown in Web Site,,erpnext/stock/doctype/item_website_specification/item_website_specification.json:None,stock,0
+Target Fieldname (Stock Ledger Entry),اسم الحقل الهدف (قيد دفتر أستاذ المخزون),erpnext/stock/doctype/inventory_dimension/inventory_dimension.json:None,stock,1
+Target Warehouse Address Link,رابط عنوان المستودع الهدف,erpnext/stock/doctype/stock_entry/stock_entry.json:None,stock,1
+Taxes row #{0}: {1} cannot be smaller than {2},,erpnext/stock/doctype/item/item.py:352,stock,0
+Template Item Selected,تم تحديد صنف قالب,erpnext/stock/get_item_details.py:338,stock,1
+The Process Loss Qty has reset as per job cards Process Loss Qty,,erpnext/stock/doctype/stock_entry/stock_entry.py:2513,stock,0
+The Serial No at Row #{0}: {1} is not available in warehouse {2}.,,erpnext/stock/doctype/pick_list/pick_list.py:172,stock,0
+The Serial No {0} is reserved against the {1} {2} and cannot be used for any other transaction.,,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:2314,stock,0
+The Work Order is mandatory for Disassembly Order,,erpnext/stock/doctype/stock_entry/stock_entry.py:2166,stock,0
+The field {0} in row {1} is not set,,erpnext/stock/doctype/delivery_note/delivery_note.py:405,stock,0
+"The following Items, having Putaway Rules, could not be accomodated:",,erpnext/stock/doctype/putaway_rule/putaway_rule.py:305,stock,0
+The items {0} and {1} are present in the following {2} :,,erpnext/stock/doctype/item/item.py:619,stock,0
+The percentage you are allowed to pick more items in the pick list than the ordered quantity.,,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,0
+The reserved stock will be released. Are you certain you wish to proceed?,,erpnext/stock/doctype/pick_list/pick_list.js:159,stock,0
+The serial and batch bundle {0} not linked to {1} {2},,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:146; erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:158,stock,0
+The user cannot submit the Serial and Batch Bundle manually,,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.js:10,stock,0
+"The users with this Role are allowed to create/modify a stock transaction, even though the transaction is frozen.",,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,0
+"The {0} prefix '{1}' already exists. Please change the Serial No Series, otherwise you will get a Duplicate Entry error.",,erpnext/stock/doctype/item/item.py:423,stock,0
+The {0} {1} created successfully,,erpnext/stock/doctype/material_request/material_request.py:898,stock,0
+There aren't any item variants for the selected item,,erpnext/stock/report/item_variant_details/item_variant_details.py:25,stock,0
+There must be atleast 1 Finished Good in this Stock Entry,,erpnext/stock/doctype/stock_entry/stock_entry.py:1603,stock,0
+This field is used to set the 'Customer'.,,erpnext/stock/doctype/delivery_note/delivery_note.js:487,stock,0
+This is considered dangerous from accounting point of view.,,erpnext/stock/doctype/stock_settings/stock_settings.js:42,stock,0
+This option can be checked to edit the 'Posting Date' and 'Posting Time' fields.,,erpnext/stock/doctype/delivery_note/delivery_note.js:500,stock,0
+"This table is used to set details about the 'Item', 'Qty', 'Basic Rate', etc.",,erpnext/stock/doctype/delivery_note/delivery_note.js:493,stock,0
+Total Active Items,إجمالي الأصناف النشطة,erpnext/stock/workspace/stock/stock.json:None,stock,1
+Total Incoming Value (Receipt),إجمالي القيمة الواردة (استلام),erpnext/stock/doctype/stock_entry/stock_entry.json:None,stock,1
+Total Landed Cost,إجمالي التكلفة الإضافية,erpnext/stock/report/landed_cost_report/landed_cost_report.py:24,stock,1
+Total Landed Cost (Company Currency),إجمالي التكلفة الإضافية (عملة الشركة),erpnext/stock/doctype/landed_cost_voucher/landed_cost_voucher.json:None,stock,1
+Total Outgoing Value (Consumption),إجمالي القيمة الصادرة (استهلاك),erpnext/stock/doctype/stock_entry/stock_entry.json:None,stock,1
+Total Reposting Count,إجمالي عدد إعادة الترحيل,erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.json:None,stock,1
+Total Stock Value,إجمالي قيمة المخزون,erpnext/stock/workspace/stock/stock.json:None,stock,1
+Total Value Difference (Incoming - Outgoing),إجمالي فرق القيمة (وارد - صادر),erpnext/stock/doctype/stock_entry/stock_entry.json:None,stock,1
+Total Vendor Invoices Cost (Company Currency),إجمالي تكلفة فواتير الموردين (عملة الشركة),erpnext/stock/doctype/landed_cost_voucher/landed_cost_voucher.json:None,stock,1
+Total Warehouses,إجمالي المستودعات,erpnext/stock/workspace/stock/stock.json:None,stock,1
+Total Weight (kg),إجمالي الوزن (كجم),erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Total Workstation Time (In Hours),إجمالي وقت محطة العمل (بالساعات),erpnext/stock/doctype/item_lead_time/item_lead_time.json:None,stock,1
+Tracebility Direction,اتجاه التتبع,erpnext/stock/report/serial_no_and_batch_traceability/serial_no_and_batch_traceability.js:53,stock,1
+Tracking Status,حالة التتبع,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Tracking Status Info,معلومات حالة التتبع,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Tracking URL,رابط التتبع,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Transaction Information,معلومات المعاملة,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.json:None,stock,1
+Transit,عبور,erpnext/stock/doctype/warehouse/warehouse.json:None,stock,1
+Transit Entry,قيد عبور,erpnext/stock/doctype/stock_entry/stock_entry.js:479,stock,1
+Type of Transaction,نوع المعاملة,erpnext/stock/doctype/inventory_dimension/inventory_dimension.json:None; erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.json:None; erpnext/stock/doctype/serial_and_batch_entry/serial_and_batch_entry.json:None,stock,1
+UOM conversion factor required for UOM: {0} in Item: {1},,erpnext/stock/doctype/stock_entry/stock_entry.py:3628,stock,0
+UOM {0} not found in Item {1},,erpnext/stock/doctype/item_price/item_price.py:61,stock,0
+UPC,,erpnext/stock/doctype/item_barcode/item_barcode.json:None,stock,0
+UPC-A,,erpnext/stock/doctype/item_barcode/item_barcode.json:None,stock,0
+Unassigned Qty,كمية غير مسندة,erpnext/stock/doctype/putaway_rule/putaway_rule.py:323,stock,1
+Update Batch Qty,تحديث كمية الدفعة,erpnext/stock/report/stock_qty_vs_batch_qty/stock_qty_vs_batch_qty.js:31,stock,1
+Update Existing Price List Rate,تحديث سعر قائمة الأسعار الحالي,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Update Price List Based On,تحديث قائمة الأسعار بناء على,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+"Upon submission of the Sales Order, Work Order, or Production Plan, the system will automatically reserve the stock.",,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,0
+Use Batch-wise Valuation,استخدام التقييم حسب الدفعة,erpnext/stock/doctype/batch/batch.json:None,stock,1
+Use Item based reposting,استخدام إعادة الترحيل حسب الصنف,erpnext/stock/doctype/stock_reposting_settings/stock_reposting_settings.json:None,stock,1
+Use Serial / Batch Fields,استخدام حقول التسلسل/الدفعة,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Users with this role are allowed to over deliver/receive against orders above the allowance percentage,,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,0
+Using negative stock disables FIFO/Moving average valuation when inventory is negative.,,erpnext/stock/doctype/stock_settings/stock_settings.js:38,stock,0
+Validate Material Transfer Warehouses,التحقق من مستودعات نقل المواد,erpnext/stock/doctype/stock_settings/stock_settings.json:None,stock,1
+Validate Negative Stock,التحقق من المخزون السالب,erpnext/stock/doctype/inventory_dimension/inventory_dimension.json:None,stock,1
+Valuation (I - K),,erpnext/stock/report/stock_ledger_variance/stock_ledger_variance.js:63,stock,0
+Valuation Field Type,نوع حقل التقييم,erpnext/stock/report/available_serial_no/available_serial_no.js:61; erpnext/stock/report/stock_balance/stock_balance.js:101; erpnext/stock/report/stock_ledger/stock_ledger.js:114,stock,1
+Valuation Rate (In / Out),سعر التقييم (داخل/خارج),erpnext/stock/report/incorrect_serial_no_valuation/incorrect_serial_no_valuation.py:197,stock,1
+Valuation rate for customer provided items has been set to zero.,,erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.py:985,stock,0
+Value (G - D),,erpnext/stock/report/stock_ledger_variance/stock_ledger_variance.js:58,stock,0
+Value ({0}),,erpnext/stock/report/stock_ageing/stock_ageing.py:221,stock,0
+Value Based Inspection,فحص حسب القيمة,erpnext/stock/doctype/quality_inspection_reading/quality_inspection_reading.json:None,stock,1
+Value of Goods,قيمة البضائع,erpnext/stock/doctype/shipment/shipment.json:None,stock,1
+Value of goods cannot be 0,,erpnext/stock/doctype/shipment/shipment.py:87,stock,0
+Vendor Invoice,فاتورة المورد,erpnext/stock/doctype/landed_cost_vendor_invoice/landed_cost_vendor_invoice.json:None; erpnext/stock/report/landed_cost_report/landed_cost_report.py:42,stock,1
+Vendor Invoices,فواتير الموردين,erpnext/stock/doctype/landed_cost_voucher/landed_cost_voucher.json:None,stock,1
+Via Landed Cost Voucher,عبر سند التكلفة الإضافية,erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.json:None,stock,1
+View Ledgers,عرض دفاتر الأستاذ,erpnext/stock/doctype/serial_no/serial_no.js:28,stock,1
+Voucher No is mandatory,رقم السند إلزامي,erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.py:1298,stock,1
+Voucher Qty,كمية السند,erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.json:None; erpnext/stock/report/reserved_stock/reserved_stock.py:117,stock,1
+Warehouse Capacity Summary,ملخص سعة المستودع,erpnext/stock/page/warehouse_capacity_summary/warehouse_capacity_summary.js:4,stock,1
+Warehouse Capacity for Item '{0}' must be greater than the existing stock level of {1} {2}.,,erpnext/stock/doctype/putaway_rule/putaway_rule.py:79,stock,0
+Warehouse Disabled?,هل المستودع معطل؟,erpnext/stock/report/warehouse_wise_stock_balance/warehouse_wise_stock_balance.py:113,stock,1
+Warehouse Wise Stock Balance,رصيد المخزون حسب المستودع,erpnext/stock/report/warehouse_wise_stock_balance/warehouse_wise_stock_balance.json:None; erpnext/stock/workspace/stock/stock.json:None,stock,1
+Warehouse {0} does not belong to Company {1}.,,erpnext/stock/doctype/putaway_rule/putaway_rule.py:67,stock,0
+Warehouse {0} does not exist,,erpnext/stock/doctype/warehouse/warehouse.py:306,stock,0
+Warehouse's Stock Value has already been booked in the following accounts:,,erpnext/stock/doctype/warehouse/warehouse.py:144,stock,0
+Warning on Negative Stock,تحذير عند المخزون السالب,erpnext/stock/stock_ledger.py:820,stock,1
+Warranty Expiry (Serial),انتهاء الضمان (تسلسلي),erpnext/stock/report/serial_no_and_batch_traceability/serial_no_and_batch_traceability.py:542,stock,1
+Weight (kg),الوزن (كجم),erpnext/stock/doctype/shipment_parcel/shipment_parcel.json:None; erpnext/stock/doctype/shipment_parcel_template/shipment_parcel_template.json:None,stock,1
+"When creating an Item, entering a value for this field will automatically create an Item Price at the backend.",,erpnext/stock/doctype/item/item.js:1072,stock,0
+Width (cm),العرض (سم),erpnext/stock/doctype/shipment_parcel/shipment_parcel.json:None; erpnext/stock/doctype/shipment_parcel_template/shipment_parcel_template.json:None,stock,1
+You are not authorized to make/edit Stock Transactions for Item {0} under warehouse {1} before this time.,,erpnext/stock/doctype/stock_ledger_entry/stock_ledger_entry.py:338,stock,0
+You cannot repost item valuation before {},,erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.py:183,stock,0
+You have entered a duplicate Delivery Note on Row,,erpnext/stock/doctype/shipment/shipment.js:442,stock,0
+Zero quantity,كمية صفرية,erpnext/stock/doctype/stock_entry/stock_entry.py:525,stock,1
+after,,erpnext/stock/stock_ledger.py:2041,stock,0
+image,,erpnext/stock/doctype/batch/batch.json:None,stock,0
+performing either one below:,,erpnext/stock/stock_ledger.py:2042,stock,0
+product bundle item row's name in sales order. Also indicates that picked item is to be used for a product bundle,,erpnext/stock/doctype/pick_list_item/pick_list_item.json:None,stock,0
+{0} account not found while submitting purchase receipt,,erpnext/stock/doctype/purchase_receipt/purchase_receipt.py:514,stock,0
+"{0} units are reserved for Item {1} in Warehouse {2}, please un-reserve the same to {3} the Stock Reconciliation.",,erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.py:703,stock,0
+{0} units of Item {1} is not available in any of the warehouses.,,erpnext/stock/doctype/pick_list/pick_list.py:1029,stock,0
+{0} units of Item {1} is picked in another Pick List.,,erpnext/stock/doctype/pick_list/pick_list.py:1021,stock,0
+{0} units of {1} are required in {2} with the inventory dimension: {3} on {4} {5} for {6} to complete the transaction.,,erpnext/stock/doctype/stock_ledger_entry/stock_ledger_entry.py:145,stock,0
+{0} units of {1} needed in {2} on {3} {4} to complete this transaction.,,erpnext/stock/stock_ledger.py:2294; erpnext/stock/stock_ledger.py:2339,stock,0
+{} To Bill,,erpnext/stock/workspace/stock/stock.json:None,stock,0

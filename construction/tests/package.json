@@ -1,0 +1,14 @@
+{
+  "name": "print-settings-tests",
+  "private": true,
+  "scripts": {
+    "test": "node --test test_print_settings_properties.js"
+  },
+  "devDependencies": {
+    "fast-check": "^3.0.0"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.60.0",
+    "playwright": "^1.60.0"
+  }
+}

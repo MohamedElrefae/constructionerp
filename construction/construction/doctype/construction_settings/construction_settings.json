@@ -1,0 +1,249 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "creation": "2026-05-22 12:00:00",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "enable_scope_context",
+    "option_b_section",
+    "enable_option_b_report_access_bypass",
+    "scope_dimensions_section",
+    "enable_scope_company",
+    "enable_scope_cost_center",
+    "enable_scope_project",
+    "enable_scope_department",
+    "scope_filter_exclusions",
+    "boq_cascade_section",
+    "enable_boq_cascade_filtering",
+    "improve_now_rollout_section",
+    "enable_boq_excel_import_preview",
+    "enable_boq_excel_import_commit",
+    "enable_boq_wbs_resequence",
+    "enable_stage_measurement_ui",
+    "enable_boq_scope_registry",
+    "enable_bilingual_boq_print",
+    "enable_variation_orders",
+    "global_export_menu_section",
+    "enable_global_export_menu",
+    "vfc_debug_logging_section",
+    "enable_vfc_debug_logging",
+    "direct_labor_designations",
+    "section_break_2",
+    "scope_context_settings_help",
+    "scope_hierarchy_section",
+    "scope_hierarchy_ui"
+  ],
+  "fields": [
+    {
+      "default": "1",
+      "fieldname": "enable_scope_context",
+      "fieldtype": "Check",
+      "label": "Enable Scope Context",
+      "description": "Enable user scope context feature (Company/Branch/Project/Department filtering and form defaults)"
+    },
+    {
+      "fieldname": "option_b_section",
+      "fieldtype": "Section Break",
+      "label": "Option B — Report Access Bypass",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_option_b_report_access_bypass",
+      "fieldtype": "Check",
+      "label": "Enable Option B Report Access Bypass",
+      "depends_on": "enable_scope_context",
+      "description": "Allow scoped restricted users to access allowlisted financial reports without explicit report permissions. When disabled, restricted users get 403 on reports they lack permission for (Option A+ filter rewriting still applies)."
+    },
+    {
+      "fieldname": "scope_dimensions_section",
+      "fieldtype": "Section Break",
+      "label": "Scope Dimensions",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_scope_company",
+      "fieldtype": "Check",
+      "label": "Enable Scope Company",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_scope_cost_center",
+      "fieldtype": "Check",
+      "label": "Enable Scope Cost Center",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "1",
+      "fieldname": "enable_scope_project",
+      "fieldtype": "Check",
+      "label": "Enable Scope Project",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "default": "0",
+      "fieldname": "enable_scope_department",
+      "fieldtype": "Check",
+      "label": "Enable Scope Department",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "description": "DocTypes excluded from scope filtering (one per line). Forms, list views, and reports for these DocTypes bypass scope query injection. Add 'Project' if users need to switch projects freely.",
+      "fieldname": "scope_filter_exclusions",
+      "fieldtype": "Small Text",
+      "label": "Scope Filter Exclusions",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "fieldname": "boq_cascade_section",
+      "fieldtype": "Section Break",
+      "label": "BOQ Cascade Filtering"
+    },
+    {
+      "default": "Off",
+      "description": "Controls preventive BOQ dropdown cascade filtering. Off keeps existing behavior, On enables guided filtering, Strict enforces rollout gates after data quality approval.",
+      "fieldname": "enable_boq_cascade_filtering",
+      "fieldtype": "Select",
+      "label": "Enable BOQ Cascade Filtering",
+      "options": "Off\nOn\nStrict"
+    },
+    {
+      "description": "Feature gates for the Improve Now implementation program. Keep disabled until each work package has verified evidence and approval.",
+      "fieldname": "improve_now_rollout_section",
+      "fieldtype": "Section Break",
+      "label": "Improve Now Rollout Flags"
+    },
+    {
+      "default": "0",
+      "description": "Allows BOQ Excel import preview and validation without committing records.",
+      "fieldname": "enable_boq_excel_import_preview",
+      "fieldtype": "Check",
+      "label": "Enable BOQ Excel Import Preview"
+    },
+    {
+      "default": "0",
+      "description": "Allows BOQ Excel import commit. Requires WBS stability and import preview verification first.",
+      "fieldname": "enable_boq_excel_import_commit",
+      "fieldtype": "Check",
+      "label": "Enable BOQ Excel Import Commit"
+    },
+    {
+      "default": "0",
+      "description": "Allows privileged Draft-only BOQ WBS resequence operations.",
+      "fieldname": "enable_boq_wbs_resequence",
+      "fieldtype": "Check",
+      "label": "Enable BOQ WBS Resequence"
+    },
+    {
+      "default": "0",
+      "description": "Allows the enhanced stage measurement and certification UI.",
+      "fieldname": "enable_stage_measurement_ui",
+      "fieldtype": "Check",
+      "label": "Enable Stage Measurement UI"
+    },
+    {
+      "default": "0",
+      "description": "Allows the registry-driven BOQ scope validation behavior for transaction DocTypes.",
+      "fieldname": "enable_boq_scope_registry",
+      "fieldtype": "Check",
+      "label": "Enable BOQ Scope Registry"
+    },
+    {
+      "default": "0",
+      "description": "Allows Arabic/English bilingual BOQ print and export output.",
+      "fieldname": "enable_bilingual_boq_print",
+      "fieldtype": "Check",
+      "label": "Enable Bilingual BOQ Print"
+    },
+    {
+      "default": "0",
+      "description": "Allows Variation Order workflow features after WP6 verification and approval.",
+      "fieldname": "enable_variation_orders",
+      "fieldtype": "Check",
+      "label": "Enable Variation Orders"
+    },
+    {
+      "fieldname": "global_export_menu_section",
+      "fieldtype": "Section Break",
+      "label": "Global Export Menu"
+    },
+    {
+      "default": "1",
+      "description": "When enabled, every Frappe form shows an Export (Excel / PDF / Print) dropdown button automatically. Forms that define their own export menu (e.g. BOQ Header) are not affected.",
+      "fieldname": "enable_global_export_menu",
+      "fieldtype": "Check",
+      "label": "Enable Global Export Menu on all Forms"
+    },
+    {
+      "fieldname": "vfc_debug_logging_section",
+      "fieldtype": "Section Break",
+      "label": "VFC Debug Logging"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, VFC (Form Layout Engine) emits diagnostic console.log output. Use ?vfc_debug=1 URL param for one-off debugging without changing this setting.",
+      "fieldname": "enable_vfc_debug_logging",
+      "fieldtype": "Check",
+      "label": "Enable VFC Debug Logging"
+    },
+    {
+      "description": "Employee designations whose Timesheet rows require BOQ attribution as direct labor.",
+      "fieldname": "direct_labor_designations",
+      "fieldtype": "Table",
+      "label": "Direct Labor Designations",
+      "options": "Direct Labor Designation"
+    },
+    {
+      "fieldname": "section_break_2",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "scope_context_settings_help",
+      "fieldtype": "HTML",
+      "label": "Scope Context Settings Help",
+      "options": "<div class=\"text-muted small\">\n  <p><strong>Scope Context</strong> controls how users interact with multi-company, multi-cost-center environments.</p>\n  <ul>\n    <li>When enabled, users see Company/Cost Center/Project/Department selectors in the top bar.</li>\n    <li>List views and form defaults respect the active scope.</li>\n    <li>Use the Scope Dimensions section to choose which dimensions appear in the UI.</li>\n    <li>Disable this to restore default Frappe behavior without uninstalling.</li>\n  </ul>\n</div>"
+    },
+    {
+      "fieldname": "scope_hierarchy_section",
+      "fieldtype": "Section Break",
+      "label": "Scope Hierarchy Management",
+      "depends_on": "enable_scope_context"
+    },
+    {
+      "fieldname": "scope_hierarchy_ui",
+      "fieldtype": "HTML",
+      "label": "Scope Hierarchy",
+      "options": "<p class=\"text-muted\">Loading scope hierarchy...</p>"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-05-22 12:00:00",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "Construction Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

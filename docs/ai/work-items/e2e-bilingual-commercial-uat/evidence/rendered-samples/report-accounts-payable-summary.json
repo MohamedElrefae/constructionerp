@@ -1,0 +1,13 @@
+{
+  "report": "Accounts Payable Summary",
+  "ar_columns": [
+    "الحساب",
+    "مدين",
+    "دائن"
+  ],
+  "both_columns": [
+    "Account — الحساب",
+    "Debit — مدين",
+    "Credit — دائن"
+  ]
+}

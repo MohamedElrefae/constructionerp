@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "binary": "/usr/bin/opencode-cli",
+  "version": "1.14.33",
+  "exit_code": 0,
+  "session_id": "ses_f72a9fa8affeye2RKxwNDtriWC",
+  "structured_output_valid": true,
+  "observed_models": [
+    {
+      "providerID": "opencode-go",
+      "modelID": "gpt-5.6-luna"
+    },
+    {
+      "providerID": "opencode-go",
+      "modelID": "gpt-5.6-luna"
+    }
+  ],
+  "event_types": [
+    "step_finish",
+    "step_start",
+    "text"
+  ],
+  "stdout_sha256": "6190656f423c5c73a662a7a6d818f798a4ff8d4c6f06c92a17d0b284cb88d19f",
+  "permission_config": {
+    "*": "deny"
+  },
+  "headless_pass": true
+}

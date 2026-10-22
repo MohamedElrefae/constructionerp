@@ -1,0 +1,114 @@
+/* ===== DROPDOWNS & MENUS ===== */
+/* Theme: {{ theme_name }} */
+
+/* Dropdown Menus */
+.dropdown-menu {
+  background: {{ surface_bg }};
+  border: 1px solid {{ border_color }};
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.dropdown-item {
+  color: {{ text_primary }};
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item.active {
+  background: {{ accent_primary }}15;
+  color: {{ accent_primary }};
+}
+
+.dropdown-header {
+  color: {{ text_secondary }};
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.dropdown-divider {
+  border-top: 1px solid {{ border_color }};
+}
+
+.dropdown-toggle::after {
+  color: {{ text_secondary }};
+}
+
+/* Dropdown Backdrop */
+.dropdown-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Popovers */
+.popover {
+  background: {{ surface_bg }};
+  border: 1px solid {{ border_color }};
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.popover-header {
+  background: {{ surface_bg }};
+  border-bottom: 1px solid {{ border_color }};
+  color: {{ text_primary }};
+  font-weight: 600;
+}
+
+.popover-body {
+  background: {{ surface_bg }};
+  color: {{ text_primary }};
+}
+
+.bs-popover-auto[data-popper-placement^="top"] > .popover-arrow::after,
+.bs-popover-top > .popover-arrow::after {
+  border-top-color: {{ surface_bg }};
+}
+
+/* Tooltips */
+.tooltip-inner {
+  background: {{ surface_bg }};
+  color: {{ text_primary }};
+  border: 1px solid {{ border_color }};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before,
+.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: {{ surface_bg }};
+}
+
+/* Menu Buttons */
+.menu-btn,
+.menu-btn-group > .btn,
+.dropdown-toggle {
+  transition: all 0.2s ease;
+}
+
+.menu-btn:hover,
+.dropdown-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Action Menu (three-dot menu) */
+.page-actions .btn,
+.actions-btn-group .btn {
+  background: {{ surface_bg }};
+  color: {{ text_primary }};
+  border: 1px solid {{ border_color }};
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.page-actions .btn:hover,
+.actions-btn-group .btn:hover {
+  background: {{ accent_primary }}15;
+  border-color: {{ accent_primary }};
+  color: {{ accent_primary }};
+}

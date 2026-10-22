@@ -1,0 +1,92 @@
+=== lint_scope_metadata ===
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+rc=0
+=== ai_context_check ===
+
+------------------------------------------------------------
+SCP-C1. Core Memory Files
+------------------------------------------------------------
+  PASS: AGENTS.md exists (13273 bytes)
+  PASS: SESSION_MEMORY.md exists (109825 bytes)
+
+------------------------------------------------------------
+SCP-C2. Git State
+------------------------------------------------------------
+  PASS: Branch: develop
+  PASS: Latest commit: 3e871f0
+  PASS: Total commits: 500
+
+------------------------------------------------------------
+SCP-C3. BOQ Item Schema
+------------------------------------------------------------
+  PASS: 'cost_item' field exists
+  PASS: 'structure' field exists
+  PASS: 'item_code' correctly ABSENT
+  PASS: 'item_name' correctly ABSENT
+  PASS: Total fields: 48
+
+------------------------------------------------------------
+SCP-C4. BOQ Structure NestedSet
+------------------------------------------------------------
+  PASS: 'is_group' field exists
+  PASS: 'lft' field exists
+  PASS: 'old_parent' field exists
+  PASS: 'rgt' field exists
+  PASS: 'wbs_code' field exists
+
+------------------------------------------------------------
+SCP-C5. CSS Registration
+------------------------------------------------------------
+  PASS: app_include_css has 6 CSS file registrations
+  PASS: 'modern_theme.css' registered
+  PASS: 'scope_context.css' registered
+  PASS: 'vite_extensions.css' registered
+  PASS: 'vite_form_override.css' registered
+  PASS: 'vite_list_override.css' registered
+  PASS: 'vfc_sections.css' registered
+
+------------------------------------------------------------
+SCP-C6. Theme API Endpoints
+------------------------------------------------------------
+  PASS: Whitelisted endpoints: 17
+  PASS: Total functions: 33
+
+------------------------------------------------------------
+SCP-C7. Migration Patches
+------------------------------------------------------------
+  PASS: All expected migration paths exist
+
+------------------------------------------------------------
+SCP-C8. DocType Registry
+------------------------------------------------------------
+  PASS: All 22 expected DocTypes present
+
+------------------------------------------------------------
+SCP-C8B. Schema Facts Drift
+------------------------------------------------------------
+  PASS: docs/ai/SCHEMA_FACTS.md matches live DocType JSON
+
+------------------------------------------------------------
+SCP-C9. CostItem and PlantResource
+------------------------------------------------------------
+  PASS: costitem: 'cost_item_code' field exists
+  PASS: plantresource: 'resource_code' field exists
+
+------------------------------------------------------------
+SCP-C10. Architecture Decisions
+------------------------------------------------------------
+  PASS: ADR.md contains 8 ADRs
+
+Checks passed: 11
+Checks failed: 0
+
+ALL CHECKS PASSED
+rc=0
+=== lint_translation_writes ===
+Translation write lint PASSED
+rc=0
+=== schema_drift_checker ===
+Schema facts match live DocType JSON.
+Schema-owning DocTypes: 21
+Override-only folders: 1
+rc=0

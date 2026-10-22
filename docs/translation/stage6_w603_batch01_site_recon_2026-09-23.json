@@ -1,0 +1,4619 @@
+{
+  "batch": "w603-01",
+  "site": "v16.localhost",
+  "generated": "2026-09-23",
+  "scope_rows": 250,
+  "scope_sha256": "5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380",
+  "runtime_rows_scanned": 20736,
+  "match_count": 364,
+  "exact_case_matches": 363,
+  "missing_count": 0,
+  "missing_keys": [],
+  "matched_nonempty_values": 114,
+  "site_override_origin_rows": 113,
+  "site_overrides": [
+    {
+      "source_text": "Include Zero Stock Items",
+      "translated_text": "تضمين أصناف المخزون الصفري",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Expired Batches",
+      "translated_text": "تضمين الدفعات المنتهية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Transit Transfer",
+      "translated_text": "نقل قيد العبور",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Empty Stock",
+      "translated_text": "تجاهل المخزون الفارغ",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Closing Balance",
+      "translated_text": "تجاهل الرصيد الختامي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Height (cm)",
+      "translated_text": "الارتفاع (سم)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Operating Cost",
+      "translated_text": "له تكلفة تشغيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Corrective Cost",
+      "translated_text": "له تكلفة تصحيحية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Goods",
+      "translated_text": "بضائع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Generate Stock Closing Entry",
+      "translated_text": "إنشاء قيد إغلاق المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GL reposting index",
+      "translated_text": "فهرس إعادة ترحيل دفتر الأستاذ العام",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Type",
+      "translated_text": "من نوع السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher No",
+      "translated_text": "من رقم السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Detail No",
+      "translated_text": "من رقم تفاصيل السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Formula Based Criteria",
+      "translated_text": "معيار مبني على صيغة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fetch Value From",
+      "translated_text": "جلب القيمة من",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO/LIFO Queue",
+      "translated_text": "طابور FIFO/LIFO",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue vs Qty After Transaction Comparison",
+      "translated_text": "مقارنة طابور FIFO مع الكمية بعد المعاملة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue",
+      "translated_text": "طابور FIFO",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expiry",
+      "translated_text": "انتهاء الصلاحية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Stock Value",
+      "translated_text": "قيمة المخزون المتوقعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Balance Qty",
+      "translated_text": "كمية الرصيد المتوقعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Errors Notification",
+      "translated_text": "إشعار الأخطاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "End Transit",
+      "translated_text": "إنهاء العبور",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Stock Reservation",
+      "translated_text": "تمكين حجز المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Parallel Reposting",
+      "translated_text": "تمكين إعادة الترحيل المتوازي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Edit Capacity",
+      "translated_text": "تعديل السعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Duplicate Serial Number Error",
+      "translated_text": "خطأ رقم تسلسلي مكرر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Use Batch-wise Valuation",
+      "translated_text": "عدم استخدام التقييم حسب الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Update Serial / Batch on Creation of Auto Bundle",
+      "translated_text": "عدم تحديث التسلسل/الدفعة عند إنشاء المجموعة تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dispatch Address Template",
+      "translated_text": "قالب عنوان الإرسال",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disassemble",
+      "translated_text": "تفكيك",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Serial No And Batch Selector",
+      "translated_text": "تعطيل محدد الرقم التسلسلي والدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dimension Details",
+      "translated_text": "تفاصيل البُعد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference In",
+      "translated_text": "الفرق في",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference Account in Items Table",
+      "translated_text": "حساب الفرق في جدول الأصناف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Description of Content",
+      "translated_text": "وصف المحتوى",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery Note Packed Item",
+      "translated_text": "صنف معبأ في إذن التسليم",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivered Qty (in Stock UOM)",
+      "translated_text": "الكمية المسلمة (بوحدة قياس المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delete Dimension",
+      "translated_text": "حذف البُعد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deferred Accounting Defaults",
+      "translated_text": "إعدادات المحاسبة المؤجلة الافتراضية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Provisional Account (Service)",
+      "translated_text": "الحساب المؤقت الافتراضي (خدمة)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Discount Account",
+      "translated_text": "حساب الخصم الافتراضي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default COGS Account",
+      "translated_text": "حساب تكلفة البضاعة المباعة الافتراضي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Daily Yield (%)",
+      "translated_text": "الإنتاجية اليومية (%)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customer Provided Item Cost",
+      "translated_text": "تكلفة الصنف المقدم من العميل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Serial / Batch Bundle",
+      "translated_text": "مجموعة التسلسل/الدفعة الحالية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Index",
+      "translated_text": "الفهرس الحالي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Creation",
+      "translated_text": "الإنشاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Stock Entry",
+      "translated_text": "إنشاء قيد مخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entry",
+      "translated_text": "إنشاء قيد إعادة ترحيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entries",
+      "translated_text": "إنشاء قيود إعادة ترحيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Grouped Asset",
+      "translated_text": "إنشاء أصل مجمع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Delivery Note",
+      "translated_text": "إنشاء إذن تسليم",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Ledger",
+      "translated_text": "تحويل إلى دفتر الأستاذ",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Item Based Reposting",
+      "translated_text": "التحويل إلى إعادة ترحيل حسب الصنف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert Item Description to Clean HTML in Transactions",
+      "translated_text": "تحويل وصف الصنف إلى HTML نظيف في المعاملات",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Control Historical Stock Transactions",
+      "translated_text": "التحكم في معاملات المخزون السابقة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consumption Rate",
+      "translated_text": "معدل الاستهلاك",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consider Rejected Warehouses",
+      "translated_text": "احتساب مستودعات المرفوضات",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditional Rule",
+      "translated_text": "قاعدة شرطية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Check Availability in Warehouse",
+      "translated_text": "فحص التوفر في المستودع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Change in Stock Value",
+      "translated_text": "التغير في قيمة المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Caution: This might alter frozen accounts.",
+      "translated_text": "تنبيه: قد يغير هذا الحسابات المجمدة.",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier Service",
+      "translated_text": "خدمة الناقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier",
+      "translated_text": "الناقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity must be greater than 0",
+      "translated_text": "يجب أن تكون السعة أكبر من 0",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity in Stock UOM",
+      "translated_text": "السعة بوحدة قياس المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (Stock UOM)",
+      "translated_text": "السعة (بوحدة قياس المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (In Days)",
+      "translated_text": "السعة (بالأيام)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot Merge",
+      "translated_text": "لا يمكن الدمج",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS Debit",
+      "translated_text": "مدين تكلفة البضاعة المباعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS By Item Group",
+      "translated_text": "تكلفة البضاعة المباعة حسب مجموعة الأصناف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Buffer Time",
+      "translated_text": "وقت احتياطي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bin Qty Recalculated",
+      "translated_text": "تمت إعادة حساب كمية الحاوية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batchwise Valuation",
+      "translated_text": "تقييم حسب الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty updated successfully",
+      "translated_text": "تم تحديث كمية الدفعة بنجاح",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty",
+      "translated_text": "كمية الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No is mandatory",
+      "translated_text": "رقم الدفعة إلزامي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Expiry Date",
+      "translated_text": "تاريخ انتهاء الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Value",
+      "translated_text": "قيمة رصيد المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Qty",
+      "translated_text": "كمية رصيد المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Qty (Stock)",
+      "translated_text": "كمية الرصيد (المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "BOM Info",
+      "translated_text": "معلومات قائمة المواد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate (Balance Stock)",
+      "translated_text": "متوسط السعر (رصيد المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate",
+      "translated_text": "متوسط السعر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Serial No",
+      "translated_text": "تقرير الأرقام التسلسلية المتاحة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Qty to Reserve",
+      "translated_text": "الكمية المتاحة للحجز",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Batch Report",
+      "translated_text": "تقرير الدفعات المتاحة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Stock",
+      "translated_text": "حجز المخزون تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Serial and Batch Nos",
+      "translated_text": "حجز الأرقام التسلسلية والدفعات تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created Serial and Batch Bundle",
+      "translated_text": "مجموعة تسلسل ودفعة منشأة تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created (Reorder)",
+      "translated_text": "منشأ تلقائيا (إعادة طلب)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Create Serial and Batch Bundle For Outward",
+      "translated_text": "إنشاء مجموعة تسلسل ودفعة تلقائيا للصادر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to Document",
+      "translated_text": "تطبيق على المستند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to All Inventory Documents",
+      "translated_text": "تطبيق على كل مستندات المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply Putaway Rule",
+      "translated_text": "تطبيق قاعدة التخزين",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amount Difference with Purchase Invoice",
+      "translated_text": "فرق المبلغ مع فاتورة الشراء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Already Picked",
+      "translated_text": "تم انتقاؤه بالفعل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Zero Rate",
+      "translated_text": "السماح بسعر صفري",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Sales",
+      "translated_text": "السماح بالبيع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Purchase",
+      "translated_text": "السماح بالشراء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Partial Reservation",
+      "translated_text": "السماح بالحجز الجزئي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Internal Transfers at Arm's Length Price",
+      "translated_text": "السماح بالتحويلات الداخلية بسعر مستقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Age ({0})",
+      "translated_text": "العمر ({0})",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Pick List",
+      "translated_text": "مقابل قائمة الانتقاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Finished Good",
+      "translated_text": "مقابل المنتج النهائي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Affected Transactions",
+      "translated_text": "المعاملات المتأثرة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Actual Balance Qty",
+      "translated_text": "كمية الرصيد الفعلية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Action If Quality Inspection Is Rejected",
+      "translated_text": "الإجراء عند رفض فحص الجودة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Accounting Entry for LCV in Stock Entry {0}",
+      "translated_text": "قيد محاسبي لسند التكلفة الإضافية في قيد المخزون {0}",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Occupied",
+      "translated_text": "نسبة الإشغال",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Installed",
+      "translated_text": "نسبة المركب",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    }
+  ],
+  "preserved": [
+    {
+      "source_text": "Include Zero Stock Items",
+      "translated_text": "تضمين أصناف المخزون الصفري"
+    },
+    {
+      "source_text": "Include Expired Batches",
+      "translated_text": "تضمين الدفعات المنتهية"
+    },
+    {
+      "source_text": "In Transit Transfer",
+      "translated_text": "نقل قيد العبور"
+    },
+    {
+      "source_text": "Ignore Empty Stock",
+      "translated_text": "تجاهل المخزون الفارغ"
+    },
+    {
+      "source_text": "Ignore Closing Balance",
+      "translated_text": "تجاهل الرصيد الختامي"
+    },
+    {
+      "source_text": "Height (cm)",
+      "translated_text": "الارتفاع (سم)"
+    },
+    {
+      "source_text": "Has Operating Cost",
+      "translated_text": "له تكلفة تشغيل"
+    },
+    {
+      "source_text": "Has Corrective Cost",
+      "translated_text": "له تكلفة تصحيحية"
+    },
+    {
+      "source_text": "Goods",
+      "translated_text": "بضائع"
+    },
+    {
+      "source_text": "Generate Stock Closing Entry",
+      "translated_text": "إنشاء قيد إغلاق المخزون"
+    },
+    {
+      "source_text": "GL reposting index",
+      "translated_text": "فهرس إعادة ترحيل دفتر الأستاذ العام"
+    },
+    {
+      "source_text": "From Voucher Type",
+      "translated_text": "من نوع السند"
+    },
+    {
+      "source_text": "From Voucher No",
+      "translated_text": "من رقم السند"
+    },
+    {
+      "source_text": "From Voucher Detail No",
+      "translated_text": "من رقم تفاصيل السند"
+    },
+    {
+      "source_text": "Formula Based Criteria",
+      "translated_text": "معيار مبني على صيغة"
+    },
+    {
+      "source_text": "Fetch Value From",
+      "translated_text": "جلب القيمة من"
+    },
+    {
+      "source_text": "FIFO/LIFO Queue",
+      "translated_text": "طابور FIFO/LIFO"
+    },
+    {
+      "source_text": "FIFO Queue vs Qty After Transaction Comparison",
+      "translated_text": "مقارنة طابور FIFO مع الكمية بعد المعاملة"
+    },
+    {
+      "source_text": "FIFO Queue",
+      "translated_text": "طابور FIFO"
+    },
+    {
+      "source_text": "Expiry",
+      "translated_text": "انتهاء الصلاحية"
+    },
+    {
+      "source_text": "Expected Stock Value",
+      "translated_text": "قيمة المخزون المتوقعة"
+    },
+    {
+      "source_text": "Expected Balance Qty",
+      "translated_text": "كمية الرصيد المتوقعة"
+    },
+    {
+      "source_text": "Errors Notification",
+      "translated_text": "إشعار الأخطاء"
+    },
+    {
+      "source_text": "End Transit",
+      "translated_text": "إنهاء العبور"
+    },
+    {
+      "source_text": "Enable Stock Reservation",
+      "translated_text": "تمكين حجز المخزون"
+    },
+    {
+      "source_text": "Enable Parallel Reposting",
+      "translated_text": "تمكين إعادة الترحيل المتوازي"
+    },
+    {
+      "source_text": "Edit Capacity",
+      "translated_text": "تعديل السعة"
+    },
+    {
+      "source_text": "Duplicate Serial Number Error",
+      "translated_text": "خطأ رقم تسلسلي مكرر"
+    },
+    {
+      "source_text": "Do Not Use Batch-wise Valuation",
+      "translated_text": "عدم استخدام التقييم حسب الدفعة"
+    },
+    {
+      "source_text": "Do Not Update Serial / Batch on Creation of Auto Bundle",
+      "translated_text": "عدم تحديث التسلسل/الدفعة عند إنشاء المجموعة تلقائيا"
+    },
+    {
+      "source_text": "Dispatch Address Template",
+      "translated_text": "قالب عنوان الإرسال"
+    },
+    {
+      "source_text": "Disassemble",
+      "translated_text": "تفكيك"
+    },
+    {
+      "source_text": "Disable Serial No And Batch Selector",
+      "translated_text": "تعطيل محدد الرقم التسلسلي والدفعة"
+    },
+    {
+      "source_text": "Dimension Details",
+      "translated_text": "تفاصيل البُعد"
+    },
+    {
+      "source_text": "Difference In",
+      "translated_text": "الفرق في"
+    },
+    {
+      "source_text": "Difference Account in Items Table",
+      "translated_text": "حساب الفرق في جدول الأصناف"
+    },
+    {
+      "source_text": "Description of Content",
+      "translated_text": "وصف المحتوى"
+    },
+    {
+      "source_text": "Delivery Note Packed Item",
+      "translated_text": "صنف معبأ في إذن التسليم"
+    },
+    {
+      "source_text": "Delivered Qty (in Stock UOM)",
+      "translated_text": "الكمية المسلمة (بوحدة قياس المخزون)"
+    },
+    {
+      "source_text": "Delete Dimension",
+      "translated_text": "حذف البُعد"
+    },
+    {
+      "source_text": "Deferred Accounting Defaults",
+      "translated_text": "إعدادات المحاسبة المؤجلة الافتراضية"
+    },
+    {
+      "source_text": "Default Provisional Account (Service)",
+      "translated_text": "الحساب المؤقت الافتراضي (خدمة)"
+    },
+    {
+      "source_text": "Default Discount Account",
+      "translated_text": "حساب الخصم الافتراضي"
+    },
+    {
+      "source_text": "Default COGS Account",
+      "translated_text": "حساب تكلفة البضاعة المباعة الافتراضي"
+    },
+    {
+      "source_text": "Daily Yield (%)",
+      "translated_text": "الإنتاجية اليومية (%)"
+    },
+    {
+      "source_text": "Customer Provided Item Cost",
+      "translated_text": "تكلفة الصنف المقدم من العميل"
+    },
+    {
+      "source_text": "Current Serial / Batch Bundle",
+      "translated_text": "مجموعة التسلسل/الدفعة الحالية"
+    },
+    {
+      "source_text": "Current Index",
+      "translated_text": "الفهرس الحالي"
+    },
+    {
+      "source_text": "Creation",
+      "translated_text": "الإنشاء"
+    },
+    {
+      "source_text": "Create Stock Entry",
+      "translated_text": "إنشاء قيد مخزون"
+    },
+    {
+      "source_text": "Create Reposting Entry",
+      "translated_text": "إنشاء قيد إعادة ترحيل"
+    },
+    {
+      "source_text": "Create Reposting Entries",
+      "translated_text": "إنشاء قيود إعادة ترحيل"
+    },
+    {
+      "source_text": "Create Grouped Asset",
+      "translated_text": "إنشاء أصل مجمع"
+    },
+    {
+      "source_text": "Create Delivery Note",
+      "translated_text": "إنشاء إذن تسليم"
+    },
+    {
+      "source_text": "Convert to Ledger",
+      "translated_text": "تحويل إلى دفتر الأستاذ"
+    },
+    {
+      "source_text": "Convert to Item Based Reposting",
+      "translated_text": "التحويل إلى إعادة ترحيل حسب الصنف"
+    },
+    {
+      "source_text": "Convert Item Description to Clean HTML in Transactions",
+      "translated_text": "تحويل وصف الصنف إلى HTML نظيف في المعاملات"
+    },
+    {
+      "source_text": "Control Historical Stock Transactions",
+      "translated_text": "التحكم في معاملات المخزون السابقة"
+    },
+    {
+      "source_text": "Consumption Rate",
+      "translated_text": "معدل الاستهلاك"
+    },
+    {
+      "source_text": "Consider Rejected Warehouses",
+      "translated_text": "احتساب مستودعات المرفوضات"
+    },
+    {
+      "source_text": "Conditional Rule",
+      "translated_text": "قاعدة شرطية"
+    },
+    {
+      "source_text": "Check Availability in Warehouse",
+      "translated_text": "فحص التوفر في المستودع"
+    },
+    {
+      "source_text": "Change in Stock Value",
+      "translated_text": "التغير في قيمة المخزون"
+    },
+    {
+      "source_text": "Caution: This might alter frozen accounts.",
+      "translated_text": "تنبيه: قد يغير هذا الحسابات المجمدة."
+    },
+    {
+      "source_text": "Carrier Service",
+      "translated_text": "خدمة الناقل"
+    },
+    {
+      "source_text": "Carrier",
+      "translated_text": "الناقل"
+    },
+    {
+      "source_text": "Capacity must be greater than 0",
+      "translated_text": "يجب أن تكون السعة أكبر من 0"
+    },
+    {
+      "source_text": "Capacity in Stock UOM",
+      "translated_text": "السعة بوحدة قياس المخزون"
+    },
+    {
+      "source_text": "Capacity (Stock UOM)",
+      "translated_text": "السعة (بوحدة قياس المخزون)"
+    },
+    {
+      "source_text": "Capacity (In Days)",
+      "translated_text": "السعة (بالأيام)"
+    },
+    {
+      "source_text": "Cannot Merge",
+      "translated_text": "لا يمكن الدمج"
+    },
+    {
+      "source_text": "COGS Debit",
+      "translated_text": "مدين تكلفة البضاعة المباعة"
+    },
+    {
+      "source_text": "COGS By Item Group",
+      "translated_text": "تكلفة البضاعة المباعة حسب مجموعة الأصناف"
+    },
+    {
+      "source_text": "Buffer Time",
+      "translated_text": "وقت احتياطي"
+    },
+    {
+      "source_text": "Bin Qty Recalculated",
+      "translated_text": "تمت إعادة حساب كمية الحاوية"
+    },
+    {
+      "source_text": "Batchwise Valuation",
+      "translated_text": "تقييم حسب الدفعة"
+    },
+    {
+      "source_text": "Batch Qty updated successfully",
+      "translated_text": "تم تحديث كمية الدفعة بنجاح"
+    },
+    {
+      "source_text": "Batch Qty",
+      "translated_text": "كمية الدفعة"
+    },
+    {
+      "source_text": "Batch No is mandatory",
+      "translated_text": "رقم الدفعة إلزامي"
+    },
+    {
+      "source_text": "Batch Expiry Date",
+      "translated_text": "تاريخ انتهاء الدفعة"
+    },
+    {
+      "source_text": "Balance Stock Value",
+      "translated_text": "قيمة رصيد المخزون"
+    },
+    {
+      "source_text": "Balance Stock Qty",
+      "translated_text": "كمية رصيد المخزون"
+    },
+    {
+      "source_text": "Balance Qty (Stock)",
+      "translated_text": "كمية الرصيد (المخزون)"
+    },
+    {
+      "source_text": "BOM Info",
+      "translated_text": "معلومات قائمة المواد"
+    },
+    {
+      "source_text": "Avg Rate (Balance Stock)",
+      "translated_text": "متوسط السعر (رصيد المخزون)"
+    },
+    {
+      "source_text": "Avg Rate",
+      "translated_text": "متوسط السعر"
+    },
+    {
+      "source_text": "Available Serial No",
+      "translated_text": "تقرير الأرقام التسلسلية المتاحة"
+    },
+    {
+      "source_text": "Available Qty to Reserve",
+      "translated_text": "الكمية المتاحة للحجز"
+    },
+    {
+      "source_text": "Available Batch Report",
+      "translated_text": "تقرير الدفعات المتاحة"
+    },
+    {
+      "source_text": "Auto Reserve Stock",
+      "translated_text": "حجز المخزون تلقائيا"
+    },
+    {
+      "source_text": "Auto Reserve Serial and Batch Nos",
+      "translated_text": "حجز الأرقام التسلسلية والدفعات تلقائيا"
+    },
+    {
+      "source_text": "Auto Created Serial and Batch Bundle",
+      "translated_text": "مجموعة تسلسل ودفعة منشأة تلقائيا"
+    },
+    {
+      "source_text": "Auto Created (Reorder)",
+      "translated_text": "منشأ تلقائيا (إعادة طلب)"
+    },
+    {
+      "source_text": "Auto Create Serial and Batch Bundle For Outward",
+      "translated_text": "إنشاء مجموعة تسلسل ودفعة تلقائيا للصادر"
+    },
+    {
+      "source_text": "Apply to Document",
+      "translated_text": "تطبيق على المستند"
+    },
+    {
+      "source_text": "Apply to All Inventory Documents",
+      "translated_text": "تطبيق على كل مستندات المخزون"
+    },
+    {
+      "source_text": "Apply Putaway Rule",
+      "translated_text": "تطبيق قاعدة التخزين"
+    },
+    {
+      "source_text": "Amount Difference with Purchase Invoice",
+      "translated_text": "فرق المبلغ مع فاتورة الشراء"
+    },
+    {
+      "source_text": "Already Picked",
+      "translated_text": "تم انتقاؤه بالفعل"
+    },
+    {
+      "source_text": "Allow Zero Rate",
+      "translated_text": "السماح بسعر صفري"
+    },
+    {
+      "source_text": "Allow Sales",
+      "translated_text": "السماح بالبيع"
+    },
+    {
+      "source_text": "Allow Purchase",
+      "translated_text": "السماح بالشراء"
+    },
+    {
+      "source_text": "Allow Partial Reservation",
+      "translated_text": "السماح بالحجز الجزئي"
+    },
+    {
+      "source_text": "Allow Internal Transfers at Arm's Length Price",
+      "translated_text": "السماح بالتحويلات الداخلية بسعر مستقل"
+    },
+    {
+      "source_text": "Age ({0})",
+      "translated_text": "العمر ({0})"
+    },
+    {
+      "source_text": "Against Pick List",
+      "translated_text": "مقابل قائمة الانتقاء"
+    },
+    {
+      "source_text": "Against Finished Good",
+      "translated_text": "مقابل المنتج النهائي"
+    },
+    {
+      "source_text": "Affected Transactions",
+      "translated_text": "المعاملات المتأثرة"
+    },
+    {
+      "source_text": "Actual Balance Qty",
+      "translated_text": "كمية الرصيد الفعلية"
+    },
+    {
+      "source_text": "Action If Quality Inspection Is Rejected",
+      "translated_text": "الإجراء عند رفض فحص الجودة"
+    },
+    {
+      "source_text": "Accounting Entry for LCV in Stock Entry {0}",
+      "translated_text": "قيد محاسبي لسند التكلفة الإضافية في قيد المخزون {0}"
+    },
+    {
+      "source_text": "% Occupied",
+      "translated_text": "نسبة الإشغال"
+    },
+    {
+      "source_text": "% Installed",
+      "translated_text": "نسبة المركب"
+    }
+  ],
+  "nonempty_matches": [
+    {
+      "source_text": "Delivery To",
+      "translated_text": "التسليم إلى",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Zero Stock Items",
+      "translated_text": "تضمين أصناف المخزون الصفري",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Expired Batches",
+      "translated_text": "تضمين الدفعات المنتهية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Transit Transfer",
+      "translated_text": "نقل قيد العبور",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Empty Stock",
+      "translated_text": "تجاهل المخزون الفارغ",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Closing Balance",
+      "translated_text": "تجاهل الرصيد الختامي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Height (cm)",
+      "translated_text": "الارتفاع (سم)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Operating Cost",
+      "translated_text": "له تكلفة تشغيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Corrective Cost",
+      "translated_text": "له تكلفة تصحيحية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Goods",
+      "translated_text": "بضائع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Generate Stock Closing Entry",
+      "translated_text": "إنشاء قيد إغلاق المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GL reposting index",
+      "translated_text": "فهرس إعادة ترحيل دفتر الأستاذ العام",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Type",
+      "translated_text": "من نوع السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher No",
+      "translated_text": "من رقم السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Detail No",
+      "translated_text": "من رقم تفاصيل السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Formula Based Criteria",
+      "translated_text": "معيار مبني على صيغة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fetch Value From",
+      "translated_text": "جلب القيمة من",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO/LIFO Queue",
+      "translated_text": "طابور FIFO/LIFO",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue vs Qty After Transaction Comparison",
+      "translated_text": "مقارنة طابور FIFO مع الكمية بعد المعاملة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue",
+      "translated_text": "طابور FIFO",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expiry",
+      "translated_text": "انتهاء الصلاحية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Stock Value",
+      "translated_text": "قيمة المخزون المتوقعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Balance Qty",
+      "translated_text": "كمية الرصيد المتوقعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Errors Notification",
+      "translated_text": "إشعار الأخطاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "End Transit",
+      "translated_text": "إنهاء العبور",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Stock Reservation",
+      "translated_text": "تمكين حجز المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Parallel Reposting",
+      "translated_text": "تمكين إعادة الترحيل المتوازي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Edit Capacity",
+      "translated_text": "تعديل السعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Duplicate Serial Number Error",
+      "translated_text": "خطأ رقم تسلسلي مكرر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Use Batch-wise Valuation",
+      "translated_text": "عدم استخدام التقييم حسب الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Update Serial / Batch on Creation of Auto Bundle",
+      "translated_text": "عدم تحديث التسلسل/الدفعة عند إنشاء المجموعة تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dispatch Address Template",
+      "translated_text": "قالب عنوان الإرسال",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disassemble",
+      "translated_text": "تفكيك",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Serial No And Batch Selector",
+      "translated_text": "تعطيل محدد الرقم التسلسلي والدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dimension Details",
+      "translated_text": "تفاصيل البُعد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference In",
+      "translated_text": "الفرق في",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference Account in Items Table",
+      "translated_text": "حساب الفرق في جدول الأصناف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Description of Content",
+      "translated_text": "وصف المحتوى",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery Note Packed Item",
+      "translated_text": "صنف معبأ في إذن التسليم",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivered Qty (in Stock UOM)",
+      "translated_text": "الكمية المسلمة (بوحدة قياس المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delete Dimension",
+      "translated_text": "حذف البُعد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deferred Accounting Defaults",
+      "translated_text": "إعدادات المحاسبة المؤجلة الافتراضية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Provisional Account (Service)",
+      "translated_text": "الحساب المؤقت الافتراضي (خدمة)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Discount Account",
+      "translated_text": "حساب الخصم الافتراضي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default COGS Account",
+      "translated_text": "حساب تكلفة البضاعة المباعة الافتراضي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Daily Yield (%)",
+      "translated_text": "الإنتاجية اليومية (%)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customer Provided Item Cost",
+      "translated_text": "تكلفة الصنف المقدم من العميل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Serial / Batch Bundle",
+      "translated_text": "مجموعة التسلسل/الدفعة الحالية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Index",
+      "translated_text": "الفهرس الحالي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Creation",
+      "translated_text": "الإنشاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Stock Entry",
+      "translated_text": "إنشاء قيد مخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entry",
+      "translated_text": "إنشاء قيد إعادة ترحيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entries",
+      "translated_text": "إنشاء قيود إعادة ترحيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Grouped Asset",
+      "translated_text": "إنشاء أصل مجمع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Delivery Note",
+      "translated_text": "إنشاء إذن تسليم",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Ledger",
+      "translated_text": "تحويل إلى دفتر الأستاذ",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Item Based Reposting",
+      "translated_text": "التحويل إلى إعادة ترحيل حسب الصنف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert Item Description to Clean HTML in Transactions",
+      "translated_text": "تحويل وصف الصنف إلى HTML نظيف في المعاملات",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Control Historical Stock Transactions",
+      "translated_text": "التحكم في معاملات المخزون السابقة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consumption Rate",
+      "translated_text": "معدل الاستهلاك",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consider Rejected Warehouses",
+      "translated_text": "احتساب مستودعات المرفوضات",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditional Rule",
+      "translated_text": "قاعدة شرطية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Check Availability in Warehouse",
+      "translated_text": "فحص التوفر في المستودع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Change in Stock Value",
+      "translated_text": "التغير في قيمة المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Caution: This might alter frozen accounts.",
+      "translated_text": "تنبيه: قد يغير هذا الحسابات المجمدة.",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier Service",
+      "translated_text": "خدمة الناقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier",
+      "translated_text": "الناقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity must be greater than 0",
+      "translated_text": "يجب أن تكون السعة أكبر من 0",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity in Stock UOM",
+      "translated_text": "السعة بوحدة قياس المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (Stock UOM)",
+      "translated_text": "السعة (بوحدة قياس المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (In Days)",
+      "translated_text": "السعة (بالأيام)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot Merge",
+      "translated_text": "لا يمكن الدمج",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS Debit",
+      "translated_text": "مدين تكلفة البضاعة المباعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS By Item Group",
+      "translated_text": "تكلفة البضاعة المباعة حسب مجموعة الأصناف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Buffer Time",
+      "translated_text": "وقت احتياطي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bin Qty Recalculated",
+      "translated_text": "تمت إعادة حساب كمية الحاوية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batchwise Valuation",
+      "translated_text": "تقييم حسب الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty updated successfully",
+      "translated_text": "تم تحديث كمية الدفعة بنجاح",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty",
+      "translated_text": "كمية الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No is mandatory",
+      "translated_text": "رقم الدفعة إلزامي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Expiry Date",
+      "translated_text": "تاريخ انتهاء الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Value",
+      "translated_text": "قيمة رصيد المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Qty",
+      "translated_text": "كمية رصيد المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Qty (Stock)",
+      "translated_text": "كمية الرصيد (المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "BOM Info",
+      "translated_text": "معلومات قائمة المواد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate (Balance Stock)",
+      "translated_text": "متوسط السعر (رصيد المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate",
+      "translated_text": "متوسط السعر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Serial No",
+      "translated_text": "تقرير الأرقام التسلسلية المتاحة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Qty to Reserve",
+      "translated_text": "الكمية المتاحة للحجز",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Batch Report",
+      "translated_text": "تقرير الدفعات المتاحة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Stock",
+      "translated_text": "حجز المخزون تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Serial and Batch Nos",
+      "translated_text": "حجز الأرقام التسلسلية والدفعات تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created Serial and Batch Bundle",
+      "translated_text": "مجموعة تسلسل ودفعة منشأة تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created (Reorder)",
+      "translated_text": "منشأ تلقائيا (إعادة طلب)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Create Serial and Batch Bundle For Outward",
+      "translated_text": "إنشاء مجموعة تسلسل ودفعة تلقائيا للصادر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to Document",
+      "translated_text": "تطبيق على المستند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to All Inventory Documents",
+      "translated_text": "تطبيق على كل مستندات المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply Putaway Rule",
+      "translated_text": "تطبيق قاعدة التخزين",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amount Difference with Purchase Invoice",
+      "translated_text": "فرق المبلغ مع فاتورة الشراء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Already Picked",
+      "translated_text": "تم انتقاؤه بالفعل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Zero Rate",
+      "translated_text": "السماح بسعر صفري",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Sales",
+      "translated_text": "السماح بالبيع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Purchase",
+      "translated_text": "السماح بالشراء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Partial Reservation",
+      "translated_text": "السماح بالحجز الجزئي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Internal Transfers at Arm's Length Price",
+      "translated_text": "السماح بالتحويلات الداخلية بسعر مستقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Age ({0})",
+      "translated_text": "العمر ({0})",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Pick List",
+      "translated_text": "مقابل قائمة الانتقاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Finished Good",
+      "translated_text": "مقابل المنتج النهائي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Affected Transactions",
+      "translated_text": "المعاملات المتأثرة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Actual Balance Qty",
+      "translated_text": "كمية الرصيد الفعلية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Action If Quality Inspection Is Rejected",
+      "translated_text": "الإجراء عند رفض فحص الجودة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Accounting Entry for LCV in Stock Entry {0}",
+      "translated_text": "قيد محاسبي لسند التكلفة الإضافية في قيد المخزون {0}",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Occupied",
+      "translated_text": "نسبة الإشغال",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Installed",
+      "translated_text": "نسبة المركب",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    }
+  ],
+  "matches": [
+    {
+      "source_text": "If not, you can Cancel / Submit this entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Balance Qty",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "ISBN-10",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Create Serial and Batch Bundle For Outward",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Duplicate Serial Number Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (Stock UOM)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "AMC Expiry (Serial)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Goods",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expiry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Actual Balance Qty",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "An error has been appeared while reposting item valuation via {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Change in Stock Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consumed quantity of item {0} exceeds transferred quantity.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Detail No",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Generate Stock Closing Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch {0} and Warehouse",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(C) Total Qty in Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entries",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For quantity {0} should not be greater than allowed quantity {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Applied putaway rules.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Item Based Reposting",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Sales",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Height (cm)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create a variant with the template image.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(B) Expected Qty After Transaction",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Index",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO/LIFO Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fetch Value From",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Acceptance Criteria Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fix SABB Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Corrective Cost",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable it if users want to consider rejected materials to dispatch.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "EAN",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier Service",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "CODE-39",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Expired Batches",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Serial No",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From and To dates are required",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Qty",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Accounting Entry for LCV in Stock Entry {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consumption Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No {0} does not exists",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Ledger",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Creation",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Purchase",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery Note Packed Item",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery To",
+      "translated_text": "التسليم إلى",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Discount Account",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A logical Warehouse against which stock entries are made.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default COGS Account",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivered Qty (in Stock UOM)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "D - E",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(G) Sum of Change in Stock Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Qty to Reserve",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allows to keep aside a specific quantity of inventory for a particular order.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'To Package No.' cannot be less than 'From Package No.'",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Operating Cost",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'Inspection Required before Delivery' has disabled for the item {0}, no need to create the QI",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Duplicate Stock Closing Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Distinct Item and Warehouse",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity must be greater than 0",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Errors Notification",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Parallel Reposting",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For the item {0}, the quantity should be {1} according to the BOM {2}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "At row {0}: Batch No is mandatory for Item {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher No",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot cancel as processing of cancelled documents is pending.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Installed",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Action If Quality Inspection Is Rejected",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cost of Goods Sold Account in Items Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(E) Balance Stock Value in Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dispatch Address Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Attribute value: {0} must appear only once",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Company which internal customer represents.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Empty Stock",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Serial and Batch Nos",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "If yes, then this warehouse will be used to store rejected materials",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Distribute Manually",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "At least one warehouse is mandatory",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "If checked, picked qty won't automatically be fulfilled on submit of pick list.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "If enabled then system won't override the picked qty / batches / serial numbers / warehouse.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GTIN",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Serial No And Batch Selector",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A - B",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dependant SLE Voucher Detail No",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customer Provided Item Cost",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Stock",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty updated successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Variant UOM to be different from Template UOM",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(A) Qty After Transaction",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Also you can't switch back to FIFO after setting the valuation method to Moving Average for this item.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "At row {0}: Qty is mandatory for the batch {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Description of Content",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(H) Change in Stock Value (FIFO Queue)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Email or Phone/Mobile of the Contact are mandatory to continue.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default settings for your stock-related transactions",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot cancel the transaction. Reposting of item valuation on submission is not completed yet.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Age ({0})",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(J) Valuation Rate as per FIFO",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Batch Report",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Control Historical Stock Transactions",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Stock Reservation",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "EAN-8",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bin Qty Recalculated",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(D) Balance Stock Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Accounting Entry for {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No is mandatory",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Have Default Naming Series for Batch ID?",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "At row {0}: Serial No is mandatory for Item {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Example of a linked document: {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "I - K",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow existing Serial No to be Manufactured/Received again",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "For the convenience of customers, these codes can be used in print formats like Invoices and Delivery Notes",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "As {0} is enabled, you can not enable {1}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (In Days)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A driver must be set to submit.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Internal Transfers at Arm's Length Price",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% of materials delivered against this Pick List",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply Putaway Rule",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disables auto-fetching of existing quantity",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consider Rejected Warehouses",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Zero Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Formula Based Criteria",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow to Edit Stock UOM Qty for Sales Documents",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Due to stock closing entry {0}, you cannot repost item valuation before {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Already Picked",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No {0} is not present in the original {1} {2}, hence you can't return it against the {1} {2}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": " Is Child Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "As there are existing submitted transactions against item {0}, you can not change the value of {1}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "EAN-12",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A - C",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Finished Good Quantity ",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Add Serial / Batch No (Rejected Qty)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Transit Transfer",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue vs Qty After Transaction Comparison",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Error while reposting item valuation",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "As there are reserved stock, you cannot disable {0}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Applied on each reading.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Grouped Asset",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "All items have already been received",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delete Dimension",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "ISBN",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Update Serial / Batch on Creation of Auto Bundle",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Provisional Account (Service)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GL reposting index",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Here are the options to proceed:",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "According to the BOM {0}, the Item '{1}' is missing in the stock entry.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Occupied",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Allow Partial Reservation in the Stock Settings to reserve partial stock.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty updated to {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(K) Valuation = Value (D) ÷ Qty (A)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A Price List is a collection of Item Prices either Selling, Buying, or both",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Buffer Time",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enter an Item Code, the name will be auto-filled the same as Item Code on clicking inside the Item Name field.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Delivery Note",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Adjustment based on Purchase Invoice rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot amend {0} {1}, please create a new one instead.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity in Stock UOM",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amount Difference with Purchase Invoice",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Acceptance Criteria Formula",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Charges are updated in Purchase Receipt against each item",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "BOM Info",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "At Row #{0}: The picked quantity {1} for the item {2} is greater than available stock {3} in the warehouse {4}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Finished Good",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Daily Yield (%)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "ISBN-13",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(I) Valuation Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(Total Workstation Time / Manufacturing Time) * 60",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Generate packing slips for packages to be delivered. Used to notify package number, package contents and its weight.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Hi,",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Stock for Sales Order on Purchase",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Get stops from",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Insert Item Price If Missing",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Charges will be distributed proportionately based on item qty or amount, as per your selection",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Different 'Source Warehouse' and 'Target Warehouse' can be set for each row.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Serial / Batch Bundle",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batchwise Valuation",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Closing Balance",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot Merge",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GS1",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditional Rule Examples",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS Debit",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Stock Queue (qty, rate)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(C) Total qty in queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Distinct unit of an Item",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A naming series conflict occurred while creating serial numbers. Please change the naming series for the item {0}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do you want to change valuation method?",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Qty (Stock)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disabled Warehouse {0} cannot be used for this transaction.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Finished Item {0} does not match with Work Order {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Expiry Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "H - F",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to All Inventory Documents",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Example: Serial No {0} reserved in {1}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Alternative Item must be checked on Item {}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Partial Reservation",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A Packing Slip can only be created for Draft Delivery Note.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Affected Transactions",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Check Availability in Warehouse",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Edit Capacity",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Creating Packing Slip ...",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Any one of following filters required: warehouse, Item Code, Item Group",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'Inspection Required before Purchase' has disabled for the item {0}, no need to create the QI",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disassemble",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "G - D",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery to",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(F) Change in Stock Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Nos are created successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(H) Valuation Rate",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "A Product or a Service that is bought, sold or kept in stock.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Pick List",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow to Make Quality Inspection after Purchase / Delivery",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "I - J",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deferred Accounting Defaults",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No {0} is linked with Item {1} which has serial no. Please scan serial no instead.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created (Reorder)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Caution: This might alter frozen accounts.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Booking stock value across multiple accounts will make it harder to track stock and account value.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference In",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference Account in Items Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Transit Warehouse",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "If enabled then system won't apply the pricing rule on the delivery note which will be create from the pick list",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dimension Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "End Transit",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Use Batch-wise Valuation",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Zero Stock Items",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created Serial and Batch Bundle",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Stock Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(Daily Yield * No of Units Produced) / 100",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditional Rule",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "ISSN",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate (Balance Stock)",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow to Edit Stock UOM Qty for Purchase Documents",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS By Item Group",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Abbreviation: {0} must appear only once",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Stock Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do you still want to enable negative inventory?",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "(Good Units Produced / Total Units Produced) × 100",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow UOM with Conversion Rate Defined in Item",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot create Stock Reservation Entries for future dated Purchase Receipts.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enter the opening stock units.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "AWB Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert Item Description to Clean HTML in Transactions",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Zero Stock Items",
+      "translated_text": "تضمين أصناف المخزون الصفري",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Include Expired Batches",
+      "translated_text": "تضمين الدفعات المنتهية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "In Transit Transfer",
+      "translated_text": "نقل قيد العبور",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Empty Stock",
+      "translated_text": "تجاهل المخزون الفارغ",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Ignore Closing Balance",
+      "translated_text": "تجاهل الرصيد الختامي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Height (cm)",
+      "translated_text": "الارتفاع (سم)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Operating Cost",
+      "translated_text": "له تكلفة تشغيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Has Corrective Cost",
+      "translated_text": "له تكلفة تصحيحية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Goods",
+      "translated_text": "بضائع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Generate Stock Closing Entry",
+      "translated_text": "إنشاء قيد إغلاق المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "GL reposting index",
+      "translated_text": "فهرس إعادة ترحيل دفتر الأستاذ العام",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Type",
+      "translated_text": "من نوع السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher No",
+      "translated_text": "من رقم السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "From Voucher Detail No",
+      "translated_text": "من رقم تفاصيل السند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Formula Based Criteria",
+      "translated_text": "معيار مبني على صيغة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Fetch Value From",
+      "translated_text": "جلب القيمة من",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO/LIFO Queue",
+      "translated_text": "طابور FIFO/LIFO",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue vs Qty After Transaction Comparison",
+      "translated_text": "مقارنة طابور FIFO مع الكمية بعد المعاملة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "FIFO Queue",
+      "translated_text": "طابور FIFO",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expiry",
+      "translated_text": "انتهاء الصلاحية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Stock Value",
+      "translated_text": "قيمة المخزون المتوقعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Expected Balance Qty",
+      "translated_text": "كمية الرصيد المتوقعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Errors Notification",
+      "translated_text": "إشعار الأخطاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "End Transit",
+      "translated_text": "إنهاء العبور",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Stock Reservation",
+      "translated_text": "تمكين حجز المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Enable Parallel Reposting",
+      "translated_text": "تمكين إعادة الترحيل المتوازي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Edit Capacity",
+      "translated_text": "تعديل السعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Duplicate Serial Number Error",
+      "translated_text": "خطأ رقم تسلسلي مكرر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Use Batch-wise Valuation",
+      "translated_text": "عدم استخدام التقييم حسب الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Do Not Update Serial / Batch on Creation of Auto Bundle",
+      "translated_text": "عدم تحديث التسلسل/الدفعة عند إنشاء المجموعة تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dispatch Address Template",
+      "translated_text": "قالب عنوان الإرسال",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disassemble",
+      "translated_text": "تفكيك",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Disable Serial No And Batch Selector",
+      "translated_text": "تعطيل محدد الرقم التسلسلي والدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Dimension Details",
+      "translated_text": "تفاصيل البُعد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference In",
+      "translated_text": "الفرق في",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Difference Account in Items Table",
+      "translated_text": "حساب الفرق في جدول الأصناف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Description of Content",
+      "translated_text": "وصف المحتوى",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivery Note Packed Item",
+      "translated_text": "صنف معبأ في إذن التسليم",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delivered Qty (in Stock UOM)",
+      "translated_text": "الكمية المسلمة (بوحدة قياس المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Delete Dimension",
+      "translated_text": "حذف البُعد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Deferred Accounting Defaults",
+      "translated_text": "إعدادات المحاسبة المؤجلة الافتراضية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Provisional Account (Service)",
+      "translated_text": "الحساب المؤقت الافتراضي (خدمة)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default Discount Account",
+      "translated_text": "حساب الخصم الافتراضي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Default COGS Account",
+      "translated_text": "حساب تكلفة البضاعة المباعة الافتراضي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Daily Yield (%)",
+      "translated_text": "الإنتاجية اليومية (%)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Customer Provided Item Cost",
+      "translated_text": "تكلفة الصنف المقدم من العميل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Serial / Batch Bundle",
+      "translated_text": "مجموعة التسلسل/الدفعة الحالية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Current Index",
+      "translated_text": "الفهرس الحالي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Creation",
+      "translated_text": "الإنشاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Stock Entry",
+      "translated_text": "إنشاء قيد مخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entry",
+      "translated_text": "إنشاء قيد إعادة ترحيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Reposting Entries",
+      "translated_text": "إنشاء قيود إعادة ترحيل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Grouped Asset",
+      "translated_text": "إنشاء أصل مجمع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Create Delivery Note",
+      "translated_text": "إنشاء إذن تسليم",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Ledger",
+      "translated_text": "تحويل إلى دفتر الأستاذ",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert to Item Based Reposting",
+      "translated_text": "التحويل إلى إعادة ترحيل حسب الصنف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Convert Item Description to Clean HTML in Transactions",
+      "translated_text": "تحويل وصف الصنف إلى HTML نظيف في المعاملات",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Control Historical Stock Transactions",
+      "translated_text": "التحكم في معاملات المخزون السابقة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consumption Rate",
+      "translated_text": "معدل الاستهلاك",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Consider Rejected Warehouses",
+      "translated_text": "احتساب مستودعات المرفوضات",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Conditional Rule",
+      "translated_text": "قاعدة شرطية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Check Availability in Warehouse",
+      "translated_text": "فحص التوفر في المستودع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Change in Stock Value",
+      "translated_text": "التغير في قيمة المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Caution: This might alter frozen accounts.",
+      "translated_text": "تنبيه: قد يغير هذا الحسابات المجمدة.",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier Service",
+      "translated_text": "خدمة الناقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Carrier",
+      "translated_text": "الناقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity must be greater than 0",
+      "translated_text": "يجب أن تكون السعة أكبر من 0",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity in Stock UOM",
+      "translated_text": "السعة بوحدة قياس المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (Stock UOM)",
+      "translated_text": "السعة (بوحدة قياس المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Capacity (In Days)",
+      "translated_text": "السعة (بالأيام)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Cannot Merge",
+      "translated_text": "لا يمكن الدمج",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS Debit",
+      "translated_text": "مدين تكلفة البضاعة المباعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "COGS By Item Group",
+      "translated_text": "تكلفة البضاعة المباعة حسب مجموعة الأصناف",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Buffer Time",
+      "translated_text": "وقت احتياطي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Bin Qty Recalculated",
+      "translated_text": "تمت إعادة حساب كمية الحاوية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batchwise Valuation",
+      "translated_text": "تقييم حسب الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty updated successfully",
+      "translated_text": "تم تحديث كمية الدفعة بنجاح",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Qty",
+      "translated_text": "كمية الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch No is mandatory",
+      "translated_text": "رقم الدفعة إلزامي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Batch Expiry Date",
+      "translated_text": "تاريخ انتهاء الدفعة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Value",
+      "translated_text": "قيمة رصيد المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Stock Qty",
+      "translated_text": "كمية رصيد المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Balance Qty (Stock)",
+      "translated_text": "كمية الرصيد (المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "BOM Info",
+      "translated_text": "معلومات قائمة المواد",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate (Balance Stock)",
+      "translated_text": "متوسط السعر (رصيد المخزون)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Avg Rate",
+      "translated_text": "متوسط السعر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Serial No",
+      "translated_text": "تقرير الأرقام التسلسلية المتاحة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Qty to Reserve",
+      "translated_text": "الكمية المتاحة للحجز",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Available Batch Report",
+      "translated_text": "تقرير الدفعات المتاحة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Stock",
+      "translated_text": "حجز المخزون تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Reserve Serial and Batch Nos",
+      "translated_text": "حجز الأرقام التسلسلية والدفعات تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created Serial and Batch Bundle",
+      "translated_text": "مجموعة تسلسل ودفعة منشأة تلقائيا",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Created (Reorder)",
+      "translated_text": "منشأ تلقائيا (إعادة طلب)",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Auto Create Serial and Batch Bundle For Outward",
+      "translated_text": "إنشاء مجموعة تسلسل ودفعة تلقائيا للصادر",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to Document",
+      "translated_text": "تطبيق على المستند",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply to All Inventory Documents",
+      "translated_text": "تطبيق على كل مستندات المخزون",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Apply Putaway Rule",
+      "translated_text": "تطبيق قاعدة التخزين",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Amount Difference with Purchase Invoice",
+      "translated_text": "فرق المبلغ مع فاتورة الشراء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Already Picked",
+      "translated_text": "تم انتقاؤه بالفعل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Zero Rate",
+      "translated_text": "السماح بسعر صفري",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Sales",
+      "translated_text": "السماح بالبيع",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Purchase",
+      "translated_text": "السماح بالشراء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Partial Reservation",
+      "translated_text": "السماح بالحجز الجزئي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Allow Internal Transfers at Arm's Length Price",
+      "translated_text": "السماح بالتحويلات الداخلية بسعر مستقل",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Age ({0})",
+      "translated_text": "العمر ({0})",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Pick List",
+      "translated_text": "مقابل قائمة الانتقاء",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Against Finished Good",
+      "translated_text": "مقابل المنتج النهائي",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Affected Transactions",
+      "translated_text": "المعاملات المتأثرة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Actual Balance Qty",
+      "translated_text": "كمية الرصيد الفعلية",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Action If Quality Inspection Is Rejected",
+      "translated_text": "الإجراء عند رفض فحص الجودة",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Accounting Entry for LCV in Stock Entry {0}",
+      "translated_text": "قيد محاسبي لسند التكلفة الإضافية في قيد المخزون {0}",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Occupied",
+      "translated_text": "نسبة الإشغال",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "% Installed",
+      "translated_text": "نسبة المركب",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    }
+  ],
+  "note": "Authoritative dump 20736 runtime rows. 115 ct_origin='Site Override' preserves (113 exact + 2 whitespace-variant drift); 17 identifier/letter technical tokens; 118 new Released payload rows appended.",
+  "disposition": {
+    "preserved_site_override": 115,
+    "already_released_catalog": 0,
+    "exception_technical": 17,
+    "quorum_confirmed_payload": 118,
+    "total": 250
+  }
+}

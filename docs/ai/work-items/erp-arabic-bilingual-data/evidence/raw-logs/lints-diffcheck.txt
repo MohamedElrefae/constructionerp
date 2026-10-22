@@ -1,0 +1,8 @@
+COMMAND: python3 scripts/lint_scope_metadata.py && python3 scripts/lint_translation_writes.py && git diff --check
+STARTED_UTC: 2026-09-04T21:13:56Z
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+SCOPE_EXIT: 0
+Translation write lint PASSED
+TRANSLATION_EXIT: 0
+DIFFCHECK_EXIT: 0
+FINISHED_UTC: 2026-09-04T21:13:57Z

@@ -1,0 +1,84 @@
+diff --git a/construction/construction/doctype/variation_order/variation_order.js b/construction/construction/doctype/variation_order/variation_order.js
+index c6f99e9..f6bff4a 100644
+--- a/construction/construction/doctype/variation_order/variation_order.js
++++ b/construction/construction/doctype/variation_order/variation_order.js
+@@ -5,7 +5,49 @@
+ // the controller's state machine, FIDIC 25 percent rule, and signed-PDF
+ // gate remain authoritative.
+ 
+-	frappe.ui.form.on("Variation Order", {
++(function () {
++	function setFieldAccent(frm, fieldname, active, blocked) {
++		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
++		if (!$wrapper.length) return;
++		$wrapper.toggleClass("ct-boq-step-accent", !!active);
++		$wrapper.toggleClass("ct-boq-step-blocked", !!blocked);
++	}
++
++	function setFieldInlineHint(frm, fieldname, hint, blocked) {
++		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
++		if (!$wrapper.length) return;
++		const $help = $wrapper.find(".help").first();
++		if (!$help.length) return;
++		$wrapper.toggleClass("ct-boq-has-inline-hint", !!hint);
++		$wrapper.toggleClass("ct-boq-inline-hint-blocked", !!blocked);
++		$help.find(".ct-boq-inline-hint").remove();
++		if (hint) {
++			$help.append(
++				$("<span>", {
++					class: "ct-boq-inline-hint",
++					text: hint,
++					title: hint,
++				})
++			);
++		}
++	}
++
++	function applyVOBoqGuidance(frm) {
++		const field = frm.fields_dict && frm.fields_dict.boq_header;
++		if (field) {
++			field.__ct_boq_blocked = false;
++		}
++		const hasHeader = Boolean(frm.doc.boq_header);
++		setFieldAccent(frm, "boq_header", !hasHeader, false);
++		setFieldInlineHint(
++			frm,
++			"boq_header",
++			hasHeader ? null : __("Select BOQ Header first"),
++			false
++		);
++	}
++
++frappe.ui.form.on("Variation Order", {
+ 	setup(frm) {
+ 		frm.set_query("boq_header", () => {
+ 			const filters = { allowed_statuses: ["Locked"] };
+@@ -59,9 +101,11 @@
+ 		apply_variation_order_status_ui(frm);
+ 		apply_variation_order_workflow_buttons(frm);
+ 		render_variation_order_indicators(frm);
++		applyVOBoqGuidance(frm);
+ 	},
+ 
+ 	boq_header(frm) {
++		applyVOBoqGuidance(frm);
+ 		if (!frm.doc.boq_header) return;
+ 		frappe.db.get_value("BOQ Header", frm.doc.boq_header, "status").then((r) => {
+ 			const status = r?.message?.status;
+@@ -78,6 +122,11 @@
+ 		apply_variation_order_status_ui(frm);
+ 		render_variation_order_indicators(frm);
+ 	},
++	onload_post_render(frm) {
++		applyVOBoqGuidance(frm);
++		setTimeout(() => applyVOBoqGuidance(frm), 150);
++		setTimeout(() => applyVOBoqGuidance(frm), 600);
++	},
+ });
+ 
+ frappe.ui.form.on("VO Line", {
+@@ -394,3 +443,4 @@ function apply_vo_line_readonly_state(frm, cdt, cdn) {
+ 	grid_row.toggle_editable("rate_change_justification", is_editable);
+ 	grid_row.toggle_editable("notes", is_editable);
+ }
++})();

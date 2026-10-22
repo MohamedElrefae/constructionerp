@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "phase": 3,
+  "status": "INITIALIZED_DISPATCH_PENDING_TRANSFER_AUTHORIZATION",
+  "recorded_utc": "2026-09-10T23:29:14.471441+00:00",
+  "controller_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability",
+  "execution_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+  "reason_for_separate_execution_checkout": "Uncommitted Phase 2 controller correction and evidence remain preserved in the control worktree; clean execution root prevents accidental inclusion in the pilot candidate.",
+  "controller_source_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+  "execution_base": "4b77803af418cea8459c4cb7d9a0248674845da3",
+  "branch": "feature/scope-context-portability",
+  "scope": {
+    "allowed_paths": [
+      "scripts/ai_context_check.py",
+      "scripts/lint_scope_metadata.py",
+      "tests_offline/"
+    ],
+    "requirements": [
+      "SCP-R1",
+      "SCP-R2",
+      "SCP-R3",
+      "SCP-R4",
+      "SCP-R5",
+      "SCP-R6",
+      "SCP-R7"
+    ],
+    "requirement_descriptions": {
+      "SCP-R1": "Derive repo root using Path(__file__).resolve().parents[1]; pass derived root to schema_drift_checker.py in Check 8B.",
+      "SCP-R2": "Import-safe main() with __main__ guard; importing performs no checks or sys.exit.",
+      "SCP-R3": "Argparse --repo-root, --json and --help; never prompt or require --site/TARGET_SITE.",
+      "SCP-R4": "Preserve checks/failure semantics; missing or malformed input yields clear recorded FAIL and exit 1 without traceback.",
+      "SCP-R5": "Prove lint_scope_metadata.py offline path independence; change only for demonstrated gap.",
+      "SCP-R6": "Root tests_offline/conftest.py prevents Frappe package imports. Cover scope-field violations, malformed JSON, drift subprocess behavior, changed CWD, relocated copy, import safety and CLI exits.",
+      "SCP-R7": "Fresh-copy gate: pytest tests_offline and both checkers pass from clean copied checkout without site or app/Frappe packages. Preserve fixture-vs-real-evidence distinction."
+    },
+    "validation_commands": [
+      [
+        "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+        "-m",
+        "pytest",
+        "tests_offline/",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      [
+        "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+        "scripts/ai_context_check.py",
+        "--json"
+      ],
+      [
+        "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+        "scripts/lint_scope_metadata.py"
+      ]
+    ],
+    "requirement_paths": {
+      "SCP-R1": [
+        "scripts/ai_context_check.py"
+      ],
+      "SCP-R2": [
+        "scripts/ai_context_check.py"
+      ],
+      "SCP-R3": [
+        "scripts/ai_context_check.py"
+      ],
+      "SCP-R4": [
+        "scripts/ai_context_check.py"
+      ],
+      "SCP-R5": [
+        "scripts/lint_scope_metadata.py"
+      ],
+      "SCP-R6": [
+        "scripts/ai_context_check.py"
+      ],
+      "SCP-R7": [
+        "scripts/ai_context_check.py"
+      ]
+    },
+    "constraints": [
+      "Architecture and plan review only until explicit owner PLAN token; no builder launch before that gate.",
+      "No Git commit, push, merge, native tool reconfiguration, external memory/MCP calls, or ERP/site operations.",
+      "Read and work only in the execution root; never access /home/mohamed/frappe-bench/apps/construction or private ERP data.",
+      "Do not execute the old ai_context_check.py before its hard-coded root is removed; inspect it as source only.",
+      "Keep frozen orchestrator and all files outside allowed_paths unchanged.",
+      "Existing approved Phase 1/2 evidence is historical, do not rerun it.",
+      "All pilot validation is offline; use the provided stdlib+pytest environment, no package downloads or Frappe imports.",
+      "Architect must identify genuine baseline blockers rather than weakening checks or manufacturing findings. Test fixtures must not substitute for the real fresh-copy gate."
+    ],
+    "control_runtime": "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator",
+    "control_source_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+    "execution_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+    "test_python": "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python"
+  },
+  "scope_file": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/pilot-scope.json",
+  "dispatched_jobs": 0,
+  "owner_grants": 0,
+  "builder_started": false,
+  "project_commits_created": 0,
+  "erp_operations": 0,
+  "approval_review_rejection": "Native Codex dispatch rejected: explicit payload/destination consent required for checker source and plan transfer to external Codex provider. No workaround attempted.",
+  "next_action": "Obtain scoped external transfer authorization, then run through architect and independent reviewer; stop at owner PLAN gate."
+}

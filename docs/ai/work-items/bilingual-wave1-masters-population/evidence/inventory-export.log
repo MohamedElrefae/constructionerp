@@ -1,0 +1,37 @@
+WAVE1_INVENTORY_EXPORT v1 site=v16.localhost
+ITEM_TOTAL 43
+ITEM_NON_FIXTURE 14
+ITEM_IN_SCOPE 8
+ITEM_SCAFFOLD_EXCEPTIONS ['Loyal Item', 'Stock-Reco-Serial-Item-1', 'Stock-Reco-Serial-Item-2', 'Stock-Reco-batch-Item-1', 'Test Asset Item', 'Test Esstimate']
+ITEM_UNCLASSIFIED_NON_FIXTURE []
+ITEM_NON_FIXTURE_ALREADY_POPULATED []
+ROW ITEM IN_SCOPE name='138-CMS Shoe' label='138-CMS Shoe' arabic=None
+ROW ITEM IN_SCOPE name='Consulting' label='Consulting' arabic=None
+ROW ITEM IN_SCOPE name='LAB-MASON-001`' label='LAB-MASON-001`' arabic=None
+ROW ITEM SCAFFOLD name='Loyal Item' label='Loyal Item' arabic=None
+ROW ITEM IN_SCOPE name='Macbook Pro' label='Macbook Pro' arabic=None
+ROW ITEM IN_SCOPE name='OH-SITE-ADMIN-001' label='OH-SITE-ADMIN-001' arabic=None
+ROW ITEM IN_SCOPE name='PLANT-MIXER-001' label='PLANT-MIXER-001' arabic=None
+ROW ITEM IN_SCOPE name='Photocopier' label='Photocopier' arabic=None
+ROW ITEM IN_SCOPE name='SUBCONCRETE-001' label='SUBCONCRETE-001' arabic=None
+ROW ITEM SCAFFOLD name='Stock-Reco-Serial-Item-1' label='Stock-Reco-Serial-Item-1' arabic=None
+ROW ITEM SCAFFOLD name='Stock-Reco-Serial-Item-2' label='Stock-Reco-Serial-Item-2' arabic=None
+ROW ITEM SCAFFOLD name='Stock-Reco-batch-Item-1' label='Stock-Reco-batch-Item-1' arabic=None
+ROW ITEM SCAFFOLD name='Test Asset Item' label='Test Asset Item' arabic=None
+ROW ITEM SCAFFOLD name='Test Esstimate' label='MAT-CEMENT-001' arabic=None
+CUSTOMER_TOTAL 12
+CUSTOMER_NON_FIXTURE 2
+CUSTOMER_IN_SCOPE 1
+CUSTOMER_SCAFFOLD_EXCEPTIONS ['Test Loyalty Customer']
+CUSTOMER_UNCLASSIFIED_NON_FIXTURE []
+CUSTOMER_NON_FIXTURE_ALREADY_POPULATED []
+ROW CUSTOMER IN_SCOPE name='Prestiga-Biz' label='Prestiga-Biz' arabic=None
+ROW CUSTOMER SCAFFOLD name='Test Loyalty Customer' label='Test Loyalty Customer' arabic=None
+SUPPLIER_TOTAL 10
+SUPPLIER_NON_FIXTURE 0
+SUPPLIER_IN_SCOPE 0
+SUPPLIER_SCAFFOLD_EXCEPTIONS []
+SUPPLIER_UNCLASSIFIED_NON_FIXTURE []
+SUPPLIER_NON_FIXTURE_ALREADY_POPULATED []
+SUMMARY {"customers": [12, 2, 1], "items": [43, 14, 8], "suppliers": [10, 0, 0]}
+INVENTORY RESULT: PASS (R1 allowlist matches live site; pre-state empty)

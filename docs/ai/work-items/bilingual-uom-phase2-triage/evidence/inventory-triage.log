@@ -1,0 +1,295 @@
+============================================================
+UOM PHASE 2+ TRIAGE INVENTORY EXPORT
+Base commit: 5d96f12
+Total UOM rows: 253
+============================================================
+
+--- Phase 1 Frozen (15 rows) ---
+  BAG (BAG) - name in Phase 1 frozen allowlist
+  Box (Box) - name in Phase 1 frozen allowlist
+  DAY (DAY) - name in Phase 1 frozen allowlist
+  HR (HR) - name in Phase 1 frozen allowlist
+  KG (KG) - name in Phase 1 frozen allowlist
+  LS (LS) - name in Phase 1 frozen allowlist
+  LTR (LTR) - name in Phase 1 frozen allowlist
+  M (M) - name in Phase 1 frozen allowlist
+  M2 (M2) - name in Phase 1 frozen allowlist
+  M3 (M3) - name in Phase 1 frozen allowlist
+  Nos (Nos) - name in Phase 1 frozen allowlist
+  PCS (PCS) - name in Phase 1 frozen allowlist
+  SET (SET) - name in Phase 1 frozen allowlist
+  TON (TON) - name in Phase 1 frozen allowlist
+  Tonne (Tonne) - name in Phase 1 frozen allowlist
+Total: 15
+
+--- Vendor Fixtures (2 rows, never translated) ---
+  _Test UOM (_Test UOM) - name starts with _Test (absolute fixture rule)
+  _Test UOM 1 (_Test UOM 1) - name starts with _Test (absolute fixture rule)
+Total: 2
+
+--- F4-Pruned (2 rows: Pint (US), Acre) ---
+  Acre (Acre) - name F4-pruned (in_use, untranslated, Phase 2+ candidate)
+  Pint (US) (Pint (US)) - name F4-pruned (in_use, untranslated, Phase 2+ candidate)
+Total: 2
+
+--- Disabled Rows ---
+Total: 0
+
+--- In-Use Units (non-fixture, live references) ---
+Total: 0
+
+--- Phase 2A - Priority Construction & Engineering Physical Units ---
+  Ampere (Ampere) - Priority Construction & Engineering Physical Unit
+  Centimeter (Centimeter) - Priority Construction & Engineering Physical Unit
+  Cubic Centimeter (Cubic Centimeter) - Priority Construction & Engineering Physical Unit
+  Cubic Foot (Cubic Foot) - Priority Construction & Engineering Physical Unit
+  Cubic Meter (Cubic Meter) - Priority Construction & Engineering Physical Unit
+  Cubic Yard (Cubic Yard) - Priority Construction & Engineering Physical Unit
+  Foot (Foot) - Priority Construction & Engineering Physical Unit
+  Gram (Gram) - Priority Construction & Engineering Physical Unit
+  Horsepower (Horsepower) - Priority Construction & Engineering Physical Unit
+  Hour (Hour) - Priority Construction & Engineering Physical Unit
+  Inch (Inch) - Priority Construction & Engineering Physical Unit
+  Joule (Joule) - Priority Construction & Engineering Physical Unit
+  Kilojoule (Kilojoule) - Priority Construction & Engineering Physical Unit
+  Kilometer (Kilometer) - Priority Construction & Engineering Physical Unit
+  Kilowatt (Kilowatt) - Priority Construction & Engineering Physical Unit
+  Meter (Meter) - Priority Construction & Engineering Physical Unit
+  Milligram (Milligram) - Priority Construction & Engineering Physical Unit
+  Millimeter (Millimeter) - Priority Construction & Engineering Physical Unit
+  Minute (Minute) - Priority Construction & Engineering Physical Unit
+  Ounce (Ounce) - Priority Construction & Engineering Physical Unit
+  Pound (Pound) - Priority Construction & Engineering Physical Unit
+  Second (Second) - Priority Construction & Engineering Physical Unit
+  Square Foot (Square Foot) - Priority Construction & Engineering Physical Unit
+  Square Meter (Square Meter) - Priority Construction & Engineering Physical Unit
+  Square Yard (Square Yard) - Priority Construction & Engineering Physical Unit
+  Tesla (Tesla) - Priority Construction & Engineering Physical Unit
+  Watt (Watt) - Priority Construction & Engineering Physical Unit
+  Week (Week) - Priority Construction & Engineering Physical Unit
+  Yard (Yard) - Priority Construction & Engineering Physical Unit
+Total: 29 (target: 30-45)
+
+--- Phase 2B - Commercial, Packaging & Material Handling Units ---
+  Pair (Pair) - Commercial, Packaging & Material Handling Unit
+Total: 1 (target: 20-30)
+
+--- Phase 2C / Exclusions (~160+ rows) ---
+  Abampere (Abampere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Acre (US) (Acre (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ampere-Hour (Ampere-Hour) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ampere-Minute (Ampere-Minute) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ampere-Second (Ampere-Second) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Are (Are) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Area (Area) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Arshin (Arshin) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Atmosphere (Atmosphere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Bar (Bar) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Barleycorn (Barleycorn) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Barrel (Oil) (Barrel (Oil)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Barrel(Beer) (Barrel(Beer)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Biot (Biot) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Btu (It) (Btu (It)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Btu (Mean) (Btu (Mean)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Btu (Th) (Btu (Th)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Btu/Hour (Btu/Hour) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Btu/Minutes (Btu/Minutes) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Btu/Seconds (Btu/Seconds) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Bushel (UK) (Bushel (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Bushel (US Dry Level) (Bushel (US Dry Level)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Caballeria (Caballeria) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cable Length (Cable Length) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cable Length (UK) (Cable Length (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cable Length (US) (Cable Length (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Calibre (Calibre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Calorie (Food) (Calorie (Food)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Calorie (It) (Calorie (It)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Calorie (Mean) (Calorie (Mean)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Calorie (Th) (Calorie (Th)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Calorie/Seconds (Calorie/Seconds) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Carat (Carat) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Celsius (Celsius) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cental (Cental) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Centiarea (Centiarea) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Centigram/Litre (Centigram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Centilitre (Centilitre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Chain (Chain) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Coulomb (Coulomb) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cubic Decimeter (Cubic Decimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cubic Inch (Cubic Inch) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cubic Millimeter (Cubic Millimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cup (Cup) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Cycle/Second (Cycle/Second) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Decigram/Litre (Decigram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Decilitre (Decilitre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Decimeter (Decimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Dekagram/Litre (Dekagram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Dram (Dram) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Dyne (Dyne) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ells (UK) (Ells (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ems(Pica) (Ems(Pica)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  EMU Of Charge (EMU Of Charge) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  EMU of current (EMU of current) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Erg (Erg) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Fahrenheit (Fahrenheit) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Faraday (Faraday) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Fathom (Fathom) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Fluid Ounce (UK) (Fluid Ounce (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Fluid Ounce (US) (Fluid Ounce (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Foot Of Water (Foot Of Water) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Foot/Minute (Foot/Minute) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Foot/Second (Foot/Second) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Furlong (Furlong) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gallon (UK) (Gallon (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gallon Dry (US) (Gallon Dry (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gallon Liquid (US) (Gallon Liquid (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gamma (Gamma) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gauss (Gauss) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Grain (Grain) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Grain/Cubic Foot (Grain/Cubic Foot) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Grain/Gallon (UK) (Grain/Gallon (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Grain/Gallon (US) (Grain/Gallon (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gram-Force (Gram-Force) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gram/Cubic Centimeter (Gram/Cubic Centimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gram/Cubic Meter (Gram/Cubic Meter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gram/Cubic Millimeter (Gram/Cubic Millimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Gram/Litre (Gram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hand (Hand) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hectare (Hectare) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hectogram/Litre (Hectogram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hectometer (Hectometer) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hectopascal (Hectopascal) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hertz (Hertz) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Horsepower-Hours (Horsepower-Hours) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hundredweight (UK) (Hundredweight (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Hundredweight (US) (Hundredweight (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Iches Of Water (Iches Of Water) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Inch Pound-Force (Inch Pound-Force) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Inch/Minute (Inch/Minute) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Inch/Second (Inch/Second) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Inches Of Mercury (Inches Of Mercury) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Joule/Meter (Joule/Meter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kelvin (Kelvin) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kiloampere (Kiloampere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilocalorie (Kilocalorie) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilocoulomb (Kilocoulomb) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilogram-Force (Kilogram-Force) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilogram/Cubic Centimeter (Kilogram/Cubic Centimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilogram/Cubic Meter (Kilogram/Cubic Meter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilogram/Litre (Kilogram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilohertz (Kilohertz) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilometer/Hour (Kilometer/Hour) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilopascal (Kilopascal) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilopond (Kilopond) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilopound-Force (Kilopound-Force) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kilowatt-Hour (Kilowatt-Hour) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Kip (Kip) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Knot (Knot) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Link (Link) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Litre (Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Litre-Atmosphere (Litre-Atmosphere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Manzana (Manzana) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Medio Metro (Medio Metro) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Megacoulomb (Megacoulomb) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Megagram/Litre (Megagram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Megahertz (Megahertz) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Megajoule (Megajoule) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Megawatt (Megawatt) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Meter Of Water (Meter Of Water) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Meter/Second (Meter/Second) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Microbar (Microbar) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Microgram (Microgram) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Microgram/Litre (Microgram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Micrometer (Micrometer) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Microsecond (Microsecond) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Mile (Mile) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Mile (Nautical) (Mile (Nautical)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Mile/Hour (Mile/Hour) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Mile/Minute (Mile/Minute) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Mile/Second (Mile/Second) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Milibar (Milibar) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Milliampere (Milliampere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Millicoulomb (Millicoulomb) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Milligram/Cubic Centimeter (Milligram/Cubic Centimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Milligram/Cubic Meter (Milligram/Cubic Meter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Milligram/Cubic Millimeter (Milligram/Cubic Millimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Milligram/Litre (Milligram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Millihertz (Millihertz) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Millilitre (Millilitre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Millimeter Of Mercury (Millimeter Of Mercury) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Millimeter Of Water (Millimeter Of Water) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Millisecond (Millisecond) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Nanocoulomb (Nanocoulomb) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Nanogram/Litre (Nanogram/Litre) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Nanohertz (Nanohertz) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Nanometer (Nanometer) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Nanosecond (Nanosecond) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Newton (Newton) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ounce-Force (Ounce-Force) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ounce/Cubic Foot (Ounce/Cubic Foot) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ounce/Cubic Inch (Ounce/Cubic Inch) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ounce/Gallon (UK) (Ounce/Gallon (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ounce/Gallon (US) (Ounce/Gallon (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Parts Per Million (Parts Per Million) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pascal (Pascal) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Peck (Peck) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Peck (UK) (Peck (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Peck (US) (Peck (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Percent (Percent) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pint (UK) (Pint (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pint, Dry (US) (Pint, Dry (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pint, Liquid (US) (Pint, Liquid (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pond (Pond) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pood (Pood) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pound-Force (Pound-Force) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pound/Cubic Foot (Pound/Cubic Foot) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pound/Cubic Inch (Pound/Cubic Inch) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pound/Cubic Yard (Pound/Cubic Yard) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pound/Gallon (UK) (Pound/Gallon (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Pound/Gallon (US) (Pound/Gallon (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Poundal (Poundal) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Psi/1000 Feet (Psi/1000 Feet) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Quart (UK) (Quart (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Quart Dry (US) (Quart Dry (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Quart Liquid (US) (Quart Liquid (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Quintal (Quintal) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Rod (Rod) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Sazhen (Sazhen) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Slug (Slug) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Slug/Cubic Foot (Slug/Cubic Foot) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Square Centimeter (Square Centimeter) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Square Inch (Square Inch) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Square Kilometer (Square Kilometer) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Square Mile (Square Mile) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Stone (Stone) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Tablespoon (US) (Tablespoon (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Teaspoon (Teaspoon) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Technical Atmosphere (Technical Atmosphere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ton (Long)/Cubic Yard (Ton (Long)/Cubic Yard) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ton (Short)/Cubic Yard (Ton (Short)/Cubic Yard) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ton-Force (UK) (Ton-Force (UK)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Ton-Force (US) (Ton-Force (US)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Tonne-Force(Metric) (Tonne-Force(Metric)) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Torr (Torr) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Unit (Unit) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Vara (Vara) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Versta (Versta) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Volt-Ampere (Volt-Ampere) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Watt-Hour (Watt-Hour) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Wavelength In Gigametres (Wavelength In Gigametres) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Wavelength In Kilometres (Wavelength In Kilometres) - Enabled unused vendor seed unit - Phase 2C Exclusion
+  Wavelength In Megametres (Wavelength In Megametres) - Enabled unused vendor seed unit - Phase 2C Exclusion
+Total: 204 (Phase 2C Exclusion - no Arabic values drafted)
+
+============================================================
+TRIAGE SUMMARY
+Phase 1 Frozen:        15 / 15
+Vendor Fixtures:       2 / 2 (never translated)
+F4-Pruned:             2 rows (Phase 2+ candidates)
+Disabled:              0 
+In-Use:                0
+Phase 2A:              29 / (30-45)
+Phase 2B:              1 / (20-30)
+Phase 2C Exclusions:   204 / (160+)
+============================================================
+PHASE1_FROZEN_MATCH YES - derived allowlist matches frozen literal exactly.

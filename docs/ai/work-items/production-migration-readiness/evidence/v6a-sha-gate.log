@@ -1,0 +1,6 @@
+CMD: runner --dry-run --values /tmp/opencode/tampered_values.json
+runner_sha16=2d1f3581b1acbc83
+PREFLIGHT site=v16.localhost gate=allowlist production_mutation_authorized=False
+PREFLIGHT registry: 15 doctypes, arabic+norm fields present
+RESULT: FAIL — values bundle sha256 17ffe3fd7ad7b8a1 != committed 7390a0c87f8ebab1 (owner-approval binding broken)
+rc=1

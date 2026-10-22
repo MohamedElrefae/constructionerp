@@ -1,0 +1,299 @@
+{
+ "app": "construction",
+ "doctype": "Sidebar",
+ "header_icon": "building",
+ "items": [
+  {
+   "doctype": "Sidebar Item",
+   "idx": 1,
+   "label": "Home",
+   "link_to": "Construction",
+   "link_type": "Workspace",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 2,
+   "label": "Work areas",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 3,
+   "label": "Site execution",
+   "link_to": "Site Work",
+   "link_type": "Workspace",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 4,
+   "label": "Estimating and commercial",
+   "link_to": "Estimating and Commercial",
+   "link_type": "Workspace",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 5,
+   "label": "Procurement and stores",
+   "link_to": "Procurement and Stores",
+   "link_type": "Workspace",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 6,
+   "label": "Finance",
+   "link_to": "Finance",
+   "link_type": "Workspace",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 7,
+   "label": "Cost database",
+   "link_to": "Cost Database",
+   "link_type": "Workspace",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 8,
+   "label": "BOQ management",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 9,
+   "label": "BOQ Header",
+   "link_to": "BOQ Header",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 10,
+   "label": "BOQ Structure",
+   "link_to": "BOQ Structure",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 11,
+   "label": "BOQ Item",
+   "link_to": "BOQ Item",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 12,
+   "label": "BOQ Item Stage",
+   "link_to": "BOQ Item Stage",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 13,
+   "label": "BOQ Import Batch",
+   "link_to": "BOQ Import Batch",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 14,
+   "label": "BOQ Cost Analysis",
+   "link_to": "BOQ Cost Analysis",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 15,
+   "label": "Change control",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 16,
+   "label": "Variation Order",
+   "link_to": "Variation Order",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 17,
+   "label": "BOQ Quantity Revision",
+   "link_to": "BOQ Quantity Revision",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 18,
+   "label": "Rates and prices",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 19,
+   "label": "Resource Price History",
+   "link_to": "Resource Price History",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 20,
+   "label": "Item",
+   "link_to": "Item",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 21,
+   "label": "Item Price",
+   "link_to": "Item Price",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 22,
+   "label": "Reports and views",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 23,
+   "label": "Construction Report Viewer",
+   "link_to": "construction-report-viewer",
+   "link_type": "Page",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 24,
+   "label": "Cost Database Workbench",
+   "link_to": "cost-database-workbench",
+   "link_type": "Page",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 25,
+   "label": "Themes and scope",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 26,
+   "label": "Construction Theme",
+   "link_to": "Construction Theme",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 27,
+   "label": "Modern Theme Settings",
+   "link_to": "Modern Theme Settings",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 28,
+   "label": "User Desk Theme",
+   "link_to": "User Desk Theme",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 29,
+   "label": "User Scope Context",
+   "link_to": "User Scope Context",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 30,
+   "label": "Construction Settings",
+   "link_to": "Construction Settings",
+   "link_type": "DocType",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
+  }
+ ],
+ "module": "construction",
+ "name": "Construction Home",
+ "standard": 1,
+ "title": "Construction Home"
+}

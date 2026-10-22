@@ -1,0 +1,15 @@
+CMD: runner 
+runner_sha16=2d1f3581b1acbc83
+PREFLIGHT site=v16.localhost gate=allowlist production_mutation_authorized=False
+PREFLIGHT registry: 15 doctypes, arabic+norm fields present
+PREFLIGHT values: rows=188 sha256=7390a0c87f8ebab1…
+PREFLIGHT schema: arabic+norm columns present, utf8mb4 on all 15 tables
+PREFLIGHT hooks: enforce_*_policy bound on all 15 doctypes (Account=governed)
+PREFLIGHT backup: 20261005_215245-v16_localhost-database.sql.gz (1 min old)
+PREFLIGHT redis: queue:11000, cache:13000
+CLASSIFY {"ABSENT": 0, "ALREADY_APPLIED": 188, "CONFLICT": 0, "WOULD_WRITE": 0}
+COMMIT: all rows persisted
+APPLY {"ROOT_SAVES": 0, "SAVED": 0, "SKIPPED": 188}
+FINAL {"ABSENT": 0, "ALREADY_APPLIED": 188, "CONFLICT": 0, "WOULD_WRITE": 0}
+RESULT: PASS apply (0.6s)
+rc=0

@@ -1,0 +1,168 @@
+test_bad_timestamp_fails (__main__.TestCSVQuorum.test_bad_timestamp_fails) ... ok
+test_decision_mutation_invalidates (__main__.TestCSVQuorum.test_decision_mutation_invalidates) ... ok
+test_decisions_load_once_per_invocation (__main__.TestCSVQuorum.test_decisions_load_once_per_invocation) ... ok
+test_duplicate_identity_fails (__main__.TestCSVQuorum.test_duplicate_identity_fails) ... ok
+test_edge_whitespace_source_is_checked_without_trimming (__main__.TestCSVQuorum.test_edge_whitespace_source_is_checked_without_trimming) ... ok
+test_missing_a2_timestamp_fails (__main__.TestCSVQuorum.test_missing_a2_timestamp_fails) ... ok
+test_missing_decision_ref_fails (__main__.TestCSVQuorum.test_missing_decision_ref_fails) ... ok
+test_valid_row_passes (__main__.TestCSVQuorum.test_valid_row_passes) ... ok
+test_wrong_header_fails (__main__.TestCSVQuorum.test_wrong_header_fails) ... ok
+test_context_duplicates_allowed (__main__.TestFullCheckPO.test_context_duplicates_allowed) ... ok
+test_fuzzy_fails (__main__.TestFullCheckPO.test_fuzzy_fails) ... ok
+test_html_attr_mismatch_fails (__main__.TestFullCheckPO.test_html_attr_mismatch_fails) ... ok
+test_plural_completeness_enforced (__main__.TestFullCheckPO.test_plural_completeness_enforced) ... ok
+test_plural_union_placeholders (__main__.TestFullCheckPO.test_plural_union_placeholders) ... ok
+test_allowlist_missing_fails_closed (__main__.TestGates.test_allowlist_missing_fails_closed) ... ok
+test_bad_po_fails_each_rule (__main__.TestGates.test_bad_po_fails_each_rule) ... ok
+test_bidi_rejected (__main__.TestGates.test_bidi_rejected) ... ok
+test_changed_files_empty_target_set_fails (__main__.TestGates.test_changed_files_empty_target_set_fails) ... ok
+test_changed_files_traversal_rejected (__main__.TestGates.test_changed_files_traversal_rejected) ... ok
+test_csv_exact_header_enforced (__main__.TestGates.test_csv_exact_header_enforced) ... ok
+test_good_po_passes (__main__.TestGates.test_good_po_passes) ... ok
+test_main_state_is_per_call (__main__.TestGates.test_main_state_is_per_call) ... ok
+test_printf_variants_recognized (__main__.TestGates.test_printf_variants_recognized) ... ok
+test_unsafe_html_rejected (__main__.TestGates.test_unsafe_html_rejected) ... ok
+test_context_distinguishes_duplicates (__main__.TestPOParser.test_context_distinguishes_duplicates) ... ok
+test_escapes_decoded (__main__.TestPOParser.test_escapes_decoded) ... ok
+test_malformed_line_rejected (__main__.TestPOParser.test_malformed_line_rejected) ... ok
+test_obsolete_excluded (__main__.TestPOParser.test_obsolete_excluded) ... ok
+test_valid_po_parses_clean (__main__.TestPOParser.test_valid_po_parses_clean) ... ok
+test_context_shift_detected (__main__.TestRound3Gates.test_context_shift_detected) ... ok
+test_data_json_owned (__main__.TestRound3Gates.test_data_json_owned) ... ok
+test_decision_content_binding (__main__.TestRound3Gates.test_decision_content_binding) ... ok
+test_html_vue_routing (__main__.TestRound3Gates.test_html_vue_routing) ... ok
+test_manifest_binding_fields (__main__.TestRound3Gates.test_manifest_binding_fields) ... ok
+test_no_dynamic_in_repo (__main__.TestRound3Gates.test_no_dynamic_in_repo) ... ok
+test_retired_bad_line_fails (__main__.TestRound3Gates.test_retired_bad_line_fails) ... ok
+test_retired_schema_enforced (__main__.TestRound3Gates.test_retired_schema_enforced) ... ok
+test_retired_valid_entry_accepted (__main__.TestRound3Gates.test_retired_valid_entry_accepted) ... ok
+test_workspace_json_routing (__main__.TestRound3Gates.test_workspace_json_routing) ... ok
+test_ast_alias_and_frappe_underscore_skipped (__main__.TestRound4Gates.test_ast_alias_and_frappe_underscore_skipped) ... ok
+test_ast_multiline_literal_caught (__main__.TestRound4Gates.test_ast_multiline_literal_caught) ... ok
+test_ast_variable_flagged (__main__.TestRound4Gates.test_ast_variable_flagged) ... ok
+test_baseline_refuses_without_delta (__main__.TestRound4Gates.test_baseline_refuses_without_delta) ... ok
+test_baseline_same_commit_change_refused (__main__.TestRound4Gates.test_baseline_same_commit_change_refused) ... ok
+test_canonical_delta_deterministic (__main__.TestRound4Gates.test_canonical_delta_deterministic) ... ok
+test_ci_source_only_is_rejected_outside_github_actions (__main__.TestRound4Gates.test_ci_source_only_is_rejected_outside_github_actions) ... ok
+test_ci_source_only_runs_full_source_scan_without_historical_evidence (__main__.TestRound4Gates.test_ci_source_only_runs_full_source_scan_without_historical_evidence) ... ok
+test_contract_source_drift_is_refused (__main__.TestRound4Gates.test_contract_source_drift_is_refused)
+A source artifact that no longer matches the frozen pin is refused. ... ok
+test_critical_policy_matches_freshness (__main__.TestRound4Gates.test_critical_policy_matches_freshness) ... ok
+test_current_contract_is_pinned_to_the_live_source_artifacts (__main__.TestRound4Gates.test_current_contract_is_pinned_to_the_live_source_artifacts)
+The frozen contract is tied to real source artifacts, not to bare numbers. ... ok
+test_decision_object_tamper_invalidates (__main__.TestRound4Gates.test_decision_object_tamper_invalidates) ... ok
+test_delta_cli_cross_root_isolation (__main__.TestRound4Gates.test_delta_cli_cross_root_isolation) ... ok
+test_delta_cli_distinct_commits_and_write_location (__main__.TestRound4Gates.test_delta_cli_distinct_commits_and_write_location) ... ok
+test_delta_refused_without_reviewed_file (__main__.TestRound4Gates.test_delta_refused_without_reviewed_file) ... ok
+test_evidence_aggregate_arithmetic_rejected (__main__.TestRound4Gates.test_evidence_aggregate_arithmetic_rejected) ... ok
+test_evidence_arbitrary_command_rejected (__main__.TestRound4Gates.test_evidence_arbitrary_command_rejected) ... ok
+test_evidence_bad_utc_order_rejected (__main__.TestRound4Gates.test_evidence_bad_utc_order_rejected) ... ok
+test_evidence_coherent_totals_forgery_rejected (__main__.TestRound4Gates.test_evidence_coherent_totals_forgery_rejected) ... ok
+test_evidence_duplicate_content_rejected (__main__.TestRound4Gates.test_evidence_duplicate_content_rejected) ... ok
+test_evidence_duplicate_hash_rejected (__main__.TestRound4Gates.test_evidence_duplicate_hash_rejected) ... ok
+test_evidence_duplicate_index_row_rejected (__main__.TestRound4Gates.test_evidence_duplicate_index_row_rejected) ... ok
+test_evidence_hidden_failure_rejected (__main__.TestRound4Gates.test_evidence_hidden_failure_rejected) ... ok
+test_evidence_index_artifact_value_forged_rejected (__main__.TestRound4Gates.test_evidence_index_artifact_value_forged_rejected) ... ok
+test_evidence_index_false_length_rejected (__main__.TestRound4Gates.test_evidence_index_false_length_rejected) ... ok
+test_evidence_isolated_site_accepted (__main__.TestRound4Gates.test_evidence_isolated_site_accepted)
+A capture set bound to the authorized isolated site validates. ... ok
+test_evidence_junk_index_line_rejected (__main__.TestRound4Gates.test_evidence_junk_index_line_rejected) ... ok
+test_evidence_length_marker_rejected (__main__.TestRound4Gates.test_evidence_length_marker_rejected) ... ok
+test_evidence_markerless_data_rejected_in_site_aware_mode (__main__.TestRound4Gates.test_evidence_markerless_data_rejected_in_site_aware_mode)
+Site-less legacy data must not be accepted as current isolated-site evidence. ... ok
+test_evidence_missing_extra_duplicate_rejected (__main__.TestRound4Gates.test_evidence_missing_extra_duplicate_rejected) ... ok
+test_evidence_nonzero_exit_rejected (__main__.TestRound4Gates.test_evidence_nonzero_exit_rejected) ... ok
+test_evidence_traversal_rejected (__main__.TestRound4Gates.test_evidence_traversal_rejected) ... ok
+test_evidence_truncated_rejected (__main__.TestRound4Gates.test_evidence_truncated_rejected) ... ok
+test_evidence_valid_set_passes (__main__.TestRound4Gates.test_evidence_valid_set_passes) ... ok
+test_evidence_wrong_site_rejected (__main__.TestRound4Gates.test_evidence_wrong_site_rejected)
+A capture set recorded for another site is rejected. ... ok
+test_forged_provenance_refused (__main__.TestRound4Gates.test_forged_provenance_refused) ... ok
+test_forged_shift_omission_refused (__main__.TestRound4Gates.test_forged_shift_omission_refused) ... ok
+test_freshness_critical_tamper_rejected (__main__.TestRound4Gates.test_freshness_critical_tamper_rejected) ... ok
+test_freshness_future_audit_rejected (__main__.TestRound4Gates.test_freshness_future_audit_rejected) ... ok
+test_freshness_strict_future_rejected (__main__.TestRound4Gates.test_freshness_strict_future_rejected) ... ok
+test_legacy_binding_rejects_unknown_row (__main__.TestRound4Gates.test_legacy_binding_rejects_unknown_row) ... ok
+test_legacy_contract_values_are_preserved (__main__.TestRound4Gates.test_legacy_contract_values_are_preserved)
+The historical (2026-09-29) expectation is kept, not silently overwritten. ... ok
+test_legacy_evidence_set_is_rejected_by_the_current_contract (__main__.TestRound4Gates.test_legacy_evidence_set_is_rejected_by_the_current_contract)
+The two expectations are distinct; neither is inferred from the data. ... ok
+test_legacy_evidence_set_validates_under_the_legacy_contract (__main__.TestRound4Gates.test_legacy_evidence_set_validates_under_the_legacy_contract)
+The historical verification path still accepts its own expectation. ... ok
+test_manifest_binds_inventory_and_decisions (__main__.TestRound4Gates.test_manifest_binds_inventory_and_decisions) ... ok
+test_py_sink_wrapped_passes_raw_fails (__main__.TestRound4Gates.test_py_sink_wrapped_passes_raw_fails) ... ok
+test_raw_missing_fails_and_brand_disposition_passes (__main__.TestRound4Gates.test_raw_missing_fails_and_brand_disposition_passes) ... ok
+test_raw_template_text_detected (__main__.TestRound4Gates.test_raw_template_text_detected) ... ok
+test_retired_invalid_delete_rejected (__main__.TestRound4Gates.test_retired_invalid_delete_rejected) ... ok
+test_retired_rename_lifecycle (__main__.TestRound4Gates.test_retired_rename_lifecycle) ... ok
+test_retired_valid_delete_accepted (__main__.TestRound4Gates.test_retired_valid_delete_accepted) ... ok
+test_same_commit_change_refused_without_delta (__main__.TestRound4Gates.test_same_commit_change_refused_without_delta) ... ok
+test_scoped_positive_run_passes (__main__.TestRound4Gates.test_scoped_positive_run_passes) ... ok
+test_site_classification_present (__main__.TestRound4Gates.test_site_classification_present) ... ok
+test_strip_template_removes_code (__main__.TestRound4Gates.test_strip_template_removes_code) ... ok
+test_underscore_import_rule (__main__.TestRound4Gates.test_underscore_import_rule) ... ok
+test_unreviewed_delta_rejected (__main__.TestRound4Gates.test_unreviewed_delta_rejected) ... ok
+test_update_baselines_refuses_unreviewed_move (__main__.TestRound4Gates.test_update_baselines_refuses_unreviewed_move) ... ok
+test_absent_file_fails_closed (__main__.TestRoutingAndVendor.test_absent_file_fails_closed) ... ok
+test_dynamic_call_detected (__main__.TestRoutingAndVendor.test_dynamic_call_detected) ... ok
+test_json_invalid_fails (__main__.TestRoutingAndVendor.test_json_invalid_fails) ... ok
+test_vendor_absent_fails_closed (__main__.TestRoutingAndVendor.test_vendor_absent_fails_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 101 tests in 19.830s
+
+OK
+FAIL files-traversal: rejected '../nope.po'
+checked={} errors=1
+FAIL files-traversal: rejected '../nope2.po'
+checked={} errors=1
+SKIP construction/print_format/bilingual_material_request/bilingual_material_request.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_purchase_order/bilingual_purchase_order.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_sales_invoice/bilingual_sales_invoice.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_stock_entry/bilingual_stock_entry.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL frappe tree absent
+checked={} errors=1
+checked={} errors=0
+SKIP construction/print_format/bilingual_material_request/bilingual_material_request.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_purchase_order/bilingual_purchase_order.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_sales_invoice/bilingual_sales_invoice.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_stock_entry/bilingual_stock_entry.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL evidence-artifact-mismatch: BASELINE_SHA256 values ['b433566a1fb0221c32d74cee5aad6cd7f0fc051e4d7e236be1d6f6b2bbb7949c'] disagree or != live 3994d2248894…
+FAIL evidence-artifact-mismatch: CHECKER_SHA256 values ['54fa583cb250b4707c8dd8f88b6c1454c15fd16d6db6ff667ef7c0dcec0642bb'] disagree or != live 206393f298fa…
+FAIL evidence-artifact-mismatch: CSV_SHA256 values ['0a55f3c120cf1ac381c0564407cdc7a9ea975782d68642c6a943807cdd70b421'] disagree or != live 845ab43ea0be…
+FAIL evidence-artifact-mismatch: DECISIONS_SHA256 values ['bf7a58336d712eef99214268ea3d1275367b8c6b0a0714c0c51a18134f9cb268'] disagree or != live 26844891fdc9…
+FAIL evidence-artifact-mismatch: ERPNext_PO_SHA256 values ['2dfe0a5d07b091d1d34563fa53aac9f4665519aa9672303b4cd6fe3b2d705275'] disagree or != live 54c346cc2e46…
+FAIL evidence-artifact-mismatch: FRAPPE_PO_SHA256 values ['cc353e76ebd37c0ef0d72f79cf0c081a460cfa5fe6846dcf36d122384c225502'] disagree or != live ad0c7b27c040…
+FAIL evidence-artifact-mismatch: FRESHNESS_SHA256 values ['ba2d839df0d922ba86181051d4cc52712684fb3b72b5b2f6f77ae6190407f3ca'] disagree or != live 683f91831038…
+FAIL evidence-artifact-mismatch: MANIFEST_SHA256 values ['adbd3d8d40102b8517494b39f910531bb64d4cb8ea01f99f037cced0f31895dc'] disagree or != live 816ccc57fb23…
+FAIL evidence-artifact-mismatch: PO_SHA256 values ['af343ac233cac0e022aa1d84fef87943cd94eff78d364f842115614be56c3698'] disagree or != live 8b065ad4ae18…
+FAIL evidence-artifact-mismatch: TESTS_SHA256 values ['73e6c6ebdb132ef753eef6560dbfe00cb1ecdcd9afcb3b04f48eeb64619dd6a2'] disagree or != live cb286f9d7077…
+FAIL evidence-index-artifact-value: BASELINE_SHA256 index b433566a1fb0… != live 3994d2248894…
+FAIL evidence-index-artifact-value: CHECKER_SHA256 index 54fa583cb250… != live 206393f298fa…
+FAIL evidence-index-artifact-value: CSV_SHA256 index 0a55f3c120cf… != live 845ab43ea0be…
+FAIL evidence-index-artifact-value: DECISIONS_SHA256 index bf7a58336d71… != live 26844891fdc9…
+FAIL evidence-index-artifact-value: ERPNext_PO_SHA256 index 2dfe0a5d07b0… != live 54c346cc2e46…
+FAIL evidence-index-artifact-value: FRAPPE_PO_SHA256 index cc353e76ebd3… != live ad0c7b27c040…
+FAIL evidence-index-artifact-value: FRESHNESS_SHA256 index ba2d839df0d9… != live 683f91831038…
+FAIL evidence-index-artifact-value: MANIFEST_SHA256 index adbd3d8d4010… != live 816ccc57fb23…
+FAIL evidence-index-artifact-value: PO_SHA256 index af343ac233ca… != live 8b065ad4ae18…
+FAIL evidence-index-artifact-value: TESTS_SHA256 index 73e6c6ebdb13… != live cb286f9d7077…
+FAIL evidence-index-head: Git HEAD unresolvable at candidate root — fail closed
+FAIL evidence-index-root: 'CANDIDATE_ROOT: /home/mohamed/frappe-bench/apps/construction' != invocation root '/tmp/opencode/f44-bench/apps/construction'
+FAIL evidence-schema: all-tests.txt module identities/counts differ from contract
+FAIL evidence-schema: all-tests.txt module identities/counts differ from contract
+FAIL evidence-schema: full-gate.txt file count differs from contract
+FAIL evidence-schema: full-gate.txt file count differs from contract
+FAIL evidence-schema: full-gate.txt gate result object differs from contract
+FAIL evidence-schema: full-gate.txt gate result object differs from contract
+FAIL evidence-schema: gate-tests-standalone.txt standalone count differs from contract
+FAIL evidence-schema: gate-tests-standalone.txt standalone count differs from contract
+checked={"construction/locale/ar.po": 1052, "csv_rows": 4337, "extract": {"files": 328, "json_labels": 77, "missing": 0, "wrapped": 861}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=30
+FAIL frappe delta provenance mismatch: artifact claims old/new ('BOGUS', 'BOGUS', '0000000000000000000000000000000000000000000000000000000000000000', '1111111111111111111111111111111111111111111111111111111111111111') but recorded->live is c0/843a9e945564ec688b5ec20c363dc8647e8fd17aab08b3c5272cc756c8789eca -> None/0eb29ac0a2ce26dba44d13176e4d09a6d5eaaaf8efec8189301580a07f26007f
+FAIL frappe delta sets do not match recomputed inventory diff
+FAIL frappe catalog differs from committed inventory — a reviewed delta is mandatory (--delta-reviewed <file>)
+checked={"construction/locale/ar.po": 1052, "extract_scoped": {"files": 1, "json_labels": 0, "missing": 0, "wrapped": 0}, "json_labels": 18} errors=0

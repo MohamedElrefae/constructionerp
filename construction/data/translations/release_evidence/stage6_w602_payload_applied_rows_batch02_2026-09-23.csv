@@ -1,0 +1,49 @@
+source_text	translated_text	quorum_decision	decision_ref
+Address	العنوان	preserved-site-override (not imported, plan §12)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+POS has been closed at {0}. Please refresh the page.	أُغلقت نقطة البيع في {0}. يرجى تحديث الصفحة.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+POS invoice {0} created successfully	تم إنشاء فاتورة نقطة البيع {0} بنجاح	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Parent Item {0} must not be a Fixed Asset	يجب ألا يكون الصنف الأعلى {0} أصلًا ثابتًا	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Payment of {0} received successfully. Waiting for other requests to complete...	تم استلام دفعة {0} بنجاح. بانتظار اكتمال الطلبات الأخرى...	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Percentage you are allowed to sell beyond the Blanket Order quantity.	النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please contact any of the following users to extend the credit limits for {0}: {1}	يرجى التواصل مع أحد المستخدمين التاليين لتمديد حدود الائتمان لـ {0}: {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please contact your administrator to extend the credit limits for {0}.	يرجى التواصل مع المسؤول لتمديد حدود الائتمان لـ {0}.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please enter a valid number of deliveries	يرجى إدخال عدد تسليمات صالح	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please enter at least one delivery date and quantity	يرجى إدخال تاريخ تسليم وكمية على الأقل	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please enter the first delivery date	يرجى إدخال تاريخ التسليم الأول	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please save the Sales Order before adding a delivery schedule.	يرجى حفظ أمر البيع قبل إضافة جدول التسليم.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please select a frequency for delivery schedule	يرجى تحديد تكرار جدول التسليم	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Please select atleast one item to continue	يرجى تحديد صنف واحد على الأقل للمتابعة	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Quarter {0} {1}	الربع {0} {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Reason for hold:	سبب الإيقاف:	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Restrict Items Based On	تقييد الأصناف بناءً على	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Row #{0}: BOM not found for FG Item {1}	الصف #{0}: لم يتم العثور على قائمة المواد لصنف المنتج النهائي {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Row #{0}: Quantity cannot be a non-positive number. Please increase the quantity or remove the Item {1}	الصف #{0}: لا يمكن أن تكون الكمية رقمًا غير موجب. يرجى زيادة الكمية أو إزالة الصنف {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Invoice {0} must be deleted before cancelling this Sales Order	يجب حذف فاتورة البيع {0} قبل إلغاء أمر البيع هذا	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Opportunities by Campaign	فرص البيع حسب الحملة	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Opportunities by Medium	فرص البيع حسب الوسيط	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Opportunities by Source	فرص البيع حسب المصدر	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Order {0} already exists against Customer's Purchase Order {1}. To allow multiple Sales Orders, Enable {2} in {3}	يوجد أمر بيع {0} بالفعل مقابل أمر شراء العميل {1}. للسماح بأوامر بيع متعددة، فعّل {2} في {3}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Partner Target Variance Based On Item Group	الفرق المستهدف لشركاء البيع بناءً على مجموعة الأصناف	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sales Pipeline by Stage	مسار البيع حسب المرحلة	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Select an item from each set to be used in the Sales Order.	حدد صنفًا من كل مجموعة لاستخدامه في أمر البيع.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Serial numbers unavailable for Item {0} under warehouse {1}. Please try changing warehouse.	الأرقام التسلسلية غير متاحة للصنف {0} في المستودع {1}. يرجى تجريب تغيير المستودع.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Show Aggregate Value from Subsidiary Companies	عرض القيمة الإجمالية للشركات التابعة	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Sold by	تم البيع بواسطة	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Stock quantity not enough for Item Code: {0} under warehouse {1}. Available quantity {2} {3}.	كمية المخزون غير كافية لرمز الصنف: {0} في المستودع {1}. الكمية المتاحة {2} {3}.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Successfully linked to Supplier	تم الربط بالمورد بنجاح	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Supplier is required for all selected Items	المورد مطلوب لجميع الأصناف المحددة	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Supplier numbers assigned by the customer	أرقام الموردين التي يعينها العميل	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+The current POS opening entry is outdated. Please close it and create a new one.	قيد فتح نقطة البيع الحالي قديم. يرجى إغلاقه وإنشاء قيد جديد.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+This Sales Order has been fully subcontracted.	تم التعاقد بأكمله بمقاولة الباطن لأمر البيع هذا.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+This item filter has already been applied for the {0}	تم تطبيق عامل تصفية الأصناف هذا بالفعل للـ {0}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Total Only	الإجمالي فقط	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Total Picked Quantity {0} is more than ordered qty {1}. You can set the Over Picking Allowance in Stock Settings.	إجمالي الكمية الملتقطة {0} أكبر من الكمية المطلوبة {1}. يمكنك ضبط حصة الالتقاط الزائد في إعدادات المخزون.	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Total quantity in delivery schedule cannot be greater than the item quantity	إجمالي الكمية في جدول التسليم لا يمكن أن يكون أكبر من كمية الصنف	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Use Legacy (Client side) Reactivity	استخدام نموذج التفاعلية القديم (من جهة العميل)	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+Week {0} {1}	الأسبوع {0} {1}	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+You have unsaved changes. Do you want to save the invoice?	لديك تغييرات غير محفوظة. هل تريد حفظ الفاتورة؟	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+discount applied	تم تطبيق الخصم	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+doc_type	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+doctype	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+quotation_item	EXCEPTION-technical	EXCEPTION-technical (keep vendor rendering; no translation)	stage6-W6-2 batch-02 owner-approved 2026-09-23
+{}  To Deliver	{}  للتسليم	quorum-confirmed (release payload row)	stage6-W6-2 batch-02 owner-approved 2026-09-23

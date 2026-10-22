@@ -1,0 +1,27 @@
+# G1 DECISION schema branch (rev 3: +expected_parent_sha) — validation evidence
+# 2026-09-30T16:41:48Z UTC
+# Branch injected into a COPY of the real schema; real schema file untouched.
+
+  [OK ] expect=accept valid DECISION token
+  [OK ] expect=reject missing decision_hash  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject non-hex decision_hash  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject empty resolved_finding_digests  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject non-hex digest entry  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject duplicate digests  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject bad disposition  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject unknown extra property  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject removed rationale_sha256 rejected  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject bad expected_parent_sha  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject missing expected_parent_sha  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=reject supersedes non-hex  <- {'schema_version': 1, 'token_id': 'owner-decision-44', 'work_item': 'w
+  [OK ] expect=accept valid + supersedes
+
+  regression on existing scopes:
+    [OK ] PLAN v2 still validates (0 errors)
+    [OK ] COMMIT still validates (0 errors)
+
+  note: SCP-006/007/008 are NOT ledger finding_ids (all null in seq 45);
+        tokens bind to snapshot.reproduction_digest instead (SPEC §2.3).
+
+SCHEMA BRANCH VALID: True
+EXIT_CODE=0

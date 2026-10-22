@@ -1,0 +1,79 @@
+{
+  "batch": "stage6-w601-accounts-batch04",
+  "site": "v16.localhost",
+  "scope_sha256": "0286741911fbe377c0a723131611d8a91cbe7c943c59d307756d7e1f18cfae30",
+  "proposal_sha256": "4c72e83b3d41476914dcf884a8798c51ec5f6e662500105509fc2b8aad6bc47a",
+  "started_utc": "2026-09-27T09:35:46Z",
+  "checks": [
+    {
+      "name": "boot-lang-ar",
+      "ok": true,
+      "detail": "ar"
+    },
+    {
+      "name": "boot-messages-ge-1000",
+      "ok": true,
+      "detail": 14092
+    },
+    {
+      "name": "all-released-payload-translations",
+      "ok": true,
+      "detail": {
+        "matched": 121,
+        "total": 121,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "all-batch-keys-translations",
+      "ok": true,
+      "detail": {
+        "matched": 249,
+        "total": 249,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "rendered-dom-arabic",
+      "ok": true,
+      "detail": {
+        "count": 13,
+        "sample": [
+          "الأدوات",
+          "الأصول",
+          "الباطن",
+          "البيع",
+          "التصنيع",
+          "الجودة",
+          "المحاسبة",
+          "المخزون",
+          "المشاريع",
+          "المشتريات",
+          "بحث",
+          "مقاولات",
+          "منظمة"
+        ]
+      }
+    },
+    {
+      "name": "no-page-errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "desk-title-captured",
+      "ok": true,
+      "detail": "Desktop"
+    },
+    {
+      "name": "logged-out",
+      "ok": true,
+      "detail": "logout endpoint hit"
+    }
+  ],
+  "finished_utc": "2026-09-27T09:35:56Z",
+  "summary": {
+    "pass": 8,
+    "fail": 0
+  }
+}

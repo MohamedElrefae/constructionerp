@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-11T21:11:38.462043+00:00",
+  "authority": "Owner Authorization: Architect Job Reconciliation & Retry (2026-09-12)",
+  "reconciled_job": "job-c1b769164762f806bc4c0b0a",
+  "preserved_evidence": "phase-3-result-reconciliation.json",
+  "fresh_job": "job-8e3944c2b9cf5637a53cac50",
+  "fresh_session": "01a0924d-b7ed-76e0-96b9-72f7b12d3225",
+  "feedback_scope_file": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/phase-3-schema-feedback-scope.json",
+  "recorded_reconciliation": {
+    "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+    "job_id": "job-c1b769164762f806bc4c0b0a",
+    "owner_evidence_sha256": "47d6c185033ba886cffb8146f4429d37a99ca92068cfff2583e66c61f3e15b11",
+    "role": "architect"
+  },
+  "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+  "owner_plan_granted": false,
+  "note": "Resume command includes the same approved reconciliation arguments plus a scope-file containing authorized schema feedback; edit allowlist unchanged. Frozen code and rejected raw output unchanged."
+}

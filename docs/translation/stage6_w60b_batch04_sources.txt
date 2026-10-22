@@ -1,0 +1,271 @@
+Child Doctype
+Click here
+Click to Set Filters
+Client Id
+Client Metadata
+Client Secret Basic
+Client Secret Post
+Client URI
+Client script
+Code Challenge
+Code Editor Type
+Column 1
+Column 2
+Column {0}
+Communication Date
+Communication Logs
+Company Name
+Compilation warning
+Completed By Role
+Completed By User
+Condition JSON
+Condition Type
+Configure Recorder
+Connect to {}
+Connected App
+Connected User
+Contact Us Settings
+Correct version :
+Could not start up:
+Created At
+Current Job ID
+Current Value
+Custom Blocks
+Custom Delimiters
+Custom Footer
+Custom Label
+Custom Translation
+Customize Form - {0}
+Daily Maintenance
+Database Processes
+Database Version
+Debug Log
+Default App
+Default Naming
+Default User Role
+Default User Type
+Defaults Updated
+Deletion Steps
+Delimiter Options
+Delivery Status
+Desk Settings
+Desk Theme
+Desk User
+Desktop Settings
+Detect CSV type
+Directory Server
+Disable Scrolling
+Disable signups
+DocType Layout Field
+DocType State
+DocType {} not found
+Document Linking
+Document Unlocked
+Domain Name
+Download Backups
+Download Template
+Download as CSV
+Download vCard
+Download vCards
+Element Selector
+Email Domain
+Email Header
+Email ID
+Email Id
+Email Queue records.
+Email Retry Limit
+Email Sent At
+Emails Pulled
+Embed code copied
+Enable Rate Limit
+Enable Scheduler
+Enabled Scheduler
+Encrypt Backups
+Ended At
+Enqueued By
+Entity Type
+Error Logs
+Error Message
+Error {0}: {1}
+Event Frequency
+Exact Copies
+Existing Role
+Expires On
+Extra Parameters
+Failed Emails
+Failed Job Count
+Failed Jobs
+Failure Rate
+Field Missing
+Field Name
+File Storage
+Filtered By
+Filters Editor
+Finished At
+Folder Name
+Footer Based On
+Footer Content
+Footer Details
+Footer Image
+Footer Script
+For DocType
+For Document
+Force Stop job
+Form Builder
+Form Dict
+Form Tour Step
+Frappe Mail
+Frappe Mail Site
+Frappe Support
+From Date
+From Field
+From User
+Geolocation Settings
+Google Drive Picker
+Half Yearly
+Handled Emails
+Has Next Condition
+Has Setup Wizard
+Header Icon
+Header Script
+Header, Robots
+Help Articles
+Hidden Fields
+Hide Buttons
+Hide Descendants
+Hide Label
+Hide footer
+Hide footer signup
+Hide navbar
+Hourly Maintenance
+IMAP Details
+IMAP Folder
+Icon Style
+Icon Type
+Illegal template
+Image Height
+Image Width
+Image optimized
+Impersonate as {0}
+In Minutes
+In Read Only Mode
+Include Name Field
+Incoming Server
+Incoming Settings
+Incorrect value:
+Indicator Color
+Intro Video URL
+Introspection URI
+Invalid Action
+Invalid Credentials
+Invalid DocType
+Invalid DocType: {0}
+Invalid Doctype
+Invalid Fieldname
+Invalid File URL
+Invalid Operation
+Invalid Override
+Invalid Parameters.
+Invalid Phone Number
+Invalid app
+Invalid docstatus
+Invalid key
+Invalid request body
+Invalid role
+Invitation not found
+Invited By
+Is Current
+Is Custom
+Is Dynamic URL?
+Is Hidden
+Is Primary Address
+Is Remote Request?
+Is Setup Complete?
+Is System Generated
+Is Table Field
+Is Virtual
+Is standard
+JS Message
+Job ID
+Job Id
+Job Info
+Job Name
+Job Status
+Job is not running.
+LDAP Auth
+LDAP Custom Settings
+LDAP Mobile Field
+LDAP Server Settings
+Last 10 active users
+Last Heartbeat
+Last Modified Date
+Last Received At
+Last Run
+Last Updated
+Layout Reset
+Learn more
+Left Bottom
+Left Center
+Letter Head Scripts
+License Type
+Light Blue
+Log API Requests
+Log DocType
+Log Index
+Login Methods
+Login To {0}
+Login required
+Logo URI
+Logs to Clear
+MIT License
+Maintenance Manager
+Maintenance User
+Margin Bottom
+Margin Left
+Margin Right
+Margin Top
+MariaDB Variables
+Marketing Manager
+Max File Size (MB)
+Max Height
+Max attachment size
+Meets Condition?
+Memory Usage
+Memory Usage in MB
+Message Type
+Meta image
+Meta title
+Method Not Allowed
+Mid Center
+Minutes After
+Minutes Before
+Minutes Offset
+Missing DocType
+Missing Field
+Missing Permission
+Module HTML
+Module Profile
+Module Profile Name
+Module {} not found
+Name (Doc Name)
+Naming Rule
+Navbar Style
+Navigation Settings
+Next Execution
+Next Form Tour
+Next Scheduled Date
+Next Step Condition
+Next Sync Token
+Next on Click
+No Roles Specified
+No Suggestions
+No changes to sync
+No changes to update
+No failed logs
+No of Requested SMS
+No of Sent SMS
+No subject
+No {0}
+Normalized Copies
+Normalized Query
+Not Allowed

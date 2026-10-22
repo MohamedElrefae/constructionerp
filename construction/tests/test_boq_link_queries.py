@@ -1,0 +1,456 @@
+import frappe
+from frappe.desk.search import build_for_autosuggest
+from frappe.tests.utils import FrappeTestCase
+
+from construction.api.boq_link_queries import (
+    get_boq_headers,
+    get_boq_item_stages,
+    get_boq_items,
+    get_boq_scope_token,
+    get_boq_structures,
+    get_scope_projects,
+)
+from construction.services.scope_resolution import get_scope_token
+
+
+class TestBOQLinkQueries(FrappeTestCase):
+    def setUp(self):
+        self._clear_scope_defaults()
+        self.company = frappe.db.get_value("Company", {}, "name") or self._make_company()
+        self.previous_mode = frappe.db.get_single_value(
+            "Construction Settings", "enable_boq_cascade_filtering"
+        )
+        frappe.db.set_single_value("Construction Settings", "enable_boq_cascade_filtering", "On")
+        frappe.db.delete("User Scope Context", {"user": "Administrator"})
+
+        self.project_a = self._make_project("_Test BOQ Scope A")
+        self.project_b = self._make_project("_Test BOQ Scope B")
+        self.header_a = self._make_header(self.project_a, "_Test Scoped BOQ A", "Draft")
+        self.header_b = self._make_header(self.project_b, "_Test Scoped BOQ B", "Draft")
+        self.draft_header = self._make_header(self.project_a, "_Test Draft BOQ", "Draft")
+        self.structure_a, self.item_a = self._make_leaf_item(self.header_a.name, "_Test Leaf A")
+        self.structure_a_second, self.item_a_second = self._make_leaf_item(
+            self.header_a.name, "_Test Leaf A Second"
+        )
+        self.structure_b, self.item_b = self._make_leaf_item(self.header_b.name, "_Test Leaf B")
+        self._set_header_status(self.header_a, "Frozen")
+        self._set_header_status(self.header_b, "Frozen")
+
+        self._set_scope(project=self.project_a)
+
+    def tearDown(self):
+        frappe.db.rollback()
+        frappe.db.set_single_value(
+            "Construction Settings", "enable_boq_cascade_filtering", self.previous_mode or "Off"
+        )
+
+    def _make_company(self):
+        return (
+            frappe.get_doc(
+                {
+                    "doctype": "Company",
+                    "company_name": "_Test BOQ Scope Company",
+                    "abbr": "TBSC",
+                    "default_currency": "USD",
+                    "country": "United States",
+                }
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
+
+    def _clear_scope_defaults(self):
+        for key in ("branch", "company", "cost_center", "project", "department"):
+            frappe.defaults.clear_user_default(key, "Administrator")
+
+    def _make_project(self, project_name):
+        name = frappe.db.get_value("Project", {"project_name": project_name}, "name")
+        if name:
+            return name
+        return (
+            frappe.get_doc(
+                {
+                    "doctype": "Project",
+                    "project_name": project_name,
+                    "company": self.company,
+                    "naming_series": "PROJ-.####",
+                }
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
+
+    def _make_header(self, project, title, status):
+        return frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "project": project,
+                "title": title,
+                "status": status,
+                "boq_type": "Tender",
+            }
+        ).insert(ignore_permissions=True)
+
+    def _set_header_status(self, header, status):
+        if status == "Frozen":
+            header.status = "Pricing"
+            header.save(ignore_permissions=True)
+        header.status = status
+        header.save(ignore_permissions=True)
+
+    def _make_leaf_item(self, header, title):
+        structure = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": header,
+                "title": title,
+                "is_group": 0,
+            }
+        ).insert(ignore_permissions=True)
+        item_name = frappe.db.get_value("BOQ Item", {"structure": structure.name}, "name")
+        item = frappe.get_doc("BOQ Item", item_name)
+        item.quantity = 1.0
+        item.save(ignore_permissions=True)
+        return structure, item
+
+    def _set_scope(self, project=None, cost_center=None):
+        frappe.get_doc(
+            {
+                "doctype": "User Scope Context",
+                "user": "Administrator",
+                "company": self.company,
+                "cost_center": cost_center,
+                "project": project,
+            }
+        ).insert(ignore_permissions=True)
+
+    def test_scope_token_endpoint_matches_service_token(self):
+        payload = get_boq_scope_token()
+        self.assertEqual(payload["scope_token"], get_scope_token("Administrator"))
+        self.assertEqual(payload["scope"]["project"], self.project_a)
+        self.assertEqual(payload["scope"]["scope_type"], "Project-Scoped")
+
+    def test_boq_header_query_enforces_project_scope_without_implicit_status_filter(self):
+        rows = get_boq_headers("BOQ Header", "_Test", "name", 0, 20, {}, enforce_scope=True)
+        names = {row[0] for row in rows}
+        self.assertIn(self.header_a.name, names)
+        self.assertIn(self.draft_header.name, names)
+        self.assertNotIn(self.header_b.name, names)
+
+    def test_boq_header_query_applies_explicit_allowed_status_filter(self):
+        rows = get_boq_headers(
+            "BOQ Header",
+            "_Test",
+            "name",
+            0,
+            20,
+            {"allowed_statuses": ["Frozen", "Locked"]},
+            enforce_scope=True,
+        )
+        names = {row[0] for row in rows}
+        self.assertIn(self.header_a.name, names)
+        self.assertNotIn(self.header_b.name, names)
+        self.assertNotIn(self.draft_header.name, names)
+
+    def test_boq_structure_and_item_queries_follow_scope_chain(self):
+        structures = get_boq_structures("BOQ Structure", "_Test", "name", 0, 20, {}, enforce_scope=True)
+        structure_names = {row[0] for row in structures}
+        self.assertIn(self.structure_a.name, structure_names)
+        self.assertNotIn(self.structure_b.name, structure_names)
+
+        items = get_boq_items("BOQ Item", "", "name", 0, 20, {}, enforce_scope=True)
+        item_names = {row[0] for row in items}
+        self.assertIn(self.item_a.name, item_names)
+        self.assertNotIn(self.item_b.name, item_names)
+
+    def test_boq_structure_query_requires_header_when_requested(self):
+        self.assertEqual(
+            get_boq_structures(
+                "BOQ Structure",
+                "",
+                "name",
+                0,
+                20,
+                {"require_boq_header": 1},
+                enforce_scope=True,
+            ),
+            [],
+        )
+
+    def test_boq_structure_query_returns_all_leaf_nodes_for_selected_header(self):
+        structures = get_boq_structures(
+            "BOQ Structure",
+            "_Test Leaf A",
+            "name",
+            0,
+            20,
+            {"boq_header": self.header_a.name, "require_boq_header": 1},
+            enforce_scope=True,
+        )
+        structure_names = {row[0] for row in structures}
+        self.assertIn(self.structure_a.name, structure_names)
+        self.assertIn(self.structure_a_second.name, structure_names)
+        self.assertNotIn(self.structure_b.name, structure_names)
+
+    def test_closed_row_gate_returns_no_boq_dropdown_options(self):
+        closed_gate = {"require_gate": 1, "gate_open": 0}
+
+        self.assertEqual(
+            get_boq_headers("BOQ Header", "_Test", "name", 0, 20, closed_gate, enforce_scope=True),
+            [],
+        )
+        self.assertEqual(
+            get_boq_structures("BOQ Structure", "_Test", "name", 0, 20, closed_gate, enforce_scope=True),
+            [],
+        )
+        self.assertEqual(
+            get_boq_items("BOQ Item", "", "name", 0, 20, closed_gate, enforce_scope=True),
+            [],
+        )
+        self.assertEqual(
+            get_boq_item_stages("BOQ Item Stage", "", "name", 0, 20, closed_gate, enforce_scope=True),
+            [],
+        )
+
+    def test_scope_project_query_returns_current_scope_project(self):
+        rows = get_scope_projects(
+            "Project",
+            "",
+            "name",
+            0,
+            20,
+            {"project": self.project_a, "enforce_scope": 1},
+        )
+        self.assertEqual(rows[0][0], self.project_a)
+
+    def test_boq_header_scope_default_respects_explicit_project(self):
+        user = "boq-header-scope-test@example.com"
+        previous_user = frappe.session.user
+        previous_scope_context_enabled = frappe.db.get_single_value(
+            "Construction Settings", "enable_scope_context"
+        )
+
+        if not frappe.db.exists("User", user):
+            frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": user,
+                    "first_name": "BOQ Header Scope Test",
+                    "enabled": 1,
+                }
+            ).insert(ignore_permissions=True)
+
+        try:
+            frappe.db.set_single_value("Construction Settings", "enable_scope_context", 1)
+            frappe.db.delete("User Scope Context", {"user": user})
+            frappe.get_doc(
+                {
+                    "doctype": "User Scope Context",
+                    "user": user,
+                    "company": self.company,
+                    "project": self.project_a,
+                }
+            ).insert(ignore_permissions=True)
+            frappe.set_user(user)
+
+            # 1. New BOQ Header without project picks up active user scope project
+            scope_default_header = frappe.get_doc(
+                {
+                    "doctype": "BOQ Header",
+                    "title": "_Test Scope Default Header",
+                    "status": "Draft",
+                    "boq_type": "Tender",
+                }
+            ).insert(ignore_permissions=True)
+            self.assertEqual(scope_default_header.project, self.project_a)
+
+            # 2. Scoped user attempting out-of-scope project creation must be rejected
+            with self.assertRaises(frappe.PermissionError):
+                frappe.get_doc(
+                    {
+                        "doctype": "BOQ Header",
+                        "project": self.project_b,
+                        "title": "_Test Out of Scope Explicit Project Header",
+                        "status": "Draft",
+                        "boq_type": "Tender",
+                    }
+                ).insert()  # no ignore_permissions so scope enforcement fires
+
+            # 3. Explicit permitted project is preserved
+            explicit_project_header = frappe.get_doc(
+                {
+                    "doctype": "BOQ Header",
+                    "project": self.project_a,
+                    "title": "_Test Explicit Project Header",
+                    "status": "Draft",
+                    "boq_type": "Tender",
+                }
+            ).insert(ignore_permissions=True)
+            self.assertEqual(explicit_project_header.project, self.project_a)
+        finally:
+            frappe.set_user(previous_user)
+            # Do NOT commit here: FrappeTestCase rolls back the transaction after
+            # each test, restoring enable_scope_context and removing all fixtures
+            # (headers/structures/items/projects/User Scope Context) created in
+            # setUp. Committing in teardown would persist those records and break
+            # database hermeticity.
+            frappe.db.set_single_value(
+                "Construction Settings", "enable_scope_context", previous_scope_context_enabled or 0
+            )
+
+    def test_boq_header_arabic_exact_and_normalized_search(self):
+        arabic_header = frappe.get_doc(
+            {
+                "doctype": "BOQ Header",
+                "project": self.project_a,
+                "title": "_Test Arabic Header Earthworks",
+                "title_ar": "أعمال الحفر والردم",
+                "status": "Draft",
+                "boq_type": "Tender",
+            }
+        ).insert(ignore_permissions=True)
+        self.assertEqual(arabic_header.title_ar_norm, "اعمال الحفر والردم")
+
+        # 1. Exact match on raw title_ar
+        rows = get_boq_headers("BOQ Header", "الحفر", "name", 0, 20, {}, enforce_scope=True)
+        names = {row[0] for row in rows}
+        self.assertIn(arabic_header.name, names)
+
+        # 2. Normalized match on Alef variant without hamza (proves norm_txt bind path)
+        rows_norm = get_boq_headers("BOQ Header", "اعمال", "name", 0, 20, {}, enforce_scope=True)
+        names_norm = {row[0] for row in rows_norm}
+        self.assertIn(arabic_header.name, names_norm)
+
+        # 3. Normalized match with tatweel
+        rows_tatweel = get_boq_headers("BOQ Header", "أعــــمال", "name", 0, 20, {}, enforce_scope=True)
+        names_tatweel = {row[0] for row in rows_tatweel}
+        self.assertIn(arabic_header.name, names_tatweel)
+
+        # 4. Fail-closed: non-matching Arabic returns nothing
+        rows_mismatch = get_boq_headers("BOQ Header", "سباكة", "name", 0, 20, {}, enforce_scope=True)
+        names_mismatch = {row[0] for row in rows_mismatch}
+        self.assertNotIn(arabic_header.name, names_mismatch)
+
+        # 5. Row tuple shape and autosuggest compatibility
+        target_row = next(r for r in rows if r[0] == arabic_header.name)
+        self.assertEqual(len(target_row), 4)
+        self.assertEqual(target_row[0], arabic_header.name)
+        self.assertEqual(target_row[1], arabic_header.title)
+        self.assertEqual(target_row[2], self.project_a)
+        self.assertEqual(target_row[3], "أعمال الحفر والردم")
+
+        # 6. build_for_autosuggest preserves English label and projects Arabic into description
+        autosuggest = build_for_autosuggest([target_row], "BOQ Header")
+        self.assertEqual(len(autosuggest), 1)
+        self.assertEqual(autosuggest[0]["value"], arabic_header.name)
+        self.assertEqual(autosuggest[0]["label"], arabic_header.title)
+        self.assertIn("أعمال الحفر والردم", autosuggest[0]["description"])
+
+    def test_boq_structure_arabic_exact_and_normalized_search(self):
+        arabic_structure = frappe.get_doc(
+            {
+                "doctype": "BOQ Structure",
+                "boq_header": self.draft_header.name,
+                "title": "_Test Arabic Structure Concrete",
+                "title_ar": "أعمال الخرسانة المسلحة",
+                "wbs_code": "9.9.01",
+                "is_group": 0,
+            }
+        ).insert(ignore_permissions=True)
+        self.assertEqual(arabic_structure.title_ar_norm, "اعمال الخرسانة المسلحة")
+
+        # 1. Exact match on raw title_ar
+        rows = get_boq_structures(
+            "BOQ Structure",
+            "الخرسانة",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
+        )
+        names = {row[0] for row in rows}
+        self.assertIn(arabic_structure.name, names)
+
+        # 2. Normalized match with Alef variant (اعمال instead of أعمال)
+        rows_norm = get_boq_structures(
+            "BOQ Structure",
+            "اعمال الخرسانة",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
+        )
+        names_norm = {row[0] for row in rows_norm}
+        self.assertIn(arabic_structure.name, names_norm)
+
+        # 3. Normalized match with tatweel
+        rows_tatweel = get_boq_structures(
+            "BOQ Structure",
+            "الخرســــانة",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
+        )
+        names_tatweel = {row[0] for row in rows_tatweel}
+        self.assertIn(arabic_structure.name, names_tatweel)
+
+        # 4. Fail-closed: non-matching Arabic returns nothing
+        rows_mismatch = get_boq_structures(
+            "BOQ Structure",
+            "دهانات",
+            "name",
+            0,
+            20,
+            {"boq_header": self.draft_header.name},
+            enforce_scope=True,
+        )
+        names_mismatch = {row[0] for row in rows_mismatch}
+        self.assertNotIn(arabic_structure.name, names_mismatch)
+
+        # 5. Row tuple shape and autosuggest compatibility
+        target_row = next(r for r in rows if r[0] == arabic_structure.name)
+        self.assertEqual(len(target_row), 4)
+        self.assertEqual(target_row[0], arabic_structure.name)
+        self.assertEqual(target_row[1], arabic_structure.title)
+        self.assertEqual(target_row[2], arabic_structure.wbs_code)
+        self.assertEqual(target_row[3], "أعمال الخرسانة المسلحة")
+
+        autosuggest = build_for_autosuggest([target_row], "BOQ Structure")
+        self.assertEqual(len(autosuggest), 1)
+        self.assertEqual(autosuggest[0]["value"], arabic_structure.name)
+        self.assertEqual(autosuggest[0]["label"], arabic_structure.title)
+        self.assertIn("أعمال الخرسانة المسلحة", autosuggest[0]["description"])
+
+    def test_english_search_invariance_and_column_shape(self):
+        # Header query returns 4 columns with None for title_ar on standard English fixture
+        header_rows = get_boq_headers(
+            "BOQ Header", "_Test Scoped BOQ A", "name", 0, 20, {}, enforce_scope=True
+        )
+        self.assertTrue(len(header_rows) >= 1)
+        row = header_rows[0]
+        self.assertEqual(len(row), 4)
+        self.assertEqual(row[0], self.header_a.name)
+        self.assertEqual(row[1], self.header_a.title)
+        self.assertEqual(row[2], self.project_a)
+        self.assertIsNone(row[3])
+
+        # Structure query returns 4 columns with None for title_ar
+        struct_rows = get_boq_structures(
+            "BOQ Structure",
+            "_Test Leaf A",
+            "name",
+            0,
+            20,
+            {"boq_header": self.header_a.name, "require_boq_header": 1},
+            enforce_scope=True,
+        )
+        self.assertTrue(len(struct_rows) >= 1)
+        target_s_row = next(r for r in struct_rows if r[0] == self.structure_a.name)
+        self.assertEqual(len(target_s_row), 4)
+        self.assertEqual(target_s_row[0], self.structure_a.name)
+        self.assertEqual(target_s_row[1], self.structure_a.title)
+        self.assertIsNone(target_s_row[3])

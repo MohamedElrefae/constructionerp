@@ -1,0 +1,470 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+'{0}' should be in company currency {1}.,,erpnext/setup/doctype/company/company.py:295; erpnext/setup/doctype/company/company.py:306,setup,0
+A Transaction Deletion Document: {0} is triggered for {0},,erpnext/setup/doctype/company/company.py:1078,setup,0
+Abampere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Abbr,الاختصار,erpnext/setup/doctype/company/company.json:None,setup,1
+According to CEFACT/ICG/2010/IC013 or CEFACT/ICG/2010/IC010,,erpnext/setup/doctype/uom/uom.json:None,setup,0
+Account {0} is disabled.,,erpnext/setup/doctype/company/company.py:266,setup,0
+Accountant,محاسب,erpnext/setup/setup_wizard/data/designation.txt:1,setup,1
+Acre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Acre (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Add Local Holidays,إضافة العطلات المحلية,erpnext/setup/doctype/holiday_list/holiday_list.json:None,setup,1
+Administrative Assistant,مساعد إداري,erpnext/setup/setup_wizard/data/designation.txt:2,setup,1
+Administrative Officer,مسؤول إداري,erpnext/setup/setup_wizard/data/designation.txt:3,setup,1
+Advance Payment Date,تاريخ الدفعة المقدمة,erpnext/setup/doctype/company/company.json:None,setup,1
+Advertisement,إعلان,erpnext/setup/setup_wizard/data/marketing_source.txt:3,setup,1
+Advertising,إعلانات,erpnext/setup/setup_wizard/data/industry_type.txt:2,setup,1
+Aerospace,,erpnext/setup/setup_wizard/data/industry_type.txt:3,setup,0
+Agent,وكيل,erpnext/setup/setup_wizard/data/sales_partner_type.txt:4,setup,1
+Agriculture,الزراعة,erpnext/setup/setup_wizard/data/industry_type.txt:4,setup,1
+Airline,,erpnext/setup/setup_wizard/data/industry_type.txt:5,setup,0
+All Sales Transactions can be tagged against multiple Sales Persons so that you can set and monitor targets.,,erpnext/setup/doctype/sales_person/sales_person.json:None,setup,0
+Ampere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ampere-Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ampere-Minute,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ampere-Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+An Item Group is a way to classify items based on types.,,erpnext/setup/doctype/item_group/item_group.json:None,setup,0
+Analyst,محلل,erpnext/setup/setup_wizard/data/designation.txt:4,setup,1
+Apparel & Accessories,,erpnext/setup/setup_wizard/data/industry_type.txt:6,setup,0
+Are,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Arshin,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Associate,مشارك,erpnext/setup/setup_wizard/data/designation.txt:5,setup,1
+Atmosphere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Attendance & Leaves,الحضور والإجازات,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Auto Create Exchange Rate Revaluation,إنشاء إعادة تقييم سعر الصرف تلقائيا,erpnext/setup/doctype/company/company.json:None,setup,1
+Automotive,,erpnext/setup/setup_wizard/data/industry_type.txt:7,setup,0
+B+,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+B-,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+Barleycorn,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Barrel (Oil),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Barrel(Beer),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Based on your HR Policy, select your leave allocation period's end date",,erpnext/setup/doctype/holiday_list/holiday_list.js:60,setup,0
+"Based on your HR Policy, select your leave allocation period's start date",,erpnext/setup/doctype/holiday_list/holiday_list.js:55,setup,0
+Biot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Biotechnology,,erpnext/setup/setup_wizard/data/industry_type.txt:9,setup,0
+Both Payable Account: {0} and Advance Account: {1} must be of same currency for company: {2},,erpnext/setup/doctype/supplier_group/supplier_group.py:57,setup,0
+Both Receivable Account: {0} and Advance Account: {1} must be of same currency for company: {2},,erpnext/setup/doctype/customer_group/customer_group.py:62,setup,0
+Box,صندوق,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,1
+Broadcasting,,erpnext/setup/setup_wizard/data/industry_type.txt:10,setup,0
+Brokerage,,erpnext/setup/setup_wizard/data/industry_type.txt:11,setup,0
+Btu (It),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Btu (Mean),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Btu (Th),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Btu/Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Btu/Minutes,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Btu/Seconds,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Bushel (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Bushel (US Dry Level),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Business Analyst,محلل أعمال,erpnext/setup/setup_wizard/data/designation.txt:6,setup,1
+Business Development Manager,مدير تطوير الأعمال,erpnext/setup/setup_wizard/data/designation.txt:7,setup,1
+Buying & Selling Settings,إعدادات الشراء والبيع,erpnext/setup/doctype/company/company.json:None,setup,1
+Buying and Selling,الشراء والبيع,erpnext/setup/doctype/company/company.json:None,setup,1
+Caballeria,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cable Length,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cable Length (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cable Length (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Calibre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Calorie (Food),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Calorie (It),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Calorie (Mean),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Calorie (Th),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Calorie/Seconds,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cannot Change Inventory Account Setting,لا يمكن تغيير إعداد حساب المخزون,erpnext/setup/doctype/company/company.py:217,setup,1
+Cannot enqueue multi docs for one company. {0} is already queued/running for company: {1},,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:110,setup,0
+Cannot make any transactions until the deletion job is completed,,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:516,setup,0
+Carat,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Carriage Paid To,,erpnext/setup/doctype/incoterm/incoterms.csv:6,setup,0
+Carriage and Insurance Paid to,,erpnext/setup/doctype/incoterm/incoterms.csv:7,setup,0
+Celsius,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cental,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Centiarea,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Centigram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Centilitre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Centimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Chain,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Chemical,,erpnext/setup/setup_wizard/data/industry_type.txt:12,setup,0
+Chief Executive Officer,,erpnext/setup/setup_wizard/data/designation.txt:9,setup,0
+Chief Financial Officer,,erpnext/setup/setup_wizard/data/designation.txt:10,setup,0
+Chief Operating Officer,,erpnext/setup/setup_wizard/data/designation.txt:11,setup,0
+Chief Technology Officer,,erpnext/setup/setup_wizard/data/designation.txt:12,setup,0
+Classification of Customers by region,,erpnext/setup/doctype/territory/territory.json:None,setup,0
+Clear Notifications,مسح الإشعارات,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Cold Calling,اتصال بارد,erpnext/setup/setup_wizard/data/marketing_source.txt:4,setup,1
+Company Details,تفاصيل الشركة,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Company {} does not exist yet. Taxes setup aborted.,,erpnext/setup/setup_wizard/operations/taxes_setup.py:14,setup,0
+Consulting,,erpnext/setup/setup_wizard/data/industry_type.txt:14,setup,0
+Consumer Products,,erpnext/setup/setup_wizard/data/industry_type.txt:15,setup,0
+Cosmetics,,erpnext/setup/setup_wizard/data/industry_type.txt:16,setup,0
+Cost and Freight,,erpnext/setup/doctype/incoterm/incoterms.csv:8,setup,0
+Cost to Company (CTC),التكلفة على الشركة,erpnext/setup/doctype/employee/employee.json:None,setup,1
+"Cost, Insurance and Freight",,erpnext/setup/doctype/incoterm/incoterms.csv:9,setup,0
+Could Not Delete Demo Data,,erpnext/setup/demo.py:55,setup,0
+Coulomb,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Creating User...,,erpnext/setup/doctype/employee/employee.js:92,setup,0
+Cross Listing of Item in multiple groups,,erpnext/setup/doctype/website_item_group/website_item_group.json:None,setup,0
+Cubic Centimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cubic Decimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cubic Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cubic Inch,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cubic Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cubic Millimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cubic Yard,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Cup,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Customer / Item / Item Group,,erpnext/setup/doctype/authorization_rule/authorization_rule.json:None,setup,0
+Customer Service Representative,ممثل خدمة العملاء,erpnext/setup/setup_wizard/data/designation.txt:13,setup,1
+Customer's Vendor,,erpnext/setup/setup_wizard/data/marketing_source.txt:8,setup,0
+Cycle/Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Date of Birth,تاريخ الميلاد,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Date of Joining,تاريخ الانضمام,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Dealer,,erpnext/setup/setup_wizard/data/sales_partner_type.txt:3,setup,0
+Decigram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Decilitre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Decimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Default Advance Paid Account,حساب الدفعات المقدمة المدفوعة الافتراضي,erpnext/setup/doctype/company/company.json:None; erpnext/setup/doctype/company/company.py:307,setup,1
+Default Advance Received Account,حساب الدفعات المقدمة المستلمة الافتراضي,erpnext/setup/doctype/company/company.json:None; erpnext/setup/doctype/company/company.py:296,setup,1
+Default In-Transit Warehouse,مستودع العبور الافتراضي,erpnext/setup/doctype/company/company.json:None; erpnext/stock/doctype/warehouse/warehouse.json:None,setup,1
+Default Operating Cost Account,حساب تكلفة التشغيل الافتراضي,erpnext/setup/doctype/company/company.json:None,setup,1
+Default Payment Discount Account,حساب خصم الدفع الافتراضي,erpnext/setup/doctype/company/company.json:None,setup,1
+Default Provisional Account,الحساب المؤقت الافتراضي,erpnext/setup/doctype/company/company.json:None,setup,1
+Default Sales Contact,جهة اتصال المبيعات الافتراضية,erpnext/setup/doctype/company/company.json:None,setup,1
+Default Stock Valuation Method,طريقة تقييم المخزون الافتراضية,erpnext/setup/doctype/company/company.json:None,setup,1
+"Default tax templates for sales, purchase and items are created.",,erpnext/setup/doctype/company/company.js:191,setup,0
+Defense,,erpnext/setup/setup_wizard/data/industry_type.txt:17,setup,0
+Deferred Accounting,المحاسبة المؤجلة,erpnext/setup/doctype/company/company.json:None; erpnext/stock/doctype/item/item.json:None,setup,1
+Dekagram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Delete Bins,حذف الحاويات,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Delete Leads and Addresses,حذف العملاء المحتملين والعناوين,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Delete Transactions,حذف المعاملات,erpnext/setup/doctype/company/company.js:168; erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Deleted Documents,المستندات المحذوفة,erpnext/setup/workspace/settings/settings.json:None,setup,1
+Deletion in Progress!,الحذف جار!,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:503,setup,1
+Delivered At Place,,erpnext/setup/doctype/incoterm/incoterms.csv:10,setup,0
+Delivered At Place Unloaded,,erpnext/setup/doctype/incoterm/incoterms.csv:11,setup,0
+Delivered Duty Paid,,erpnext/setup/doctype/incoterm/incoterms.csv:12,setup,0
+Delivery Manager,مدير التسليم,erpnext/setup/doctype/driver/driver.json:None; erpnext/setup/doctype/vehicle/vehicle.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/delivery_settings/delivery_settings.json:None; erpnext/stock/doctype/delivery_trip/delivery_trip.json:None; erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.json:None,setup,1
+Delivery User,مستخدم التسليم,erpnext/setup/doctype/driver/driver.json:None; erpnext/setup/doctype/vehicle/vehicle.json:None; erpnext/stock/doctype/delivery_note/delivery_note.json:None; erpnext/stock/doctype/delivery_trip/delivery_trip.json:None; erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.json:None,setup,1
+Demo Bank Account,,erpnext/setup/setup_wizard/operations/install_fixtures.py:542,setup,0
+Demo Company,,erpnext/setup/doctype/global_defaults/global_defaults.json:None,setup,0
+Department Stores,متاجر الأقسام,erpnext/setup/setup_wizard/data/industry_type.txt:18,setup,1
+Designer,,erpnext/setup/setup_wizard/data/designation.txt:14,setup,0
+DocTypes should not be added manually to the 'Excluded DocTypes' table. You are only allowed to remove entries from it.,,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:78,setup,0
+Documentation,,erpnext/setup/install.py:188,setup,0
+Dram,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Dyne,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+EMU Of Charge,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+EMU of current,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Electronics,,erpnext/setup/setup_wizard/data/industry_type.txt:20,setup,0
+Ells (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Email Digest Recipient,مستلم ملخص البريد,erpnext/setup/doctype/email_digest_recipient/email_digest_recipient.json:None,setup,1
+Email Digest: {0},ملخص البريد: {0},erpnext/setup/doctype/email_digest/email_digest.js:15,setup,1
+Employee Exit,خروج الموظف,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Employee Number,رقم الموظف,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Ems(Pica),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Enable Item-wise Inventory Account,تمكين حساب المخزون حسب الصنف,erpnext/setup/doctype/company/company.json:None,setup,1
+Enable Provisional Accounting For Non Stock Items,,erpnext/setup/doctype/company/company.json:None,setup,0
+Encashment Date,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+Energy,,erpnext/setup/setup_wizard/data/industry_type.txt:21,setup,0
+Engineer,,erpnext/setup/setup_wizard/data/designation.txt:15,setup,0
+Enter a name for this Holiday List.,,erpnext/setup/doctype/holiday_list/holiday_list.js:50,setup,0
+Entertainment & Leisure,,erpnext/setup/setup_wizard/data/industry_type.txt:22,setup,0
+Erg,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ex Works,تسليم المصنع,erpnext/setup/doctype/incoterm/incoterms.csv:2,setup,1
+Exchange Gain / Loss,ربح/خسارة الصرف,erpnext/setup/doctype/company/company.json:None,setup,1
+Exchange Rate Revaluation Settings,إعدادات إعادة تقييم سعر الصرف,erpnext/setup/doctype/company/company.json:None,setup,1
+Excluded DocTypes,أنواع المستندات المستثناة,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Executive Assistant,مساعد تنفيذي,erpnext/setup/setup_wizard/data/designation.txt:16,setup,1
+Executive Search,,erpnext/setup/setup_wizard/data/industry_type.txt:23,setup,0
+Exhibition,,erpnext/setup/setup_wizard/data/marketing_source.txt:5,setup,0
+Existing Customer,,erpnext/setup/setup_wizard/data/marketing_source.txt:1,setup,0
+FIFO,الأول داخل أول خارج,erpnext/setup/doctype/company/company.json:None; erpnext/stock/doctype/item/item.json:None; erpnext/stock/doctype/stock_settings/stock_settings.json:None,setup,1
+Fahrenheit,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Failed to erase demo data, please delete the demo company manually.",,erpnext/setup/demo.py:54,setup,0
+Failed to setup defaults for country {0}. Please contact support.,,erpnext/setup/doctype/company/company.py:862,setup,0
+Faraday,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Fathom,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Finance Manager,مدير مالي,erpnext/setup/setup_wizard/data/designation.txt:17,setup,1
+Financial Services,,erpnext/setup/setup_wizard/data/industry_type.txt:24,setup,0
+Fixed Asset Defaults,إعدادات الأصول الثابتة الافتراضية,erpnext/setup/doctype/company/company.json:None,setup,1
+Fluid Ounce (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Fluid Ounce (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Food, Beverage & Tobacco",,erpnext/setup/setup_wizard/data/industry_type.txt:25,setup,0
+Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Foot Of Water,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Foot/Minute,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Foot/Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+For service item,,erpnext/setup/doctype/company/company.json:None,setup,0
+Frappe School,,erpnext/setup/install.py:200,setup,0
+Free Alongside Ship,,erpnext/setup/doctype/incoterm/incoterms.csv:4,setup,0
+Free Carrier,,erpnext/setup/doctype/incoterm/incoterms.csv:3,setup,0
+Free On Board,,erpnext/setup/doctype/incoterm/incoterms.csv:5,setup,0
+Furlong,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gallon (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gallon Dry (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gallon Liquid (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gamma,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gauss,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Grain,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Grain/Cubic Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Grain/Gallon (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Grain/Gallon (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gram,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gram-Force,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gram/Cubic Centimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gram/Cubic Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gram/Cubic Millimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Gram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Grocery,,erpnext/setup/setup_wizard/data/industry_type.txt:26,setup,0
+Hand,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Head of Marketing and Sales,رئيس التسويق والمبيعات,erpnext/setup/setup_wizard/data/designation.txt:19,setup,1
+Health Care,الرعاية الصحية,erpnext/setup/setup_wizard/data/industry_type.txt:27,setup,1
+Hectare,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Hectogram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Hectometer,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Hectopascal,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Here, you can select a senior of this Employee. Based on this, Organization Chart will be populated.",,erpnext/setup/doctype/employee/employee.js:134,setup,0
+Hertz,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Holiday Date {0} added multiple times,,erpnext/setup/doctype/holiday_list/holiday_list.py:162,setup,0
+Holidays,العطلات,erpnext/setup/doctype/holiday_list/holiday_list.json:None,setup,1
+Horsepower,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Horsepower-Hours,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Hundredweight (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Hundredweight (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Iches Of Water,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Implementation Partner,,erpnext/setup/setup_wizard/data/sales_partner_type.txt:6,setup,0
+Import Data,استيراد البيانات,erpnext/setup/workspace/home/home.json:None; erpnext/setup/workspace/settings/settings.json:None,setup,1
+Inch,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Inch Pound-Force,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Inch/Minute,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Inch/Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Inches Of Mercury,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Initialize Summary Table,تهيئة جدول الملخص,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Internal,داخلي,erpnext/setup/setup_wizard/operations/install_fixtures.py:300,setup,1
+Internet Publishing,,erpnext/setup/setup_wizard/data/industry_type.txt:28,setup,0
+Investment Banking,,erpnext/setup/setup_wizard/data/industry_type.txt:29,setup,0
+Is Half Day,نصف يوم,erpnext/setup/doctype/holiday/holiday.json:None; erpnext/setup/doctype/holiday_list/holiday_list.json:None,setup,1
+Item Group wise Discount,خصم حسب مجموعة الأصناف,erpnext/setup/doctype/authorization_rule/authorization_rule.json:None,setup,1
+Joining,الانضمام,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Joule,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Joule/Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kelvin,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kg,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kiloampere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilocalorie,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilocoulomb,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilogram-Force,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilogram/Cubic Centimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilogram/Cubic Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilogram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilohertz,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilojoule,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilometer,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilometer/Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilopascal,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilopond,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilopound-Force,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilowatt,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kilowatt-Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Kip,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Knot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+LIFO,الأخير داخل أول خارج,erpnext/setup/doctype/company/company.json:None; erpnext/stock/doctype/item/item.json:None; erpnext/stock/doctype/stock_settings/stock_settings.json:None,setup,1
+Legal Entity / Subsidiary with a separate Chart of Accounts belonging to the Organization.,,erpnext/setup/doctype/company/company.json:None,setup,0
+License Plate,لوحة المركبة,erpnext/setup/doctype/vehicle/vehicle.json:None,setup,1
+Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Litre-Atmosphere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Manager,مدير,erpnext/setup/setup_wizard/data/designation.txt:20,setup,1
+Managing Director,,erpnext/setup/setup_wizard/data/designation.txt:21,setup,0
+Marketing Specialist,أخصائي تسويق,erpnext/setup/setup_wizard/data/designation.txt:23,setup,1
+Mass Mailing,,erpnext/setup/setup_wizard/data/marketing_source.txt:7,setup,0
+Megacoulomb,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Megagram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Megahertz,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Megajoule,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Megawatt,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Messaging CRM Campagin,,erpnext/setup/install.py:127,setup,0
+Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Meter Of Water,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Meter/Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Microbar,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Microgram,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Microgram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Micrometer,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Microsecond,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Mile,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Mile (Nautical),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Mile/Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Mile/Minute,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Mile/Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milibar,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milliampere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millicoulomb,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milligram,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milligram/Cubic Centimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milligram/Cubic Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milligram/Cubic Millimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Milligram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millihertz,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millilitre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millimeter Of Mercury,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millimeter Of Water,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Millisecond,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Model,الطراز,erpnext/setup/doctype/vehicle/vehicle.json:None,setup,1
+Motion Picture & Video,,erpnext/setup/setup_wizard/data/industry_type.txt:32,setup,0
+Music,,erpnext/setup/setup_wizard/data/industry_type.txt:33,setup,0
+Nanocoulomb,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Nanogram/Litre,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Nanohertz,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Nanometer,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Nanosecond,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Newspaper Publishers,,erpnext/setup/setup_wizard/data/industry_type.txt:34,setup,0
+Newton,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Nos,,erpnext/setup/setup_wizard/data/uom_data.json:None; erpnext/stock/utils.py:711; erpnext/stock/utils.py:713,setup,0
+Not authorized since {0} exceeds limits,,erpnext/setup/doctype/authorization_control/authorization_control.py:59,setup,0
+O+,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+O-,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+Offer Date,تاريخ العرض,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Oldest Of Invoice Or Advance,الأقدم بين الفاتورة أو الدفعة المقدمة,erpnext/setup/doctype/company/company.json:None,setup,1
+Online Auctions,,erpnext/setup/setup_wizard/data/industry_type.txt:35,setup,0
+Ounce,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ounce-Force,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ounce/Cubic Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ounce/Cubic Inch,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ounce/Gallon (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ounce/Gallon (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Owned,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+Pair,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Parts Per Million,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pascal,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Passport Details,تفاصيل جواز السفر,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Passport Number,رقم جواز السفر,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Peck (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Peck (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pension Funds,,erpnext/setup/setup_wizard/data/industry_type.txt:36,setup,0
+Personal Details,تفاصيل شخصية,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Pharmaceuticals,,erpnext/setup/setup_wizard/data/industry_type.txt:37,setup,0
+Pint (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pint (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Pint, Dry (US)",,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Pint, Liquid (US)",,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Please select a country,,erpnext/setup/doctype/holiday_list/holiday_list.py:89,setup,0
+Pond,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pood,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound-Force,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound/Cubic Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound/Cubic Inch,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound/Cubic Yard,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound/Gallon (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Pound/Gallon (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Poundal,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Preferred Contact Email,بريد الاتصال المفضل,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Preferred Email,البريد المفضل,erpnext/setup/doctype/employee/employee.json:None,setup,1
+President,,erpnext/setup/setup_wizard/data/designation.txt:24,setup,0
+Private Equity,,erpnext/setup/setup_wizard/data/industry_type.txt:38,setup,0
+Process in Single Transaction,,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,0
+Product Manager,مدير منتج,erpnext/setup/setup_wizard/data/designation.txt:25,setup,1
+Project Manager,مدير مشروع,erpnext/setup/setup_wizard/data/designation.txt:26,setup,1
+Provisional Account,حساب مؤقت,erpnext/setup/doctype/company/company.py:565,setup,1
+Psi/1000 Feet,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Publishing,,erpnext/setup/setup_wizard/data/industry_type.txt:39,setup,0
+Purchase Expense,مصروف الشراء,erpnext/setup/doctype/company/company.json:None,setup,1
+Purchase Expense Account,حساب مصروف الشراء,erpnext/setup/doctype/company/company.json:None; erpnext/stock/doctype/item_default/item_default.json:None,setup,1
+Purchase Expense Contra Account,حساب مقابل مصروف الشراء,erpnext/setup/doctype/company/company.json:None; erpnext/stock/doctype/item_default/item_default.json:None,setup,1
+Quart (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Quart Dry (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Quart Liquid (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Quintal,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Real Estate,,erpnext/setup/setup_wizard/data/industry_type.txt:40,setup,0
+Receive from Customer,استلام من العميل,erpnext/setup/setup_wizard/operations/install_fixtures.py:120; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_entry_type/stock_entry_type.json:None,setup,1
+Reconciliation Takes Effect On,تسري التسوية في,erpnext/setup/doctype/company/company.json:None,setup,1
+Relieving Date,تاريخ إنهاء الخدمة,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Report an Issue,,erpnext/setup/install.py:206,setup,0
+Reporting Currency,عملة التقارير,erpnext/setup/doctype/company/company.json:None,setup,1
+Researcher,باحث,erpnext/setup/setup_wizard/data/designation.txt:27,setup,1
+Reseller,,erpnext/setup/setup_wizard/data/sales_partner_type.txt:7,setup,0
+Reset Company Default Values,,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,0
+Resignation Letter Date,,erpnext/setup/doctype/employee/employee.json:None,setup,0
+Retail & Wholesale,,erpnext/setup/setup_wizard/data/industry_type.txt:41,setup,0
+Retailer,,erpnext/setup/setup_wizard/data/sales_partner_type.txt:5,setup,0
+Return Raw Material to Customer,إرجاع المادة الخام إلى العميل,erpnext/setup/setup_wizard/operations/install_fixtures.py:126; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_entry_type/stock_entry_type.json:None,setup,1
+Rod,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Roles Allowed to Set and Edit Frozen Account Entries,الأدوار المسموح لها بتعيين وتعديل قيود الحسابات المجمدة,erpnext/setup/doctype/company/company.json:None,setup,1
+Salary Currency,عملة الراتب,erpnext/setup/doctype/employee/employee.json:None,setup,1
+Sales Representative,مندوب مبيعات,erpnext/setup/setup_wizard/data/designation.txt:28,setup,1
+Sazhen,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Second,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Secretary,,erpnext/setup/setup_wizard/data/designation.txt:29,setup,0
+Securities & Commodity Exchanges,,erpnext/setup/setup_wizard/data/industry_type.txt:42,setup,0
+Select Date of Birth. This will validate Employees age and prevent hiring of under-age staff.,,erpnext/setup/doctype/employee/employee.js:120,setup,0
+"Select Date of joining. It will have impact on the first salary calculation, Leave allocation on pro-rata bases.",,erpnext/setup/doctype/employee/employee.js:127,setup,0
+Select a Company this Employee belongs to.,حدد الشركة التي ينتمي إليها هذا الموظف.,erpnext/setup/doctype/employee/employee.js:115,setup,1
+Select your weekly off day,,erpnext/setup/doctype/holiday_list/holiday_list.js:65,setup,0
+Send regular summary reports via Email.,,erpnext/setup/doctype/email_digest/email_digest.json:None,setup,0
+Service Expense Account,حساب مصروف الخدمة,erpnext/setup/doctype/company/company.json:None; erpnext/subcontracting/doctype/subcontracting_receipt_item/subcontracting_receipt_item.json:None,setup,1
+Set default {0} account for non stock items,,erpnext/setup/doctype/company/company.py:564,setup,0
+Slug/Cubic Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Soap & Detergent,,erpnext/setup/setup_wizard/data/industry_type.txt:44,setup,0
+Software Developer,,erpnext/setup/setup_wizard/data/designation.txt:30,setup,0
+Specify Exchange Rate to convert one currency into another,,erpnext/setup/doctype/currency_exchange/currency_exchange.json:None,setup,0
+Sports,,erpnext/setup/setup_wizard/data/industry_type.txt:46,setup,0
+Square Centimeter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Square Foot,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Square Inch,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Square Kilometer,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Square Meter,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Square Mile,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Square Yard,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Start Deletion,بدء الحذف,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.js:21,setup,1
+Stock and Manufacturing,المخزون والتصنيع,erpnext/setup/doctype/company/company.json:None,setup,1
+Stone,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Subcontracting Delivery,تسليم مقاولات الباطن,erpnext/setup/setup_wizard/operations/install_fixtures.py:132; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_entry_type/stock_entry_type.json:None; erpnext/subcontracting/doctype/subcontracting_inward_order/subcontracting_inward_order.js:158; erpnext/subcontracting/workspace/subcontracting/subcontracting.json:None,setup,1
+Subcontracting Return,مرتجع مقاولات باطن,erpnext/setup/setup_wizard/operations/install_fixtures.py:138; erpnext/stock/doctype/stock_entry/stock_entry.json:None; erpnext/stock/doctype/stock_entry_type/stock_entry_type.json:None,setup,1
+Subdivision,تقسيم إداري,erpnext/setup/doctype/holiday_list/holiday_list.json:None,setup,1
+Submit ERR Journals?,ترحيل قيود إعادة تقييم سعر الصرف؟,erpnext/setup/doctype/company/company.json:None,setup,1
+Supplier Reference,مرجع المورد,erpnext/setup/setup_wizard/data/marketing_source.txt:6,setup,1
+Suspended,موقوف,erpnext/setup/doctype/driver/driver.json:None; erpnext/setup/doctype/employee/employee.json:None,setup,1
+Tablespoon (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Teaspoon,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Technical Atmosphere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Technology,,erpnext/setup/setup_wizard/data/industry_type.txt:47,setup,0
+Telecommunications,,erpnext/setup/setup_wizard/data/industry_type.txt:48,setup,0
+Television,,erpnext/setup/setup_wizard/data/industry_type.txt:49,setup,0
+Tesla,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+The Sales Person is linked with {0},,erpnext/setup/doctype/sales_person/sales_person.py:102,setup,0
+There are no active Fiscal Years for which Demo Data can be generated.,,erpnext/setup/demo.py:108,setup,0
+Ton (Long)/Cubic Yard,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ton (Short)/Cubic Yard,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ton-Force (UK),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Ton-Force (US),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Tonne,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Tonne-Force(Metric),,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Torr,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Total Contribution Amount Against Invoices: {0},,erpnext/setup/doctype/sales_person/sales_person.js:17,setup,0
+Total Contribution Amount Against Orders: {0},,erpnext/setup/doctype/sales_person/sales_person.js:10,setup,0
+Total Holidays,إجمالي العطلات,erpnext/setup/doctype/holiday_list/holiday_list.json:None,setup,1
+Transaction Deletion Document: {0} is running for this Company. {1},,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:504,setup,0
+Transaction Deletion Record,سجل حذف المعاملة,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.json:None,setup,1
+Transaction Deletion Record Item,عنصر سجل حذف المعاملة,erpnext/setup/doctype/transaction_deletion_record_item/transaction_deletion_record_item.json:None,setup,1
+Transportation,,erpnext/setup/setup_wizard/data/industry_type.txt:50,setup,0
+Unit,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+"Upon enabling this, the JV will be submitted for a different exchange rate.",,erpnext/setup/doctype/company/company.json:None,setup,0
+User Forum,,erpnext/setup/install.py:194,setup,0
+User {0}: Removed Employee Self Service role as there is no mapped employee.,,erpnext/setup/doctype/employee/employee.py:246,setup,0
+User {0}: Removed Employee role as there is no mapped employee.,,erpnext/setup/doctype/employee/employee.py:241,setup,0
+Vara,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Venture Capital,,erpnext/setup/setup_wizard/data/industry_type.txt:51,setup,0
+Versta,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Vice President,,erpnext/setup/setup_wizard/data/designation.txt:31,setup,0
+Volt-Ampere,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Walk In,,erpnext/setup/setup_wizard/data/marketing_source.txt:10,setup,0
+Watt,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Watt-Hour,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Wavelength In Gigametres,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Wavelength In Kilometres,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Wavelength In Megametres,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+Yard,,erpnext/setup/setup_wizard/data/uom_data.json:None,setup,0
+{0} currency must be same as company's default currency. Please select another account.,,erpnext/setup/doctype/company/company.py:283,setup,0
+{0} entered twice {1} in Item Taxes,,erpnext/setup/doctype/item_group/item_group.py:48; erpnext/stock/doctype/item/item.py:454,setup,0
+{0} is already running for {1},,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:198,setup,0
+{0} is not running. Cannot trigger events for this Document,,erpnext/setup/doctype/transaction_deletion_record/transaction_deletion_record.py:206,setup,0
+{0}: {1} is a group account.,,erpnext/setup/doctype/company/company.py:270,setup,0

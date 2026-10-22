@@ -1,0 +1,27 @@
+{
+  "apps": {
+    "erpnext": {
+      "commit": "7474d9e786277383de1242ab882f16856d17a9c9",
+      "inputs": {
+        "erpnext/locale/ar.po": {
+          "sha256": "54c346cc2e4628b4f2abb37cb5fb05cc996f79388501f72c0dce4f0bfbf4b65b"
+        }
+      }
+    },
+    "frappe": {
+      "commit": "af44091716ed4e9be32720483a27d3f1937ad7fd",
+      "inputs": {
+        "frappe/locale/ar.po": {
+          "sha256": "ad0c7b27c0406257911210b5c5a354a2fa9506f8fac1b9552806c592c7038205"
+        },
+        "frappe/public/js/frappe/form/script_manager.js": {
+          "sha256": "e7204be9dc75381e7a979f7a46f4cc4b14cf0f7f27f18415b121ccc9e07ed025"
+        }
+      }
+    }
+  },
+  "note": "Exact vendor inputs the CI protocol job must supply. The hashes were read from the pinned vendor commits (git show <commit>:<path> | sha256sum) of the qualified Frappe/ERPNext checkouts; a missing or changed input must fail the required CI, never skip it. 2026-10-21: the frappe commit pin is the effective private vendor commit af44091716ed4e9be32720483a27d3f1937ad7fd (parent 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b); frappe/locale/ar.po and script_manager.js are byte-identical at both commits, so these digests describe the same bytes, and every gate-consuming job reconstructs that commit locally instead of fetching it.",
+  "recorded_by": "F44 Qualified Successor <successor@f44.invalid>",
+  "recorded_utc": "2026-10-20T00:00:00Z",
+  "schema": "vendor-ci-inputs/v1"
+}

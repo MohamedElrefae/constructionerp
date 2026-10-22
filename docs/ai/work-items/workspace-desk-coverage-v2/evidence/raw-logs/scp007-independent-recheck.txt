@@ -1,0 +1,74 @@
+# SCP-007 independent adversarial re-check — v16.localhost
+# generated 2026-09-30T12:03:43Z UTC
+==============================================================================
+SCP-007 INDEPENDENT ADVERSARIAL RE-CHECK
+==============================================================================
+
+[1] WORKSPACE JSON LTR MEASUREMENT (measured, not threshold-asserted)
+  cards=5  links=16
+    card  len=14  rtl=none  'BOQ Management'
+    card  len=15  rtl=none  'Cost Estimation'
+    card  len=20  rtl=none  'Variation Management'
+    card  len=14  rtl=none  'Theme Settings'
+    card  len=16  rtl=none  'Scope Management'
+  max card len=20  max link label len=23
+  child tables present: NONE
+
+[2] GROUND TRUTH: DocPerm rows for the 16 workspace DocTypes
+  Custom DocPerm[Scope Report Access Log]: []
+  DocPerm[Scope Report Access Log]: [('System Manager', 1), ('Auditor', 1)]
+  => roles with read on Scope Report Access Log: ['Auditor', 'System Manager']
+
+[3] REAL FRAMEWORK PERMISSIONS (no role monkeypatching)
+  [real] Site Engineer    site.engineer@example.com      enabled=1 roles=['All', 'Desk User', 'Guest', 'Site Engineer']
+  [temp] Project Manager  adv_probe_project_manager@test.local           roles=['All', 'Desk User', 'Guest', 'Project Manager']
+  [temp] Accountant       adv_probe_accountant@test.local                roles=['Accountant', 'All', 'Desk User', 'Guest']
+  [temp] System Manager   adv_probe_system_manager@test.local            roles=['All', 'Desk User', 'Guest', 'System Manager']
+  [temp] Auditor          adv_probe_auditor@test.local                   roles=['All', 'Auditor', 'Desk User', 'Guest']
+
+  DocType               Project Manager  Accountant       System Manager   Auditor          Site Engineer    
+  -----------------------------------------------------------------------------------------------------------
+  BOQ Cost Analysis     True             True             True             False            True             
+  BOQ Header            True             True             True             False            True             
+  BOQ Import Batch      True             False            True             False            False            
+  BOQ Item              True             True             True             False            True             
+  BOQ Item Stage        True             True             True             False            True             
+  BOQ Quantity Revision True             True             True             False            True             
+  BOQ Structure         True             True             True             False            True             
+  Construction Settings False            False            True             False            False            
+  Construction Theme    True             True             True             True             True             
+  Form Layout Profile   True             True             True             True             True             
+  Modern Theme Settings True             True             True             True             True             
+  Resource Price HistoryTrue             False            True             False            False            
+  Scope Report Access LogFalse            False            True             True             False            
+  User Desk Theme       True             True             True             True             True             
+  User Scope Context    True             True             True             True             True             
+  Variation Order       True             False            True             False            True             
+
+[4] SCOPE REPORT ACCESS LOG — real per-role verdict
+  Project Manager  read=False
+  Accountant       read=False
+  System Manager   read=True
+  Auditor          read=True
+  Site Engineer    read=False
+
+[5] DESK LINK VISIBILITY derived from REAL permissions
+  Project Manager  14/16 visible; hidden=['Construction Settings', 'Scope Report Access Log']
+  Accountant       11/16 visible; hidden=['BOQ Import Batch', 'Construction Settings', 'Resource Price History', 'Scope Report Access Log', 'Variation Order']
+  System Manager   16/16 visible; hidden=[]
+  Auditor          6/16 visible; hidden=['BOQ Cost Analysis', 'BOQ Header', 'BOQ Import Batch', 'BOQ Item', 'BOQ Item Stage', 'BOQ Quantity Revision', 'BOQ Structure', 'Construction Settings', 'Resource Price History', 'Variation Order']
+  Site Engineer    12/16 visible; hidden=['BOQ Import Batch', 'Construction Settings', 'Resource Price History', 'Scope Report Access Log']
+
+[6] DIRECT get_list() DENIAL with REAL identities
+  Project Manager  adv_probe_project_manager@test.local           SRAL=PermissionError      denies User doctype=False
+  Accountant       adv_probe_accountant@test.local                SRAL=PermissionError      denies User doctype=False
+  Site Engineer    site.engineer@example.com                      SRAL=PermissionError      denies User doctype=False
+  Administrator SRAL rows = 23
+
+[7] CLEANUP: baseline users=31 final=31 drift=0
+  probe identities remaining: NONE
+
+==============================================================================
+FINDINGS: 0
+==============================================================================
+EXIT_CODE=0

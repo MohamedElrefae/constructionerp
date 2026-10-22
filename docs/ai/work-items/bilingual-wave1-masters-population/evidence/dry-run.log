@@ -1,0 +1,16 @@
+DRY Item 'OH-SITE-ADMIN-001' before=<empty> after=13666ed4f66bfa57 norm=8e0037588c017640 WOULD_WRITE
+DRY Item 'SUBCONCRETE-001' before=<empty> after=1b80f074c87c8080 norm=e40051d23d7ed8c1 WOULD_WRITE
+DRY Item 'PLANT-MIXER-001' before=<empty> after=50d1e344fe50ca76 norm=50d1e344fe50ca76 WOULD_WRITE
+DRY Item 'LAB-MASON-001`' before=<empty> after=0d02acd46129f85f norm=0d02acd46129f85f WOULD_WRITE
+DRY Item 'Consulting' before=<empty> after=fa885dabcf8c2fad norm=fa885dabcf8c2fad WOULD_WRITE
+DRY Item 'Macbook Pro' before=<empty> after=adc27f0950fdd164 norm=adc27f0950fdd164 WOULD_WRITE
+DRY Item 'Photocopier' before=<empty> after=b2473ec598a4a1ad norm=b2473ec598a4a1ad WOULD_WRITE
+DRY Item '138-CMS Shoe' before=<empty> after=5bcd54e8ded93cd3 norm=5bcd54e8ded93cd3 WOULD_WRITE
+DRY Customer 'Prestiga-Biz' before=<empty> after=3f5981c0b6a5cf03 norm=3f5981c0b6a5cf03 WOULD_WRITE
+POPULATED_NOW Item=0
+POPULATED_NOW Customer=0
+POPULATED_NOW Supplier=0
+SUMMARY rows=9 would_write=9 already_applied=0
+PRIVATE dry-run.json sha256=1d016b0fe0df4584f125867bede9043f374a3ad1d6b4fe575213ee86d77e1882
+WRITES_PERFORMED: 0
+DRY-RUN RESULT: PASS (9/9 rows validated; approved sha matched; zero writes)

@@ -1,0 +1,106 @@
+{
+  "finding_id": "P3-F002",
+  "recorded_utc": "2026-09-11T21:45:24.519040Z",
+  "status": "AWAITING_OWNER_AMENDMENT_AND_JOB_RECONCILIATION",
+  "job_id": "job-0b3f130e287b123d9b20a0b8",
+  "native_session": "ses_f6d92fe1cffeMIGqB5Jdi8lIrX",
+  "job_status": "RECONCILIATION_REQUIRED",
+  "failure_class": "MALFORMED_RESULT",
+  "owner_plan_granted": true,
+  "approval_refs": [
+    "owner-plan-grant-phase3-pilot"
+  ],
+  "observations": [
+    "The dispatcher enforced the PLAN grant, but the immutable builder context contains no checkpoint-derived approval attestation. The builder reports that it cannot establish approval.",
+    "OpenCode emitted a commentary text event before its final JSON. parse_output concatenates all OpenCode text events and fails JSON decoding.",
+    "The final JSON itself is parseable but uses invalid result status BLOCKED and verdict FAIL. Do not accept or rewrite it.",
+    "Builder attempted schema reads from the control worktree and OpenCode denied external_directory access. Matching schema files exist inside the pilot execution root. Permissions were not bypassed."
+  ],
+  "proposed_bounded_correction": [
+    "Engine._prepare: include non-consumable checkpoint-derived PLAN approval attestation bound to the active plan, scope, stage and repository; never expose owner token files. Include explicit execution-root schema paths.",
+    "adapters.parse_output: distinguish final OpenCode response from earlier commentary using native message metadata; retain strict JSON and schema validation, rejecting ambiguous/malformed results.",
+    "Add targeted regressions for approval context, local schema paths, commentary/final response separation and invalid result rejection. Rerun the full suite and regenerate freeze after approval.",
+    "Reconcile the stopped rejected job using this evidence and retry the builder under the existing standing PLAN grant. Preserve raw output and permission restrictions."
+  ],
+  "raw_output_sha256": "e38a77e2f1ec70f59718e3cd914490bc312485e9b97b817b5011f9eb7daa8170",
+  "terminal": {
+    "exit_code": 0,
+    "finished_utc": "2026-09-11T21:43:56.521384Z",
+    "job_id": "job-0b3f130e287b123d9b20a0b8",
+    "native_pid": 17800,
+    "native_start": "365876",
+    "phase": "TERMINAL",
+    "session_id": "ses_f6d92fe1cffeMIGqB5Jdi8lIrX",
+    "started_utc": "2026-09-11T21:43:31.435795Z",
+    "stderr": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-0b3f130e287b123d9b20a0b8/stderr.txt",
+    "stdout": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot/orchestrator/var/jobs/job-0b3f130e287b123d9b20a0b8/stdout.jsonl",
+    "timeout": false,
+    "worker_pid": 17799,
+    "worker_start": "365872"
+  },
+  "processes_stopped": {
+    "worker_pid": true,
+    "native_pid": true
+  },
+  "pilot_tracked_diff_empty": true,
+  "rejected_body_status": "BLOCKED",
+  "rejected_body_verdict": "FAIL",
+  "state": {
+    "work_item": "scope-context-portability",
+    "stage": "1",
+    "status": "PAUSED",
+    "next_roles": [],
+    "active_jobs": [
+      "job-0b3f130e287b123d9b20a0b8"
+    ],
+    "candidate": {
+      "archive_sha256": "8251a6f055fcf24d6de781ba10e96b21bead69f0cad85cd89ab3df7c4e553b78",
+      "candidate_id": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+      "manifest": {
+        "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+        "branch": "feature/scope-context-portability",
+        "entries": [],
+        "kind": "code"
+      },
+      "manifest_hash": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+      "tree_oid": "b72f470db46869199fd9eca2d81fb207ae3515b7"
+    },
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "round": 1,
+    "attempt": 7,
+    "cursor": 13,
+    "revision": 13,
+    "findings": [],
+    "backlog": [],
+    "next_finding": 2,
+    "unsuccessful_cycles": 0,
+    "unchanged_rounds": 0,
+    "previous_snapshots": [],
+    "gate": {
+      "scope": "DECISION",
+      "gate_id": "decision-13"
+    },
+    "pause_reason": "RECONCILIATION_REQUIRED",
+    "resume_to": "BUILD_IN_PROGRESS",
+    "prior": {
+      "status": "BUILD_IN_PROGRESS",
+      "next_roles": [],
+      "gate": null
+    },
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64"
+    ],
+    "approval_refs": [
+      "owner-plan-grant-phase3-pilot"
+    ],
+    "review_results": {},
+    "stages": {},
+    "plan_granted": true,
+    "committed": false
+  }
+}

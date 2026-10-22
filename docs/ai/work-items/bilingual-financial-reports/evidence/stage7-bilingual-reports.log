@@ -1,0 +1,26 @@
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_stage7_bilingual_reports, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 10 unspecified-category tests for construction
+
+construction.tests.test_stage7_bilingual_reports.TestBilingualReportsAPI
+   [32m ✔ [0m test_ar_mode_localizes_account_label
+   [32m ✔ [0m test_both_mode_keeps_identity_prefix
+   [32m ✔ [0m test_en_mode_untouched
+   [32m ✔ [0m test_unknown_report_fails_closed
+
+construction.tests.test_stage7_bilingual_reports.TestGenuineAuthorization
+   [32m ✔ [0m test_non_admin_without_accounts_roles_is_rejected_before_execute
+
+construction.tests.test_stage7_bilingual_reports.TestRealModuleSmoke
+   [32m ✔ [0m test_malformed_filters_fail_closed
+   [32m ✔ [0m test_non_object_filters_fail_closed
+   [32m ✔ [0m test_non_object_native_filters_fail_closed
+   [32m ✔ [0m test_object_filters_accepted
+   [32m ✔ [0m test_pilot_modules_import_and_expose_execute
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.105s
+
+OK

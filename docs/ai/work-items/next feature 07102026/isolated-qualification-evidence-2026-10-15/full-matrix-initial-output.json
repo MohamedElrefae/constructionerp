@@ -1,0 +1,97 @@
+[
+  {
+    "module": "test_boq_properties",
+    "exit": 0,
+    "log": "matrix-test_boq_properties.log"
+  },
+  {
+    "module": "test_quantity_revisions",
+    "exit": 0,
+    "log": "matrix-test_quantity_revisions.log"
+  },
+  {
+    "module": "test_variation_orders",
+    "exit": 1,
+    "log": "matrix-test_variation_orders.log"
+  },
+  {
+    "module": "test_cost_analysis_engine",
+    "exit": 0,
+    "log": "matrix-test_cost_analysis_engine.log"
+  },
+  {
+    "module": "test_cost_database_api",
+    "exit": 0,
+    "log": "matrix-test_cost_database_api.log"
+  },
+  {
+    "module": "test_customer_release_financial_guards",
+    "exit": 0,
+    "log": "matrix-test_customer_release_financial_guards.log"
+  },
+  {
+    "module": "test_boq_transactions",
+    "exit": 0,
+    "log": "matrix-test_boq_transactions.log"
+  },
+  {
+    "module": "test_boq_wbs_generation",
+    "exit": 0,
+    "log": "matrix-test_boq_wbs_generation.log"
+  },
+  {
+    "module": "test_boq_structure_conversion",
+    "exit": 0,
+    "log": "matrix-test_boq_structure_conversion.log"
+  },
+  {
+    "module": "test_boq_structure_delete_safety",
+    "exit": 0,
+    "log": "matrix-test_boq_structure_delete_safety.log"
+  },
+  {
+    "module": "test_boq_excel_parser",
+    "exit": 0,
+    "log": "matrix-test_boq_excel_parser.log"
+  },
+  {
+    "module": "test_boq_rollup_audit",
+    "exit": 0,
+    "log": "matrix-test_boq_rollup_audit.log"
+  },
+  {
+    "module": "test_bilingual_install_schema",
+    "exit": 0,
+    "log": "matrix-test_bilingual_install_schema.log"
+  },
+  {
+    "module": "test_packaged_translation_adoption",
+    "exit": 0,
+    "log": "matrix-test_packaged_translation_adoption.log"
+  },
+  {
+    "module": "test_report_export_authorization",
+    "exit": 0,
+    "log": "matrix-test_report_export_authorization.log"
+  },
+  {
+    "module": "test_boq_legacy_cost_conversion",
+    "exit": 0,
+    "log": "matrix-test_boq_legacy_cost_conversion.log"
+  },
+  {
+    "module": "test_boq_parent_permissions",
+    "exit": 0,
+    "log": "matrix-test_boq_parent_permissions.log"
+  },
+  {
+    "module": "test_bilingual_desk_link_dispatch",
+    "exit": 0,
+    "log": "matrix-test_bilingual_desk_link_dispatch.log"
+  },
+  {
+    "module": "test_stage7_bilingual_reports",
+    "exit": 0,
+    "log": "matrix-test_stage7_bilingual_reports.log"
+  }
+]

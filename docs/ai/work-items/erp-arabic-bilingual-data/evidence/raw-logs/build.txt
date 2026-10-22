@@ -1,0 +1,19 @@
+COMMAND: bench build --app construction
+STARTED_UTC: 2026-09-04T21:13:54Z
+Linking /home/mohamed/frappe-bench/apps/frappe/frappe/public to ./assets/frappe Linking /home/mohamed/frappe-bench/apps/frappe/node_modules to ./assets/frappe/node_modules                                                                                Linking /home/mohamed/frappe-bench/apps/erpnext/erpnext/public to ./assets/erpnext                                                                                Linking /home/mohamed/frappe-bench/apps/erpnext/node_modules to ./assets/erpnext/node_modules                                                                                Linking /home/mohamed/frappe-bench/apps/construction/construction/public to ./assets/construction                                                                                ✔ Application Assets Linked                                            
+
+
+yarn run v1.22.22
+$ node esbuild --production --apps construction --run-build-command
+File                                                        Size
+
+construction/dist/js/
+└─ construction.bundle.2XKAHIYO.js                          15.62 Kb
+
+ DONE  Total Build Time: 109.222ms
+
+Done in 0.68s.
+Compiling translations for construction
+MO file already up to date at /home/mohamed/frappe-bench/sites/assets/locale/ar/LC_MESSAGES/construction.mo
+EXIT_CODE: 0
+FINISHED_UTC: 2026-09-04T21:13:56Z

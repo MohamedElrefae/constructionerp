@@ -1,0 +1,51 @@
+# Construction-visible strings already covered by vendor (Frappe/ERPNext) Arabic catalogs.
+# Verified locally against vendor ar.po sets on 2026-09-05; re-audit with
+# scripts/check_localization_gates.py --audit-vendor-coverage when vendors upgrade.
+# One exact source string per line. Additions require reviewer sign-off.
+Add
+Apply
+Cancel
+Clear All
+Company
+Completed
+Configure Columns
+Confirm
+Convert to Group
+Convert to Non-Group
+Create
+Create a new {0}
+Delete Section
+Draft
+Error
+Fields
+In Progress
+Is Group
+List Settings
+Loading...
+Login required
+No
+No Data
+None
+Not Started
+On Hold
+PDF
+Print
+Print Settings
+Project
+Reason
+Rejected
+Reset
+Restore
+Save
+Search
+Select All
+Select {0}
+Status
+Submitted
+Totals
+Tree View
+Type
+Unit
+Version
+Workflow
+Yes

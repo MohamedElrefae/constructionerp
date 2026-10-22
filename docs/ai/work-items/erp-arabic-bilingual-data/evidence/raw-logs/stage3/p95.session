@@ -1,0 +1,20 @@
+import json
+parent = frappe.get_value("Account", {"company": "Elrefae", "is_group": 1, "parent_account": ("is", "set")}, "name")
+# Measurement fixtures: 12 accounts matching the query text.
+created = []
+for i in range(12):
+    doc = frappe.get_doc({"doctype": "Account", "company": "Elrefae", "account_name": "CT-T3-P-%02d" % i, "account_number": "CT-T3-%02d" % i, "parent_account": parent, "is_group": 0})
+    doc.insert(ignore_permissions=True)
+    created.append(doc.name)
+frappe.db.commit()
+from construction.services.bilingual_service import measure_search_p95
+m = measure_search_p95("CT-T3-", samples=50)
+print("MEASUREMENT:", json.dumps(m, sort_keys=True))
+removed = []
+for name in created + frappe.get_all("Account", filters={"company": "Elrefae", "account_number": ("like", "CT-T3-%")}, pluck="name"):
+    if frappe.db.exists("Account", name):
+        frappe.delete_doc("Account", name, force=True, ignore_permissions=True)
+        removed.append(name)
+frappe.db.commit()
+print("CLEANUP:", len(removed), "removed; leftover:", frappe.get_all("Account", filters={"company": "Elrefae", "account_number": ("like", "CT-T3-%")}, pluck="name"))
+exit()

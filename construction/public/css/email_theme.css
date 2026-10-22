@@ -1,0 +1,61 @@
+/**
+ * Email Theme for Construction ERP (Client-Compatible)
+ * No CSS variables - uses absolute hex colors for Outlook/Gmail.
+ */
+
+.email-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    color: #1e293b !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+}
+
+.email-header {
+    background-color: #0b1020 !important;
+    padding: 24px !important;
+    text-align: center !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
+.email-body {
+    padding: 32px !important;
+    background-color: #ffffff !important;
+    border-left: 1px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+}
+
+.email-footer {
+    background-color: #f8fafc !important;
+    padding: 24px !important;
+    text-align: center !important;
+    font-size: 12px !important;
+    color: #64748b !important;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+.btn-primary {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    padding: 14px 28px !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-weight: 700 !important;
+    margin-top: 20px !important;
+}
+
+/* Specific overrides for Frappe default email templates */
+table.email-table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+th.email-th {
+    background-color: #f1f5f9 !important;
+    color: #1e293b !important;
+    padding: 12px !important;
+    text-align: left !important;
+}

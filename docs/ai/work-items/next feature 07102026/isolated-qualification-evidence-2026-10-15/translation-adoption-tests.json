@@ -1,0 +1,62 @@
+{
+  "results": [
+    {
+      "case": "decision reference required",
+      "pass": true
+    },
+    {
+      "case": "unreleased key refused",
+      "pass": true
+    },
+    {
+      "case": "ordinary user refused",
+      "pass": true
+    },
+    {
+      "case": "text mismatch refused",
+      "pass": true
+    },
+    {
+      "case": "four matching adoptions preserve identity/text",
+      "pass": true
+    },
+    {
+      "case": "repeated adoption no-op",
+      "pass": true
+    }
+  ],
+  "changes": [
+    {
+      "name": "5sg4q6g7tv",
+      "changed": true,
+      "previous_version": null,
+      "release_version": "1.1",
+      "previous_app": "construction",
+      "app": "construction"
+    },
+    {
+      "name": "d3bg1abf8e",
+      "changed": true,
+      "previous_version": null,
+      "release_version": "1.2",
+      "previous_app": "construction",
+      "app": "frappe"
+    },
+    {
+      "name": "cvvnq7hlbv",
+      "changed": true,
+      "previous_version": null,
+      "release_version": "1.2",
+      "previous_app": "construction",
+      "app": "frappe"
+    },
+    {
+      "name": "tckut2m833",
+      "changed": true,
+      "previous_version": null,
+      "release_version": "1.4",
+      "previous_app": "construction",
+      "app": "frappe"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "business_hashes_equal": true,
+  "counts_equal": true,
+  "settings_equal": true,
+  "config_equal": true,
+  "files_equal": true,
+  "controlled_failure": true
+}

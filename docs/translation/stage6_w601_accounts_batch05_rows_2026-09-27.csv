@@ -1,0 +1,57 @@
+source_text,suggested_ar,locations,area,has_pre_filled
+Value Type,نوع القيمة,erpnext/accounts/doctype/financial_report_row/financial_report_row.json:None,accounts,1
+Value as on,,erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:599; erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:629,accounts,0
+Value of New Capitalized Asset,قيمة الأصل المرسمَل الجديد,erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:623,accounts,1
+Value of New Purchase,قيمة الشراء الجديد,erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:605,accounts,1
+Value of Scrapped Asset,قيمة الأصل المخرد,erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:617,accounts,1
+Value of Sold Asset,قيمة الأصل المباع,erpnext/accounts/report/asset_depreciations_and_balances/asset_depreciations_and_balances.py:611,accounts,1
+View Account Coverage,عرض تغطية الحساب,erpnext/accounts/doctype/financial_report_template/financial_report_template.js:7,accounts,1
+Voucher Name,اسم السند,erpnext/accounts/doctype/tax_withheld_vouchers/tax_withheld_vouchers.json:None,accounts,1
+Voucher {0} is over-allocated by {1},,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:195,accounts,0
+Voucher-wise Balance,الرصيد حسب السند,erpnext/accounts/report/voucher_wise_balance/voucher_wise_balance.json:None,accounts,1
+WIP Composite Asset,أصل مركب تحت التشغيل,erpnext/accounts/doctype/purchase_invoice_item/purchase_invoice_item.json:None; erpnext/buying/doctype/purchase_order_item/purchase_order_item.json:None; erpnext/stock/doctype/material_request_item/material_request_item.json:None; erpnext/stock/doctype/purchase_receipt_item/purchase_receipt_item.json:None,accounts,1
+Waiting for payment...,بانتظار الدفع...,erpnext/accounts/doctype/pos_invoice/pos_invoice.js:435,accounts,1
+Warning!,,erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.py:114,accounts,0
+Warnings,تحذيرات,erpnext/accounts/doctype/financial_report_template/financial_report_validation.py:77,accounts,1
+Withdrawal,سحب,erpnext/accounts/doctype/bank_transaction/bank_transaction.json:None; erpnext/public/js/bank_reconciliation_tool/data_table_manager.js:67,accounts,1
+Write Off Limit,حد الشطب,erpnext/accounts/doctype/pos_profile/pos_profile.json:None,accounts,1
+Wrong Company,,erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:70,accounts,0
+Wrong Template,,erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:55,accounts,0
+You can add the original invoice {} manually to proceed.,,erpnext/accounts/doctype/pos_invoice_merge_log/pos_invoice_merge_log.py:111,accounts,0
+You can't redeem Loyalty Points having more value than the Total Amount.,,erpnext/accounts/doctype/loyalty_program/loyalty_program.py:192,accounts,0
+You cannot create a {0} within the closed Accounting Period {1},,erpnext/accounts/doctype/accounting_period/accounting_period.py:136,accounts,0
+You cannot enable both the settings '{0}' and '{1}'.,,erpnext/accounts/doctype/accounts_settings/accounts_settings.py:144,accounts,0
+You cannot {0} this document because another Period Closing Entry {1} exists after {2},,erpnext/accounts/doctype/period_closing_voucher/period_closing_voucher.py:107,accounts,0
+You need to cancel POS Closing Entry {} to be able to cancel this document.,,erpnext/accounts/doctype/pos_invoice/pos_invoice.py:278,accounts,0
+Zero Balance,رصيد صفري,erpnext/accounts/doctype/exchange_rate_revaluation_account/exchange_rate_revaluation_account.json:None,accounts,1
+dated {0},,erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py:334; erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1078,accounts,0
+exchangerate.host,,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None,accounts,0
+frankfurter.dev,,erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json:None,accounts,0
+subscription is already cancelled.,,erpnext/accounts/doctype/subscription/subscription.py:679,accounts,0
+to unallocate the amount of this Return Invoice before cancelling it.,,erpnext/accounts/doctype/sales_invoice/sales_invoice.py:3087,accounts,0
+variance,,erpnext/accounts/report/budget_variance_report/budget_variance_report.js:9,accounts,0
+{0} Budget for Account {1} against {2} {3} is {4}. It is already exceeded by {5}.,,erpnext/accounts/doctype/budget/budget.py:547,accounts,0
+{0} Budget for Account {1} against {2} {3} is {4}. It will be exceeded by {5}.,,erpnext/accounts/doctype/budget/budget.py:550,accounts,0
+{0} Transaction(s) Reconciled,,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.py:457,accounts,0
+{0} account is not of company {1},,erpnext/accounts/doctype/payment_ledger_entry/payment_ledger_entry.py:59,accounts,0
+{0} account is not of type {1},,erpnext/accounts/doctype/payment_ledger_entry/payment_ledger_entry.py:62,accounts,0
+{0} cannot be changed with opened Opening Entries.,,erpnext/accounts/doctype/pos_settings/pos_settings.py:52,accounts,0
+{0} cannot be used as a Main Cost Center because it has been used as child in Cost Center Allocation {1},,erpnext/accounts/doctype/cost_center_allocation/cost_center_allocation.py:136,accounts,0
+{0} cannot be zero,,erpnext/accounts/doctype/payment_request/payment_request.py:120,accounts,0
+{0} has been modified after you pulled it. Please pull it again.,,erpnext/accounts/doctype/payment_reconciliation/payment_reconciliation.py:773,accounts,0
+{0} is added multiple times on rows: {1},,erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:100; erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py:153; erpnext/accounts/doctype/pos_invoice_merge_log/pos_invoice_merge_log.py:60,accounts,0
+{0} is open. Close the POS or cancel the existing POS Opening Entry to create a new POS Opening Entry.,,erpnext/accounts/doctype/pos_opening_entry/pos_opening_entry.py:68,accounts,0
+{0} view is currently unsupported in Custom Financial Report.,,erpnext/accounts/doctype/financial_report_template/financial_report_engine.py:232,accounts,0
+{0} will be given as discount.,,erpnext/accounts/doctype/payment_term/payment_term.js:19,accounts,0
+{0} {1} Partially Reconciled,,erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.py:461,accounts,0
+{0} {1} is allocated twice in this Bank Transaction,,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:96,accounts,0
+{0} {1} is not in any active Fiscal Year,,erpnext/accounts/utils.py:120,accounts,0
+{0} {1} not allowed to be reposted. Modify {2} to enable reposting.,,erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py:272,accounts,0
+{0} {1}: Account {2} is a Group Account and group accounts cannot be used in transactions,,erpnext/accounts/doctype/gl_entry/gl_entry.py:241; erpnext/accounts/doctype/payment_ledger_entry/payment_ledger_entry.py:73,accounts,0
+{0} {1}: Cost Center is required for 'Profit and Loss' account {2}.,,erpnext/accounts/doctype/gl_entry/gl_entry.py:178,accounts,0
+{0} {1}: Cost Center {2} is a group cost center and group cost centers cannot be used in transactions,,erpnext/accounts/doctype/gl_entry/gl_entry.py:273,accounts,0
+{0}% of total invoice value will be given as discount.,,erpnext/accounts/doctype/payment_term/payment_term.js:15,accounts,0
+{} is a child company.,,erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py:66,accounts,0
+{} {} is already linked with another {},,erpnext/accounts/doctype/party_link/party_link.py:53; erpnext/accounts/doctype/party_link/party_link.py:63,accounts,0
+{} {} is already linked with {} {},,erpnext/accounts/doctype/party_link/party_link.py:40,accounts,0
+{} {} is not affecting bank account {},,erpnext/accounts/doctype/bank_transaction/bank_transaction.py:385,accounts,0

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scope-proposal/v1",
+  "title": "Scope Proposal",
+  "description": "Architect-proposed scope and implementation stages, validated by the orchestrator at result-collection time.",
+  "type": "object",
+  "required": ["schema", "scope", "implementation_stages"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "scope-proposal/v1"
+    },
+    "scope": {
+      "type": "object",
+      "required": ["allowed_paths", "requirements", "validation_commands"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed_paths": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "requirements": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "validation_commands": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "implementation_stages": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}

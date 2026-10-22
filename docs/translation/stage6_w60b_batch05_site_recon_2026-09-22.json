@@ -1,0 +1,3309 @@
+{
+  "site": "v16.localhost",
+  "scope_rows": 270,
+  "languages": [
+    {
+      "name": "ar",
+      "enabled": 1
+    },
+    {
+      "name": "en",
+      "enabled": 1
+    }
+  ],
+  "match_count": 274,
+  "site_overrides": [
+    {
+      "source_text": "Postal Code",
+      "translated_text": "الرمز البريدي",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    }
+  ],
+  "other_matches": [
+    {
+      "source_text": "Prefer not to say",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler: Inactive",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "RQ Worker",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Number of keys",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Missing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Recursive Fetch From",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Datetime",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not active",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Worker Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sent To",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 hours ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 weeks ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Values Changed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduled Against",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Profile Picture",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Role Profiles",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success Message",
+      "translated_text": "رسالة النجاح",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Resource TOS URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Theme",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SMS Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook Trigger",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Page",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Protected File",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Table Trimmed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Workflow Task",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Traceback",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not Helpful",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Rounding Method",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Method",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Package Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Offset Y",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Workflow Data",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Try a Naming Series",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Workspaces",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Password Email Sent",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sequence Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Visits",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Timeless Launchpad",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Related Errors",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Re-Run in Console",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Timed Out",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Original Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Resource Policy URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduled Jobs Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queued By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Published Web Pages",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Welcome URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Response Headers",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Workflow Builder ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row #",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Right Center",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Published Web Forms",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Token Cache",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Popover Element",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pending Jobs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "UI Tour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Size (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Token URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SMS Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permitted Roles",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set Properties",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Rate Limiting",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Synced Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not a valid user",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sign ups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Software Version",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Table Fieldname",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sent Folder Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show attachments",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Plain Text",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Session Created",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Repeat on Days",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Redirect To Path",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Page",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User is disabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Levels",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Submission Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Relay Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show on Timeline",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Visit Desktop",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Publishing Dates",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sequence ID",
+      "translated_text": "معرف التسلسل",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Syntax Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Slack Webhook URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Page Title",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "1 second ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sent On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Type Module",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Offset X",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Icon",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Send Email On State",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "TOS URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Number of Queries",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "To Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference name",
+      "translated_text": "اسم المرجع",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unsupported {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Storage Usage (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Country",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Realtime (SocketIO)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Worker Information",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SQL Output",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pull Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total Users",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Policy URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Email",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Source Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Suggested Indexes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'{0}' is not a valid URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unsafe SQL query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Requested Numbers",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OTP SMS Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Package Release",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Started At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reset Layout",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Inspector",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Section ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Private Files (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Top 10",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Full Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Timeout (In Seconds)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Query Parameters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Runtime in Seconds",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SQL Explain",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Value Change",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total Working Time",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Partial Success",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Language Picker",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Description",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Time Taken",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Transition Tasks",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Redirect URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SocketIO Ping Check",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler: Active",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Visitor ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Standard Permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Role Profile",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scripting / Style",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Template File",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Uncaught Exception",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Runtime in Minutes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Trigger caching",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Raw Printing Setting",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Tour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Purchase Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Release Notes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Table Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Upgrade plan",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Stack Trace",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not Nullable",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Test Spanish",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Outgoing Server",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OpenID Configuration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Revocation URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Start Recording",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success title",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pending Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sign Out",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Push Notifications",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Name Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User does not exist.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Postal Code",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Session Display",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Token Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Partially Sent",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Userinfo URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Send Now",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set size in MB",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unsubscribe Params",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Outgoing Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Client Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 months ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Test Job ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Resource Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Master Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Redirect HTTP Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook Secret",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Used OAuth",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "System Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Purchase User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queued At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queue Overloaded",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Welcome to {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Invitation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Time Zone",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Start Time",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Roles & Permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Splash Image",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Utilization %",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Page Route",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler Inactive",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show list",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Email Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Scope",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Trim Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Format",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook Request Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Read mode",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Onboarding Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SQL Queries",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Processlist",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scopes Supported",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Body",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Id Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "1 day ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Time in Queries",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Retry Sending",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Put on Hold",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Trace ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queue Type(s)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Recorder Query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'{0}' is not a valid IBAN",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Doc",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Indexes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Absolute Values",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Peak Memory Usage",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Headers",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Software ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set only once",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "System Health",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "PDF Generator",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Role Replication",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Use STARTTLS",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Quick Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show footer on login",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Test Data",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Right Bottom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Track Steps",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sync {0} Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Values Changed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Public Files (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success message",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Quick Lists",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Setup > User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Payload Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Wrapping up",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Workflow",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unhandled Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please select {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Setup failed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User {0} is disabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Too Many Documents",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Optimizing image...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permissions Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queue Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pulling emails...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Top Errors",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Number Card Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Successful Job Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    }
+  ],
+  "matches": [
+    {
+      "source_text": "Prefer not to say",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler: Inactive",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "RQ Worker",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Number of keys",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Missing",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Recursive Fetch From",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Datetime",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not active",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Worker Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sent To",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 hours ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 weeks ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Values Changed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduled Against",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Profile Picture",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Role Profiles",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success Message",
+      "translated_text": "رسالة النجاح",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Resource TOS URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Theme",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SMS Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook Trigger",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Page",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Protected File",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Table Trimmed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Workflow Task",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Traceback",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not Helpful",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Rounding Method",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Method",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Package Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Offset Y",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Workflow Data",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Try a Naming Series",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Workspaces",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Password Email Sent",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sequence Id",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Visits",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Timeless Launchpad",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Related Errors",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Re-Run in Console",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Timed Out",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Original Value",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Resource Policy URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduled Jobs Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queued By",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Published Web Pages",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Welcome URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Response Headers",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Workflow Builder ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row #",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Right Center",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Published Web Forms",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Token Cache",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Popover Element",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pending Jobs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "UI Tour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Size (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Token URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SMS Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permitted Roles",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set Properties",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Rate Limiting",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Synced Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not a valid user",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sign ups",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Software Version",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Table Fieldname",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sent Folder Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show attachments",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Plain Text",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Session Created",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Repeat on Days",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Redirect To Path",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Page",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User is disabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Levels",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Submission Queue",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Relay Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show on Timeline",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Visit Desktop",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Publishing Dates",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sequence ID",
+      "translated_text": "معرف التسلسل",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Syntax Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Slack Webhook URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Page Title",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "1 second ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sent On",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Type Module",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Offset X",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Icon",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Send Email On State",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "TOS URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Number of Queries",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "To Date",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference name",
+      "translated_text": "اسم المرجع",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unsupported {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Storage Usage (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Country",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Realtime (SocketIO)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Worker Information",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SQL Output",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pull Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total Users",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Policy URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Email",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Source Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Suggested Indexes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'{0}' is not a valid URL",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unsafe SQL query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Requested Numbers",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OTP SMS Template",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Package Release",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Started At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reset Layout",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Inspector",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Section ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Private Files (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Top 10",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Full Number",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Timeout (In Seconds)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Query Parameters",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Runtime in Seconds",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SQL Explain",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Value Change",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total Working Time",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Partial Success",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Language Picker",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Description",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Time Taken",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Transition Tasks",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Redirect URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permission Query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SocketIO Ping Check",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler: Active",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Visitor ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Standard Permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Role Profile",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scripting / Style",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Template File",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Uncaught Exception",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Runtime in Minutes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Trigger caching",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Raw Printing Setting",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Tour",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Purchase Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Release Notes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Table Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Upgrade plan",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Stack Trace",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Not Nullable",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Test Spanish",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Outgoing Server",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OpenID Configuration",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Revocation URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Start Recording",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success title",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pending Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Document",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sign Out",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Push Notifications",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Name Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User does not exist.",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Postal Code",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Session Display",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Token Type",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Partially Sent",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Userinfo URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Send Now",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set size in MB",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unsubscribe Params",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Outgoing Settings",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Client Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "2 months ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Test Job ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Resource Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Master Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Redirect HTTP Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook Secret",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Used OAuth",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "System Logs",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Purchase User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queued At",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queue Overloaded",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Welcome to {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Role",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Invitation",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Time Zone",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Start Time",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Roles & Permissions",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Splash Image",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Utilization %",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Page Route",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scheduler Inactive",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show list",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sender Email Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "OAuth Scope",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Trim Table",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Format",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Webhook Request Log",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Read mode",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Onboarding Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "SQL Queries",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Processlist",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Scopes Supported",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Body",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success URI",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Id Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "1 day ago",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Time in Queries",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Retry Sending",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Put on Hold",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Trace ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queue Type(s)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Recorder Query",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "'{0}' is not a valid IBAN",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reference Doc",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Indexes",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Absolute Values",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Peak Memory Usage",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Headers",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Software ID",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set only once",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "System Health",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Manager",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "PDF Generator",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Role Replication",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Use STARTTLS",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Set Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Quick Entry",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show footer on login",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Field",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Test Data",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Right Bottom",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Track Steps",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sync {0} Fields",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Request Limit",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row Values Changed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Public Files (MB)",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Success message",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Quick Lists",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Setup > User",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Payload Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Website Script",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Wrapping up",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select Workflow",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Unhandled Emails",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please select {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Setup failed",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User {0} is disabled",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Too Many Documents",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "User Details",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Optimizing image...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Permissions Error",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Queue Status",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Pulling emails...",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Top Errors",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Number Card Name",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Successful Job Count",
+      "translated_text": "",
+      "ct_origin": "",
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Postal Code",
+      "translated_text": "الرمز البريدي",
+      "ct_origin": "Site Override",
+      "owner": "Administrator"
+    }
+  ]
+}

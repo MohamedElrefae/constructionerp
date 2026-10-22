@@ -1,0 +1,7 @@
+SITE total=21 arabic_populated=0
+DRY Company 'Elrefae' before=<empty> after=63f48828f9f20a78 norm=63f48828f9f20a78 WOULD_WRITE PLAIN_SAVE abbr='E' currency='EGP' country='Egypt' coa='Standard with Numbers'
+EXCLUSIONS excluded_rows=20 (test-noise companies, untouched)
+SUMMARY rows=1 would_write=1 plain=1
+PRIVATE dry-run.json sha256=747cf6b9e9a8aadde90965e0b1949b159b9f68c0ce357e2d5d72fa4e823d20f7
+WRITES_PERFORMED: 0
+DRY-RUN RESULT: PASS (1/1 row validated; PLAIN save planned; approved v2 sha matched; zero writes)

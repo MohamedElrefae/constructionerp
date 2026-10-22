@@ -1,0 +1,1441 @@
+/* global vfcDebugLog */
+/* ═══════════════════════════════════════════════════════════════════════
+   vfc_layout_engine.js — Generic Form Layout Engine
+   ─────────────────────────────────────────────────────────────────────
+   Reads a Form Layout Profile from the server and re-parents Frappe
+   field wrappers into custom named section containers.
+
+   Architecture
+   ─────────────────────────────────────────────────────────────────────
+   • Fully generic — works for ANY DocType (no hard-coding)
+   • Non-destructive — never modifies Frappe's field objects or meta
+   • Graceful fallback — if no profile, form renders exactly as Frappe
+     would (this function returns immediately and does nothing)
+   • Safe for unknown fields — logs one warning and skips
+
+   Native Frappe behaviors preserved
+   ─────────────────────────────────────────────────────────────────────
+   • Field permissions (read-only, hidden by role)
+   • Mandatory validation
+   • depends_on / read_only_depends_on evaluation
+   • Link field queries
+   • Field events (onchange, etc.)
+   • Child table controls
+
+   How re-parenting works
+   ─────────────────────────────────────────────────────────────────────
+   Each Frappe field has a .wrapper (jQuery element) that holds the
+   label + control. We move these wrappers into our <div> grid containers
+   while keeping them in frm.fields_dict. Frappe continues to manage
+   them — we only change WHERE in the DOM they appear.
+
+   Version: 1.20 | 2026-05-28
+   Gate: Phase 2 — pilot active on BOQ Header and BOQ Item
+════════════════════════════════════════════════════════════════════════ */
+
+(function () {
+	"use strict";
+
+	/* ═══════════════════════════════════════════════════════════════════
+     PILOT GUARD
+     Phase 3: expanded to all construction DocTypes. Without a Form
+     Layout Profile record, the engine is a no-op (graceful fallback).
+     The engine works on flat-layout DocTypes. Tabbed DocTypes (those
+     with Tab Break fields) are automatically skipped regardless of
+     BLOCKED_DOCTYPES - this is a safety net.
+  ═══════════════════════════════════════════════════════════════════ */
+	const BLOCKED_DOCTYPES = new Set([
+		// ── Frappe core metadata ──
+		// Never allow VFC to re-parent core schema-definition doctypes.
+		"DocType",
+		"DocField",
+		"DocPerm",
+		"Custom Field",
+		"Property Setter",
+
+		// ── Client/Server scripting ──
+		// Scripts managed by Frappe's hook system, not form layout.
+		"Client Script",
+		"Server Script",
+
+		// ── Reports, Pages, Print ──
+		// Not standard data-entry forms.
+		"Report",
+		"Page",
+		"Print Format",
+		"Letter Head",
+
+		// ── System/internal logs ──
+		// Never expose these to layout manipulation.
+		"Patch Log",
+		"Error Log",
+		"Scheduled Job Log",
+		"Activity Log",
+		"Access Log",
+		"Version",
+
+		// ── Communication/Notification ──
+		// Thread/timeline entries that render in Frappe's timeline widget.
+		"Comment",
+		"Communication",
+		"Notification Log",
+
+		// ── File/Attachment ──
+		"File",
+
+		// ── Workflow ──
+		// Workflow internals should not be layout-moved.
+		"Workflow Action",
+		"Workflow Action Master",
+		"Workflow Transition",
+
+		// ── Tags ──
+		"Tag",
+		"Tag Link",
+
+		// ── Email ──
+		"Email Queue",
+		"Email Queue Recipient",
+
+		// ── ToDo ──
+		"ToDo",
+
+		// ── i18n ──
+		"Translation",
+		"Language",
+
+		// ── System Configuration ──
+		"Module Def",
+		"Web Form",
+		"Web Page",
+		"Website Settings",
+		"System Settings",
+		"Domain Settings",
+	]);
+
+	/* ═══════════════════════════════════════════════════════════════════
+     LAYOUT ENGINE — singleton
+  ═══════════════════════════════════════════════════════════════════ */
+	const LayoutEngine = {
+		// Cache TTL: 60 seconds (profile changes become visible within this window)
+		CACHE_TTL_MS: 60000,
+		// Cache: doctype → { value, ts } (null = no profile, {} = loaded)
+		_cache: new Map(),
+		// Active containers: frm.doctype → array of injected section divs
+		_activeSections: new Map(),
+
+		/* ─────────────────────────────────────────────────────────────
+       attach(frm)
+       Called on every form refresh. Idempotent per frm instance.
+       Fetches the active profile (cached per doctype) then renders.
+    ───────────────────────────────────────────────────────────── */
+		async attach(frm) {
+			vfcDebugLog("log", `[LE] attach() triggered for: ${frm.doctype}`);
+			const dt = frm.doctype;
+
+			const layoutRoot = this._getLayoutRoot(frm);
+
+			// Blocked gate — skip internal/system-only doctypes
+			if (BLOCKED_DOCTYPES.has(dt)) {
+				return;
+			}
+
+			// Tab detection — DocTypes with Tab Break fields use tab-aware rendering.
+			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
+
+			if (hasTabs && frm.layout && frm.layout.tabs && frm.layout.tabs.length) {
+				const TabClass = frm.layout.tabs[0].constructor;
+				if (TabClass && !TabClass._vfc_patched) {
+					TabClass._vfc_patched = true;
+					TabClass.prototype.refresh = function () {
+						if (!this.df) return;
+
+						let hide = this.df.hidden || this.df.hidden_due_to_dependency;
+
+						if (
+							!hide &&
+							this.frm &&
+							!this.frm.get_perm(this.df.permlevel || 0, "read")
+						) {
+							hide = true;
+						}
+						if (!hide) {
+							hide = true;
+							const hasVfcHost = this.wrapper.find(".vfc-tab-pane-host").length > 0;
+							if (hasVfcHost) {
+								const hasVisibleFields =
+									this.wrapper.find(
+										".vfc-tab-pane-host .frappe-control:not(.hide-control)"
+									).length > 0;
+								if (hasVisibleFields) {
+									hide = false;
+								}
+							}
+							if (hide) {
+								if (
+									this.wrapper.find(
+										".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)"
+									).length
+								) {
+									hide = false;
+								}
+							}
+						}
+
+						this.toggle(!hide);
+					};
+				}
+			}
+
+			const key = frm.doctype + "__" + frm.docname;
+			vfcDebugLog("log", `[LE] Processing key: ${key}`);
+			if (!this._retryTimers) this._retryTimers = new Map();
+			if (!this._retryCounts) this._retryCounts = new Map();
+			if (!this._attachTokens) this._attachTokens = new Map();
+			const token = (this._attachTokens.get(key) || 0) + 1;
+			this._attachTokens.set(key, token);
+
+			// Clear any existing retry timers for this form key
+			if (this._retryTimers.has(key)) {
+				clearTimeout(this._retryTimers.get(key));
+				this._retryTimers.delete(key);
+			}
+
+			try {
+				// Fetch profile (cached after first call)
+				vfcDebugLog("log", `[LE] Fetching profile for ${dt}...`);
+				const profile = await this._fetchProfile(dt);
+				vfcDebugLog("log", `[LE] Profile fetched for ${dt}:`, profile);
+
+				if (this._attachTokens.get(key) !== token) {
+					vfcDebugLog("log", `[LE] Stale attach skipped for ${key}.`);
+					return;
+				}
+
+				// No profile → check density override or fallback to native
+				if (!profile) {
+					if (layoutRoot) {
+						const denClass = [...layoutRoot.classList].find((c) =>
+							/^vfc-density-\d+$/.test(c)
+						);
+						if (denClass) {
+							const density = parseInt(denClass.split("-").pop(), 10);
+							if (density !== 2 && !hasTabs) {
+								vfcDebugLog(
+									"log",
+									`[LE] No profile, non-default density (${density}) — density rendering.`
+								);
+								this.renderWithDensity(frm, density);
+								return;
+							}
+						}
+					}
+
+					vfcDebugLog("log", `[LE] No profile found for ${dt}. Aborting VFC layout.`);
+					return;
+				}
+
+				if (!layoutRoot || !layoutRoot.isConnected) {
+					const retries = this._retryCounts.get(key) || 0;
+					if (retries < 20) {
+						this._retryCounts.set(key, retries + 1);
+						vfcDebugLog(
+							"log",
+							`[LE] layoutRoot not found for ${key}. Scheduling retry ${
+								retries + 1
+							}/20 in 250ms...`
+						);
+						const timer = setTimeout(() => {
+							this.attach(frm);
+						}, 250);
+						this._retryTimers.set(key, timer);
+					} else {
+						vfcDebugLog(
+							"warn",
+							`[LE] Retry limit reached. Could not find layoutRoot for ${key}.`
+						);
+						this._retryCounts.delete(key);
+					}
+					return;
+				}
+
+				// Re-inject on every refresh (field wrappers may be recreated)
+				this._render(frm, profile, layoutRoot);
+			} catch (err) {
+				vfcDebugLog("error", `[LE] attach error for ${dt}:`, err);
+			}
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _fetchProfile(doctype)
+       Returns profile object or null. Caches result per doctype.
+    ───────────────────────────────────────────────────────────── */
+		async _fetchProfile(doctype) {
+			if (this._cache.has(doctype)) {
+				const entry = this._cache.get(doctype);
+				if (entry && entry.ts && Date.now() - entry.ts < this.CACHE_TTL_MS) {
+					return entry.value;
+				}
+				this._cache.delete(doctype);
+			}
+
+			const result = await frappe.call({
+				method: "construction.construction.api.layout_api.get_active_layout",
+				args: { doctype },
+				freeze: false,
+			});
+
+			const profile = result?.message || null;
+			this._cache.set(doctype, { value: profile, ts: Date.now() });
+			return profile;
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _render(frm, profile)
+       Core engine: builds section containers, moves field wrappers.
+    ───────────────────────────────────────────────────────────── */
+		_render(frm, profile, layoutRoot) {
+			const dt = frm.doctype;
+
+			// Remove any previously injected VFC sections for this frm
+			this._clearSections(frm);
+
+			// Mark form as VFC-active so density CSS only applies here
+			layoutRoot.classList.add("vfc-active");
+
+			// Collect known fieldnames (guard against unknown field refs)
+			const knownFieldnames = new Set((frm.meta?.fields || []).map((f) => f.fieldname));
+
+			// Build type map for O(1) fieldtype lookup
+			const metaFieldTypeMap = {};
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
+			(frm.meta?.fields || []).forEach((mf) => {
+				if (mf.fieldname) metaFieldTypeMap[mf.fieldname] = mf.fieldtype;
+			});
+
+			// Build a Set of fieldnames assigned in this profile (excluding layout-only types)
+			const assignedFieldnames = new Set();
+			const profileHiddenFieldnames = new Set();
+			(profile.sections || []).forEach((sec) => {
+				(sec.fields || []).forEach((f) => {
+					if (!f.fieldname) return;
+					if (SKIP_TYPES.has(metaFieldTypeMap[f.fieldname])) return;
+					assignedFieldnames.add(f.fieldname);
+					if (f.visible === false) profileHiddenFieldnames.add(f.fieldname);
+				});
+			});
+
+			// Sort sections by sort_order
+			const sections = [...(profile.sections || [])].sort(
+				(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+			);
+
+			const injectedContainers = [];
+
+			// ── Hide ALL native Frappe section/column break elements ──
+			// We'll reconstruct the visual layout ourselves.
+			this._hideNativeLayoutShells(layoutRoot);
+
+			// Determine effective column count from density override (if set)
+			const densityOverride = layoutRoot.classList.contains("vfc-density-1")
+				? 1
+				: layoutRoot.classList.contains("vfc-density-2")
+				? 2
+				: layoutRoot.classList.contains("vfc-density-3")
+				? 3
+				: 0;
+
+			// Tab detection for rendering
+			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
+
+			// ── Build VFC section containers ──
+			sections.forEach((sec) => {
+				if (sec.visible === false) return;
+
+				const effectiveColCount =
+					densityOverride || Math.min(Math.max(sec.column_count || 2, 1), 3);
+				const sectionEl = this._buildSectionEl(sec, frm, effectiveColCount);
+				const gridEl = sectionEl.querySelector(".vfc-le-grid");
+
+				// Sort fields within section
+				const fields = [...(sec.fields || [])].sort(
+					(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+				);
+
+				let hasVisibleField = false;
+				let colIdx = 0;
+
+				fields.forEach((fld) => {
+					const fn = fld.fieldname;
+
+					// Unknown field guard
+					if (!knownFieldnames.has(fn)) {
+						vfcDebugLog(
+							"warn",
+							`[LE] Profile '${profile.profile_name}': unknown fieldname '${fn}' on ${dt} — skipping`
+						);
+						return;
+					}
+
+					// Skip layout-only field types (breaks, tabs, HTML, headings)
+					if (SKIP_TYPES.has(metaFieldTypeMap[fn])) return;
+
+					const fieldObj = frm.fields_dict[fn];
+					if (!fieldObj) {
+						vfcDebugLog("log", `[LE] FieldObj not found for ${fn}`);
+						return;
+					}
+
+					// Handle profile-level visibility
+					if (fld.visible === false) {
+						frm.toggle_display(fn, false);
+						return;
+					}
+
+					// Handle runtime visibility (user settings, permissions, depends_on)
+					if (
+						fieldObj.df &&
+						(fieldObj.df.hidden ||
+							fieldObj.df.invisible ||
+							fieldObj.df.hidden_due_to_dependency)
+					) {
+						vfcDebugLog(
+							"log",
+							`[LE] Skipping hidden field ${fn} (df.hidden=${fieldObj.df.hidden}, df.invisible=${fieldObj.df.invisible}, df.hidden_due_to_dependency=${fieldObj.df.hidden_due_to_dependency})`
+						);
+						return;
+					}
+
+					const wrapper = fieldObj.wrapper;
+					if (!wrapper) {
+						vfcDebugLog("log", `[LE] Wrapper missing for ${fn}`);
+						return;
+					}
+
+					// Determine column span
+					let col;
+					if (densityOverride > 0) {
+						colIdx = (colIdx + 1) % densityOverride;
+						col = colIdx || densityOverride;
+					} else {
+						const colCount = Math.min(Math.max(sec.column_count || 2, 1), 3);
+						col = Math.min(Math.max(fld.col || 1, 1), colCount);
+					}
+
+					// Create a cell div for this field
+					const cell = document.createElement("div");
+					cell.className = "vfc-le-cell";
+					cell.style.gridColumn = String(col);
+					cell.setAttribute("data-vfc-field", fn);
+
+					// Move the native field wrapper into our cell
+					const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
+					if (nativeEl && nativeEl.parentNode) {
+						if (!fieldObj._native_parent) {
+							fieldObj._native_parent = nativeEl.parentNode;
+						}
+						cell.appendChild(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
+					}
+
+					gridEl.appendChild(cell);
+					hasVisibleField = true;
+				});
+
+				// Only append section if it has at least one field (or is collapsible)
+				if (hasVisibleField || sec.collapsible) {
+					if (hasTabs) {
+						const tabFieldname = this._getSectionTab(sec, frm);
+						const tabPane = this._getTabPane(frm, tabFieldname);
+						if (tabPane) {
+							const host = this._getOrCreateTabHost(tabPane);
+							host.appendChild(sectionEl);
+						} else {
+							layoutRoot.appendChild(sectionEl);
+						}
+					} else {
+						layoutRoot.appendChild(sectionEl);
+					}
+					injectedContainers.push(sectionEl);
+				}
+			});
+
+			// ── Append unassigned fields at bottom (unassigned_policy: append) ──
+			if (profile.unassigned_policy !== "discard") {
+				this._appendUnassigned(
+					frm,
+					layoutRoot,
+					knownFieldnames,
+					assignedFieldnames,
+					profile
+				);
+			}
+
+			// Store for cleanup on next render
+			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);
+
+			// Setup MutationObserver to watch for field wrappers being pulled back by Frappe
+			this._setupObserver(frm, layoutRoot, profile);
+
+			const key = frm.doctype + "__" + frm.docname;
+			const state = { assignedFieldnames, profileHiddenFieldnames };
+			this._verifyAndRetry(frm, state, "immediate");
+			this._scheduleValidationPasses(frm, state);
+		},
+
+		_getLayoutRoot(frm) {
+			const candidates = [];
+			const addCandidate = (el) => {
+				if (el && !candidates.includes(el)) candidates.push(el);
+			};
+
+			frm.wrapper?.find?.(".form-layout")?.each((_, el) => addCandidate(el));
+			if (frm.layout?.wrapper?.hasClass?.("form-layout")) {
+				addCandidate(frm.layout.wrapper[0]);
+			}
+			frm.layout?.wrapper?.find?.(".form-layout")?.each((_, el) => addCandidate(el));
+			addCandidate(frm.layout?.wrapper?.[0]);
+
+			return candidates.find((el) => el.isConnected) || candidates[0] || null;
+		},
+
+		_getObserverRoot(frm, layoutRoot) {
+			return frm.wrapper?.[0] || frm.page?.main?.[0] || layoutRoot;
+		},
+
+		_getSectionTab(sec, frm) {
+			if (sec.tab_fieldname) return sec.tab_fieldname;
+			if (sec.fields && sec.fields.length) {
+				for (const fld of sec.fields) {
+					const fn = fld.fieldname;
+					const metaField = (frm.meta?.fields || []).find((f) => f.fieldname === fn);
+					if (metaField) {
+						const layoutFields = frm.layout?.fields || frm.meta.fields;
+						const idx = layoutFields.indexOf(metaField);
+						for (let i = idx; i >= 0; i--) {
+							if (layoutFields[i].fieldtype === "Tab Break") {
+								return layoutFields[i].fieldname;
+							}
+						}
+					}
+				}
+			}
+			if (frm.layout?.tabs?.length) {
+				return frm.layout.tabs[0].df.fieldname;
+			}
+			return null;
+		},
+
+		_getFieldTab(df, frm) {
+			const fields = frm.layout?.fields || frm.meta?.fields || [];
+			const idx = fields.indexOf(df);
+			if (idx === -1) return null;
+			for (let i = idx; i >= 0; i--) {
+				if (fields[i].fieldtype === "Tab Break") {
+					return fields[i].fieldname;
+				}
+			}
+			return null;
+		},
+
+		_getTabPane(frm, tabFieldname) {
+			if (!tabFieldname) return null;
+			const dt = frappe.scrub(frm.doctype, "-");
+			const id = `${dt}-${tabFieldname}`;
+			return document.getElementById(id);
+		},
+
+		_getOrCreateTabHost(tabPane) {
+			if (!tabPane) return null;
+			let host = tabPane.querySelector(".vfc-tab-pane-host");
+			if (!host) {
+				host = document.createElement("div");
+				host.className = "vfc-tab-pane-host";
+				tabPane.appendChild(host);
+			}
+			return host;
+		},
+
+		_hideNativeLayoutShells(layoutRoot) {
+			if (!layoutRoot) return 0;
+
+			let count = 0;
+			layoutRoot
+				.querySelectorAll(
+					".form-section, .frappe-section, .section-head, .section-body, .frappe-column, .form-column"
+				)
+				.forEach((el) => {
+					if (el.closest(".vfc-le-section")) return;
+					if (el.closest(".form-dashboard-section")) return; // Protect dashboard components
+					el.style.setProperty("display", "none", "important");
+					el.setAttribute("data-vfc-hidden", "1");
+					count += 1;
+				});
+			return count;
+		},
+
+		_clearValidationTimers(key) {
+			if (!this._validationTimers) this._validationTimers = new Map();
+			const timers = this._validationTimers.get(key) || [];
+			timers.forEach((timer) => clearTimeout(timer));
+			this._validationTimers.delete(key);
+		},
+
+		_scheduleValidationPasses(frm, state) {
+			const key = frm.doctype + "__" + frm.docname;
+			this._clearValidationTimers(key);
+
+			const timers = [300, 750, 1500, 3000].map((delay) =>
+				setTimeout(() => {
+					this._verifyAndRetry(frm, state, `delayed-${delay}`);
+				}, delay)
+			);
+			this._validationTimers.set(key, timers);
+		},
+
+		_verifyAndRetry(frm, state, phase) {
+			const key = frm.doctype + "__" + frm.docname;
+			if (!this._retryTimers) this._retryTimers = new Map();
+			if (!this._retryCounts) this._retryCounts = new Map();
+
+			if (this._retryTimers.has(key)) {
+				clearTimeout(this._retryTimers.get(key));
+				this._retryTimers.delete(key);
+			}
+
+			const layoutRoot = this._getLayoutRoot(frm);
+			const hiddenNativeCount = this._hideNativeLayoutShells(layoutRoot);
+			const missingFields = this._hasMissingFields(frm, state, phase);
+			const visibleNativeCount = this._countVisibleNativeLayoutShells(layoutRoot);
+			const hiddenEmptySectionCount = this._hideEmptyCustomSections(layoutRoot);
+			const sectionSummary = this._getSectionSummary(layoutRoot);
+			vfcDebugLog(
+				"log",
+				`[LE] Verification ${phase} complete. missingFields=${missingFields}`
+			);
+			if (hiddenNativeCount || visibleNativeCount) {
+				vfcDebugLog(
+					"log",
+					`[LE] Verification ${phase}: hiddenNativeShells=${hiddenNativeCount}, visibleNativeShells=${visibleNativeCount}`
+				);
+			}
+			if (hiddenEmptySectionCount) {
+				vfcDebugLog(
+					"log",
+					`[LE] Verification ${phase}: hiddenEmptySections=${hiddenEmptySectionCount}`
+				);
+			}
+			vfcDebugLog("log", `[LE] Verification ${phase}: sections=${sectionSummary}`);
+
+			if (missingFields) {
+				const retries = this._retryCounts.get(key) || 0;
+				if (retries < 20) {
+					this._retryCounts.set(key, retries + 1);
+					vfcDebugLog(
+						"log",
+						`[LE] Missing field wrappers detected for ${key}. Scheduling retry ${
+							retries + 1
+						}/20 in 250ms...`
+					);
+					const timer = setTimeout(() => {
+						this.attach(frm);
+					}, 250);
+					this._retryTimers.set(key, timer);
+				} else {
+					vfcDebugLog(
+						"warn",
+						`[LE] Retry limit reached for ${key}. Some field wrappers could not be attached.`
+					);
+					this._retryCounts.delete(key);
+				}
+			} else if (phase === "delayed-3000") {
+				this._retryCounts.delete(key);
+				this._clearValidationTimers(key);
+			}
+		},
+
+		_hasMissingFields(frm, state, phase) {
+			const layoutRoot = this._getLayoutRoot(frm);
+			if (!layoutRoot || !layoutRoot.isConnected) {
+				vfcDebugLog(
+					"log",
+					`[LE] Verification ${phase}: current layoutRoot missing or detached`
+				);
+				return true;
+			}
+
+			for (const fn of state.assignedFieldnames) {
+				const fieldObj = frm.fields_dict[fn];
+				if (!fieldObj) continue;
+
+				if (
+					fieldObj.df &&
+					(fieldObj.df.hidden ||
+						fieldObj.df.invisible ||
+						fieldObj.df.hidden_due_to_dependency)
+				)
+					continue;
+				if (state.profileHiddenFieldnames.has(fn)) continue;
+
+				const wrapper = fieldObj.wrapper;
+				if (!wrapper) {
+					vfcDebugLog("log", `[LE] Verification ${phase}: Wrapper missing for ${fn}`);
+					return true;
+				}
+
+				const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
+				if (!nativeEl) {
+					vfcDebugLog("log", `[LE] Verification ${phase}: nativeEl is falsy for ${fn}`);
+					return true;
+				}
+				if (!nativeEl.isConnected) {
+					vfcDebugLog(
+						"log",
+						`[LE] Verification ${phase}: nativeEl not connected to DOM for ${fn}`
+					);
+					return true;
+				}
+
+				const cell = nativeEl.parentNode;
+				if (!cell?.classList?.contains("vfc-le-cell")) {
+					vfcDebugLog(
+						"log",
+						`[LE] Verification ${phase}: nativeEl parent is NOT .vfc-le-cell for ${fn}`
+					);
+					return true;
+				}
+
+				const section = cell.closest(".vfc-le-section");
+				if (!section || !layoutRoot.contains(section)) {
+					vfcDebugLog(
+						"log",
+						`[LE] Verification ${phase}: ${fn} is not inside the current VFC section tree`
+					);
+					return true;
+				}
+
+				if (nativeEl.closest("[data-vfc-hidden='1']")) {
+					vfcDebugLog(
+						"log",
+						`[LE] Verification ${phase}: ${fn} is inside a hidden native Frappe container`
+					);
+					return true;
+				}
+
+				const style = window.getComputedStyle(nativeEl);
+				const rect = nativeEl.getBoundingClientRect();
+				if (
+					style.display === "none" ||
+					style.visibility === "hidden" ||
+					Number(style.opacity) === 0 ||
+					rect.height < 2 ||
+					rect.width < 2
+				) {
+					vfcDebugLog(
+						"log",
+						`[LE] Verification ${phase}: ${fn} is currently not painted. display=${
+							style.display
+						}, visibility=${style.visibility}, opacity=${
+							style.opacity
+						}, rect=${Math.round(rect.width)}x${Math.round(rect.height)}`
+					);
+				}
+			}
+
+			return false;
+		},
+
+		_countVisibleNativeLayoutShells(layoutRoot) {
+			if (!layoutRoot) return 0;
+
+			let count = 0;
+			layoutRoot
+				.querySelectorAll(
+					".form-section, .frappe-section, .section-head, .section-body, .frappe-column, .form-column"
+				)
+				.forEach((el) => {
+					if (el.closest(".vfc-le-section")) return;
+					const style = window.getComputedStyle(el);
+					const rect = el.getBoundingClientRect();
+					if (
+						style.display !== "none" &&
+						style.visibility !== "hidden" &&
+						rect.width > 1 &&
+						rect.height > 1
+					) {
+						count += 1;
+					}
+				});
+			return count;
+		},
+
+		_getSectionSummary(layoutRoot) {
+			if (!layoutRoot) return "no-layout-root";
+
+			return [...layoutRoot.querySelectorAll(".vfc-le-section")]
+				.map((section) => {
+					const label =
+						section.querySelector(".vfc-le-section-head")?.textContent?.trim() ||
+						"(no label)";
+					const cells = [...section.querySelectorAll(".vfc-le-cell")];
+					const managed = cells.filter((cell) =>
+						cell.querySelector("[data-vfc-managed='1']")
+					).length;
+					const painted = cells.filter((cell) => {
+						const field = cell.querySelector("[data-vfc-managed='1']");
+						if (!field) return false;
+						if (
+							field.classList.contains("hide-control") ||
+							field.classList.contains("hidden") ||
+							field.classList.contains("d-none") ||
+							field.hasAttribute("hidden") ||
+							field.style.display === "none"
+						) {
+							return false;
+						}
+						return true;
+					}).length;
+					return `${label}:${painted}/${managed}/${cells.length}`;
+				})
+				.join(", ");
+		},
+
+		_hideEmptyCustomSections(layoutRoot) {
+			if (!layoutRoot) return 0;
+
+			let hidden = 0;
+			layoutRoot.querySelectorAll(".vfc-le-section").forEach((section) => {
+				const cells = [...section.querySelectorAll(".vfc-le-cell")];
+
+				// Sections with NO cells are truly empty (no fields were ever placed here) → hide them.
+				// Sections with cells where NOT ALL cells are tagged with data-vfc-managed are still
+				// being rendered — skip them to avoid premature hiding during render transitions.
+				if (cells.length > 0) {
+					const allCellsProcessed = cells.every((cell) =>
+						cell.querySelector("[data-vfc-managed='1']")
+					);
+					if (!allCellsProcessed) return; // render still in progress, skip
+				}
+
+				const painted = cells.filter((cell) => {
+					const field = cell.querySelector("[data-vfc-managed='1']");
+					if (!field) return false;
+					if (
+						field.classList.contains("hide-control") ||
+						field.classList.contains("hidden") ||
+						field.classList.contains("d-none") ||
+						field.hasAttribute("hidden") ||
+						field.style.display === "none"
+					) {
+						return false;
+					}
+					return true;
+				}).length;
+
+				if (painted === 0) {
+					section.setAttribute("data-vfc-empty", "1");
+					section.style.setProperty("display", "none", "important");
+					hidden += 1;
+				} else {
+					section.removeAttribute("data-vfc-empty");
+					section.style.removeProperty("display");
+				}
+			});
+			return hidden;
+		},
+
+		_restoreVisibleFieldWrapper(nativeEl, fieldObj) {
+			if (!nativeEl) return;
+
+			if (fieldObj?.df?.hidden_due_to_dependency || fieldObj?.df?.hidden) {
+				return;
+			}
+
+			nativeEl.classList.remove("hide-control", "hidden", "d-none");
+			nativeEl.removeAttribute("hidden");
+			nativeEl.setAttribute("data-vfc-managed", "1");
+			nativeEl.style.removeProperty("display");
+			nativeEl.style.removeProperty("visibility");
+			nativeEl.style.removeProperty("opacity");
+			nativeEl.style.removeProperty("height");
+			nativeEl.style.removeProperty("max-height");
+
+			nativeEl
+				.querySelectorAll(
+					".control-label, .control-input-wrapper, .control-value, .control-input"
+				)
+				.forEach((el) => {
+					el.classList.remove("hide-control", "hidden", "d-none");
+					el.removeAttribute("hidden");
+					el.style.removeProperty("visibility");
+					el.style.removeProperty("opacity");
+				});
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+        _buildSectionEl(sec, frm, colCount) → HTMLElement
+        Builds the VFC section card with header and CSS grid body.
+        colCount is the effective column count (density override > profile).
+     ───────────────────────────────────────────────────────────── */
+		_buildSectionEl(sec, frm, colCount) {
+			colCount = colCount || Math.min(Math.max(sec.column_count || 2, 1), 3);
+			const secEl = document.createElement("div");
+			secEl.className = "vfc-le-section";
+			secEl.setAttribute("data-vfc-section-id", sec.id || "");
+			if (sec.collapsible) secEl.setAttribute("data-vfc-collapsible", "1");
+
+			// Header
+			if (sec.label) {
+				const head = document.createElement("div");
+				head.className = "vfc-le-section-head";
+				head.textContent = __(sec.label);
+
+				if (sec.collapsible) {
+					head.classList.add("vfc-le-collapsible");
+					const initCollapsed = !!sec.collapsed_by_default;
+					// Always set the attribute explicitly so state is unambiguous
+					secEl.setAttribute("data-vfc-collapsed", initCollapsed ? "1" : "0");
+					vfcDebugLog(
+						"log",
+						`[LE] Section "${
+							sec.label || sec.id
+						}": collapsible=true, collapsed_by_default=${
+							sec.collapsed_by_default
+						}, initCollapsed=${initCollapsed}`
+					);
+
+					head.addEventListener("click", () => {
+						const collapsed = secEl.getAttribute("data-vfc-collapsed") === "1";
+						secEl.setAttribute("data-vfc-collapsed", collapsed ? "0" : "1");
+						const grid = secEl.querySelector(".vfc-le-grid");
+						if (grid) grid.style.display = collapsed ? "" : "none";
+					});
+
+					if (initCollapsed) {
+						// Defer hide so DOM is built first
+						setTimeout(() => {
+							const grid = secEl.querySelector(".vfc-le-grid");
+							if (grid) grid.style.display = "none";
+						}, 0);
+					}
+				}
+
+				secEl.appendChild(head);
+			}
+
+			// Grid body
+			const grid = document.createElement("div");
+			grid.className = "vfc-le-grid";
+			grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
+			secEl.appendChild(grid);
+
+			return secEl;
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _appendUnassigned
+       Any field that is in frm.meta but NOT in the profile gets
+       appended to a trailing "Other Fields" section so nothing is lost.
+       Column count is read from profile.unassigned_column_count (default 2).
+    ───────────────────────────────────────────────────────────── */
+		_appendUnassigned(frm, layoutRoot, knownFieldnames, assignedFieldnames, profile) {
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
+			const unassigned = (frm.meta?.fields || []).filter(
+				(f) =>
+					f.fieldname &&
+					!assignedFieldnames.has(f.fieldname) &&
+					!SKIP_TYPES.has(f.fieldtype)
+			);
+
+			if (!unassigned.length) return;
+
+			const colCount = Math.min(Math.max(profile.unassigned_column_count || 2, 1), 3);
+			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
+
+			if (hasTabs) {
+				const grouped = {};
+				unassigned.forEach((f) => {
+					const tab = this._getFieldTab(f, frm);
+					if (tab) {
+						if (!grouped[tab]) grouped[tab] = [];
+						grouped[tab].push(f);
+					}
+				});
+
+				for (const [tabFieldname, fields] of Object.entries(grouped)) {
+					const tabPane = this._getTabPane(frm, tabFieldname);
+					if (!tabPane) continue;
+					const host = this._getOrCreateTabHost(tabPane);
+
+					const secEl = document.createElement("div");
+					secEl.className = "vfc-le-section vfc-le-unassigned";
+
+					const head = document.createElement("div");
+					head.className = "vfc-le-section-head";
+					head.textContent = __("Other Fields");
+					secEl.appendChild(head);
+
+					const grid = document.createElement("div");
+					grid.className = "vfc-le-grid";
+					grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
+					secEl.appendChild(grid);
+
+					fields.forEach((f) => {
+						const fieldObj = frm.fields_dict[f.fieldname];
+						if (!fieldObj || !fieldObj.wrapper) return;
+
+						if (
+							fieldObj.df &&
+							(fieldObj.df.hidden ||
+								fieldObj.df.invisible ||
+								fieldObj.df.hidden_due_to_dependency)
+						)
+							return;
+
+						const cell = document.createElement("div");
+						cell.className = "vfc-le-cell";
+						cell.setAttribute("data-vfc-field", f.fieldname);
+
+						const nativeEl =
+							fieldObj.wrapper instanceof jQuery
+								? fieldObj.wrapper[0]
+								: fieldObj.wrapper;
+						if (nativeEl && nativeEl.parentNode) {
+							cell.appendChild(nativeEl);
+							this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
+						}
+						grid.appendChild(cell);
+					});
+
+					if (grid.children.length > 0) {
+						host.appendChild(secEl);
+					}
+				}
+			} else {
+				const secEl = document.createElement("div");
+				secEl.className = "vfc-le-section vfc-le-unassigned";
+
+				const head = document.createElement("div");
+				head.className = "vfc-le-section-head";
+				head.textContent = __("Other Fields");
+				secEl.appendChild(head);
+
+				const grid = document.createElement("div");
+				grid.className = "vfc-le-grid";
+				grid.style.gridTemplateColumns = `repeat(${colCount}, 1fr)`;
+				secEl.appendChild(grid);
+
+				unassigned.forEach((f) => {
+					const fieldObj = frm.fields_dict[f.fieldname];
+					if (!fieldObj || !fieldObj.wrapper) return;
+
+					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+
+					const cell = document.createElement("div");
+					cell.className = "vfc-le-cell";
+					cell.setAttribute("data-vfc-field", f.fieldname);
+
+					const nativeEl =
+						fieldObj.wrapper instanceof jQuery
+							? fieldObj.wrapper[0]
+							: fieldObj.wrapper;
+					if (nativeEl && nativeEl.parentNode) {
+						cell.appendChild(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
+					}
+					grid.appendChild(cell);
+				});
+
+				if (grid.children.length > 0) {
+					layoutRoot.appendChild(secEl);
+				}
+			}
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _clearSections(frm)
+       Remove previously injected VFC sections from the DOM.
+       Also un-hide any native Frappe section elements we hid.
+    ───────────────────────────────────────────────────────────── */
+		_clearSections(frm) {
+			const dt = frm.doctype;
+			const layoutRoot = this._getLayoutRoot(frm);
+
+			if (layoutRoot) {
+				layoutRoot.classList.remove("vfc-active");
+				layoutRoot.querySelectorAll(".vfc-le-section").forEach((el) => {
+					// Move field wrappers back to their native parent before removing section
+					el.querySelectorAll(".vfc-le-cell").forEach((cell) => {
+						const fn = cell.getAttribute("data-vfc-field");
+						if (fn && frm.fields_dict[fn]) {
+							const fieldObj = frm.fields_dict[fn];
+							const nativeWrapper =
+								fieldObj.wrapper instanceof jQuery
+									? fieldObj.wrapper[0]
+									: fieldObj.wrapper;
+							if (nativeWrapper && cell.contains(nativeWrapper)) {
+								// Return to original native parent if still in DOM
+								if (
+									fieldObj._native_parent &&
+									fieldObj._native_parent.isConnected
+								) {
+									fieldObj._native_parent.appendChild(nativeWrapper);
+								}
+							}
+						}
+					});
+					el.remove();
+				});
+				layoutRoot.querySelectorAll(".vfc-tab-pane-host").forEach((el) => el.remove());
+			}
+
+			// Also clear any cached active sections for this doctype
+			for (const k of this._activeSections.keys()) {
+				if (k.startsWith(dt + "__")) {
+					this._activeSections.delete(k);
+				}
+			}
+
+			if (frm.docname) {
+				this._clearValidationTimers(dt + "__" + frm.docname);
+				const key = dt + "__" + frm.docname;
+				if (this._retryTimers && this._retryTimers.has(key)) {
+					clearTimeout(this._retryTimers.get(key));
+					this._retryTimers.delete(key);
+				}
+				if (this._retryCounts) {
+					this._retryCounts.delete(key);
+				}
+			}
+
+			// Disconnect and delete any MutationObservers for this doctype
+			if (this._observers) {
+				for (const k of this._observers.keys()) {
+					if (k.startsWith(dt + "__")) {
+						this._observers.get(k).disconnect();
+						this._observers.delete(k);
+					}
+				}
+			}
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _setupObserver
+       Watches the DOM to see if Frappe natively moves field wrappers
+       back into hidden native sections, pulling them back out dynamically.
+    ───────────────────────────────────────────────────────────── */
+		_setupObserver(frm, layoutRoot) {
+			const key = frm.doctype + "__" + frm.docname;
+			if (!this._observers) {
+				this._observers = new Map();
+			}
+			if (this._observers.has(key)) {
+				return;
+			}
+
+			const observer = new MutationObserver((mutations) => {
+				if (window.VFC_DEBUG) {
+					window.__VFC_OBSERVER_COUNT = (window.__VFC_OBSERVER_COUNT || 0) + 1;
+				}
+				let needsReattach = false;
+				for (const mutation of mutations) {
+					if (mutation.type === "childList" && mutation.addedNodes.length) {
+						for (const node of mutation.addedNodes) {
+							if (node.nodeType !== 1) continue;
+							const currentLayoutRoot = this._getLayoutRoot(frm);
+							if (currentLayoutRoot) this._hideNativeLayoutShells(currentLayoutRoot);
+							if (
+								node.classList.contains("form-layout") ||
+								node.querySelector?.(".form-layout")
+							) {
+								needsReattach = true;
+								break;
+							}
+							if (
+								node.classList.contains("frappe-control") ||
+								node.querySelector?.(".frappe-control")
+							) {
+								const parent = node.parentNode;
+								if (parent && !parent.classList.contains("vfc-le-cell")) {
+									needsReattach = true;
+									break;
+								}
+							}
+						}
+					}
+					if (needsReattach) break;
+				}
+
+				if (needsReattach) {
+					observer.disconnect();
+					this._observers.delete(key);
+					this.attach(frm);
+				}
+			});
+
+			observer.observe(layoutRoot, {
+				childList: true,
+			});
+			this._observers.set(key, observer);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       invalidateCache(doctype)
+       Call this after saving a profile to force re-fetch on next
+       form open.
+    ───────────────────────────────────────────────────────────── */
+		_invalidateCache(doctype) {
+			this._cache.delete(doctype);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+        invalidateCache(doctype)
+        Public alias for _invalidateCache. Called by vite_layout_controls.js
+        after saving a profile. Exposed on window.VFCLayoutEngine.
+     ───────────────────────────────────────────────────────────── */
+		invalidateCache(doctype) {
+			this._invalidateCache(doctype);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       renderWithDensity(frm, colCount)
+       Renders the form with a dynamic (virtual) profile at the
+       specified column count.  Bypasses PILOT / tab gates so that
+       density works on EVERY DocType.
+    ───────────────────────────────────────────────────────────── */
+		renderWithDensity(frm, colCount) {
+			const layoutRoot = this._getLayoutRoot(frm);
+			if (!layoutRoot) {
+				vfcDebugLog("warn", "[LE] renderWithDensity: no layoutRoot");
+				return;
+			}
+
+			this._clearSections(frm);
+			layoutRoot.classList.add("vfc-active");
+
+			// Build a virtual profile from the current form meta fields
+			const profile = this._buildDensityProfile(frm, colCount);
+			if (!profile) {
+				vfcDebugLog("warn", "[LE] renderWithDensity: no profile built");
+				return;
+			}
+			vfcDebugLog(
+				"log",
+				`[LE] renderWithDensity: colCount=${colCount}, profile sections=${profile.sections.length}`
+			);
+
+			// Hide ALL native shells INCLUDING tab structure
+			this._hideNativeLayoutShells(layoutRoot);
+			layoutRoot.querySelectorAll(".nav-tabs, .tab-content, .tab-pane").forEach((el) => {
+				if (el.closest(".vfc-le-section")) return;
+				el.style.setProperty("display", "none", "important");
+				el.setAttribute("data-vfc-hidden", "1");
+			});
+
+			const knownFieldnames = new Set((frm.meta?.fields || []).map((f) => f.fieldname));
+			const SKIP_TYPES = new Set([
+				"Section Break",
+				"Column Break",
+				"Tab Break",
+				"HTML",
+				"Heading",
+			]);
+			const metaFieldTypeMap = {};
+			(frm.meta?.fields || []).forEach((mf) => {
+				if (mf.fieldname) metaFieldTypeMap[mf.fieldname] = mf.fieldtype;
+			});
+
+			const injectedContainers = [];
+
+			let totalFieldsRendered = 0;
+
+			profile.sections.forEach((sec) => {
+				if (sec.visible === false) return;
+
+				const sectionEl = this._buildSectionEl(sec, frm, colCount);
+				const gridEl = sectionEl.querySelector(".vfc-le-grid");
+
+				const fields = [...(sec.fields || [])].sort(
+					(a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+				);
+				let hasVisibleField = false;
+				let colIdx = 0;
+
+				fields.forEach((fld) => {
+					const fn = fld.fieldname;
+					if (!knownFieldnames.has(fn)) return;
+					if (SKIP_TYPES.has(metaFieldTypeMap[fn])) return;
+
+					const fieldObj = frm.fields_dict[fn];
+					if (!fieldObj) return;
+
+					if (fld.visible === false) {
+						frm.toggle_display(fn, false);
+						return;
+					}
+
+					if (fieldObj.df && (fieldObj.df.hidden || fieldObj.df.invisible)) return;
+
+					const wrapper = fieldObj.wrapper;
+					if (!wrapper) return;
+
+					colIdx = (colIdx + 1) % colCount;
+					const gridCol = colIdx || colCount;
+
+					const cell = document.createElement("div");
+					cell.className = "vfc-le-cell";
+					cell.style.gridColumn = String(gridCol);
+					cell.setAttribute("data-vfc-field", fn);
+
+					const nativeEl = wrapper instanceof jQuery ? wrapper[0] : wrapper;
+					if (nativeEl && nativeEl.parentNode) {
+						if (!fieldObj._native_parent) {
+							fieldObj._native_parent = nativeEl.parentNode;
+						}
+						cell.appendChild(nativeEl);
+						this._restoreVisibleFieldWrapper(nativeEl, fieldObj);
+					}
+
+					gridEl.appendChild(cell);
+					hasVisibleField = true;
+					totalFieldsRendered++;
+				});
+
+				if (hasVisibleField || sec.collapsible) {
+					layoutRoot.appendChild(sectionEl);
+					injectedContainers.push(sectionEl);
+					vfcDebugLog(
+						"log",
+						`[LE] renderWithDensity: section "${sec.label || sec.fieldname}" → ${
+							fields.length
+						} fields`
+					);
+				}
+			});
+
+			vfcDebugLog(
+				"log",
+				`[LE] renderWithDensity: rendered ${totalFieldsRendered} fields across ${injectedContainers.length} sections`
+			);
+			this._activeSections.set(frm.doctype + "__" + frm.docname, injectedContainers);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       restoreNative(frm)
+       Removes all VFC sections and restores Frappe's native layout.
+    ───────────────────────────────────────────────────────────── */
+		restoreNative(frm) {
+			this._clearSections(frm);
+		},
+
+		/* ─────────────────────────────────────────────────────────────
+       _buildDensityProfile(frm, colCount) → profile object
+       Groups frm.meta.fields by Section Break into a virtual profile.
+    ───────────────────────────────────────────────────────────── */
+		_buildDensityProfile(frm, colCount) {
+			const fields = frm.meta?.fields || [];
+			if (!fields.length) return null;
+
+			const sections = [];
+			let currentSection = null;
+			const SKIP_TYPES = new Set(["Section Break", "Column Break", "Tab Break"]);
+
+			fields.forEach((df, i) => {
+				if (
+					df.fieldtype === "Tab Break" ||
+					df.fieldtype === "HTML" ||
+					df.fieldtype === "Heading"
+				)
+					return;
+
+				if (df.fieldtype === "Section Break") {
+					currentSection = {
+						fieldname: df.fieldname || `sec_${i}`,
+						id: df.fieldname || `sec_${i}`,
+						label: df.label || "",
+						column_count: colCount || 2,
+						visible: true,
+						collapsible: !!df.collapsible,
+						collapsed_by_default: false,
+						fields: [],
+					};
+					sections.push(currentSection);
+					return;
+				}
+
+				if (SKIP_TYPES.has(df.fieldtype)) return;
+
+				if (!currentSection) {
+					currentSection = {
+						fieldname: "_default",
+						id: "_default",
+						label: "",
+						column_count: colCount || 2,
+						visible: true,
+						collapsible: false,
+						fields: [],
+					};
+					sections.push(currentSection);
+				}
+
+				currentSection.fields.push({
+					fieldname: df.fieldname,
+					visible: !df.hidden,
+					sort_order: i,
+					col: 1,
+				});
+			});
+
+			return {
+				profile_name: "_density",
+				column_count: colCount || 2,
+				sections: sections.filter((s) => s.fields.length > 0),
+				unassigned_policy: "discard",
+			};
+		},
+	};
+
+	/* ═══════════════════════════════════════════════════════════════════
+     GLOBAL ATTACH HOOK
+     Fires AFTER the VFC panel attach (which runs at 150ms).
+     Layout engine runs at 250ms to ensure fields_dict is fully ready.
+  ═══════════════════════════════════════════════════════════════════ */
+	frappe.ui.form.on("*", {
+		refresh(frm) {
+			setTimeout(() => {
+				try {
+					LayoutEngine.attach(frm);
+				} catch (err) {
+					vfcDebugLog("warn", "[LE] attach error:", err);
+				}
+			}, 250);
+		},
+		onload_post_render(frm) {
+			setTimeout(() => {
+				try {
+					LayoutEngine.attach(frm);
+				} catch (err) {
+					vfcDebugLog("warn", "[LE] attach error:", err);
+				}
+			}, 50);
+		},
+	});
+
+	/* ═══════════════════════════════════════════════════════════════════
+     EXPOSE globally for vfc_sections_tab.js and console debugging
+  ═══════════════════════════════════════════════════════════════════ */
+	window.VFCLayoutEngine = LayoutEngine;
+	vfcDebugLog("log", "[LE] vfc_layout_engine.js parsed and initialized successfully.");
+})();

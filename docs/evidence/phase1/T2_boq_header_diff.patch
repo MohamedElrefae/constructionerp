@@ -1,0 +1,70 @@
+diff --git a/construction/construction/doctype/boq_header/boq_header.js b/construction/construction/doctype/boq_header/boq_header.js
+index bf4c592..7a2fb16 100644
+--- a/construction/construction/doctype/boq_header/boq_header.js
++++ b/construction/construction/doctype/boq_header/boq_header.js
+@@ -3,6 +3,44 @@
+ // ViteFormConfig is attached globally via frappe.ui.form.on('*') in vite_layout_controls.js
+ // Do NOT call ViteFormConfig.attach(frm) here — it causes duplicate attach.
+ 
++(function () {
++	function setFieldAccent(frm, fieldname, active, blocked) {
++		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
++		if (!$wrapper.length) return;
++		$wrapper.toggleClass("ct-boq-step-accent", !!active);
++		$wrapper.toggleClass("ct-boq-step-blocked", !!blocked);
++	}
++
++	function setFieldInlineHint(frm, fieldname, hint, blocked) {
++		const $wrapper = $(`.frappe-control[data-fieldname="${fieldname}"]`);
++		if (!$wrapper.length) return;
++		const $help = $wrapper.find(".help").first();
++		if (!$help.length) return;
++		$wrapper.toggleClass("ct-boq-has-inline-hint", !!hint);
++		$wrapper.toggleClass("ct-boq-inline-hint-blocked", !!blocked);
++		$help.find(".ct-boq-inline-hint").remove();
++		if (hint) {
++			$help.append(
++				$("<span>", {
++					class: "ct-boq-inline-hint",
++					text: hint,
++					title: hint,
++				})
++			);
++		}
++	}
++
++	function applyProjectGuidance(frm) {
++		const hasProject = Boolean(frm.doc.project);
++		setFieldAccent(frm, "project", !hasProject, false);
++		setFieldInlineHint(
++			frm,
++			"project",
++			hasProject ? null : __("Select Project first"),
++			false
++		);
++	}
++
+ frappe.ui.form.on("BOQ Header", {
+ 	refresh(frm) {
+ 		if (!frm.is_new()) {
+@@ -440,6 +478,15 @@ frappe.ui.form.on("BOQ Header", {
+ 				__("Actions")
+ 			);
+ 		}
++		applyProjectGuidance(frm);
++	},
++	onload_post_render(frm) {
++		applyProjectGuidance(frm);
++		setTimeout(() => applyProjectGuidance(frm), 150);
++		setTimeout(() => applyProjectGuidance(frm), 600);
++	},
++	project(frm) {
++		applyProjectGuidance(frm);
+ 	},
+ });
+ 
+@@ -620,3 +667,4 @@ function open_revised_boq_dialog(frm) {
+ 		},
+ 	});
+ }
++})();

@@ -1,0 +1,254 @@
+{
+  "entries": [
+    {
+      "context": "",
+      "ct_app": "frappe",
+      "historical_reviews": [
+        {
+          "confidence": "High",
+          "model": "OpenAI Codex, GPT-5 family",
+          "original_decision_row_sha256": "268b2cdbad6bea4517083b49eaa17c46eaa5e4cda1c4b6b56dd61833586ca8da",
+          "original_review_artifact_sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c",
+          "rationale": "Standard, immediately recognizable MSA computing term. The iḍāfa construction is grammatical and suitably brief for navigation. It is also internally consistent with the existing catalog translation `Desktop Icon` → `أيقونة سطح المكتب`.",
+          "reviewed_at_utc": "2026-09-04T20:41:29Z",
+          "role": "AI-A1",
+          "verdict": "APPROVE"
+        },
+        {
+          "confidence": "0.99",
+          "model": "OpenAI Codex, GPT-5 family (record contains no more-specific model identifier)",
+          "original_decision_row_sha256": "d7777a50ffb67e8bfaadbff9bd7e0536cec47e19f3a24fc90211fe2fd8690af0",
+          "original_review_artifact_sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4",
+          "rationale": "The source is the route to `/desk`. It cannot reasonably be read as an accounting office, project office, or contractual term in this menu context.",
+          "reviewed_at_utc": "2026-09-04T20:41:27Z",
+          "role": "AI-A2",
+          "verdict": "ACCEPT"
+        },
+        {
+          "confidence": "High",
+          "model": "OpenAI GPT-5.6-sol",
+          "original_decision_row_sha256": "d1fb936fd9deb9ee841093e9e58d7e085f29d5cc570ef6c0bdfc690983780783",
+          "original_review_artifact_sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7",
+          "rationale": "Plain Arabic text; no tokens, markup, bidi controls, whitespace, punctuation, duplication, or material overflow risk.",
+          "reviewed_at_utc": "2026-09-04T20:42:01Z",
+          "role": "AI-A3",
+          "verdict": "APPROVE"
+        }
+      ],
+      "separate_qualification_notes": [
+        "AI-R verification remains pending; this provenance relocation does not close that gate."
+      ],
+      "source_text": "Desktop",
+      "translated_text": "سطح المكتب"
+    },
+    {
+      "context": "",
+      "ct_app": "frappe",
+      "historical_reviews": [
+        {
+          "confidence": "High",
+          "model": "OpenAI Codex, GPT-5 family",
+          "original_decision_row_sha256": "8cfdb60bed668a153d80772151770ad10866e364197cd375a8a74f6c8b83b864",
+          "original_review_artifact_sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c",
+          "rationale": "Natural plural rendering of software workspaces, grammatically correct, concise, and clearer for general ERP users than the more abstract alternative `بيئات العمل`.",
+          "reviewed_at_utc": "2026-09-04T20:41:29Z",
+          "role": "AI-A1",
+          "verdict": "APPROVE"
+        },
+        {
+          "confidence": "0.98",
+          "model": "OpenAI Codex, GPT-5 family (record contains no more-specific model identifier)",
+          "original_decision_row_sha256": "341a8b3d7040c7d8262d1d5edb5470d015a75e55d563713d63edadaefe1c646e",
+          "original_review_artifact_sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4",
+          "rationale": "Although `مساحة` can denote physical area in construction, the entry contains nested Frappe workspace links. `مساحات العمل` truthfully denotes digital workspaces here, not measured site areas or scope of work.",
+          "reviewed_at_utc": "2026-09-04T20:41:27Z",
+          "role": "AI-A2",
+          "verdict": "ACCEPT"
+        },
+        {
+          "confidence": "High",
+          "model": "OpenAI GPT-5.6-sol",
+          "original_decision_row_sha256": "7690e99ad9b78026f8c3b3193f3e75eafecf02a0bb16a599ea6fdd356404852a",
+          "original_review_artifact_sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7",
+          "rationale": "Plain Arabic text; one-to-one mapping and comparable label length; no mechanical defect.",
+          "reviewed_at_utc": "2026-09-04T20:42:01Z",
+          "role": "AI-A3",
+          "verdict": "APPROVE"
+        }
+      ],
+      "separate_qualification_notes": [
+        "AI-R verification remains pending; this provenance relocation does not close that gate."
+      ],
+      "source_text": "Workspaces",
+      "translated_text": "مساحات العمل"
+    },
+    {
+      "context": "",
+      "ct_app": "frappe",
+      "historical_reviews": [
+        {
+          "confidence": "High",
+          "model": "OpenAI Codex, GPT-5 family",
+          "original_decision_row_sha256": "606dc06760899e534d7f25558fb209626aa12ee936e1c16fd49adadd08efcf2f",
+          "original_review_artifact_sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c",
+          "rationale": "`الشريط الجانبي` is the established repository term for sidebar, and `تحرير` accurately expresses editing/customizing it. The wording is consistent with existing `Edit …` translations such as `تحرير القيم` and `تحرير {0}`. Visual fit remains an AI-A3 responsibility.",
+          "reviewed_at_utc": "2026-09-04T20:41:29Z",
+          "role": "AI-A1",
+          "verdict": "APPROVE"
+        },
+        {
+          "confidence": "0.99",
+          "model": "OpenAI Codex, GPT-5 family (record contains no more-specific model identifier)",
+          "original_decision_row_sha256": "0fdb2ec39df5b402232112e8b8290cd564bbe2c47781586a356309c24b6db740",
+          "original_review_artifact_sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4",
+          "rationale": "The action toggles the sidebar editor. `الشريط الجانبي` removes any possible accounting/document-drafting meaning of `تحرير`.",
+          "reviewed_at_utc": "2026-09-04T20:41:27Z",
+          "role": "AI-A2",
+          "verdict": "ACCEPT"
+        },
+        {
+          "confidence": "High for payload; Medium for narrow layout",
+          "model": "OpenAI GPT-5.6-sol",
+          "original_decision_row_sha256": "bdcdf2bbcbf921ffddc3c3dd8913a18331ae42f1c30ede6cabe2508ee57ff5e8",
+          "original_review_artifact_sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7",
+          "rationale": "Structurally valid, but the 20-code-point Arabic target is materially longer than the 12-code-point source. No actual narrow/mobile rendering of the proposed runtime value was supplied. Verify clipping/wrapping at the minimum supported sidebar width before the Stage 1C runtime/render gate is declared complete.",
+          "reviewed_at_utc": "2026-09-04T20:42:01Z",
+          "role": "AI-A3",
+          "verdict": "APPROVE WITH NON-BLOCKING UX EXCEPTION"
+        }
+      ],
+      "separate_qualification_notes": [
+        "AI-A3 identified a non-blocking narrow-sidebar-width rendering check; that runtime check remains outstanding.",
+        "AI-R verification remains pending; this provenance relocation does not close that gate."
+      ],
+      "source_text": "Edit Sidebar",
+      "translated_text": "تحرير الشريط الجانبي"
+    },
+    {
+      "context": "",
+      "ct_app": "frappe",
+      "historical_reviews": [
+        {
+          "confidence": "High",
+          "model": "OpenAI Codex, GPT-5 family",
+          "original_decision_row_sha256": "bdfb699a170c0b2a287c1ec701a3b0876692d253cd91944b67aba5ac0255d4cf",
+          "original_review_artifact_sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c",
+          "rationale": "Clear action-label phrasing. `تبديل` matches the existing catalog convention for toggle actions, while `المظهر` is natural for the visible theme/appearance concept in an Egyptian Arabic UI.",
+          "reviewed_at_utc": "2026-09-04T20:41:29Z",
+          "role": "AI-A1",
+          "verdict": "APPROVE"
+        },
+        {
+          "confidence": "0.99",
+          "model": "OpenAI Codex, GPT-5 family (record contains no more-specific model identifier)",
+          "original_decision_row_sha256": "c95ccab2c2dfa51302f2353d54cc963f1a9a2cd399f347d0446a283b79bfab81",
+          "original_review_artifact_sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4",
+          "rationale": "The action opens Frappe's theme switcher. It has no accounting presentation, report-formatting, or construction-domain consequence.",
+          "reviewed_at_utc": "2026-09-04T20:41:27Z",
+          "role": "AI-A2",
+          "verdict": "ACCEPT"
+        },
+        {
+          "confidence": "High",
+          "model": "OpenAI GPT-5.6-sol",
+          "original_decision_row_sha256": "ada57afaf3181f54ee434c46c486662061d2fc1182770dafa6ee5fd2866dafa7",
+          "original_review_artifact_sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7",
+          "rationale": "Equal code-point length; plain text; no directionality or formatting risk.",
+          "reviewed_at_utc": "2026-09-04T20:42:01Z",
+          "role": "AI-A3",
+          "verdict": "APPROVE"
+        }
+      ],
+      "separate_qualification_notes": [
+        "AI-R verification remains pending; this provenance relocation does not close that gate."
+      ],
+      "source_text": "Toggle Theme",
+      "translated_text": "تبديل المظهر"
+    },
+    {
+      "context": "",
+      "ct_app": "frappe",
+      "historical_reviews": [
+        {
+          "confidence": "High",
+          "model": "OpenAI Codex, GPT-5 family",
+          "original_decision_row_sha256": "8e723b7774fd72947aa734749c83b3be464f40716d90e304504c1e2d78247e1d",
+          "original_review_artifact_sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c",
+          "rationale": "Grammatically correct and concise. `الكامل` agrees with masculine `العرض`; the surrounding appearance-control context makes “full width” clear. Domain polysemy of `العرض` is reserved for AI-A2 and does not create a linguistic defect in this UI phrase.",
+          "reviewed_at_utc": "2026-09-04T20:41:29Z",
+          "role": "AI-A1",
+          "verdict": "APPROVE"
+        },
+        {
+          "confidence": "0.97",
+          "model": "OpenAI Codex, GPT-5 family (record contains no more-specific model identifier)",
+          "original_decision_row_sha256": "ba432a13d0b6469541b4e57fdd1f7d5c9ebd38a6a14d1df8ce3b204f719034c8",
+          "original_review_artifact_sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4",
+          "rationale": "`العرض` can mean bid/offer or financial-statement presentation, and can mean physical width in engineering. Here the action directly calls `toggle_full_width()` beside theme/sidebar controls, so it unambiguously means full page/display width. An Egyptian accountant, QS, or contractor would not interpret this toolbar action as toggling a tender offer.",
+          "reviewed_at_utc": "2026-09-04T20:41:27Z",
+          "role": "AI-A2",
+          "verdict": "ACCEPT"
+        },
+        {
+          "confidence": "High",
+          "model": "OpenAI GPT-5.6-sol",
+          "original_decision_row_sha256": "ac3c5ae9c2aac37e48925877241009b83ad62394269b9a2a28ee4e54dad7e1bf",
+          "original_review_artifact_sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7",
+          "rationale": "Plain Arabic text; target length is comparable; no mechanical or toolbar-overflow blocker identified. Semantic dual meaning belongs to AI-A2, not AI-A3.",
+          "reviewed_at_utc": "2026-09-04T20:42:01Z",
+          "role": "AI-A3",
+          "verdict": "APPROVE"
+        }
+      ],
+      "separate_qualification_notes": [
+        "AI-R verification remains pending; this provenance relocation does not close that gate."
+      ],
+      "source_text": "Toggle Full Width",
+      "translated_text": "تبديل العرض الكامل"
+    },
+    {
+      "context": "",
+      "ct_app": "construction",
+      "historical_reviews": [
+        {
+          "confidence": "High",
+          "model": "OpenAI Codex, GPT-5 family",
+          "original_decision_row_sha256": "195acd0319c0fd9ffdfa3ec22fa38587c0bf0c9b877e94a5a9575e6be6cc7d21",
+          "original_review_artifact_sha256": "788b5070beffd23fa9f21aceebb869a5cd40708128ef6b63c9c2533d9555972c",
+          "rationale": "Natural MSA UI wording for font/typeface settings. The iḍāfa is grammatical and concise; `إعدادات` follows established catalog usage and `الخطوط` is already used for `Fonts` in the Frappe Arabic catalog. Domain polysemy is reserved for AI-A2.",
+          "reviewed_at_utc": "2026-09-04T20:41:29Z",
+          "role": "AI-A1",
+          "verdict": "APPROVE"
+        },
+        {
+          "confidence": "0.98",
+          "model": "OpenAI Codex, GPT-5 family (record contains no more-specific model identifier)",
+          "original_decision_row_sha256": "70d350b2ecd45718f8e05f0fd909048dbb4a64b8a25cdacb924277f0cf2d948f",
+          "original_review_artifact_sha256": "b596d2de87da68da4299759fb360cb3d2f91ff8e385d5f50bf66720d783f39d4",
+          "rationale": "`الخطوط` can refer to pipelines/routes and, in compounds, credit lines or line items. The verified dialog controls font family, size, and weight and is inserted beside theme/display controls. In that context `الخطوط` unambiguously means fonts/typefaces, not BOQ items or engineering lines.",
+          "reviewed_at_utc": "2026-09-04T20:41:27Z",
+          "role": "AI-A2",
+          "verdict": "ACCEPT"
+        },
+        {
+          "confidence": "High",
+          "model": "OpenAI GPT-5.6-sol",
+          "original_decision_row_sha256": "dd35e2df47b95a8bd9d098059ba5dc37b1775efb39d817ef4d81b42ddde58882",
+          "original_review_artifact_sha256": "2e1d13e2c73276b5368c8d603723f4e69eb6a74f345d0bd2fbc151c606a5bbf7",
+          "rationale": "Exact extracted msgid and owned source verified; short plain target; no format or directionality risk. Semantic dual meaning belongs to AI-A2, not AI-A3.",
+          "reviewed_at_utc": "2026-09-04T20:42:01Z",
+          "role": "AI-A3",
+          "verdict": "APPROVE"
+        }
+      ],
+      "separate_qualification_notes": [
+        "AI-R verification remains pending; this provenance relocation does not close that gate."
+      ],
+      "source_text": "Typography Settings",
+      "translated_text": "إعدادات الخطوط"
+    }
+  ],
+  "provenance_notice": "These records preserve the historical AI reviews and are not human review or current linguistic re-review. Original review artifacts remain preserved separately; their SHA-256 values and exact decision-row hashes are included for traceability.",
+  "schema_version": 1,
+  "scope": "Historical Stage 1C review provenance for six Frappe/Construction navigation labels."
+}

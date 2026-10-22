@@ -1,0 +1,149 @@
+=== Session D - production cutover rehearsal (simulated; dry-run / validation only) ===
+utc=2026-10-05T20:42:16Z  head=234c024  branch=develop
+Invariants: production_mutation_authorized stays false; no database write;
+            redis 11000/13000 terminated after the run; strictly local, no push.
+
+##### STAGE A - T-1h: link-search latency baseline establishment #####
+CUTOVER SMOKE TESTS site=v16.localhost gate=closed budget_ms=1.5 surface=searchable_dropdown.searchable_link_search
+ENV load1=2.36 load5=2.72 load15=2.31 (latency gates are only meaningful on a quiesced bench)
+S1 PASS: registry loaded, arabic+norm columns present and utf8mb4 on all 15 cutover doctypes
+S2 PASS: governance gate closed as expected (production_mutation_authorized=None)
+S8 PASS: redis reachable on queue:11000, cache:13000
+S3 attempt 1/3 (load1=2.36 load5=2.72)
+S3 PASS: correctness 30/30 probes hit; baseline written to latency-baseline.json (worst 3.075 ms at Account/ar)
+S3-absolute ADVISORY: ADR Tier-1 ceiling 1.50 ms breached at baseline by 2 probes: ['Account/ar', 'Account/en'] — recorded in the pin, non-regression enforced from now on
+S4 ADVISORY: transactional link sidecar has no ratified latency budget; measured from a Customer query — Sales Order: p50=1.408 p95=1.812 max=2.150 | Purchase Order: p50=0.639 p95=0.784 max=1.191 | Material Request: p50=1.612 p95=2.296 max=2.579 | Sales Invoice: p50=2.127 p95=2.745 max=2.768
+S5 PASS: Balance Sheet: 5 columns x 10 rows in 270.5 ms (en mode, company with 4 GL rows)
+S5 PASS: Profit and Loss Statement: 5 columns x 6 rows in 63.4 ms (en mode, company with 4 GL rows)
+S5 PASS: report generation read-only (Account=2102, GL Entry=4 unchanged)
+S6 SKIP: Purchase Order: no documents on this site (nothing to preview — disclosed, not a pass)
+S6 PASS: print previews rendered with document name present: Sales Invoice(17197 chars, <table), Stock Entry(15358 chars, <table), Material Request(11576 chars, <table)
+S7 PASS: maintenance_mode is off (site serving traffic)
+SMOKE RESULT: PASS (9 checks passed, 2 advisory: S3-absolute, S4 (5.9s)
+stageA_rc=0
+
+##### STAGE B - orchestrator rehearsal (preflight -> dry-run -> smoke) #####
+CUTOVER ORCHESTRATOR site=v16.localhost phase=rehearsal utc=2026-10-05T20:42:23Z
+Invariants: no database write; production_mutation_authorized is never set by this program; fail-closed on every gate.
+
+[PASS] P1 site: site present; db_name configured=yes; production_mutation_authorized=None (gate closed)
+
+--- P2 take backup (T-24h step)
+$ /home/mohamed/.local/bin/bench --site v16.localhost backup --with-files --compress
+Backup Summary for v16.localhost at 2026-10-06 02:12:52.127781
+Config  : /home/mohamed/frappe-bench/sites/v16.localhost/private/backups/20261006_021223-v16_localhost-site_config_backup.json 303.0B
+Database: /home/mohamed/frappe-bench/sites/v16.localhost/private/backups/20261006_021223-v16_localhost-database.sql.gz 68.0MiB
+Public  : /home/mohamed/frappe-bench/sites/v16.localhost/private/backups/20261006_021223-v16_localhost-files.tgz 171.9KiB
+Private : /home/mohamed/frappe-bench/sites/v16.localhost/private/backups/20261006_021223-v16_localhost-private-files.tgz 1.1MiB
+Backup for Site v16.localhost has been successfully completed with files
+rc=0
+[PASS] P2 backup: 20261006_021223-v16_localhost-database.sql.gz (68.0 MiB, 0 min old, gzip stream verified end-to-end)
+[PASS] P3 disk: 2.47 GiB free
+[PASS] P4 redis: queue:11000 and cache:13000 answer PING
+[PASS] P5 schema: connection OK (site db name redacted); arabic+norm columns and utf8mb4 on all 15 cutover tables; Account rows=2102
+
+--- P6a maintenance mode ON (demonstration)
+$ /home/mohamed/.local/bin/bench --site v16.localhost set-maintenance-mode on
+rc=0
+
+--- P6b maintenance mode OFF (restored immediately)
+$ /home/mohamed/.local/bin/bench --site v16.localhost set-maintenance-mode off
+rc=0
+[PASS] P6 maintenance: toggled 0 -> 1 -> 0 with `bench set-maintenance-mode`; site left serving
+(auto-confirmed) Run the migration dry-run rehearsal (read-only, zero writes)? -> yes
+
+--- D1 migration runner --dry-run
+$ /home/mohamed/frappe-bench/env/bin/python /home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/production-migration-readiness/evidence/scripts/run_production_bilingual_migration.py --site v16.localhost --dry-run --allow-sites v16.localhost
+PREFLIGHT site=v16.localhost gate=allowlist production_mutation_authorized=False
+PREFLIGHT registry: 15 doctypes, arabic+norm fields present
+PREFLIGHT values: rows=188 sha256=7390a0c87f8ebab1…
+PREFLIGHT schema: arabic+norm columns present, utf8mb4 on all 15 tables
+PREFLIGHT hooks: enforce_*_policy bound on all 15 doctypes (Account=governed)
+PREFLIGHT backup: 20261006_021223-v16_localhost-database.sql.gz (0 min old)
+PREFLIGHT redis: queue:11000, cache:13000
+CLASSIFY {"ABSENT": 0, "ALREADY_APPLIED": 188, "CONFLICT": 0, "WOULD_WRITE": 0}
+  Company: would_write=0 already_applied=1
+  Account: would_write=0 already_applied=81
+  Cost Center: would_write=0 already_applied=3
+  Warehouse: would_write=0 already_applied=5
+  Project: would_write=0 already_applied=5
+  Item Group: would_write=0 already_applied=6
+  Customer Group: would_write=0 already_applied=5
+  Supplier Group: would_write=0 already_applied=8
+  Territory: would_write=0 already_applied=4
+  Department: would_write=0 already_applied=14
+  Task: would_write=0 already_applied=1
+  UOM: would_write=0 already_applied=45
+  Item: would_write=0 already_applied=8
+  Customer: would_write=0 already_applied=1
+  Terms and Conditions: would_write=0 already_applied=1
+RESULT: PASS dry-run, 0 writes, 0 would_write, 188 already_applied (0.4s)
+rc=0
+[PASS] D1 dry-run: rc=0, 0 writes, 0 conflicts, 0 absent; {"ABSENT": 0, "ALREADY_APPLIED": 188, "CONFLICT": 0, "WOULD_WRITE": 0}
+
+--- D2 post-migration verifier
+$ /home/mohamed/frappe-bench/env/bin/python /home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/production-migration-readiness/evidence/scripts/verify_production_bilingual_migration.py --site v16.localhost
+  ok: V1 counts: 188 approved rows across 15 doctypes (189 populated incl. frozen fixture)
+  ok: V2 values byte-equal to approval; all 189 norms (188 approved + fixture) server-derived and correct
+  skip: V3 (no --pre snapshot)
+  ok: V4 Company: tree valid (21 rows, 16 root(s))
+  ok: V4 Account: tree valid (2102 rows, 105 root(s))
+  ok: V4 Cost Center: tree valid (47 rows, 21 root(s))
+  ok: V4 Warehouse: tree valid (118 rows, 32 root(s))
+  ok: V4 Item Group: tree valid (19 rows, 1 root(s))
+  ok: V4 Customer Group: tree valid (7 rows, 1 root(s))
+  ok: V4 Supplier Group: tree valid (9 rows, 1 root(s))
+  ok: V4 Territory: tree valid (9 rows, 1 root(s))
+  ok: V4 Department: tree valid (276 rows, 1 root(s))
+  ok: V4 Task: tree valid (4 rows, 2 root(s))
+  ok: V5 probes: 32 queries, p50=0.9ms max=50.3ms
+VERIFY RESULT: PASS (V1 counts, V2 norms, V3 frozen, V4 trees, V5 probes)
+rc=0
+[PASS] D2 verifier: counts / norms / frozen fields / trees / probes PASS
+
+--- S1 post-cutover smoke tests
+$ /home/mohamed/frappe-bench/env/bin/python /home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/production-cutover-runbook/evidence/scripts/cutover_smoke_tests.py --site v16.localhost --expect-gate closed --baseline /home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/production-cutover-runbook/evidence/latency-baseline.json
+CUTOVER SMOKE TESTS site=v16.localhost gate=closed budget_ms=1.5 surface=searchable_dropdown.searchable_link_search
+ENV load1=3.22 load5=2.91 load15=2.40 (latency gates are only meaningful on a quiesced bench)
+S1 PASS: registry loaded, arabic+norm columns present and utf8mb4 on all 15 cutover doctypes
+S2 PASS: governance gate closed as expected (production_mutation_authorized=None)
+S8 PASS: redis reachable on queue:11000, cache:13000
+S3 PASS: 30 probes correct; every P95 within its gate (worst 3.123 ms at Account/ar)
+S3-absolute ADVISORY: ADR Tier-1 ceiling 1.50 ms still breached by 2 probes carried from baseline: ['Account/ar', 'Account/en'] — pre-existing drift, not cutover-induced
+S4 ADVISORY: transactional link sidecar has no ratified latency budget; measured from a Customer query — Sales Order: p50=1.378 p95=1.775 max=2.024 | Purchase Order: p50=0.654 p95=0.906 max=0.948 | Material Request: p50=1.936 p95=2.310 max=2.468 | Sales Invoice: p50=2.114 p95=2.619 max=2.813
+S5 PASS: Balance Sheet: 5 columns x 10 rows in 200.6 ms (en mode, company with 4 GL rows)
+S5 PASS: Profit and Loss Statement: 5 columns x 6 rows in 52.7 ms (en mode, company with 4 GL rows)
+S5 PASS: report generation read-only (Account=2102, GL Entry=4 unchanged)
+S6 SKIP: Purchase Order: no documents on this site (nothing to preview — disclosed, not a pass)
+S6 PASS: print previews rendered with document name present: Sales Invoice(17197 chars, <table), Stock Entry(15358 chars, <table), Material Request(11576 chars, <table)
+S7 PASS: maintenance_mode is off (site serving traffic)
+SMOKE RESULT: PASS (9 checks passed, 2 advisory: S3-absolute, S4 (5.9s)
+rc=0
+[PASS] S1 smoke: S1-S8 checks green (advisories reported inline)
+
+======================================================================
+CUTOVER ORCHESTRATOR SUMMARY
+  [PASS] P1 site: site present; db_name configured=yes; production_mutation_authorized=None (gate closed)
+  [PASS] P2 backup: 20261006_021223-v16_localhost-database.sql.gz (68.0 MiB, 0 min old, gzip stream verified end-to-end)
+  [PASS] P3 disk: 2.47 GiB free
+  [PASS] P4 redis: queue:11000 and cache:13000 answer PING
+  [PASS] P5 schema: connection OK (site db name redacted); arabic+norm columns and utf8mb4 on all 15 cutover tables; Account rows=2102
+  [PASS] P6 maintenance: toggled 0 -> 1 -> 0 with `bench set-maintenance-mode`; site left serving
+  [PASS] D1 dry-run: rc=0, 0 writes, 0 conflicts, 0 absent; {"ABSENT": 0, "ALREADY_APPLIED": 188, "CONFLICT": 0, "WOULD_WRITE": 0}
+  [PASS] D2 verifier: counts / norms / frozen fields / trees / probes PASS
+  [PASS] S1 smoke: S1-S8 checks green (advisories reported inline)
+RESULT: PASS
+stageB_rc=0
+
+##### POST-STATE (fail-closed invariants) #####
+production_mutation_authorized= None | maintenance_mode= 0
+baseline pin:
+{
+  "budget_ms": 1.5,
+  "captured_utc": "2026-10-05T20:42:21Z",
+  "expect_gate": "closed",
+  "probes": {
+    "Account/ar": {
+      "compliant": false,
+      "p50": 2.408,
+      "p95": 3.075

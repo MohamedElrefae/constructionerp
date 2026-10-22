@@ -1,0 +1,151 @@
+==============================================================================
+AUDIT bilingual-translation-catalog-sync
+==============================================================================
+site                : v16.localhost
+base_commit         : 6c721b8
+glossary_sha256     : aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4
+glossary_terms      : 47 (meta.term_count=47)
+payload_sha256      : 0a55f3c120cf1ac381c0564407cdc7a9ea975782d68642c6a943807cdd70b421
+payload_released    : 4337 distinct keys
+
+--- PASS A: Translation doctype, language='ar' inventory ---
+rows_total                  : 22761
+by_ct_is_catalog_entry      : {0: 7028, 1: 15733}
+by_ct_origin                : {'Site Override': 2691, 'Packaged Release': 4337, '<none>': 15733}
+by_ct_review_status         : {'<none>': 2696, 'Released': 8653, 'Approved': 7759, 'Pending': 3653}
+empty_translated_text_rows  : 3653
+duplicate_source_text_groups: 6933 (extra rows 7019)
+
+--- PASS B: stored-row conformance vs 47 glossary terms ---
+  DIVERGENT 'Add Child' name=276415515d ctx='' cat=1 origin='' cur_sha16=f548ae03f4cdbef0 appr_sha16=46dadab0f9e2eacf
+  DIVERGENT 'Add Child' name=97vm3hqjdp ctx='' cat=0 origin='Packaged Release' cur_sha16=f548ae03f4cdbef0 appr_sha16=46dadab0f9e2eacf
+  EMPTY     'Subcontracting' name=fd3e1667b5 ctx='' cat=1 origin='' cur_sha16=e3b0c44298fc1c14 appr_sha16=c6cdc4cd34361da1
+  DIVERGENT 'Subcontract' name=450efe1fe1 ctx='' cat=1 origin='' cur_sha16=7aac3f97ba45c66c appr_sha16=0d4a245d446c92e1
+  EMPTY     'Subcontract Order' name=f5f7189e9f ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=60258ad873094cae
+  EMPTY     'Subcontracting Order' name=b452b0d3fb ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=60258ad873094cae
+  EMPTY     'Subcontracting Receipt' name=be2be0b07e ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=4df7cbe9802c40ff
+  EMPTY     'Subcontracting Purchase Order' name=b7e081e928 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=8efcdf9904529052
+  EMPTY     'Subcontracting Sales Order' name=300aeca0c0 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=9b8a60a33905c692
+  EMPTY     'Subcontracting BOM' name=0f6f050f7c ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=b4adca5a4536c642
+  EMPTY     'Subcontract BOM' name=cc92d45b33 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=b4adca5a4536c642
+  EMPTY     'Subcontracting Settings' name=662cf3c6f8 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=96df9af3d47ee018
+  EMPTY     'Subcontracting Inward' name=aa28f98954 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=d5d472f1ac2e6aed
+  EMPTY     'Subcontracting Delivery' name=c2dad81eff ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=f6ccf7fac17b7ad9
+  DIVERGENT 'Is Subcontracted' name=400a59bff5 ctx='' cat=1 origin=None cur_sha16=77b3313dc3741403 appr_sha16=73a6b1ef2c4bf361
+  EMPTY     'Is Subcontracted Item' name=bf378df3e8 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=082daa66849149e2
+  EMPTY     'Subcontracted Quantity' name=ce93d5d441 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=290575bc89f10230
+  EMPTY     'Reserved Qty for Subcontract' name=db3901dd57 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=1cd5b532ea3fbf3c
+  EMPTY     'Subcontracting Conversion Factor' name=758be8fde2 ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=7f8fde76a80a2615
+  EMPTY     'Subcontracting Order Item' name=18a641730d ctx='' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=dc11a106bb68f854
+  EMPTY     'Submit' name=86b6e532d9 ctx='Button in list view actions menu' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=64a11fadf7420f59
+  EMPTY     'Submit' name=b076a2f715 ctx='Submit password for Email Account' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=64a11fadf7420f59
+  EMPTY     'Submit' name=b8714dd2b9 ctx='Primary action of prompt dialog' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=64a11fadf7420f59
+  EMPTY     'Submit' name=ba06632908 ctx='Button in web form' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=64a11fadf7420f59
+  EMPTY     'Submit' name=fbff2d9495 ctx='Primary action in dialog' cat=1 origin=None cur_sha16=e3b0c44298fc1c14 appr_sha16=64a11fadf7420f59
+stored exact=76 divergent=4 empty=21 terms_without_row=0 of 47
+
+--- PASS C: EFFECTIVE rendered conformance (authoritative) ---
+loader_installed            : True
+rendered_dict_size          : 14439
+  DIVERGENT 'Add Child' rendered_sha16=f548ae03f4cdbef0 appr_sha16=46dadab0f9e2eacf rendered_len=15 byte_scan=[]
+rendered match=46 divergent=1 absent_or_empty=0 of 47
+
+--- PASS D: forbidden_ar violations at term keys (rendered) ---
+forbidden_term_violations   : 0
+
+--- PASS E: same source rendered differently across contexts ---
+context_variant_contradictions: 0
+
+--- PASS F: master-data labels (presence + baseline where one exists) ---
+  PRESENT   'Company'              sha16=9ee7213d22589ef2 len=6 comparison=presence_only baseline=<none committed>
+  PRESENT   'Department'           sha16=0771c3ff93368054 len=5 comparison=presence_only baseline=<none committed>
+  PRESENT   'UOM'                  sha16=02e927a2fbf51bda len=11 comparison=presence_only baseline=<none committed>
+  PRESENT   'Unit of Measure'      sha16=02e927a2fbf51bda len=11 comparison=presence_only baseline=<none committed>
+  PRESENT   'Account'              sha16=66dcee1f461697dd len=6 comparison=presence_only baseline=<none committed>
+  MATCH     'Cost Center'          sha16=3d8ab274b4d9df14 len=12 comparison=value_verified baseline_sha16=3d8ab274b4d9df14
+  PRESENT   'Warehouse'            sha16=1a616ca76f933877 len=8 comparison=presence_only baseline=<none committed>
+  PRESENT   'Project'              sha16=7eb84d94b7ef145d len=7 comparison=presence_only baseline=<none committed>
+  PRESENT   'Item'                 sha16=5b12a452b19e6c1d len=5 comparison=presence_only baseline=<none committed>
+  PRESENT   'Customer'             sha16=a042411e90be03e4 len=6 comparison=presence_only baseline=<none committed>
+  PRESENT   'Supplier'             sha16=4680c31a727f1d00 len=6 comparison=presence_only baseline=<none committed>
+  MATCH     'Chart of Accounts'    sha16=79b9f05878231729 len=13 comparison=value_verified baseline_sha16=79b9f05878231729
+master_labels_present       : 12/12
+master_labels_with_baseline : 2/12 (source docs/translation/smoke-test-1.0.md)
+master_labels_value_verified: 2/2 of those carrying a committed baseline
+  NOTE (finding C-05): 10 of 12 master labels have NO committed ratified baseline; they are presence-only and are NOT claimed value-verified.
+
+--- PASS G: standard action buttons ---
+buttons_present             : 42/45
+buttons_absent_english_fallback: ['Remove Row', 'Save as Draft', 'OK']
+
+--- PASS H: INERT catalog-only divergence (ct_is_catalog_entry=1, never rendered) ---
+inert_divergent_rows        : 3 (sources 3)
+  INERT-DIVERGENT 'Add Child' name=276415515d cur_sha16=f548ae03f4cdbef0 appr_sha16=46dadab0f9e2eacf review='Released'
+  INERT-DIVERGENT 'Subcontract' name=450efe1fe1 cur_sha16=7aac3f97ba45c66c appr_sha16=0d4a245d446c92e1 review='Approved'
+  INERT-DIVERGENT 'Is Subcontracted' name=400a59bff5 cur_sha16=77b3313dc3741403 appr_sha16=73a6b1ef2c4bf361 review='Approved'
+inert_empty_rows            : 21
+  INERT-EMPTY     'Subcontracting' name=fd3e1667b5 review='Pending'
+  INERT-EMPTY     'Subcontract Order' name=f5f7189e9f review='Pending'
+  INERT-EMPTY     'Subcontracting Order' name=b452b0d3fb review='Pending'
+  INERT-EMPTY     'Subcontracting Receipt' name=be2be0b07e review='Pending'
+  INERT-EMPTY     'Subcontracting Purchase Order' name=b7e081e928 review='Pending'
+  INERT-EMPTY     'Subcontracting Sales Order' name=300aeca0c0 review='Pending'
+  INERT-EMPTY     'Subcontracting BOM' name=0f6f050f7c review='Pending'
+  INERT-EMPTY     'Subcontract BOM' name=cc92d45b33 review='Pending'
+  INERT-EMPTY     'Subcontracting Settings' name=662cf3c6f8 review='Pending'
+  INERT-EMPTY     'Subcontracting Inward' name=aa28f98954 review='Pending'
+  INERT-EMPTY     'Subcontracting Delivery' name=c2dad81eff review='Pending'
+  INERT-EMPTY     'Is Subcontracted Item' name=bf378df3e8 review='Pending'
+  INERT-EMPTY     'Subcontracted Quantity' name=ce93d5d441 review='Pending'
+  INERT-EMPTY     'Reserved Qty for Subcontract' name=db3901dd57 review='Pending'
+  INERT-EMPTY     'Subcontracting Conversion Factor' name=758be8fde2 review='Pending'
+  INERT-EMPTY     'Subcontracting Order Item' name=18a641730d review='Pending'
+  INERT-EMPTY     'Submit' name=86b6e532d9 review='Pending'
+  INERT-EMPTY     'Submit' name=b076a2f715 review='Pending'
+  INERT-EMPTY     'Submit' name=b8714dd2b9 review='Pending'
+  INERT-EMPTY     'Submit' name=ba06632908 review='Pending'
+  INERT-EMPTY     'Submit' name=fbff2d9495 review='Pending'
+
+--- PASS I: harmonisation patch proposal ---
+glossary_terms_diverging_from_released_payload: 1
+  PATCH 'Add Child' payload_v=1.1 decision_ref='legacy:docs/translation/sign-off-1.0.md'
+        approved_ar: {'before_sha16': '46dadab0f9e2eacf', 'after_sha16': 'f548ae03f4cdbef0'}
+        usage_notes: {'before_sha16': '0dfe04819391b103', 'after_sha16': 'a512254a69200243'}
+        references: {'before_sha16': '0a7690f5e7326f8e', 'after_sha16': '0f76655c55120046'}
+        version: {'before': '2.0', 'after': '2.1'}
+        byte_scan_after=[]
+
+--- PASS J: competing-value producers across app/doc sources (REPORT ONLY) ---
+  source 'Add Child': files carrying one/both competing values = 14
+    app_data                 construction/data/glossary/egyptian_construction_glossary.json glossary_value_hits=1 payload_value_hits=0
+    app_data                 construction/data/translations/approved_ar_overrides.csv glossary_value_hits=0 payload_value_hits=2
+    app_data                 construction/data/translations/release_decisions.json glossary_value_hits=0 payload_value_hits=2
+    app_data                 construction/data/translations/review/batch-08-technical-administration.csv glossary_value_hits=2 payload_value_hits=0
+    app_data                 construction/data/translations/review_queue.csv glossary_value_hits=1 payload_value_hits=0
+    app_python_source        construction/insert_translations.py glossary_value_hits=1 payload_value_hits=0
+    app_python_source        construction/scripts/global_arabic_translation_review.py glossary_value_hits=1 payload_value_hits=0
+    app_python_write_path    construction/patches/v8_4/fix_tree_view_arabic_translations.py glossary_value_hits=2 payload_value_hits=1
+    dated_doc_evidence       docs/evidence/smoke/README.md glossary_value_hits=1 payload_value_hits=0
+    dated_doc_evidence       docs/translation/sign-off-1.0.md glossary_value_hits=1 payload_value_hits=0
+    dated_doc_evidence       docs/translation/smoke-test-1.0.md glossary_value_hits=1 payload_value_hits=0
+    dated_doc_evidence       docs/translation/stage6_w60a_ai_proposal_build_2026-09-21.py glossary_value_hits=1 payload_value_hits=0
+    dated_doc_evidence       docs/translation/stage6_w60a_payload_applied_rows_2026-09-21.csv glossary_value_hits=1 payload_value_hits=0
+    other                    SESSION_MEMORY.md glossary_value_hits=1 payload_value_hits=0
+  app_python_write_path files : 1 -> ['construction/patches/v8_4/fix_tree_view_arabic_translations.py']
+  app_render_source files     : 0 -> []
+  RISK (finding C-06): a registered patch/review script still carries the glossary-side value; on a fresh install or patch re-run it would overwrite the runtime row. Mitigated today by construction/translation_service.py import_released_overrides_hook (hooks.py after_install/after_migrate), which re-imports the payload and clears drift in the same migrate cycle. Not mutated this cycle - outside the owner-approved change set.
+
+--- PASS J2: hardcoded Arabic __() labels in app JS(X) (REPORT ONLY) ---
+  construction/public/js/components/TreeView.jsx hardcoded_arabic_labels=10 digests=['03cec4ee9ea4776c', '0bed7b4494c94ee6', '113d570d6555bc43', '59ca629220a63ede', '6d0a1e214b60bb96', '72ff0519031f0a60']...
+  FINDING C-07: construction/public/js/components/TreeView.jsx passes hardcoded Arabic to __(); the file is not in hooks.py app_include_js and is imported by no module, so it never renders. Dormant source divergence only - not mutated this cycle (outside the owner-approved change set).
+
+--- PROPOSAL ---
+path                    : /home/mohamed/frappe-bench/sites/v16.localhost/private/translation-catalog-sync/proposal.json
+sha256                  : a23a7dceb6cf4b794af47155317be63267fbab46a7334618bf05dfbceec9b9a0
+glossary_sha256_before  : aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4
+glossary_sha256_after   : 7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d
+site_translation_writes : 0
+glossary_term_patches   : 1
+Arabic values are held in the private proposal only (privacy R4); this log carries sha16 digests exclusively.
+
+AUDIT RESULT: PASS

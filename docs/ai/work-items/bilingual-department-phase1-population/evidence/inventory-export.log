@@ -1,0 +1,314 @@
+SITE total=276 distinct_labels=16 arabic_populated=0
+ROW root name='All Departments' label='All Departments' company=None parent='' is_group=1 disabled=0 lft=1 rgt=578
+ROW label_noise name='_Test Department - _TC' label='_Test Department' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=2 rgt=3
+ROW label_noise name='_Test Department 1 - _TC' label='_Test Department 1' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=4 rgt=5
+ROW test_company name='Accounts - _TC' label='Accounts' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=6 rgt=7
+ROW test_company name='Accounts - _TC1' label='Accounts' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=8 rgt=9
+ROW test_company name='Accounts - _TC2' label='Accounts' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=10 rgt=11
+ROW test_company name='Accounts - _TC3' label='Accounts' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=12 rgt=13
+ROW test_company name='Accounts - _TC4' label='Accounts' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=14 rgt=15
+ROW test_company name='Accounts - _TC5' label='Accounts' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=16 rgt=17
+ROW test_company name='Accounts - _TC6' label='Accounts' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=18 rgt=19
+ROW test_company name='Accounts - _TC7' label='Accounts' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=20 rgt=21
+ROW test_company name='Accounts - _TCSV' label='Accounts' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=22 rgt=23
+ROW test_company name='Accounts - _TCUV' label='Accounts' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=24 rgt=25
+ROW test_company name='Accounts - _TOIC' label='Accounts' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=26 rgt=27
+ROW test_company name='Accounts - _TSS' label='Accounts' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=28 rgt=29
+ROW test_company name='Accounts - BT' label='Accounts' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=30 rgt=31
+ROW test_company name='Accounts - CCI' label='Accounts' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=32 rgt=33
+ROW test_company name='Accounts - CCU' label='Accounts' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=34 rgt=35
+ROW real_company name='Accounts - E' label='Accounts' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=36 rgt=37
+ROW test_company name='Accounts - PGCI' label='Accounts' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=38 rgt=39
+ROW test_company name='Accounts - TBC' label='Accounts' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=42 rgt=43
+ROW test_company name='Accounts - TCP1' label='Accounts' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=44 rgt=45
+ROW test_company name='Accounts - TQC' label='Accounts' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=46 rgt=47
+ROW test_company name='Accounts - WP' label='Accounts' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=48 rgt=49
+ROW test_company name='Customer Service - _TC' label='Customer Service' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=50 rgt=51
+ROW test_company name='Customer Service - _TC1' label='Customer Service' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=52 rgt=53
+ROW test_company name='Customer Service - _TC2' label='Customer Service' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=54 rgt=55
+ROW test_company name='Customer Service - _TC3' label='Customer Service' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=56 rgt=57
+ROW test_company name='Customer Service - _TC4' label='Customer Service' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=58 rgt=59
+ROW test_company name='Customer Service - _TC5' label='Customer Service' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=60 rgt=61
+ROW test_company name='Customer Service - _TC6' label='Customer Service' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=62 rgt=63
+ROW test_company name='Customer Service - _TC7' label='Customer Service' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=64 rgt=65
+ROW test_company name='Customer Service - _TCSV' label='Customer Service' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=66 rgt=67
+ROW test_company name='Customer Service - _TCUV' label='Customer Service' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=68 rgt=69
+ROW test_company name='Customer Service - _TOIC' label='Customer Service' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=70 rgt=71
+ROW test_company name='Customer Service - _TSS' label='Customer Service' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=72 rgt=73
+ROW test_company name='Customer Service - BT' label='Customer Service' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=74 rgt=75
+ROW test_company name='Customer Service - CCI' label='Customer Service' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=76 rgt=77
+ROW test_company name='Customer Service - CCU' label='Customer Service' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=78 rgt=79
+ROW real_company name='Customer Service - E' label='Customer Service' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=80 rgt=81
+ROW test_company name='Customer Service - PGCI' label='Customer Service' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=82 rgt=83
+ROW test_company name='Customer Service - TBC' label='Customer Service' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=86 rgt=87
+ROW test_company name='Customer Service - TCP1' label='Customer Service' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=88 rgt=89
+ROW test_company name='Customer Service - TQC' label='Customer Service' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=90 rgt=91
+ROW test_company name='Customer Service - WP' label='Customer Service' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=92 rgt=93
+ROW test_company name='Dispatch - _TC' label='Dispatch' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=94 rgt=95
+ROW test_company name='Dispatch - _TC1' label='Dispatch' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=96 rgt=97
+ROW test_company name='Dispatch - _TC2' label='Dispatch' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=98 rgt=99
+ROW test_company name='Dispatch - _TC3' label='Dispatch' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=100 rgt=101
+ROW test_company name='Dispatch - _TC4' label='Dispatch' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=102 rgt=103
+ROW test_company name='Dispatch - _TC5' label='Dispatch' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=104 rgt=105
+ROW test_company name='Dispatch - _TC6' label='Dispatch' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=106 rgt=107
+ROW test_company name='Dispatch - _TC7' label='Dispatch' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=108 rgt=109
+ROW test_company name='Dispatch - _TCSV' label='Dispatch' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=110 rgt=111
+ROW test_company name='Dispatch - _TCUV' label='Dispatch' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=112 rgt=113
+ROW test_company name='Dispatch - _TOIC' label='Dispatch' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=114 rgt=115
+ROW test_company name='Dispatch - _TSS' label='Dispatch' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=116 rgt=117
+ROW test_company name='Dispatch - BT' label='Dispatch' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=118 rgt=119
+ROW test_company name='Dispatch - CCI' label='Dispatch' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=120 rgt=121
+ROW test_company name='Dispatch - CCU' label='Dispatch' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=122 rgt=123
+ROW real_company name='Dispatch - E' label='Dispatch' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=124 rgt=125
+ROW test_company name='Dispatch - PGCI' label='Dispatch' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=126 rgt=127
+ROW test_company name='Dispatch - TBC' label='Dispatch' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=130 rgt=131
+ROW test_company name='Dispatch - TCP1' label='Dispatch' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=132 rgt=133
+ROW test_company name='Dispatch - TQC' label='Dispatch' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=134 rgt=135
+ROW test_company name='Dispatch - WP' label='Dispatch' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=136 rgt=137
+ROW test_company name='Human Resources - _TC' label='Human Resources' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=138 rgt=139
+ROW test_company name='Human Resources - _TC1' label='Human Resources' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=140 rgt=141
+ROW test_company name='Human Resources - _TC2' label='Human Resources' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=142 rgt=143
+ROW test_company name='Human Resources - _TC3' label='Human Resources' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=144 rgt=145
+ROW test_company name='Human Resources - _TC4' label='Human Resources' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=146 rgt=147
+ROW test_company name='Human Resources - _TC5' label='Human Resources' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=148 rgt=149
+ROW test_company name='Human Resources - _TC6' label='Human Resources' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=150 rgt=151
+ROW test_company name='Human Resources - _TC7' label='Human Resources' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=152 rgt=153
+ROW test_company name='Human Resources - _TCSV' label='Human Resources' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=154 rgt=155
+ROW test_company name='Human Resources - _TCUV' label='Human Resources' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=156 rgt=157
+ROW test_company name='Human Resources - _TOIC' label='Human Resources' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=158 rgt=159
+ROW test_company name='Human Resources - _TSS' label='Human Resources' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=160 rgt=161
+ROW test_company name='Human Resources - BT' label='Human Resources' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=162 rgt=163
+ROW test_company name='Human Resources - CCI' label='Human Resources' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=164 rgt=165
+ROW test_company name='Human Resources - CCU' label='Human Resources' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=166 rgt=167
+ROW real_company name='Human Resources - E' label='Human Resources' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=168 rgt=169
+ROW test_company name='Human Resources - PGCI' label='Human Resources' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=170 rgt=171
+ROW test_company name='Human Resources - TBC' label='Human Resources' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=174 rgt=175
+ROW test_company name='Human Resources - TCP1' label='Human Resources' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=176 rgt=177
+ROW test_company name='Human Resources - TQC' label='Human Resources' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=178 rgt=179
+ROW test_company name='Human Resources - WP' label='Human Resources' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=180 rgt=181
+ROW test_company name='Legal - _TC' label='Legal' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=182 rgt=183
+ROW test_company name='Legal - _TC1' label='Legal' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=184 rgt=185
+ROW test_company name='Legal - _TC2' label='Legal' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=186 rgt=187
+ROW test_company name='Legal - _TC3' label='Legal' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=188 rgt=189
+ROW test_company name='Legal - _TC4' label='Legal' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=190 rgt=191
+ROW test_company name='Legal - _TC5' label='Legal' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=192 rgt=193
+ROW test_company name='Legal - _TC6' label='Legal' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=194 rgt=195
+ROW test_company name='Legal - _TC7' label='Legal' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=196 rgt=197
+ROW test_company name='Legal - _TCSV' label='Legal' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=198 rgt=199
+ROW test_company name='Legal - _TCUV' label='Legal' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=200 rgt=201
+ROW test_company name='Legal - _TOIC' label='Legal' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=202 rgt=203
+ROW test_company name='Legal - _TSS' label='Legal' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=204 rgt=205
+ROW test_company name='Legal - BT' label='Legal' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=206 rgt=207
+ROW test_company name='Legal - CCI' label='Legal' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=208 rgt=209
+ROW test_company name='Legal - CCU' label='Legal' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=210 rgt=211
+ROW real_company name='Legal - E' label='Legal' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=212 rgt=213
+ROW test_company name='Legal - PGCI' label='Legal' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=214 rgt=215
+ROW test_company name='Legal - TBC' label='Legal' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=218 rgt=219
+ROW test_company name='Legal - TCP1' label='Legal' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=220 rgt=221
+ROW test_company name='Legal - TQC' label='Legal' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=222 rgt=223
+ROW test_company name='Legal - WP' label='Legal' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=224 rgt=225
+ROW test_company name='Management - _TC' label='Management' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=226 rgt=227
+ROW test_company name='Management - _TC1' label='Management' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=228 rgt=229
+ROW test_company name='Management - _TC2' label='Management' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=230 rgt=231
+ROW test_company name='Management - _TC3' label='Management' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=232 rgt=233
+ROW test_company name='Management - _TC4' label='Management' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=234 rgt=235
+ROW test_company name='Management - _TC5' label='Management' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=236 rgt=237
+ROW test_company name='Management - _TC6' label='Management' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=238 rgt=239
+ROW test_company name='Management - _TC7' label='Management' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=240 rgt=241
+ROW test_company name='Management - _TCSV' label='Management' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=242 rgt=243
+ROW test_company name='Management - _TCUV' label='Management' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=244 rgt=245
+ROW test_company name='Management - _TOIC' label='Management' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=246 rgt=247
+ROW test_company name='Management - _TSS' label='Management' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=248 rgt=249
+ROW test_company name='Management - BT' label='Management' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=250 rgt=251
+ROW test_company name='Management - CCI' label='Management' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=252 rgt=253
+ROW test_company name='Management - CCU' label='Management' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=254 rgt=255
+ROW real_company name='Management - E' label='Management' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=256 rgt=257
+ROW test_company name='Management - PGCI' label='Management' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=258 rgt=259
+ROW test_company name='Management - TBC' label='Management' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=262 rgt=263
+ROW test_company name='Management - TCP1' label='Management' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=264 rgt=265
+ROW test_company name='Management - TQC' label='Management' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=266 rgt=267
+ROW test_company name='Management - WP' label='Management' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=268 rgt=269
+ROW test_company name='Marketing - _TC' label='Marketing' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=270 rgt=271
+ROW test_company name='Marketing - _TC1' label='Marketing' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=272 rgt=273
+ROW test_company name='Marketing - _TC2' label='Marketing' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=274 rgt=275
+ROW test_company name='Marketing - _TC3' label='Marketing' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=276 rgt=277
+ROW test_company name='Marketing - _TC4' label='Marketing' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=278 rgt=279
+ROW test_company name='Marketing - _TC5' label='Marketing' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=280 rgt=281
+ROW test_company name='Marketing - _TC6' label='Marketing' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=282 rgt=283
+ROW test_company name='Marketing - _TC7' label='Marketing' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=284 rgt=285
+ROW test_company name='Marketing - _TCSV' label='Marketing' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=286 rgt=287
+ROW test_company name='Marketing - _TCUV' label='Marketing' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=288 rgt=289
+ROW test_company name='Marketing - _TOIC' label='Marketing' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=290 rgt=291
+ROW test_company name='Marketing - _TSS' label='Marketing' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=292 rgt=293
+ROW test_company name='Marketing - BT' label='Marketing' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=294 rgt=295
+ROW test_company name='Marketing - CCI' label='Marketing' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=296 rgt=297
+ROW test_company name='Marketing - CCU' label='Marketing' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=298 rgt=299
+ROW real_company name='Marketing - E' label='Marketing' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=300 rgt=301
+ROW test_company name='Marketing - PGCI' label='Marketing' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=302 rgt=303
+ROW test_company name='Marketing - TBC' label='Marketing' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=306 rgt=307
+ROW test_company name='Marketing - TCP1' label='Marketing' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=308 rgt=309
+ROW test_company name='Marketing - TQC' label='Marketing' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=310 rgt=311
+ROW test_company name='Marketing - WP' label='Marketing' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=312 rgt=313
+ROW test_company name='Operations - _TC' label='Operations' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=314 rgt=315
+ROW test_company name='Operations - _TC1' label='Operations' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=316 rgt=317
+ROW test_company name='Operations - _TC2' label='Operations' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=318 rgt=319
+ROW test_company name='Operations - _TC3' label='Operations' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=320 rgt=321
+ROW test_company name='Operations - _TC4' label='Operations' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=322 rgt=323
+ROW test_company name='Operations - _TC5' label='Operations' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=324 rgt=325
+ROW test_company name='Operations - _TC6' label='Operations' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=326 rgt=327
+ROW test_company name='Operations - _TC7' label='Operations' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=328 rgt=329
+ROW test_company name='Operations - _TCSV' label='Operations' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=330 rgt=331
+ROW test_company name='Operations - _TCUV' label='Operations' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=332 rgt=333
+ROW test_company name='Operations - _TOIC' label='Operations' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=334 rgt=335
+ROW test_company name='Operations - _TSS' label='Operations' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=336 rgt=337
+ROW test_company name='Operations - BT' label='Operations' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=338 rgt=339
+ROW test_company name='Operations - CCI' label='Operations' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=340 rgt=341
+ROW test_company name='Operations - CCU' label='Operations' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=342 rgt=343
+ROW real_company name='Operations - E' label='Operations' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=344 rgt=345
+ROW test_company name='Operations - PGCI' label='Operations' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=346 rgt=347
+ROW test_company name='Operations - TBC' label='Operations' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=350 rgt=351
+ROW test_company name='Operations - TCP1' label='Operations' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=352 rgt=353
+ROW test_company name='Operations - TQC' label='Operations' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=354 rgt=355
+ROW test_company name='Operations - WP' label='Operations' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=356 rgt=357
+ROW test_company name='Production - _TC' label='Production' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=358 rgt=359
+ROW test_company name='Production - _TC1' label='Production' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=360 rgt=361
+ROW test_company name='Production - _TC2' label='Production' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=362 rgt=363
+ROW test_company name='Production - _TC3' label='Production' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=364 rgt=365
+ROW test_company name='Production - _TC4' label='Production' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=366 rgt=367
+ROW test_company name='Production - _TC5' label='Production' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=368 rgt=369
+ROW test_company name='Production - _TC6' label='Production' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=370 rgt=371
+ROW test_company name='Production - _TC7' label='Production' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=372 rgt=373
+ROW test_company name='Production - _TCSV' label='Production' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=374 rgt=375
+ROW test_company name='Production - _TCUV' label='Production' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=376 rgt=377
+ROW test_company name='Production - _TOIC' label='Production' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=378 rgt=379
+ROW test_company name='Production - _TSS' label='Production' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=380 rgt=381
+ROW test_company name='Production - BT' label='Production' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=382 rgt=383
+ROW test_company name='Production - CCI' label='Production' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=384 rgt=385
+ROW test_company name='Production - CCU' label='Production' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=386 rgt=387
+ROW real_company name='Production - E' label='Production' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=388 rgt=389
+ROW test_company name='Production - PGCI' label='Production' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=390 rgt=391
+ROW test_company name='Production - TBC' label='Production' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=394 rgt=395
+ROW test_company name='Production - TCP1' label='Production' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=396 rgt=397
+ROW test_company name='Production - TQC' label='Production' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=398 rgt=399
+ROW test_company name='Production - WP' label='Production' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=400 rgt=401
+ROW test_company name='Purchase - _TC' label='Purchase' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=402 rgt=403
+ROW test_company name='Purchase - _TC1' label='Purchase' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=404 rgt=405
+ROW test_company name='Purchase - _TC2' label='Purchase' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=406 rgt=407
+ROW test_company name='Purchase - _TC3' label='Purchase' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=408 rgt=409
+ROW test_company name='Purchase - _TC4' label='Purchase' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=410 rgt=411
+ROW test_company name='Purchase - _TC5' label='Purchase' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=412 rgt=413
+ROW test_company name='Purchase - _TC6' label='Purchase' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=414 rgt=415
+ROW test_company name='Purchase - _TC7' label='Purchase' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=416 rgt=417
+ROW test_company name='Purchase - _TCSV' label='Purchase' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=418 rgt=419
+ROW test_company name='Purchase - _TCUV' label='Purchase' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=420 rgt=421
+ROW test_company name='Purchase - _TOIC' label='Purchase' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=422 rgt=423
+ROW test_company name='Purchase - _TSS' label='Purchase' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=424 rgt=425
+ROW test_company name='Purchase - BT' label='Purchase' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=426 rgt=427
+ROW test_company name='Purchase - CCI' label='Purchase' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=428 rgt=429
+ROW test_company name='Purchase - CCU' label='Purchase' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=430 rgt=431
+ROW real_company name='Purchase - E' label='Purchase' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=432 rgt=433
+ROW test_company name='Purchase - PGCI' label='Purchase' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=434 rgt=435
+ROW test_company name='Purchase - TBC' label='Purchase' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=438 rgt=439
+ROW test_company name='Purchase - TCP1' label='Purchase' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=440 rgt=441
+ROW test_company name='Purchase - TQC' label='Purchase' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=442 rgt=443
+ROW test_company name='Purchase - WP' label='Purchase' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=444 rgt=445
+ROW test_company name='Quality Management - _TC' label='Quality Management' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=446 rgt=447
+ROW test_company name='Quality Management - _TC1' label='Quality Management' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=448 rgt=449
+ROW test_company name='Quality Management - _TC2' label='Quality Management' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=450 rgt=451
+ROW test_company name='Quality Management - _TC3' label='Quality Management' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=452 rgt=453
+ROW test_company name='Quality Management - _TC4' label='Quality Management' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=454 rgt=455
+ROW test_company name='Quality Management - _TC5' label='Quality Management' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=456 rgt=457
+ROW test_company name='Quality Management - _TC6' label='Quality Management' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=458 rgt=459
+ROW test_company name='Quality Management - _TC7' label='Quality Management' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=460 rgt=461
+ROW test_company name='Quality Management - _TCSV' label='Quality Management' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=462 rgt=463
+ROW test_company name='Quality Management - _TCUV' label='Quality Management' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=464 rgt=465
+ROW test_company name='Quality Management - _TOIC' label='Quality Management' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=466 rgt=467
+ROW test_company name='Quality Management - _TSS' label='Quality Management' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=468 rgt=469
+ROW test_company name='Quality Management - BT' label='Quality Management' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=470 rgt=471
+ROW test_company name='Quality Management - CCI' label='Quality Management' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=472 rgt=473
+ROW test_company name='Quality Management - CCU' label='Quality Management' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=474 rgt=475
+ROW real_company name='Quality Management - E' label='Quality Management' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=476 rgt=477
+ROW test_company name='Quality Management - PGCI' label='Quality Management' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=478 rgt=479
+ROW test_company name='Quality Management - TBC' label='Quality Management' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=482 rgt=483
+ROW test_company name='Quality Management - TCP1' label='Quality Management' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=484 rgt=485
+ROW test_company name='Quality Management - TQC' label='Quality Management' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=486 rgt=487
+ROW test_company name='Quality Management - WP' label='Quality Management' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=488 rgt=489
+ROW test_company name='Research & Development - _TC' label='Research & Development' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=490 rgt=491
+ROW test_company name='Research & Development - _TC1' label='Research & Development' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=492 rgt=493
+ROW test_company name='Research & Development - _TC2' label='Research & Development' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=494 rgt=495
+ROW test_company name='Research & Development - _TC3' label='Research & Development' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=496 rgt=497
+ROW test_company name='Research & Development - _TC4' label='Research & Development' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=498 rgt=499
+ROW test_company name='Research & Development - _TC5' label='Research & Development' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=500 rgt=501
+ROW test_company name='Research & Development - _TC6' label='Research & Development' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=502 rgt=503
+ROW test_company name='Research & Development - _TC7' label='Research & Development' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=504 rgt=505
+ROW test_company name='Research & Development - _TCSV' label='Research & Development' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=506 rgt=507
+ROW test_company name='Research & Development - _TCUV' label='Research & Development' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=508 rgt=509
+ROW test_company name='Research & Development - _TOIC' label='Research & Development' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=510 rgt=511
+ROW test_company name='Research & Development - _TSS' label='Research & Development' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=512 rgt=513
+ROW test_company name='Research & Development - BT' label='Research & Development' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=514 rgt=515
+ROW test_company name='Research & Development - CCI' label='Research & Development' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=516 rgt=517
+ROW test_company name='Research & Development - CCU' label='Research & Development' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=518 rgt=519
+ROW real_company name='Research & Development - E' label='Research & Development' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=520 rgt=521
+ROW test_company name='Research & Development - PGCI' label='Research & Development' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=522 rgt=523
+ROW test_company name='Research & Development - TBC' label='Research & Development' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=526 rgt=527
+ROW test_company name='Research & Development - TCP1' label='Research & Development' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=528 rgt=529
+ROW test_company name='Research & Development - TQC' label='Research & Development' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=530 rgt=531
+ROW test_company name='Research & Development - WP' label='Research & Development' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=532 rgt=533
+ROW test_company name='Sales - _TC' label='Sales' company='_Test Company' parent='All Departments' is_group=0 disabled=0 lft=534 rgt=535
+ROW test_company name='Sales - _TC1' label='Sales' company='_Test Company 1' parent='All Departments' is_group=0 disabled=0 lft=536 rgt=537
+ROW test_company name='Sales - _TC2' label='Sales' company='_Test Company 2' parent='All Departments' is_group=0 disabled=0 lft=538 rgt=539
+ROW test_company name='Sales - _TC3' label='Sales' company='_Test Company 3' parent='All Departments' is_group=0 disabled=0 lft=540 rgt=541
+ROW test_company name='Sales - _TC4' label='Sales' company='_Test Company 4' parent='All Departments' is_group=0 disabled=0 lft=542 rgt=543
+ROW test_company name='Sales - _TC5' label='Sales' company='_Test Company 5' parent='All Departments' is_group=0 disabled=0 lft=544 rgt=545
+ROW test_company name='Sales - _TC6' label='Sales' company='_Test Company 6' parent='All Departments' is_group=0 disabled=0 lft=546 rgt=547
+ROW test_company name='Sales - _TC7' label='Sales' company='_Test Company 7' parent='All Departments' is_group=0 disabled=0 lft=548 rgt=549
+ROW test_company name='Sales - _TCSV' label='Sales' company='_Test Company SA VAT' parent='All Departments' is_group=0 disabled=0 lft=550 rgt=551
+ROW test_company name='Sales - _TCUV' label='Sales' company='_Test Company UAE VAT' parent='All Departments' is_group=0 disabled=0 lft=552 rgt=553
+ROW test_company name='Sales - _TOIC' label='Sales' company='_Test Opening Invoice Company' parent='All Departments' is_group=0 disabled=0 lft=554 rgt=555
+ROW test_company name='Sales - _TSS' label='Sales' company='_Test Support SLA' parent='All Departments' is_group=0 disabled=0 lft=556 rgt=557
+ROW test_company name='Sales - BT' label='Sales' company='Best Test' parent='All Departments' is_group=0 disabled=0 lft=558 rgt=559
+ROW test_company name='Sales - CCI' label='Sales' company='Child Company India' parent='All Departments' is_group=0 disabled=0 lft=560 rgt=561
+ROW test_company name='Sales - CCU' label='Sales' company='Child Company US' parent='All Departments' is_group=0 disabled=0 lft=562 rgt=563
+ROW real_company name='Sales - E' label='Sales' company='Elrefae' parent='All Departments' is_group=0 disabled=0 lft=564 rgt=565
+ROW test_company name='Sales - PGCI' label='Sales' company='Parent Group Company India' parent='All Departments' is_group=0 disabled=0 lft=566 rgt=567
+ROW test_company name='Sales - TBC' label='Sales' company='Trial Balance Company' parent='All Departments' is_group=0 disabled=0 lft=570 rgt=571
+ROW test_company name='Sales - TCP1' label='Sales' company='_Test Company with perpetual inventory' parent='All Departments' is_group=0 disabled=0 lft=572 rgt=573
+ROW test_company name='Sales - TQC' label='Sales' company='Test Quality Company' parent='All Departments' is_group=0 disabled=0 lft=574 rgt=575
+ROW test_company name='Sales - WP' label='Sales' company='Wind Power LLC' parent='All Departments' is_group=0 disabled=0 lft=576 rgt=577
+CLASS root=1 real_company=13 test_company=260 label_noise=2
+USAGE dept='All Departments' company=None tables=['User Scope Context'] in-phase1
+USAGE dept='_Test Department - _TC' company='_Test Company' tables=['Employee'] excluded
+USAGE dept='_Test Department 1 - _TC' company='_Test Company' tables=['Employee'] excluded
+USAGE_SUMMARY in_use_phase1=['All Departments'] in_use_excluded=['_Test Department - _TC', '_Test Department 1 - _TC']
+FIXTURE_JSON department_fixture_files=none
+COMPANY '_Test Company' rows=15
+COMPANY '_Test Company UAE VAT' rows=13
+COMPANY 'Parent Group Company India' rows=13
+COMPANY '_Test Company 7' rows=13
+COMPANY 'Child Company US' rows=13
+COMPANY '_Test Company 5' rows=13
+COMPANY 'Best Test' rows=13
+COMPANY 'Test Quality Company' rows=13
+COMPANY '_Test Company 3' rows=13
+COMPANY '_Test Opening Invoice Company' rows=13
+COMPANY 'Trial Balance Company' rows=13
+COMPANY '_Test Company 1' rows=13
+COMPANY '_Test Company SA VAT' rows=13
+COMPANY 'Elrefae' rows=13
+COMPANY '_Test Company 6' rows=13
+COMPANY 'Child Company India' rows=13
+COMPANY 'Wind Power LLC' rows=13
+COMPANY '_Test Company 4' rows=13
+COMPANY '_Test Support SLA' rows=13
+COMPANY '_Test Company with perpetual inventory' rows=13
+COMPANY '_Test Company 2' rows=13
+COMPANY '<root>' rows=1
+FINDINGS F-5G-1 actual total 276 frozen (5F scope note said 274 - stale off-hand figure)
+FINDINGS F-5G-2 identity: name = '<label> - <abbr>' on all company rows; root name = label
+FINDINGS F-5G-3 tree: single root, all 275 children flat under it, only root is_group=1
+FINDINGS F-5G-4 root save quirk probed: MandatoryError(company NULL) + NestedSetRecursionError (validate self-parents) -> R3b-style ignore_mandatory + scoped get_root_of->None needed
+FINDINGS F-5G-5 no Department fixture JSON -> no sync-wipe risk (5F F5 does not apply)
+FINDINGS F-5G-6 glossary: 47 terms, zero exact matches on the 14 Phase-1 labels
+PHASE1_FROZEN_MATCH yes (14 = root + 13 Elrefae)
+PRE_STATE_ARABIC 0
+INVENTORY RESULT: PASS

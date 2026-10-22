@@ -1,0 +1,12 @@
+# Frappe's rules target the deployable application surface. These standalone
+# tools have dedicated test suites and different filesystem/process boundaries.
+dashboard/
+orchestrator/
+scripts/
+tests_offline/
+docs/
+
+# Test-only sources are not shipped as runtime application code.
+**/tests/
+**/*_tests.js
+construction/scratch/

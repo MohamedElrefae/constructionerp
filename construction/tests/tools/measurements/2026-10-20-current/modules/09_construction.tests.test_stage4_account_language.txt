@@ -1,0 +1,18 @@
+Starting test run with parameters: site=v16-protocol.localhost, app=construction, module=construction.tests.test_stage4_account_language, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /tmp/opencode/f44-bench/logs/frappe.testing.log
+
+Running 6 unspecified-category tests for construction
+
+construction.tests.test_stage4_account_language.TestStage4AccountLanguage
+   [32m ✔ [0m test_dry_run_apply_is_zero_mutation_plan
+   [32m ✔ [0m test_export_returns_governed_manifest_contract
+   [32m ✔ [0m test_export_rows_have_identity_and_english
+   [32m ✔ [0m test_glossary_lookup_returns_mapping
+   [32m ✔ [0m test_validate_proposal_contract
+   [32m ✔ [0m test_write_path_uses_private_dir_and_returns_hash
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.182s
+
+OK

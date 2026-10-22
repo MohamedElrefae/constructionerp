@@ -1,0 +1,32 @@
+COUNTS_BEFORE: {"Account": 2103, "GL Entry": 4, "Report": 193, "Translation": 22762}
+REPORT General Ledger mode=ar: OK columns=15 rows=16 tail=no ms=124.31
+REPORT General Ledger mode=en: OK columns=15 rows=16 tail=no ms=6.69
+HEADERS_SWAPPED[General Ledger]: True
+EN_HEADERS[General Ledger]: ["GL Entry", "Posting Date", "Account", "Debit (EGP)", "Credit (EGP)", "Balance (EGP)", "Voucher Type", "Voucher Subtype"]
+AR_HEADERS[General Ledger]: ["GL Entry", "تاريخ الترحيل", "الحساب", "مدين (EGP)", "دائن (EGP)", "الرصيد (EGP)", "نوع السند", "النوع الفرعي للسند"]
+REPORT Trial Balance mode=ar: OK columns=10 rows=3 tail=no ms=75.31
+REPORT Trial Balance mode=en: OK columns=10 rows=3 tail=no ms=37.15
+HEADERS_SWAPPED[Trial Balance]: True
+EN_HEADERS[Trial Balance]: ["Account", "Account Name", "Account Number", "Currency", "Opening (Dr)", "Opening (Cr)", "Debit", "Credit"]
+AR_HEADERS[Trial Balance]: ["الحساب", "اسم الحساب", "رقم الحساب", "العملة", "Opening (Dr)", "Opening (Cr)", "مدين", "دائن"]
+REPORT Accounts Receivable Summary mode=ar: OK columns=17 rows=1 tail=no ms=78.23
+REPORT Accounts Receivable Summary mode=en: OK columns=17 rows=1 tail=no ms=15.63
+HEADERS_SWAPPED[Accounts Receivable Summary]: True
+EN_HEADERS[Accounts Receivable Summary]: ["Party Type", "Party", "Advance Amount", "Invoiced Amount", "Paid Amount", "Credit Note", "Outstanding Amount", "<0"]
+AR_HEADERS[Accounts Receivable Summary]: ["نوع الطرف", "الطرف", "المبلغ مقدما", "قيمة الفواتير", "المبلغ المدفوع", "إشعار دائن", "المبلغ المستحق", "<0"]
+REPORT Accounts Payable Summary mode=ar: OK columns=16 rows=0 tail=no ms=30.73
+REPORT Accounts Payable Summary mode=en: OK columns=16 rows=0 tail=no ms=11.33
+HEADERS_SWAPPED[Accounts Payable Summary]: True
+EN_HEADERS[Accounts Payable Summary]: ["Party Type", "Party", "Advance Amount", "Invoiced Amount", "Paid Amount", "Debit Note", "Outstanding Amount", "<0"]
+AR_HEADERS[Accounts Payable Summary]: ["نوع الطرف", "الطرف", "المبلغ مقدما", "قيمة الفواتير", "المبلغ المدفوع", "إشعار مدين", "المبلغ المستحق", "<0"]
+REPORT Cash Flow mode=ar: OK columns=3 rows=18 tail=yes ms=92.96
+REPORT Cash Flow mode=en: OK columns=3 rows=18 tail=yes ms=79.85
+HEADERS_SWAPPED[Cash Flow]: True
+EN_HEADERS[Cash Flow]: ["Section", "Currency", "2026"]
+AR_HEADERS[Cash Flow]: ["القسم", "العملة", "2026"]
+EN_HEADERS_STABLE: True
+BOTH_HEADERS_COMBINED: True
+BOTH_HEADERS[Cash Flow]: ["Section — القسم", "Currency — العملة", "2026"]
+COUNTS_AFTER: {"Account": 2103, "GL Entry": 4, "Report": 193, "Translation": 22762}
+MUTATION_GUARD: PASS
+PROBE RESULT: PASS

@@ -1,0 +1,13 @@
+tree 231f1d8b87171dfc6fcedb1ae320195953539c34
+parent 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+author F44 Pillow13 Candidate Builder <candidate-builder@f44.invalid> 1792583486 +0300
+committer F44 Pillow13 Candidate Builder <candidate-builder@f44.invalid> 1792583486 +0300
+
+build(deps): bump Pillow to 13.0.0 (owner-authorized private vendor divergence)
+
+Private, versioned divergence from pinned Frappe base 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+(16.51.1). No upstream Frappe v16 release declares Pillow~=13.0.0; this commit is NOT an
+upstream-supported release and is not published to any public frappe repository.
+
+Scope: single-line dependency pin change only. No source, test or CI change in the
+vendor tree.

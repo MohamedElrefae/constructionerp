@@ -1,0 +1,12 @@
+construction.searchable_dropdown.tests.test_search_api :: 13  [TestSearchableLinkSearch=11, TestGetRecentItems=2]
+construction.searchable_dropdown.tests.test_integration :: 6  [TestSearchableDropdownIntegration=5, TestSearchableDropdownPermissions=1]
+construction.tests.test_bilingual_account_schema :: 5  [TestAccountArabicNameSchema=5]
+construction.tests.test_translation_catalog :: 3  [TestTranslationCatalogRuntime=3]
+construction.tests.test_translation_stabilization_gates :: 8  [TestTranslationStabilizationGates=8]
+construction.tests.test_localization_gates :: 101  [TestPOParser=5, TestGates=10, TestFullCheckPO=5, TestCSVQuorum=9, TestRoutingAndVendor=4, TestRound3Gates=10, TestRound4Gates=58]
+construction.tests.test_bilingual_service :: 38  [TestRegistryLoadAndValidate=9, TestFallbackChains=3, TestUnicodePolicy=10, TestArabicNormalization=4, TestDisplayLabel=5, TestCompleteness=3, TestRelevanceRank=4]
+construction.tests.test_bilingual_account_pilot :: 53  [TestBilingualAccountPilot=53]
+construction.tests.test_stage4_account_language :: 6  [TestStage4AccountLanguage=6]
+construction.tests.test_stage4_report_extension :: 14  [TestReportExtensionPure=10, TestReportExtensionIntegration=4]
+construction.tests.test_stage4_review_bundle :: 36  [TestReviewBundleValidation=14, TestIdentityBindingAndTimeBounds=4, TestGovernedManifestBoundary=12, TestMalformedNowUtcFailsClosed=3, TestImportPayloadFailClosed=3]
+AGGREGATE_STATIC_TOTAL 283

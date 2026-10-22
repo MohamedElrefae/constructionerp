@@ -1,0 +1,11 @@
+SITE: v16.localhost (non-production test only)
+RESULT: PASS
+PASS redis-cache: port 13000 PING ok
+PASS redis-queue: port 11000 PING ok
+PASS site-http: /ping 200
+PASS desk-boot: boot lang=ar
+PASS desk-boot: __messages entries=13628
+PASS desk-boot-key: 'Parent Row No not found for {0}' present in boot
+PASS desk-boot: UAT session logged out
+UAT PREFLIGHT: PASS
+TEARDOWN: Administrator password rotated; Administrator/System Settings language=en; cache flushed.

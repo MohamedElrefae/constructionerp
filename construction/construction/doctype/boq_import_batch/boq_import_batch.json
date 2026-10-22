@@ -1,0 +1,178 @@
+{
+  "actions": [],
+  "autoname": "Prompt",
+  "creation": "2026-06-09 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "boq_header",
+    "project",
+    "status",
+    "import_mode",
+    "source_file",
+    "source_file_name",
+    "sheet_name",
+    "sb_counts",
+    "row_count",
+    "section_count",
+    "item_count",
+    "ambiguous_count",
+    "error_count",
+    "warning_count",
+    "sb_review",
+    "errors_json",
+    "warnings_json",
+    "preview_json"
+  ],
+  "fields": [
+    {
+      "fieldname": "boq_header",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "BOQ Header",
+      "options": "BOQ Header",
+      "reqd": 1
+    },
+    {
+      "fetch_from": "boq_header.project",
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "label": "Project",
+      "options": "Project",
+      "read_only": 1
+    },
+    {
+      "default": "Preview",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Preview\nCommitted\nFailed\nCancelled"
+    },
+    {
+      "fieldname": "import_mode",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Import Mode",
+      "options": "Structured\nSemi-Structured\nFlat"
+    },
+    {
+      "fieldname": "source_file",
+      "fieldtype": "Attach",
+      "label": "Source File"
+    },
+    {
+      "fieldname": "source_file_name",
+      "fieldtype": "Data",
+      "label": "Source File Name"
+    },
+    {
+      "fieldname": "sheet_name",
+      "fieldtype": "Data",
+      "label": "Sheet Name"
+    },
+    {
+      "fieldname": "sb_counts",
+      "fieldtype": "Section Break",
+      "label": "Counts"
+    },
+    {
+      "fieldname": "row_count",
+      "fieldtype": "Int",
+      "label": "Rows"
+    },
+    {
+      "fieldname": "section_count",
+      "fieldtype": "Int",
+      "label": "Sections"
+    },
+    {
+      "fieldname": "item_count",
+      "fieldtype": "Int",
+      "label": "Items"
+    },
+    {
+      "fieldname": "ambiguous_count",
+      "fieldtype": "Int",
+      "label": "Ambiguous Rows"
+    },
+    {
+      "fieldname": "error_count",
+      "fieldtype": "Int",
+      "label": "Errors"
+    },
+    {
+      "fieldname": "warning_count",
+      "fieldtype": "Int",
+      "label": "Warnings"
+    },
+    {
+      "fieldname": "sb_review",
+      "fieldtype": "Section Break",
+      "label": "Review Payload"
+    },
+    {
+      "fieldname": "errors_json",
+      "fieldtype": "Long Text",
+      "label": "Errors JSON"
+    },
+    {
+      "fieldname": "warnings_json",
+      "fieldtype": "Long Text",
+      "label": "Warnings JSON"
+    },
+    {
+      "fieldname": "preview_json",
+      "fieldtype": "Long Text",
+      "label": "Preview JSON"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-06-09 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "construction",
+  "name": "BOQ Import Batch",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager"
+    },
+    {
+      "read": 1,
+      "role": "Read-Only"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

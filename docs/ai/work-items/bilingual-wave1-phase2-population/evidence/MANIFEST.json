@@ -1,0 +1,49 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-wave1-phase2-population/SCOPE.md": "c532cd33c65305b34ca608db2d10026beb917b0233a9aff27a016db56b7eda4a",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/inventory-export.log": "e43f31f236a596b8f9a7bd6a3898908d1cc1fcfa517e8f5d454fcb5896ae865a",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/dry-run.log": "dd15f29601edc126d2e9f9a58928c7549434b527ceaaac2f0875843fbba857f6",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/apply.log": "52a8bdcd7fe83dd728461eca361c1bd9d76d7fc7daa130bbd2032003a13efb47",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/post-import-verification.log": "01869e5f586b594baaf7eaff26a36f3ad514e0253173e162af2bbf2d9e4c4de4",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/regression-matrix.log": "7e7caa151d6e6b2f0929f647740126200ca6cfca9db2137e760ef30148d0dd1c",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/review-ai-a2.md": "0bf6ca66f221ddee18b616bcf75a08ad971f9da4bf9e1cbc15f5e6248f6fa4be",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/owner-approval.md": "5d8f181234bf5258c82d979d42aedb990daa9c04e731aa777b2fd1b9e1b8adaa",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/scripts/export_phase2_inventory.py": "70451f08c741184ae7573daf5d15e5c672194ab4fa42328463fcc12b02edd40f",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/scripts/dry_run_phase2_population.py": "0036f9f4678379c3b77afaa1ef3dcaee6e24293bd3bfa77745493d0605f77aba",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/scripts/apply_phase2_population.py": "5a1fbc54a5c5b4cdad5f1a25d1beac5e441600180249d83befe38985738b6c0c",
+    "docs/ai/work-items/bilingual-wave1-phase2-population/evidence/scripts/verify_phase2_population.py": "e81b60d918b8add59414c07fc20073b227a12c5ff15af2ae2cc33d1a69a00b83"
+  },
+  "amendments": [],
+  "base_commit": "66acc8e",
+  "branch": "develop",
+  "work_item": "bilingual-wave1-phase2-population",
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 66acc8e (call-only, never edited); no file under apps/frappe or apps/erpnext modified; no app code, hook, patch, test, JS or registry change; no ?v= bump and no matrix-header change (zero re-pins); exactly the 13 approved in-scope phase-2 rows (company-aware rule: operating company Elrefae) written on site v16.localhost via the standard document save with server-derived _norm; vendor fixtures, 20 test-record companies' rows, the pre-existing CT-TEST fixture value, Account (81 Arabic) and Company untouched; full values and rollback export stay in sites/v16.localhost/private/wave1-phase2-population/ (privacy R4); production mutation never authorized",
+  "decisions_settled": {
+    "R1": "in-scope = phase-2 trio rows of operating company Elrefae, non-fixture (13 rows: 3 Cost Center + 5 Warehouse + 5 Project); exceptions = 36 vendor fixtures + 127 rows of 20 ERPNext test-record companies (created 2026-06-10); frozen allowlist asserted by export",
+    "R2": "D4/D5 cycle with owner approval as hard gate: export -> proposal v1 -> review round 1 (11/2 revise) -> v2 -> review round 2 fresh session (13/13, overall approve) -> owner approval of sha e68ef0c6...108557 -> dry-run -> apply -> verification",
+    "R3": "standard doc.save() through the registered enforce_bilingual_arabic_policy hook (bidi gate + server-derived norm) for all three doctypes; R3a disclosed: root cost centre retried with flags.ignore_mandatory=True on a fresh copy after fail-closed MandatoryError (vendor parent_cost_center reqd=1 vs legitimate NULL root), all other validations still run",
+    "R4": "privacy: values + rollback export private under sites/v16.localhost/private/wave1-phase2-population/; committed evidence carries counts and sha256 digests only",
+    "R5": "completeness = 100% of the 13 approved rows populated (3/3 + 5/5 + 5/5), exceptions enumerated; fixture pre-existing value verified unchanged",
+    "R6": "new files under this work-item directory only -> zero shared-file edits -> zero manifest re-pins (verified: all pre-existing manifests unchanged)",
+    "R7": "no display/config changes: identity_section stays false for the trio, no doctype_js, no ?v= bump, no registry edit, no Account/Company writes"
+  },
+  "test_results": {
+    "regression_matrix": "21 modules / 258 tests, all OK",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check 11/11, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS",
+    "inventory_export": "PASS (allowlist matches live site, pre-state empty, all non-Elrefae rows classified)",
+    "dry_run": "PASS (13/13 validated, approved sha matched, 0 writes)",
+    "apply": "PASS (13/13 written, 0 failed, transaction committed; 2 fail-closed rollbacks disclosed under R3a)",
+    "post_import_verification": "PASS (in_scope=13 populated=13 norm_consistent=13 identity_unchanged=13 exceptions=0; norm-key search 13/13; totals unchanged; accounts_arabic=81; company_ar empty)"
+  },
+  "private_artefacts": {
+    "note": "site master data - privacy R4; digests only, values never committed",
+    "proposal.json": "e68ef0c687516a110ed553a52cfe7d871808ba6007d9c1444ec1739730108557 (owner-approved, version 2)",
+    "review-ai-a2.json": "b462acd2f0ee31e502df8b439ff86842cba2b90bfcc0a128d417a87611bb5dd3",
+    "dry-run.json": "b158ca44e01ca44e6ad77a9b611765ba4e82538aa9333498a1608f23196e7e29 (rollback: before-values all empty)",
+    "apply.json": "85fff2ee2c2ff2fea9971dcdb4019312f3b5545892ee24b0cae6dca435bfc089"
+  },
+  "site_migration": "none - no patch, no schema change; site data only: 13 bilingual name fields (and their server-derived _norm values) populated on v16.localhost, a non-production test site",
+  "causal_order": "export/inventory -> proposal -> independent review rounds -> owner approval -> dry-run -> apply -> post-import verification -> matrix + reconciler + lints -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> MANIFEST.json -> commit"
+}

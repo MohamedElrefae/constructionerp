@@ -1,0 +1,9 @@
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL evidence-artifact-mismatch: CHECKER_SHA256 values ['54fa583cb250b4707c8dd8f88b6c1454c15fd16d6db6ff667ef7c0dcec0642bb'] disagree or != live 71cdbeeb9b82…
+FAIL evidence-command: all-tests.txt unexpected COMMAND 'bench --site v16.localhost run-tests x11 modules (aggregate)'
+FAIL evidence-index-artifact-value: CHECKER_SHA256 index 54fa583cb250… != live 71cdbeeb9b82…
+FAIL evidence-index-root: 'CANDIDATE_ROOT: /home/mohamed/frappe-bench/apps/construction' != invocation root '/tmp/opencode/replica/apps/construction'
+FAIL evidence-schema: full-gate.txt gate result object differs from contract
+FAIL evidence-schema: full-gate.txt gate result object differs from contract
+checked={"construction/locale/ar.po": 817, "csv_rows": 4337, "extract": {"files": 265, "json_labels": 29, "missing": 0, "wrapped": 667}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=6

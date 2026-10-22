@@ -1,0 +1,60 @@
+# G10 Dependency Security Reconciliation Log
+# Generated: 2026-10-06T10:55:11Z
+# Command: python3 docs/ai/work-items/dependency-security-remediation/scripts/reconcile_dependencies.py
+
+G10 DEPENDENCY SECURITY RECONCILIATION
+==============================================================================
+Inventory      : docs/ai/work-items/customer-release-gap-fixes/ADVISORY_INVENTORY.json
+Inventory date : 2026-10-05
+Distributions  : 177
+Reported pkgs  : 9
+
+Target pins (aligned with Frappe v16.36.1 / ERPNext v16.37.0):
+  - cryptography~=50.0.0
+  - pyopenssl~=26.4.0
+  - pillow~=12.3.0
+  - sqlparse~=0.6.0
+  - sql_metadata~=3.0.1
+
+package       installed   target       uniq  fixmax  outcome   controls
+-----------------------------------------------------------------------
+bleach        6.3.0       -               3   6.4.0  BLOCKED   bleach allowlist + narrative_sanitizer Unicode/HTML gate
+cryptography  46.0.7      50.0.0          4  50.0.0  RESOLVED  
+oauthlib      3.3.1       -               1   4.0.0  BLOCKED   framework boundary; no construction-level call path
+pdfkit        1.0.0       -               1       -  BLOCKED   construction.utils.security.enforce_local_asset_protocol + guard_ssrf
+pillow        12.2.0      12.3.0         13  12.3.0  RESOLVED  
+pyjwt         2.12.1      -              14  2.15.0  BLOCKED   framework boundary; no construction-level call path
+pypdf         6.10.2      -              27  6.19.0  BLOCKED   construction.utils.security.validate_pdf_page_limit + validate_upload
+sqlparse      0.5.5       0.6.0           5   0.6.0  RESOLVED  
+weasyprint    68.0        -               2    70.0  BLOCKED   construction.utils.security.enforce_local_asset_protocol + guard_ssrf
+
+Unique advisory identities: 70
+  RESOLVED by target pins : 22
+  PARTIAL (framework cap) : 0
+  BLOCKED (compensating)  : 48
+
+Per-package disposition:
+  bleach         BLOCKED   unique=3   bleach allowlist + narrative_sanitizer Unicode/HTML gate
+  cryptography   RESOLVED  unique=4   
+  oauthlib       BLOCKED   unique=1   framework boundary; no construction-level call path
+  pdfkit         BLOCKED   unique=1   construction.utils.security.enforce_local_asset_protocol + guard_ssrf
+  pillow         RESOLVED  unique=13  
+  pyjwt          BLOCKED   unique=14  framework boundary; no construction-level call path
+  pypdf          BLOCKED   unique=27  construction.utils.security.validate_pdf_page_limit + validate_upload
+  sqlparse       RESOLVED  unique=5   
+  weasyprint     BLOCKED   unique=2   construction.utils.security.enforce_local_asset_protocol + guard_ssrf
+
+NOTE: 'RESOLVED' is a metadata-level statement that the target pin admits
+the recorded fix version; it is not an exploitability or release approval.
+
+=== pip freeze (security-relevant subset) ===
+bleach==6.3.0
+cryptography==46.0.7
+oauthlib==3.3.1
+pdfkit==1.0.0
+pillow==12.2.0
+PyJWT==2.12.1
+pyOpenSSL==26.0.0
+pypdf==6.10.2
+sqlparse==0.5.5
+weasyprint==68.0

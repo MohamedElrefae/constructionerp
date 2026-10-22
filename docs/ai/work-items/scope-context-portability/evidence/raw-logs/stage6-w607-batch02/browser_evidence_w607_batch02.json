@@ -1,0 +1,60 @@
+{
+  "batch": "stage6-w607-frappe-batch02",
+  "site": "v16.localhost",
+  "scope_sha256": "cd6536bc0cb0b9db14214e55500ebadf3a525b2a1250147b9ad9b402e1e70be3",
+  "proposal_sha256": "ec58c9c43f6708ae821e1eee404fd2207d4b5d65d323c14f14d93a7c69555b4a",
+  "started_utc": "2026-09-27T16:59:55Z",
+  "checks": [
+    {
+      "name": "boot-lang-ar",
+      "ok": true,
+      "detail": "ar"
+    },
+    {
+      "name": "boot-messages-ge-1000",
+      "ok": true,
+      "detail": 14639
+    },
+    {
+      "name": "all-released-payload-translations",
+      "ok": true,
+      "detail": {
+        "matched": 243,
+        "total": 243,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "all-batch-keys-resolved",
+      "ok": true,
+      "detail": {
+        "matched": 243,
+        "total": 243,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "technical-exceptions-excluded-from-released",
+      "ok": true,
+      "detail": {
+        "tech_keys": [
+          "{0} ${skip_list ? \"\" : type}"
+        ]
+      }
+    },
+    {
+      "name": "no-page-errors",
+      "ok": true,
+      "detail": {
+        "errors": []
+      }
+    },
+    {
+      "name": "screenshot-captured",
+      "ok": true,
+      "detail": "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/scope-context-portability/evidence/raw-logs/stage6-w607-batch02/browser-ar-desk-w607-frappe-batch02.png"
+    }
+  ],
+  "ended_utc": "2026-09-27T17:00:03Z",
+  "all_passed": true
+}

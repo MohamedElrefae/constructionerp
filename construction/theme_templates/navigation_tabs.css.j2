@@ -1,0 +1,95 @@
+/* ===== TABS & NAVIGATION ===== */
+/* Theme: {{ theme_name }} */
+
+/* Nav Tabs */
+.nav-tabs {
+  border-bottom: 1px solid {{ border_color }};
+}
+
+.nav-tabs .nav-link {
+  color: {{ text_secondary }};
+  border: none;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: {{ text_primary }};
+  background: {{ accent_primary }}10;
+}
+
+.nav-tabs .nav-link.active {
+  color: {{ text_primary }};
+  background: {{ surface_bg }};
+  border-bottom: 2px solid {{ accent_primary }};
+  font-weight: 500;
+}
+
+/* Nav Pills */
+.nav-pills .nav-link {
+  color: {{ text_secondary }};
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link.active {
+  background: {{ accent_primary }};
+  color: #ffffff;
+  box-shadow: 0 2px 8px {{ accent_primary }}30;
+}
+
+.nav-pills .nav-link:hover:not(.active) {
+  background: {{ accent_primary }}10;
+  color: {{ accent_primary }};
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item a {
+  color: {{ text_secondary }};
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: {{ accent_primary }};
+}
+
+.breadcrumb-item.active {
+  color: {{ text_primary }};
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  color: {{ border_color }};
+}
+
+/* Pagination */
+.pagination .page-link {
+  background: {{ surface_bg }};
+  color: {{ text_primary }};
+  border: 1px solid {{ border_color }};
+  transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+  background: {{ accent_primary }}15;
+  border-color: {{ accent_primary }};
+  color: {{ accent_primary }};
+}
+
+.pagination .page-item.active .page-link {
+  background: {{ accent_primary }};
+  border-color: {{ accent_primary }};
+  color: #ffffff;
+  box-shadow: 0 2px 4px {{ accent_primary }}30;
+}
+
+.pagination .page-item.disabled .page-link {
+  background: {{ surface_bg }};
+  color: {{ text_secondary }};
+  border-color: {{ border_color }};
+  opacity: 0.5;
+}

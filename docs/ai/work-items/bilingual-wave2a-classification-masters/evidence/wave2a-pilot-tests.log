@@ -1,0 +1,24 @@
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.tests.test_bilingual_wave2a_pilot, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 8 unspecified-category tests for construction
+
+construction.tests.test_bilingual_wave2a_pilot.TestBilingualWave2aPilot
+   [32m ✔ [0m test_active_and_schema_installed_fail_closed_on_missing_wave2a_field
+   [32m ✔ [0m test_arabic_edit_rejects_bidi_controls
+   [32m ✔ [0m test_norm_field_patch_idempotent_and_reversible
+   [32m ✔ [0m test_registry_loads_and_maps_resolved_wave2a_fields
+   [32m ✔ [0m test_search_matches_despite_alef_tatweel_diacritics
+       ▸  /home/mohamed/frappe-bench/apps/frappe/frappe/model/qb_query.py:153: V17FrappeDeprecationWarning: This codepath was marked (DATE: 2024-01-01) deprecated for removal (from v17 onwards); note:
+       ▸   The 'limit_page_length' parameter is deprecated. Use 'limit' instead.
+       ▸  
+       ▸    deprecation_warning(
+   [32m ✔ [0m test_server_authoritative_norm_derivation_and_poison_overwritten
+   [32m ✔ [0m test_tree_identity_invariant_and_rename_preservation [31m (5.08s)[0m
+   [32m ✔ [0m test_zero_service_edits_guard
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 7.290s
+
+OK

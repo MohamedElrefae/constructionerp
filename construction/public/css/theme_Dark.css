@@ -1,0 +1,3 @@
+/* Construction Theme: Dark */
+html[data-theme="dark"]{--ct-success:#28a745;--ct-warning:#ffc107;--ct-error:#dc3545;--ct-accent-primary:#3b82f6;--ct-accent-hover:#29CD42;--ct-navbar-bg:#111827;--ct-sidebar-bg:#1f2937;--ct-surface-bg:#1f2937;--ct-body-bg:#111827;--ct-text-primary:#f9fafb;--ct-text-secondary:#ebe6e6;--ct-border-color:#4F9DD9;--ct-navbar-text:#ede8e8;}
+

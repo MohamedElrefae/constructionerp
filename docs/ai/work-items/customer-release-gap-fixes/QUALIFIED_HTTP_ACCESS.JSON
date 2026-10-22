@@ -1,0 +1,19 @@
+{
+  "schema": "synthetic-native-http-access/v1",
+  "results": {
+    "allowed_native_read": 200,
+    "denied_native_read": 403,
+    "native_list": 200,
+    "denied_native_write": 403,
+    "denied_parent_reassignment": 403,
+    "allowed_private_file": 200,
+    "denied_private_file": 403,
+    "mutation_get_refused": 403,
+    "mutation_post_allowed": 200,
+    "mutation_post_denied": 403,
+    "denied_export": 403
+  },
+  "native_list_contains_only_allowed_item": true,
+  "denied_parent_and_header_unchanged": true,
+  "scope": "Project Manager with one assigned Project; working scope filter disabled. Synthetic WSGI request evidence, not browser or full role matrix."
+}

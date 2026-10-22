@@ -1,0 +1,45 @@
+/* ===== TOASTS/ALERTS: {{ theme_name }} ===== */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .toast {
+    background: {{ surface_bg }};
+    border: 1px solid {{ border_color }};
+{% if is_dark_mode %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+{% else %}
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+{% endif %}
+    border-radius: 8px;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .toast .toast-header {
+    color: {{ text_primary }};
+    border-bottom: 1px solid {{ border_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .toast .toast-body {
+    color: {{ text_secondary }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .alert-success {
+    background: {{ success_color }}1a;
+    border-color: {{ success_color }};
+    color: {{ success_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .alert-warning {
+    background: {{ warning_color }}1a;
+    border-color: {{ warning_color }};
+    color: {{ warning_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .alert-danger,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .alert-error {
+    background: {{ error_color }}1a;
+    border-color: {{ error_color }};
+    color: {{ error_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .msgprint {
+    background: {{ surface_bg }};
+    border: 1px solid {{ border_color }};
+    color: {{ text_primary }};
+}

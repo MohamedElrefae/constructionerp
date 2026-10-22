@@ -1,0 +1,67 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "2ee561f0a82f0b276b7fac5697f9572f78b7c60a69043f20bef8c26c64133dfb",
+    "SCOPE.md": "c10d60a204f9924f3c9b0dbc0756194983ce2c4d44f21463b6b119a8d7328d0c",
+    "scripts/measure_wave2a_p95.py": "07340e5f75f49d1094e312ebe4973f4214f00693237de0b920e3d88f2534af8b",
+    "wave2a-p95-measurement.json": "45257accc631952b06022f0ad82b5152641e11c557c4a5c691b031dedc267b3b",
+    "wave2a-pilot-tests.log": "0b701e2381705341dbf1ebdcec93569e1b56082f4c5bd8baa40e1be151cffb11"
+  },
+  "base_commit": "dc71b5618532ea7fc8a1c5d778667a806cfc5109",
+  "branch": "feature/bilingual-wave2a-classification",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "artifact_owner": "erp-arabic-bilingual-data",
+    "document": "docs/ai/work-items/bilingual-wave2a-classification-masters/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "2ee561f0a82f0b276b7fac5697f9572f78b7c60a69043f20bef8c26c64133dfb",
+    "latency_gate": "Wave 2a classification masters MEASURED (1.38-1.48x, sub-1.42ms P95) and accepted as a documented trade-off; Account latency UNEVALUATED pending Stage-3 re-pin",
+    "rationale": "Account pilot artifact test fails on intentional hash change originating from Wave 1. Live measurement structurally verifies invariant. No assertion bounds Wave 2a search latency without this local harness.",
+    "repin_requires": "owner-authorized governance maintenance run under erp-arabic-bilingual-data",
+    "status": "ACCEPTED_KNOWN_MISMATCH"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Customer Group": 0.617,
+      "Item Group": 0.645,
+      "Supplier Group": 0.62,
+      "Territory": 0.622,
+      "UOM": 1.416
+    },
+    "artefact": "docs/ai/work-items/bilingual-wave2a-classification-masters/evidence/wave2a-p95-measurement.json",
+    "caveat": "No doctype meets the canonical 1.10x rule owned by erp-arabic-bilingual-data. This artifact applies no gate rule and claims no conformance. Account latency remains unevaluated pending the Stage-3 re-pin.",
+    "disposition": "MEASURED and accepted as a documented architectural trade-off",
+    "fixture_prefix": "CT-W2A-",
+    "fixtures_per_doctype": 12,
+    "harness": "docs/ai/work-items/bilingual-wave2a-classification-masters/evidence/scripts/measure_wave2a_p95.py",
+    "harness_sha256": "07340e5f75f49d1094e312ebe4973f4214f00693237de0b920e3d88f2534af8b",
+    "leftover_fixtures": 0,
+    "match_sets_equal_all": true,
+    "ratios": {
+      "Customer Group": 1.3896,
+      "Item Group": 1.4659,
+      "Supplier Group": 1.4155,
+      "Territory": 1.3978,
+      "UOM": 1.475
+    },
+    "samples": 50,
+    "scope": "work-item-local; no canonical gate rule applied or claimed",
+    "sha256": "45257accc631952b06022f0ad82b5152641e11c557c4a5c691b031dedc267b3b",
+    "warmup": 5,
+    "why_local_harness": "measure_search_p95 hardcodes the Account doctype in five call sites; parameterising it would modify governed service code and break test_zero_service_edits_guard"
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "erp-arabic-bilingual-data evidence untouched",
+    "bilingual-wave1-masters evidence untouched",
+    "Employee deferred to dedicated design cycle",
+    "Wave 2b transactional documents deferred",
+    "no registry promotion to active in candidate commit"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Wave 2a classification masters required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_wave2a_pilot.test_zero_service_edits_guard",
+    "reference_commit": "dc71b5618532ea7fc8a1c5d778667a806cfc5109",
+    "search_py_diff_lines": 0
+  }
+}

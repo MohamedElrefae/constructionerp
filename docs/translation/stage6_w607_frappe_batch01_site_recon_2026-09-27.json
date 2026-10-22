@@ -1,0 +1,21 @@
+{
+  "generated_utc": "2026-09-27T14:36:50.832307+00:00",
+  "site": "v16.localhost",
+  "scope_file": "docs/translation/stage6_w607_frappe_batch01_rows_2026-09-27.csv",
+  "scope_sha256": "43abe1b462c47b51c0209a0650511fac2ed32cdb5f3a585cde2e9468bfaab26a",
+  "scope_rows": 250,
+  "site_overrides_count": 1,
+  "missing_runtime_count": 249,
+  "site_overrides": [
+    {
+      "source_text": "Parent-to-child or child-to-different-child grouping is not allowed.",
+      "matched_runtime_source": "Parent-to-child or child-to-different-child grouping is not allowed.",
+      "translated_text": "لا يُسمح بالتجميع من السجل الرئيسي إلى سجل فرعي أو من سجل فرعي إلى سجل فرعي آخر.",
+      "context": "",
+      "ct_origin": "Site Override",
+      "ct_app": "frappe",
+      "ct_release_version": "",
+      "docname": "echig8cvv5"
+    }
+  ]
+}

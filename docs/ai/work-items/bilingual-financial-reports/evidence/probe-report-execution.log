@@ -1,0 +1,11 @@
+COUNTS_BEFORE: {"Account": 2102, "GL Entry": 4}
+MAPPING_SIZE: 162
+REPORT General Ledger: OK mode=ar columns=15 rows=16 ms=144.14
+REPORT Trial Balance: OK mode=ar columns=10 rows=3 ms=59.77
+REPORT Accounts Receivable: OK mode=ar columns=25 rows=5 ms=57.66
+TB_EN_LABELS: ["1110 - Cash - E", "1310 - Debtors - E", "'Total'"]
+TB_AR_LABELS: ["النقدية", "المدينون", "'Total'"]
+TB_AR_MODE_SWAPPED: True
+COUNTS_AFTER: {"Account": 2102, "GL Entry": 4}
+MUTATION_GUARD: PASS
+PROBE RESULT: PASS

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "phase": 1,
+  "tests": {
+    "command": "orchestrator/.venv/bin/python -m pytest orchestrator/tests -q",
+    "passed": 93,
+    "failed": 0,
+    "duration_seconds": 21.1,
+    "context": "Host namespace support; all engineering jobs and commits in tests are synthetic disposable fixtures"
+  },
+  "lint": {
+    "command": "ruff check orchestrator",
+    "passed": true
+  },
+  "doctor": {
+    "command": "orchestrator/.venv/bin/python orchestrator/cli.py doctor --json",
+    "ok": true,
+    "checks_passed": 65
+  },
+  "packaging": "Actual Flit sdist/direct wheel/rebuilt wheel/fresh-venv install and legacy setuptools exclusion tests passed as part of pytest",
+  "source_bindings_match": true,
+  "approved_prompt_bindings_match": true,
+  "project_index_empty": true,
+  "project_base_unchanged": true,
+  "phase2_qualified": false,
+  "native_pilot_complete": false,
+  "erp_operations": false,
+  "source_manifest_sha256": "1a31afa2fba2e00be53d03913a574040e4053d898c492ba2ce0bc183cabce67d",
+  "review_chain_final": "PASS for final bounded repair; initial full review and follow-up findings remediated"
+}

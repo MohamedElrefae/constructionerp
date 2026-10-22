@@ -1,0 +1,12 @@
+/* MINIMAL TEST: If this works, background turns RED in dark mode */
+html[data-theme="dark"] {
+  --bg-color: #ff0000 !important;
+  --navbar-bg: #ff0000 !important;
+  --text-color: #ffffff !important;
+}
+
+html[data-theme="light"] {
+  --bg-color: #00ff00 !important;
+  --navbar-bg: #00ff00 !important;
+  --text-color: #000000 !important;
+}

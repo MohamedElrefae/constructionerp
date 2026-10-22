@@ -1,0 +1,82 @@
+Parent Row No not found for {0}
+Planned Qty: Quantity, for which, Work Order has been raised, but is pending to be manufactured.
+Please check either with operations or FG Based Operating Cost.
+Please mention the Current and New BOM for replacement.
+Please select a Work Order first.
+Please select atleast one operation to create Job Card
+Please set Parent Row No for item {0}
+Please set actual demand or sales forecast to generate Material Requirements Planning Report.
+Please set the Target Warehouse in the Job Card
+Please set the WIP Warehouse in the Job Card
+Please set {0} in BOM Creator {1}
+Please uncheck 'Show in Bucket View' to create Orders
+Process Loss Percentage cannot be greater than 100
+Production Plan Already Submitted
+Purchase Order {0} created
+Qty To Manufacture ({0}) cannot be a fraction for the UOM {2}. To allow this, disable '{1}' in the UOM {2}.
+Quantity to Produce should be greater than zero.
+Remove Parent Row No in Items Table
+Reqired Qty
+Requested Qty: Quantity requested for purchase, but not ordered.
+Reservation
+Reserved Qty for Production: Raw materials quantity to make manufacturing items.
+Reserved Qty for Subcontract: Raw materials quantity to make subcontracted items.
+Reserved Qty: Quantity ordered for sale, but not delivered.
+Row #1: Sequence ID must be 1 for Operation {0}.
+Row #{0}: Cannot transfer more than Required Qty {1} for Item {2} against Job Card {3}
+Row #{0}: Customer Provided Item {1} cannot be added multiple times.
+Row #{0}: From Time and To Time fields are required
+Row #{0}: Please select Item Code in Assembly Items
+Row #{0}: Please select the BOM No in Assembly Items
+Row #{0}: Please select the Sub Assembly Warehouse
+Row #{0}: Sequence ID must be {1} or {2} for Operation {3}.
+Row #{0}: Since 'Track Semi Finished Goods' is enabled, the BOM {1} cannot be used for Sub Assembly Items
+Row #{0}: Source Warehouse {1} for item {2} cannot be a customer warehouse.
+Row #{0}: Source Warehouse {1} for item {2} must be same as Source Warehouse {3} in the Work Order.
+Row #{0}: Start Time and End Time are required
+Row #{0}: Start Time must be before End Time
+Row {0}: Quantity cannot be negative.
+Row {0}: Workstation or Workstation Type is mandatory for an operation {1}
+Scan Job Card Qrcode
+Select the Default Workstation where the Operation will be performed. This will be fetched in BOMs and Work Orders.
+Select the Item to be manufactured.
+Select the Item to be manufactured. The Item name, UoM, Company, and Currency will be fetched automatically.
+Select the Warehouse
+Select the raw materials (Items) required to manufacture the Item
+Set Operating Cost / Scrap Items From Sub-assemblies
+Set quantity of process loss item:
+Set the Planned Start Date (an Estimated Date at which you want the Production to begin)
+Setting {0} is required
+Source Warehouse {0} must be same as Customer Warehouse {1} in the Subcontracting Inward Order.
+Stock Entry {0} has created
+Sub assembly item references are missing. Please fetch the sub assemblies and raw materials again.
+System will automatically create the serial numbers / batch for the Finished Good on submission of work order
+Target Warehouse Reservation Error
+Target Warehouse is required before Submit
+Target Warehouse {0} must be same as Delivery Warehouse {1} in the Subcontracting Inward Order Item.
+The Company {0} of Sales Forecast {1} does not match with the Company {2} of Master Production Schedule {3}.
+The default BOM for that item will be fetched by the system. You can also change the BOM.
+The job card {0} is in {1} state and you cannot complete.
+The job card {0} is in {1} state and you cannot start it again.
+The operation {0} can not add multiple times
+The operation {0} can not be the sub operation
+The user will be able to transfer additional materials from the store to the Work in Progress (WIP) warehouse.
+The warehouse where you store finished Items before they are shipped.
+The {0} {1} is used to calculate the valuation cost for the finished good {2}.
+This is a Template BOM and will be used to make the work order for {0} of the item {1}
+Time in mins.
+To add Operations tick the 'With Operations' checkbox.
+To add subcontracted Item's raw materials if include exploded items is disabled.
+To include non-stock items in the material request planning. i.e. Items for which 'Maintain Stock' checkbox is unticked.
+Updated via 'Time Log' (In Minutes)
+Warehouse {0} is not allowed for Sales Order {1}, it should be {2}
+When a parent warehouse is chosen, the system conducts Project Qty checks against the associated child warehouses
+Work Order {0} created
+You can set it as a machine name or operation type. For example, stiching machine 12
+You can't make any changes to Job Card since Work Order is closed.
+You cannot change the rate if BOM is mentioned against any Item.
+as a percentage of finished item quantity
+temporary name
+via BOM Update Tool
+{0} Operating Cost for operation {1}
+{0} items lost during process.

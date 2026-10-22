@@ -1,0 +1,14 @@
+Apps in this namespace:
+frappe, erpnext, construction
+
+In [1]: 
+In [2]: 
+In [3]: 
+In [4]:    ...:    ...: 
+In [5]: Out[5]: <Account: doctype=Account CT-HTTP-1 - CT HTTP Probe - E>
+
+In [6]: 
+In [7]: {"setup": "created", "account": "CT-HTTP-1 - CT HTTP Probe - E", "account_number": "CT-HTTP-1", "utc": "2026-09-10T00:05:50Z"}
+
+In [8]: 
+exit=0

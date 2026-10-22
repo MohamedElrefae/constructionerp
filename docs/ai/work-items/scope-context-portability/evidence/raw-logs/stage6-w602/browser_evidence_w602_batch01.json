@@ -1,0 +1,194 @@
+{
+ "batch": "stage6-w602-batch01",
+ "started_utc": "2026-09-23T12:00:49Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 12577
+  },
+  {
+   "name": "translate:Could not find path for",
+   "ok": true,
+   "detail": {
+    "expected": "تعذّر العثور على المسار لـ",
+    "got": "تعذّر العثور على المسار لـ"
+   }
+  },
+  {
+   "name": "translate:% of materials billed against this Sales Order",
+   "ok": true,
+   "detail": {
+    "expected": "% o نسبة المواد المفوترة ضد أمر البيع هذا",
+    "got": "% o نسبة المواد المفوترة ضد أمر البيع هذا"
+   }
+  },
+  {
+   "name": "translate:% of materials delivered against this Sales Order",
+   "ok": true,
+   "detail": {
+    "expected": "% o نسبة المواد المسلَّمة ضد أمر البيع هذا",
+    "got": "% o نسبة المواد المسلَّمة ضد أمر البيع هذا"
+   }
+  },
+  {
+   "name": "translate:Allow Purchase Order with Zero Quantity",
+   "ok": true,
+   "detail": {
+    "expected": "السماح بأمر شراء بكمية صفر",
+    "got": "السماح بأمر شراء بكمية صفر"
+   }
+  },
+  {
+   "name": "translate:Allow Request for Quotation with Zero Quantity",
+   "ok": true,
+   "detail": {
+    "expected": "السماح بطلب عرض سعر بكمية صفر",
+    "got": "السماح بطلب عرض سعر بكمية صفر"
+   }
+  },
+  {
+   "name": "translate:Allow Supplier Quotation with Zero Quantity",
+   "ok": true,
+   "detail": {
+    "expected": "السماح بعرض سعر مورد بكمية صفر",
+    "got": "السماح بعرض سعر مورد بكمية صفر"
+   }
+  },
+  {
+   "name": "translate:Analysis Chart",
+   "ok": true,
+   "detail": {
+    "expected": "مخطط التحليل",
+    "got": "مخطط التحليل"
+   }
+  },
+  {
+   "name": "translate:Billed, Received & Returned",
+   "ok": true,
+   "detail": {
+    "expected": "مفوتر، مستلَم، ومرتجع",
+    "got": "مفوتر، مستلَم، ومرتجع"
+   }
+  },
+  {
+   "name": "translate:Criteria weights must add up to 100%",
+   "ok": true,
+   "detail": {
+    "expected": "يجب أن يكون مجموع أوزان المعايير 100%",
+    "got": "يجب أن يكون مجموع أوزان المعايير 100%"
+   }
+  },
+  {
+   "name": "translate:Expires today or already expired",
+   "ok": true,
+   "detail": {
+    "expected": "تنتهي صلاحيته اليوم أو انتهت بالفعل",
+    "got": "تنتهي صلاحيته اليوم أو انتهت بالفعل"
+   }
+  },
+  {
+   "name": "translate:Creating Subcontracting Order ...",
+   "ok": true,
+   "detail": {
+    "expected": "جارٍ إنشاء أمر مقاولة باطن ...",
+    "got": "جارٍ إنشاء أمر مقاولة باطن ..."
+   }
+  },
+  {
+   "name": "translate:Learn Procurement",
+   "ok": true,
+   "detail": {
+    "expected": "تعرّف على المشتريات",
+    "got": "تعرّف على المشتريات"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "12/12"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "تمت إضافة دور المورد للمستخدم User.",
+    "got": "تمت إضافة دور المورد للمستخدم User."
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Could not find path for": "تعذّر العثور على المسار لـ",
+    "% of materials billed against this Sales Order": "% o نسبة المواد المفوترة ضد أمر البيع هذا",
+    "% of materials delivered against this Sales Order": "% o نسبة المواد المسلَّمة ضد أمر البيع هذا",
+    "Allow Purchase Order with Zero Quantity": "السماح بأمر شراء بكمية صفر"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-23T12:01:00Z",
+ "summary": {
+  "pass": 21,
+  "fail": 0
+ }
+}

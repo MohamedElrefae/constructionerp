@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "work_item": "erp-arabic-bilingual-data",
+  "job_id": "job-26261b6a46e9d461b869f6bd",
+  "role": "proposer",
+  "decision": "ABANDONED_AFTER_OWNER_REVIEW",
+  "failure_class": "PERMISSIONS_BOUNDARY_OR_CAPABILITY_DEFICIT",
+  "reason": "Attempt 2 proposer blocked due to capability and permission boundaries; execution approval withheld. Job abandoned and workflow returned to PLAN gate pending explicit owner authorization.",
+  "reconciliation_utc": "2026-09-14T15:27:00Z"
+}

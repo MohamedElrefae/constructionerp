@@ -1,0 +1,26 @@
+ROW_OK UOM 'M3' value=0804df0daf3d4a64 norm=0804df0daf3d4a64 identity=unchanged
+ROW_OK UOM 'M2' value=e7b2a3d2f82114c7 norm=e7b2a3d2f82114c7 identity=unchanged
+ROW_OK UOM 'M' value=60d80267fce4afdb norm=60d80267fce4afdb identity=unchanged
+ROW_OK UOM 'TON' value=6c97adc355134976 norm=6c97adc355134976 identity=unchanged
+ROW_OK UOM 'KG' value=174e94ae4c517269 norm=174e94ae4c517269 identity=unchanged
+ROW_OK UOM 'PCS' value=848514abbbfdcec4 norm=848514abbbfdcec4 identity=unchanged
+ROW_OK UOM 'LS' value=3dd22c2ed2f99121 norm=3dd22c2ed2f99121 identity=unchanged
+ROW_OK UOM 'DAY' value=eb07f635d8831be8 norm=eb07f635d8831be8 identity=unchanged
+ROW_OK UOM 'HR' value=44c3abfb7720d08f norm=44c3abfb7720d08f identity=unchanged
+ROW_OK UOM 'BAG' value=89e2f096fa1aa360 norm=89e2f096fa1aa360 identity=unchanged
+ROW_OK UOM 'LTR' value=15a5db957dcc091a norm=15a5db957dcc091a identity=unchanged
+ROW_OK UOM 'SET' value=663173f1daa44b54 norm=663173f1daa44b54 identity=unchanged
+ROW_OK UOM 'Nos' value=a760cfd5140ee8f2 norm=a760cfd5140ee8f2 identity=unchanged
+ROW_OK UOM 'Tonne' value=6c97adc355134976 norm=6c97adc355134976 identity=unchanged
+ROW_OK UOM 'Box' value=e8c39755d5e8255c norm=e8c39755d5e8255c identity=unchanged
+COMPLETENESS site_arabic_total=15 approved=15 missing=0 extra=0
+EXCEPTIONS_OK pruned=2 vendor=2 remainder_unpopulated=yes probe_residue=0
+ENABLEMENT fixtures_enabled=12/12 site_disabled=0
+FIXTURE_FILE sha256=d6e27a01483c841dccdb090277aa9c59459b270d52d40661bf9934d9e4c33ad2 rows=12 consistent=yes
+VISIBILITY phase1_visible_in_picker=15/15
+DURABILITY_PROOF fixture_sync_roundtrip=PASS rollback_restored=yes
+FROZEN_SURFACES accounts_ar=81 cost_centers_ar=3 customers_ar=1 items_ar=8 projects_ar=5 suppliers_ar=0 warehouses_ar=6 company_ar=empty groups={'Item Group': 6, 'Customer Group': 5, 'Supplier Group': 8, 'Territory': 4}
+COUNTS_OK uom_total=253
+SUMMARY approved=15 populated=15 norm_consistent=15 identity_unchanged=15 fixtures_enabled=12 visibility=15/15 exceptions=0 durability=PASS prior_frozen=yes
+ROLLBACK_REF dry-run.json (before-values: all empty) sha256=00c3470a00df688004f685a7d3c0b47ae5c051b2ed2de9fe5eab82127d826d73
+VERIFICATION RESULT: PASS

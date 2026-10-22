@@ -1,0 +1,240 @@
+{
+  "addresses_findings": [
+    "SCP-007"
+  ],
+  "candidate": {
+    "candidate_id": "341715dde1ab8ab7abbefb66faba89c4b3590062177dcb82865f8a46a3570cad",
+    "manifest": {
+      "base_commit": "4123646bd8b7016abad8c276cea36a58d6cbfb3a",
+      "branch": "feature/workspace-integration",
+      "entries": [
+        {
+          "content_sha256": "ba2d839df0d922ba86181051d4cc52712684fb3b72b5b2f6f77ae6190407f3ca",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/freshness_evidence.json"
+        },
+        {
+          "content_sha256": "adbd3d8d40102b8517494b39f910531bb64d4cb8ea01f99f037cced0f31895dc",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/localization_manifest.json"
+        },
+        {
+          "content_sha256": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/stage2_inventory_manifest.json"
+        },
+        {
+          "content_sha256": "b433566a1fb0221c32d74cee5aad6cd7f0fc051e4d7e236be1d6f6b2bbb7949c",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/data/localization/vendor_catalog_baseline.json"
+        },
+        {
+          "content_sha256": "af343ac233cac0e022aa1d84fef87943cd94eff78d364f842115614be56c3698",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/locale/ar.po"
+        },
+        {
+          "content_sha256": "a732aaae9f7bc00a67bbe5abd8f02047ce078c3aa7cc51d7e31b91dc0ea9d406",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/tests/tools/stage2_evidence_assemble.py"
+        },
+        {
+          "content_sha256": "7794fa70659850d74716bc2ac132f0a7cfee84025d63d7f02a886278df94ea8a",
+          "kind": "file",
+          "mode": "100644",
+          "path": "construction/workspace/construction/construction.json"
+        },
+        {
+          "content_sha256": "3c5ef21a3ccf5e8acc027a431560e8ecd73ded93ccafdd0f4980e75c91bc5f9b",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/all-tests.txt"
+        },
+        {
+          "content_sha256": "7fec6188fa77ec73214d41026f8c76a0bff92744c96b7392eb5e5aa3fd19bd7c",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/final-dryrun.txt"
+        },
+        {
+          "content_sha256": "2750c592a0c9a3bfbc9279f868b30b698312f949520d2726329ac582ae697c88",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/freshness-envelope.txt"
+        },
+        {
+          "content_sha256": "faaa66930a435ed6e56e47c3c5ed2fa42cdd09c668f467cd535f9f899eb2bea4",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/full-gate.txt"
+        },
+        {
+          "content_sha256": "3153602f1c54b72eee5aa05aed2654d3ef412b7c9e85728eb2d8b2151a28a01f",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/gate-tests-standalone.txt"
+        },
+        {
+          "content_sha256": "5ba488db82309d0ee2d8183eebdacd7d21e118525a1c8d5327377246555b1611",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/index.txt"
+        },
+        {
+          "content_sha256": "52f4fb389c06d52c5d8a5f9075416e94b193101f55e9be652d1ee3a5d2fe9fe6",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/lints-diffcheck.txt"
+        },
+        {
+          "content_sha256": "652e83a964ff926fbc553760c3579480b4de422213985f4a3396cf1d11e29130",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/merkle.txt"
+        },
+        {
+          "content_sha256": "bc713f0fa7fa7a7ca1ee327e597dc3db2b2f5c76b76a15e46a35733deffa4d92",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/scoped-gate.txt"
+        },
+        {
+          "content_sha256": "9fa55904588902d862680a931d79cea3fa96032a5fff58617ae211167033a110",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/sync.txt"
+        },
+        {
+          "content_sha256": "ee5303a5783318986bd857fd03d53fca8da816d1195cc564ea418ea13d7f1e75",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/raw-logs/stage2/vendor-audit.txt"
+        },
+        {
+          "content_sha256": "42161ceec2330b2f4af059db3bbafb39a91e7a04c8a0d135a3c1095831854f54",
+          "kind": "file",
+          "mode": "100644",
+          "path": "orchestrator/engine.py"
+        },
+        {
+          "content_sha256": "2fb47b5b8085324506ec261610a86d363b63d370248a81478523d6877f868e2a",
+          "kind": "file",
+          "mode": "100644",
+          "path": "orchestrator/tests/test_engine.py"
+        },
+        {
+          "content_sha256": "54fa583cb250b4707c8dd8f88b6c1454c15fd16d6db6ff667ef7c0dcec0642bb",
+          "kind": "file",
+          "mode": "100644",
+          "path": "scripts/check_localization_gates.py"
+        }
+      ],
+      "kind": "code"
+    },
+    "tree_oid": "b91bedf5e31f4f46ed44c06c77a6af25401d826e"
+  },
+  "commands": [
+    {
+      "description": "DocPerm/Custom DocPerm rows read directly from the database",
+      "doctype": "Scope Report Access Log",
+      "exit_code": 0,
+      "id": "docperm-ground-truth",
+      "result": {
+        "read_roles": [
+          "Auditor",
+          "System Manager"
+        ],
+        "unexpected_read_roles": []
+      }
+    },
+    {
+      "description": "frappe.has_permission(read) evaluated per role with NO role monkeypatching, using controlled single-role users plus one real pre-existing user",
+      "desk_link_visibility_of_16": {
+        "Accountant": "11/16",
+        "Auditor": "6/16",
+        "Project Manager": "14/16",
+        "Site Engineer": "12/16",
+        "System Manager": "16/16"
+      },
+      "exit_code": 0,
+      "id": "effective-permissions-real-users",
+      "identities": {
+        "Accountant": "adv_probe_accountant@test.local (temporary, deleted)",
+        "Auditor": "adv_probe_auditor@test.local (temporary, deleted)",
+        "Project Manager": "adv_probe_project_manager@test.local (temporary, deleted)",
+        "Site Engineer": "site.engineer@example.com (pre-existing, enabled)",
+        "System Manager": "adv_probe_system_manager@test.local (temporary, deleted)"
+      },
+      "scope_report_access_log_read": {
+        "Accountant": false,
+        "Auditor": true,
+        "Project Manager": false,
+        "Site Engineer": false,
+        "System Manager": true
+      }
+    },
+    {
+      "description": "frappe.get_list('Scope Report Access Log') under each real identity; each identity separately confirmed to retain normal access to the User doctype, proving targeted denial rather than blanket denial",
+      "exit_code": 0,
+      "id": "direct-list-denial",
+      "result": {
+        "Accountant": "PermissionError",
+        "Administrator": "23 rows returned",
+        "Project Manager": "PermissionError",
+        "Site Engineer": "PermissionError"
+      }
+    },
+    {
+      "baseline_users": 31,
+      "description": "Temporary probe identities created, exercised, then deleted; user count compared before/after",
+      "drift": 0,
+      "exit_code": 0,
+      "final_users": 31,
+      "id": "rollback-and-residual-check",
+      "probe_identities_remaining": []
+    },
+    {
+      "cards": 5,
+      "child_tables_exposed": [],
+      "description": "Static measurement of Workspace JSON: card/link counts, label lengths, RTL and Unicode bidi-control detection",
+      "exit_code": 0,
+      "id": "ltr-static-measurement",
+      "links": 16,
+      "max_card_name_length": 20,
+      "max_link_label_length": 23,
+      "rtl_or_bidi_characters_found": []
+    }
+  ],
+  "generated_utc": "2026-09-30T22:40:00Z",
+  "raw_capture": {
+    "exit_code": 0,
+    "path": "docs/ai/work-items/workspace-desk-coverage/evidence/raw-logs/scp007-independent-recheck.txt",
+    "reported_findings": 0,
+    "sha256": "8da3c9dc8715760c679f02a8dfc89135db51365d2af1c0bad18664057256efd9"
+  },
+  "report_id": "scp007-permissions-and-desk-runtime",
+  "requirements": [
+    "WDC-R1",
+    "WDC-R2",
+    "WDC-R6"
+  ],
+  "residual_gaps": [
+    "ENGLISH/LTR BROWSER COVERAGE NOT SUPPLIED. Only static label measurement and Unicode RTL/bidi inspection were performed. No browser run established English/LTR presentation of all 16 destinations including wrapping, clipping, or routing. Plan WDC-R1 line 90 states static checks cannot establish this.",
+    "PO SOURCE/COMPILED-CATALOG BINDING NOT SUPPLIED. No capture binds the source catalog to the compiled catalog, and no runtime lookup evidence was captured (WDC-R2 line 108).",
+    "V15 COMPATIBILITY NOT ADDRESSED. No v15 runtime verification was performed and none is claimed (WDC-R1 line 90).",
+    "SCOPE LIMITATION. All probes were server-side. No non-administrator browser session was established, matching the constraint recorded in the prior report."
+  ],
+  "schema": "workspace-desk-coverage/validation-report/v1",
+  "supersedes_prior_evidence": {
+    "artifact": "docs/ai/work-items/workspace-desk-coverage/evidence/scripts/verify_ltr_and_permissions.py",
+    "reason": "That script computed its 5x16 permission matrix by monkeypatching frappe.get_roles with a hardcoded role list and passing non-existent users, and asserted a Project Manager denial for the non-existent identity dep_pm@example.com, which is denied everything. Its conclusions were independently reproduced here by valid means; its method was not."
+  },
+  "verdict": "PARTIALLY_SATISFIES",
+  "verdict_detail": "Effective permissions, Workspace filtering, direct-access denial and authenticated rollback are satisfied and candidate-bound. English/LTR browser presentation, PO source/compiled-catalog binding, and v15 disposition remain open."
+}

@@ -1,0 +1,53 @@
+WAVE2_GROUP_INVENTORY_EXPORT v1 site=v16.localhost
+ITEM_GROUP total=19 in_scope=6 vendor_fixture=13 roots_without_parent=1
+  ROW IN_SCOPE name='All Item Groups' label='All Item Groups' arabic=None parent='' is_group=1
+  ROW IN_SCOPE name='Consumable' label='Consumable' arabic=None parent='All Item Groups' is_group=0
+  ROW IN_SCOPE name='Products' label='Products' arabic=None parent='All Item Groups' is_group=0
+  ROW IN_SCOPE name='Raw Material' label='Raw Material' arabic=None parent='All Item Groups' is_group=0
+  ROW IN_SCOPE name='Services' label='Services' arabic=None parent='All Item Groups' is_group=0
+  ROW IN_SCOPE name='Sub Assemblies' label='Sub Assemblies' arabic=None parent='All Item Groups' is_group=0
+  ROW VENDOR_FIXTURE name='_Test Item Group' label='_Test Item Group' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group A' label='_Test Item Group A' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group B' label='_Test Item Group B' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group B - 1' label='_Test Item Group B - 1' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group B - 2' label='_Test Item Group B - 2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group B - 3' label='_Test Item Group B - 3' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group C' label='_Test Item Group C' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group C - 1' label='_Test Item Group C - 1' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group C - 2' label='_Test Item Group C - 2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group D' label='_Test Item Group D' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group Desktops' label='_Test Item Group Desktops' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group Tax Child Override' label='_Test Item Group Tax Child Override' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Item Group Tax Parent' label='_Test Item Group Tax Parent' arabic=None
+CUSTOMER_GROUP total=7 in_scope=5 vendor_fixture=2 roots_without_parent=1
+  ROW IN_SCOPE name='All Customer Groups' label='All Customer Groups' arabic=None parent=None is_group=1
+  ROW IN_SCOPE name='Commercial' label='Commercial' arabic=None parent='All Customer Groups' is_group=0
+  ROW IN_SCOPE name='Government' label='Government' arabic=None parent='All Customer Groups' is_group=0
+  ROW IN_SCOPE name='Individual' label='Individual' arabic=None parent='All Customer Groups' is_group=0
+  ROW IN_SCOPE name='Non Profit' label='Non Profit' arabic=None parent='All Customer Groups' is_group=0
+  ROW VENDOR_FIXTURE name='_Test Customer Group' label='_Test Customer Group' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Customer Group 1' label='_Test Customer Group 1' arabic=None
+SUPPLIER_GROUP total=9 in_scope=8 vendor_fixture=1 roots_without_parent=1
+  ROW IN_SCOPE name='All Supplier Groups' label='All Supplier Groups' arabic=None parent=None is_group=1
+  ROW IN_SCOPE name='Distributor' label='Distributor' arabic=None parent='All Supplier Groups' is_group=0
+  ROW IN_SCOPE name='Electrical' label='Electrical' arabic=None parent='All Supplier Groups' is_group=0
+  ROW IN_SCOPE name='Hardware' label='Hardware' arabic=None parent='All Supplier Groups' is_group=0
+  ROW IN_SCOPE name='Local' label='Local' arabic=None parent='All Supplier Groups' is_group=0
+  ROW IN_SCOPE name='Pharmaceutical' label='Pharmaceutical' arabic=None parent='All Supplier Groups' is_group=0
+  ROW IN_SCOPE name='Raw Material' label='Raw Material' arabic=None parent='All Supplier Groups' is_group=0
+  ROW IN_SCOPE name='Services' label='Services' arabic=None parent='All Supplier Groups' is_group=0
+  ROW VENDOR_FIXTURE name='_Test Supplier Group' label='_Test Supplier Group' arabic=None
+TERRITORY total=9 in_scope=4 vendor_fixture=5 roots_without_parent=1
+  ROW IN_SCOPE name='All Territories' label='All Territories' arabic=None parent=None is_group=1
+  ROW IN_SCOPE name='Egypt' label='Egypt' arabic=None parent='All Territories' is_group=0
+  ROW IN_SCOPE name='India' label='India' arabic=None parent='All Territories' is_group=0
+  ROW IN_SCOPE name='Rest Of The World' label='Rest Of The World' arabic=None parent='All Territories' is_group=0
+  ROW VENDOR_FIXTURE name='_Test Territory' label='_Test Territory' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Territory India' label='_Test Territory India' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Territory Maharashtra' label='_Test Territory Maharashtra' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Territory Rest Of The World' label='_Test Territory Rest Of The World' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Territory United States' label='_Test Territory United States' arabic=None
+PARENT_FIELDS_OPTIONAL yes
+PRE_EXISTING_ARABIC none
+SUMMARY {"Customer Group": [7, 5, 2], "Item Group": [19, 6, 13], "Supplier Group": [9, 8, 1], "Territory": [9, 4, 5]}
+INVENTORY RESULT: PASS (R1 rule-derived in-scope matches frozen allowlist; pre-state of all in-scope rows empty; parent fields optional; all rows classified)

@@ -1,0 +1,14 @@
+{
+  "loader_installed": true,
+  "using_safe_fallback": false,
+  "has_duplicates": false,
+  "has_null_digests": false,
+  "constraint_present": true,
+  "constraint_name": "ct_translation_key_digest",
+  "has_drift": false,
+  "drift_details": [],
+  "has_orphan_site_overrides": false,
+  "last_catalog_sync_at": "2026-09-02 12:42:22.282470",
+  "last_release_import_at": "2026-09-02 12:34:41.375232",
+  "last_drift_checked_at": "2026-09-02 13:14:24.977085"
+}

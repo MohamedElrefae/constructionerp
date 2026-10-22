@@ -1,0 +1,103 @@
+Incorrect Check in (group) Warehouse for Reorder
+Incorrect Component Quantity
+Incorrect Reference Document (Purchase Receipt Item)
+Incorrect Type of Transaction
+Individual Stock Ledger Entry cannot be cancelled.
+Invalid Item Defaults
+Invalid Priority
+Invalid Query
+Invalid Serial and Batch Bundle
+Invalid Source and Target Warehouse
+Invalid search query
+It can take upto few hours for accurate stock values to be visible after merging items.
+Item Price appears multiple times based on Price List, Supplier/Customer, Currency, Item, Batch, UOM, Qty, and Dates.
+Item Warehouse based reposting has been enabled.
+Item rate has been updated to zero as Allow Zero Valuation Rate is checked for item {0}
+Item valuation rate is recalculated considering landed cost voucher amount
+Item valuation reposting in progress. Report might show incorrect item valuation.
+Item {0} is already reserved/delivered against Sales Order {1}.
+Item {0} must be a Non-Stock Item
+Item {0} not found in 'Raw Materials Supplied' table in {1} {2}
+Item {0} not found.
+Item {} does not exist.
+Item/Item Code required to get Item Tax Template.
+Items rate has been updated to zero as Allow Zero Valuation Rate is checked for the following items: {0}
+Last Name, Email or Phone/Mobile of the user are mandatory to continue.
+Learn Inventory Management
+Limit timeslot for Stock Reposting
+Limits don't apply on
+Linked with submitted documents
+Log the selling and buying rate of an Item
+Make {0} Variant
+Make {0} Variants
+Manufacturers used in Items
+Min Value: {0}, Max Value: {1}, in Increments of: {2}
+Multiple items cannot be marked as finished item
+No additional fields available
+No available quantity to reserve for item {0} in warehouse {1}
+No of Months (Expense)
+No of Months (Revenue)
+No of Parallel Reposting (Per Item)
+No of Shift
+No of Units Produced
+No of Workstations
+No stock ledger entries were created. Please set the quantity or valuation rate for the items properly and try again.
+No stock transactions can be created or modified before this date.
+Note: To merge the items, create a separate Stock Reconciliation for the old item {0}
+Only one {0} entry can be created against the Work Order {1}
+Only to be used for Subcontracting Inward.
+Over Billing Allowance exceeded for Purchase Receipt Item {0} ({1}) by {2}%
+Pallets
+Parcel weight cannot be 0
+Per Day
+Per Unit Time in Mins
+Pickup Date cannot be before this day
+Pickup To time should be greater than Pickup From time
+Pickup from
+Pickup to
+Please check the error message and take necessary actions to fix the error and then restart the reposting again.
+Please contact any of the following users to {} this transaction.
+Please create Landed Cost Vouchers against Invoices that have 'Update Stock' enabled.
+Please delete Product Bundle {0}, before merging {1} into {2}
+Please enable Use Old Serial / Batch Fields to make_bundle
+Please enable {0} in the {1}.
+Please enter Shipment Parcel information
+Please first set Last Name, Email and Phone for the user
+Please mention 'Weight UOM' along with Weight.
+Please rectify and try again.
+Please select Serial/Batch Nos to reserve or change Reservation Based On to Qty.
+Please select Subcontracting Order instead of Purchase Order {0}
+Please select at least one filter: Item Code, Batch, or Serial No.
+Please select at least one row with difference value
+Please select either the Item or Warehouse or Warehouse Type filter to generate the report.
+Please select only one row to create a Reposting Entry
+Please select rows to create Reposting Entries
+Please select the required filters
+Please set Email/Phone for the contact
+Priority cannot be lesser than 1.
+Putaway Rule already exists for Item {0} in Warehouse {1}.
+Qty of Finished Goods Item should be greater than 0.
+Quantity cannot be greater than {0} for Item {1}
+Quantity must be greater than zero, and less or equal to {0}
+References to Sales Invoices are Incomplete
+References to Sales Orders are Incomplete
+Remove item if charges is not applicable to that item
+Repost Item Valuation restarted for selected failed records.
+Reposting Completed {0}%
+Reposting entries created: {0}
+Reposting has been started in the background.
+Reserved Qty should be greater than Delivered Qty.
+Restart
+Restart Failed Entries
+Row # {0}: Please add Serial and Batch Bundle for Item {1}
+Row #{0}: A reorder entry already exists for warehouse {1} with reorder type {2}.
+Row #{0}: Acceptance Criteria Formula is incorrect.
+Row #{0}: Acceptance Criteria Formula is required.
+Row #{0}: Batch No {1} is already selected.
+Row #{0}: Finished Good must be {1}
+Row #{0}: Item {1} has been picked, please reserve stock from the Pick List.
+Row #{0}: Only {1} available to reserve for the Item {2}
+Row #{0}: Quantity to reserve for the Item {1} should be greater than 0.
+Row #{0}: Serial No {1} for Item {2} is not available in {3} {4} or might be reserved in another {5}.
+Row #{0}: Serial No {1} is already selected.
+Row #{0}: Source and Target Warehouse cannot be the same for Material Transfer

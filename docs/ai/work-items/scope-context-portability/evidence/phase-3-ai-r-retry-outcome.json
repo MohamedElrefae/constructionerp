@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-12T01:55:00Z",
+  "status": "AI_R_RETRY_PAUSED_FOR_RECONCILIATION",
+  "authorization": "Owner Authorization Directive: P3-F003 Engine Amendment & AI-R Verification Retry",
+  "reconciliation": {
+    "pilot_worktree": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+    "control_worktree": "/home/mohamed/frappe-bench/worktrees/scope-context-portability",
+    "actions": [
+      "Reverted leaked orchestrator/engine.py and orchestrator/tests/test_engine.py in pilot worktree to base commit 4b77803af418cea8459c4cb7d9a0248674845da3; these are controller amendments that belong to the control worktree running engine.",
+      "Added docs/ai/work-items/scope-context-portability/evidence/ to the config generated list so candidate-bound recheck ignores workflow-generated evidence artifacts.",
+      "Updated SQLite workflow_meta config candidate binding from 38e04df7.../b72f470d... to owner-authorized 532f0175.../2f546c2b... while preserving all other config fields."
+    ],
+    "config_candidate_before": {
+      "candidate_id": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+      "tree_oid": "b72f470db46869199fd9eca2d81fb207ae3515b7"
+    },
+    "config_candidate_after": {
+      "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+      "tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0",
+      "manifest_hash": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133"
+    },
+    "plan_grant_preserved": {
+      "token_id": "owner-plan-grant-phase3-pilot",
+      "gate_id": "plan-3f7f6e2b096c64ad049178b4",
+      "status": "CONSUMED"
+    }
+  },
+  "verification": {
+    "candidate_bound_802_file_evidence": "docs/ai/work-items/scope-context-portability/evidence/phase-3-current-complete-source-validation.json",
+    "evidence_candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+    "evidence_tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0",
+    "complete_source_file_count": 802,
+    "complete_source_equality_before": true,
+    "complete_source_equality_after": true,
+    "package_absence_confirmed": true,
+    "live_recheck_result": "PASSED",
+    "live_freeze_result": {
+      "candidate_id": "532f0175dc88f19d111a42c498b60eb0bd832d412af12d4d7df7247b48d6b133",
+      "tree_oid": "2f546c2b88f288a258a3c603ab88ab2b380b06c0"
+    }
+  },
+  "retry": {
+    "dispatched_job": "job-585711c603d12775030d7c70",
+    "role": "builder",
+    "tool": "opencode",
+    "result": "FAILED / MALFORMED_RESULT",
+    "terminal": {
+      "exit_code": 1,
+      "timeout": false,
+      "started_utc": "2026-09-11T22:52:40.134176Z",
+      "finished_utc": "2026-09-11T22:52:41.257028Z",
+      "stderr_summary": "Session not found",
+      "stdout_bytes": 0
+    },
+    "workflow_after_collection": {
+      "status": "PAUSED",
+      "pause_reason": "MALFORMED_RESULT",
+      "gate": {"scope": "DECISION", "gate_id": "decision-30"},
+      "active_jobs": [],
+      "attempt": 16,
+      "cursor": 31,
+      "revision": 31
+    }
+  },
+  "safety": "No project files staged, no commit created, no merge, no push, no ERP/site operation. The standing PLAN grant remains consumed and bound to plan 8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1. Workflow paused at DECISION gate before any COMMIT gate.",
+  "next_agent_should": [
+    "Investigate the OpenCode native 'Session not found' failure for job-585711c603d12775030d7c70.",
+    "Confirm whether this is a transient provider/session issue or requires environment repair.",
+    "Owner reconciliation/decision is required before resuming; do not auto-retry without owner authorization.",
+    "Stop at COMMIT unless the owner separately authorizes it."
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-11T20:59:17.475054Z",
+  "status": "AWAITING_OWNER_RECONCILIATION",
+  "job_id": "job-c1b769164762f806bc4c0b0a",
+  "session_id": "01a09240-7916-7632-913d-678628e774f9",
+  "terminal_exit_code": 0,
+  "worker_and_native_processes_stopped": true,
+  "candidate_bytes_and_file_set_unchanged": true,
+  "native_stdout_sha256": "7e9de9cffec35c8ee0224b2c121109fe121503fdc0edd4f5c0195d69be6e2096",
+  "result_rejected": true,
+  "rejection": "Required findings[].snapshot missing; resolved owner_decision was also expressed using blocking:false instead of a permitted result representation. Runner validation rejected it before result acceptance.",
+  "draft": "phase-3-revised-architect-draft.md",
+  "proposed_recovery": "Preserve rejected output, owner-reconcile the finished read-only job, and start a fresh architect attempt with explicit schema feedback. No PLAN/COMMIT grant or synthetic acceptance.",
+  "schema_feedback": "Read orchestrator/schemas/v1/result-envelope.json and finding.json. Resolved prior scope objections belong in explanation/plan; do not emit a nonblocking owner_decision. If no current findings remain, findings is []. Any returned finding must include snapshot (null when unavailable) and all required properties. Runner supplies native identity and evidence_paths."
+}

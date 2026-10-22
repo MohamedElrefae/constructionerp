@@ -1,0 +1,5 @@
+MEASUREMENT: {"Brand": 1.5066}
+P95_MS: {"baseline": 0.454, "bilingual": 0.684}
+TIER: {"bilingual_p95_ms": 0.684, "ceiling_pass": true, "ratio": 1.5066, "ratio_pass": false, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "NON_COMPLIANT"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0

@@ -1,0 +1,23 @@
+PASS boot-lang-ar: ar
+PASS boot-messages-ge-1000: 12621
+PASS translate:Address: {'expected': 'العنوان', 'got': 'العنوان'}
+PASS translate:Percentage you are allowed to sell beyond the Blanket Order quantity.: {'expected': 'النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.', 'got': 'النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.'}
+PASS translate:Please enter a valid number of deliveries: {'expected': 'يرجى إدخال عدد تسليمات صالح', 'got': 'يرجى إدخال عدد تسليمات صالح'}
+PASS translate:Please enter at least one delivery date and quantity: {'expected': 'يرجى إدخال تاريخ تسليم وكمية على الأقل', 'got': 'يرجى إدخال تاريخ تسليم وكمية على الأقل'}
+PASS translate:Please enter the first delivery date: {'expected': 'يرجى إدخال تاريخ التسليم الأول', 'got': 'يرجى إدخال تاريخ التسليم الأول'}
+PASS translate:Please save the Sales Order before adding a delivery schedule.: {'expected': 'يرجى حفظ أمر البيع قبل إضافة جدول التسليم.', 'got': 'يرجى حفظ أمر البيع قبل إضافة جدول التسليم.'}
+PASS translate:Please select a frequency for delivery schedule: {'expected': 'يرجى تحديد تكرار جدول التسليم', 'got': 'يرجى تحديد تكرار جدول التسليم'}
+PASS translate:Please select atleast one item to continue: {'expected': 'يرجى تحديد صنف واحد على الأقل للمتابعة', 'got': 'يرجى تحديد صنف واحد على الأقل للمتابعة'}
+PASS translate:Reason for hold:: {'expected': 'سبب الإيقاف:', 'got': 'سبب الإيقاف:'}
+PASS translate:Restrict Items Based On: {'expected': 'تقييد الأصناف بناءً على', 'got': 'تقييد الأصناف بناءً على'}
+PASS translate:Sales Opportunities by Campaign: {'expected': 'فرص البيع حسب الحملة', 'got': 'فرص البيع حسب الحملة'}
+PASS translate:Sales Opportunities by Medium: {'expected': 'فرص البيع حسب الوسيط', 'got': 'فرص البيع حسب الوسيط'}
+PASS all-probe-translations: 12/12
+PASS translate-placeholder: {'expected': 'أُغلقت نقطة البيع في Shop. يرجى تحديث الصفحة.', 'got': 'أُغلقت نقطة البيع في Shop. يرجى تحديث الصفحة.'}
+PASS boot-messages-lookup: {'Address': 'العنوان', 'Percentage you are allowed to sell beyond the Blanket Order quantity.': 'النسبة المسموح لك بيعها زائدًا عن كمية أمر البيع المفتوح.', 'Please enter a valid number of deliveries': 'يرجى إدخال عدد تس
+PASS rendered-dom-arabic-words: {'count': 12, 'sample': ['الأدوات', 'الأصول', 'الباطن', 'البيع', 'التصنيع', 'الجودة', 'المحاسبة', 'المخزون', 'المشاريع', 'المشتريات', 'مقاولات', 'منظمة']}
+PASS rendered-workspace-modules: ['الأدوات', 'المحاسبة', 'المشتريات', 'المشاريع', 'المخزون', 'البيع']
+PASS sidebar-arabic-items: ['بحث                                       Ctrl+K', 'إشعار', 'سجل الطريق', 'إعدادات الإشعارات', 'قائمة المهام', 'التقارير', 'قائمة المهام', 'تنزيل النسخ الاحتياطية']
+PASS desk-title-captured: Desktop
+SUMMARY {'pass': 21, 'fail': 0}
+fail': 0}

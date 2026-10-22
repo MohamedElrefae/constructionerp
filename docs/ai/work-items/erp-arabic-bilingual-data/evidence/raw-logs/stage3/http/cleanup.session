@@ -1,0 +1,14 @@
+import json
+names = frappe.get_all("Account", filters={"company": "Elrefae", "account_number": ("like", "CT-HTTP-%")}, pluck="name")
+removed = []
+for name in names:
+    for row in frappe.get_all("Comment", filters={"reference_doctype": "Account", "reference_name": name}, pluck="name"):
+        frappe.delete_doc("Comment", row, force=True, ignore_permissions=True)
+    for row in frappe.get_all("Version", filters={"ref_doctype": "Account", "docname": name}, pluck="name"):
+        frappe.delete_doc("Version", row, force=True, ignore_permissions=True)
+    frappe.delete_doc("Account", name, force=True, ignore_permissions=True)
+    removed.append(name)
+frappe.db.commit()
+leftover = frappe.get_all("Account", filters={"company": "Elrefae", "account_number": ("like", "CT-HTTP-%")}, pluck="name")
+print(json.dumps({"cleanup": "done", "removed": removed, "leftover": leftover, "utc": frappe.utils.now_datetime().strftime("%Y-%m-%dT%H:%M:%SZ")}))
+exit()

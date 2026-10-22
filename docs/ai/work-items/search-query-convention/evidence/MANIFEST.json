@@ -1,0 +1,51 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/search-query-convention/SCOPE.md": "7855cc44473f0484a695b7759277d2192b4085656fbc328c1d9d2508de4d64a2",
+    "docs/ai/work-items/search-query-convention/evidence/reproduce_d4.log": "1bb86836ee797a807adb72d2392c07780adb3a26c87fc578db65c6d16b53392a",
+    "docs/ai/work-items/search-query-convention/evidence/scripts/reproduce_d4.py": "efcfd6af743efcd937b8af6ccf6c6dc6289590fcfa1f49dd7ade3f954991f886"
+  },
+  "base_commit": "db5d23e8a3f9ab34074b0b7a7018df777eb92336",
+  "branch": "develop",
+  "decision": {
+    "D4": "KEEP_DORMANT — recorded 2026-10-03; Option 1 dispatcher deferred, Option 2 rejected (would reopen ratified D1)",
+    "no_application_source_changed": true,
+    "triad_diff_lines": 0
+  },
+  "evidence": {
+    "reproduction_log": {
+      "path": "docs/ai/work-items/search-query-convention/evidence/reproduce_d4.log",
+      "sections": "A mapping, B frappe.call semantics, C live KeyError, D wiring audit, E BOQ contrast"
+    },
+    "defects_recorded": [
+      "D4a positional shift (search_widget vs searchable_link_search)",
+      "D4b dict rows vs build_for_autosuggest tuple indexing"
+    ],
+    "wiring_audit": "no loaded JS instantiates SearchableDropdownEnhancer; config files unregistered; nested hooks.py inert"
+  },
+  "test_results": {
+    "canonical_matrix": {
+      "modules": 13,
+      "tests": 171,
+      "passed": 171,
+      "failed": 0,
+      "log": "docs/ai/work-items/transactional-link-resolution/evidence/regression-matrix.log"
+    },
+    "note": "no tests added or changed by this work item; matrix result reused from transactional-link-resolution at db5d23e"
+  },
+  "primary_invariant": {
+    "claim": "Zero modifications to bilingual_service.py, search.py and bilingual_registry.json; this work item changes no application source",
+    "reference_commits": [
+      "38beb35d31026e0afc70dd43e0ccf8de7dc1a222",
+      "cbc8d5b",
+      "46aa201",
+      "0f5be0d",
+      "87e88cd",
+      "a7086ef",
+      "2f74193"
+    ],
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0
+  },
+  "work_item": "search-query-convention"
+}

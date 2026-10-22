@@ -1,0 +1,17 @@
+  ok: V1 counts: 188 approved rows across 15 doctypes (189 populated incl. frozen fixture)
+  ok: V2 values byte-equal to approval; all 188 norms server-derived and correct
+  FAIL: Supplier Group All Supplier Groups: frozen field rgt changed
+  ok: V3 frozen-field equality vs pre-snapshot: 575 field-cells unchanged
+  ok: V4 Company: tree valid (21 rows, 16 root(s))
+  ok: V4 Account: tree valid (2102 rows, 105 root(s))
+  ok: V4 Cost Center: tree valid (47 rows, 21 root(s))
+  ok: V4 Warehouse: tree valid (118 rows, 32 root(s))
+  ok: V4 Item Group: tree valid (19 rows, 1 root(s))
+  ok: V4 Customer Group: tree valid (7 rows, 1 root(s))
+  FAIL: Supplier Group: tree structure mutated vs pre-snapshot
+  ok: V4 Supplier Group: tree valid (9 rows, 1 root(s))
+  ok: V4 Territory: tree valid (9 rows, 1 root(s))
+  ok: V4 Department: tree valid (276 rows, 1 root(s))
+  ok: V4 Task: tree valid (4 rows, 2 root(s))
+  ok: V5 probes: 32 queries, p50=0.7ms max=24.0ms
+VERIFY RESULT: FAIL (2 failed checks)

@@ -1,0 +1,194 @@
+
+name: Linters
+
+on:
+  pull_request:
+  push:
+    branches:
+      - codex/foundation-ci-20261016-linter
+      - codex/foundation-ci-20261018-qualified
+      - codex/foundation-ci-20261018-qualified-r2
+      - codex/foundation-ci-20261018-qualified-r3
+      - codex/foundation-ci-20261018-qualified-r4
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linter:
+    name: 'Frappe Linter'
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: bench/apps/construction
+
+    steps:
+      - name: Checkout construction at bench layout path
+        uses: actions/checkout@v4
+        with:
+          path: bench/apps/construction
+      # Sibling vendor trees pinned to qualified commits so the localization gate
+      # validates the exact Frappe/ERPNext catalogs (bench layout: bench/apps/<app>).
+      # Pins aligned to CI-qualified versions: frappe 16.51.1 (2871914),
+      # erpnext 16.50.0 (7474d9e).
+      #
+      # The PUBLIC base commit is fetched from frappe/frappe; the owner-authorized
+      # PRIVATE divergence commit is NOT published anywhere and is NOT fetched. It
+      # is reconstructed locally by the transport step below.
+      #
+      # Sparse paths: the localization gate needs `frappe/locale`, and the reviewed
+      # transport patch edits the root `pyproject.toml`. Sparse checkout only
+      # filters the WORKING TREE; the git index still carries every entry of the
+      # base tree, so `git write-tree` in the transport applier reconstructs the
+      # full reviewed tree (231f1d8b...) exactly as in a full checkout.
+      - name: Checkout pinned Frappe catalog
+        uses: actions/checkout@v4
+        with:
+          repository: frappe/frappe
+          ref: 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b
+          path: bench/apps/frappe
+          sparse-checkout: |
+            frappe/locale
+            /pyproject.toml
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Checkout pinned ERPNext catalog
+        uses: actions/checkout@v4
+        with:
+          repository: frappe/erpnext
+          ref: 7474d9e786277383de1242ab882f16856d17a9c9
+          path: bench/apps/erpnext
+          sparse-checkout: erpnext/locale
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+      - name: Apply approved private Frappe vendor divergence (exact commit)
+        # Owner-authorized PRIVATE, VERSIONED Frappe v16 vendor divergence that moves
+        # the framework Pillow pin to 13.0.0. The effective commit
+        # af44091716ed4e9be32720483a27d3f1937ad7fd is NOT published and is NOT
+        # fetchable by SHA: it is reconstructed locally from the recorded raw commit
+        # object after the reviewed one-line patch is applied. The applier proves the
+        # pinned base checkout, the patch/object bytes, the staged tree, the commit
+        # SHA/tree/parent and a clean tracked working tree AND index, and fails closed
+        # without resetting anything.
+        #
+        # This job runs the same effective vendor as the Server and C2 jobs, so the
+        # localization gate below evaluates the SAME vendor identity everywhere
+        # instead of an upstream base that the recorded vendor baseline no longer
+        # pins. NOT an upstream-supported Frappe release.
+        run: |
+          set -euo pipefail
+          APP_ROOT="$GITHUB_WORKSPACE/bench/apps/construction"
+          VENDOR_ROOT="$GITHUB_WORKSPACE/bench/apps/frappe"
+          python3 "$APP_ROOT/.github/ci/apply_private_vendor_divergence.py" \
+            "$VENDOR_ROOT" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json"
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
+          test "$(git -C "$GITHUB_WORKSPACE/bench/apps/erpnext" rev-parse HEAD)" = 7474d9e786277383de1242ab882f16856d17a9c9
+      - name: Run pre-commit
+        run: |
+          python -m pip install pre-commit==4.7.0
+          pre-commit run --show-diff-on-failure --color=always --all-files
+      - name: Verify private Frappe vendor identity before the localization gate
+        # Measurement boundary: re-assert the effective committed vendor identity and
+        # that the tracked working tree AND index are clean against it, so the gate
+        # below cannot evaluate a reverted, missing or tampered divergence.
+        run: |
+          set -euo pipefail
+          APP_ROOT="$GITHUB_WORKSPACE/bench/apps/construction"
+          VENDOR_ROOT="$GITHUB_WORKSPACE/bench/apps/frappe"
+          python3 "$APP_ROOT/.github/ci/apply_private_vendor_divergence.py" \
+            "$VENDOR_ROOT" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.patch" \
+            "$APP_ROOT/.github/ci/vendor_patches/frappe-pillow13-vendor-divergence.json" \
+            --verify
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD)" = af44091716ed4e9be32720483a27d3f1937ad7fd
+          test "$(git -C "$VENDOR_ROOT" rev-parse HEAD^{tree})" = 231f1d8b87171dfc6fcedb1ae320195953539c34
+      - name: Localization source gates (bench-layout working directory)
+        # The Stage-2 evidence index is historical and intentionally records its
+        # original absolute checkout root and candidate HEAD. Validate all live
+        # localization sources in CI without rebinding that immutable evidence.
+        #
+        # Runs against the EFFECTIVE private vendor above; the recorded
+        # `apps.frappe.commit` baseline pin is the reviewed private commit.
+        run: python3 scripts/check_localization_gates.py --ci-source-only
+
+      - name: Lint scope-dimension metadata
+        run: python3 scripts/lint_scope_metadata.py
+
+      - name: Download Semgrep rules
+        run: |
+          git init "$RUNNER_TEMP/frappe-semgrep-rules"
+          git -C "$RUNNER_TEMP/frappe-semgrep-rules" remote add origin https://github.com/frappe/semgrep-rules.git
+          git -C "$RUNNER_TEMP/frappe-semgrep-rules" fetch --depth 1 origin 81a6e3d47a328249e8ddf04c586e493dd5553002
+          git -C "$RUNNER_TEMP/frappe-semgrep-rules" checkout --detach FETCH_HEAD
+
+      - name: Run Semgrep rules and fail closed on unresolved findings
+        run: |
+          set -euo pipefail
+          pip install semgrep==1.167.0
+          raw_json="$RUNNER_TEMP/semgrep-raw.json"
+          review_report="$RUNNER_TEMP/semgrep-review-report.json"
+          : > "$raw_json"
+          scan_exit=0
+          semgrep scan --json --metrics=off --no-rewrite-rule-ids \
+            --exclude-rule missing-argument-type-hint \
+            --exclude-rule frappe-security-file-traversal \
+            --config "$RUNNER_TEMP/frappe-semgrep-rules/rules" \
+            --config r/python.lang.correctness \
+            > "$raw_json" || scan_exit=$?
+          python3 scripts/check_semgrep_review_ledger.py \
+            --raw-semgrep-json "$raw_json" \
+            --scanner-exit "$scan_exit" \
+            --review-ledger .github/security/semgrep_review_ledger.json \
+            --candidate-root . | tee "$review_report"
+
+      - name: Preserve Semgrep scan and review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-review-evidence-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/semgrep-raw.json
+            ${{ runner.temp }}/semgrep-review-report.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  deps-vulnerable-check:
+    name: 'Vulnerable Dependency Check'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          # The construction app requires Python >=3.14,<3.15. Use the
+          # supported interpreter for the dependency audit so pip-audit
+          # evaluates against the same runtime the app ships on.
+          python-version: '3.14'
+
+      - uses: actions/checkout@v4
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Install and run pip-audit
+        run: |
+          pip install pip-audit==2.10.1
+          cd ${GITHUB_WORKSPACE}
+          pip-audit --desc on .

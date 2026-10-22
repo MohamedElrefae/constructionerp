@@ -1,0 +1,27 @@
+source_text,context,locations
+Additional Data,,erpnext/edi/doctype/common_code/common_code.json:None
+Applies To,,erpnext/edi/doctype/common_code/common_code.json:None
+Are you sure you want to delete {0}?<p>This action will also delete all associated Common Code documents.</p>,,erpnext/edi/doctype/code_list/code_list.js:18
+Canonical URI,,erpnext/edi/doctype/code_list/code_list.json:None; erpnext/edi/doctype/common_code/common_code.json:None
+Code List,,erpnext/edi/doctype/code_list/code_list.json:None; erpnext/edi/doctype/common_code/common_code.json:None
+Common Code,,erpnext/edi/doctype/common_code/common_code.json:None; erpnext/setup/doctype/uom/uom.json:None
+Default Common Code,,erpnext/edi/doctype/code_list/code_list.json:None
+Deleting {0} and all associated Common Code documents...,,erpnext/edi/doctype/code_list/code_list.js:28
+Fetching Error,,erpnext/edi/doctype/code_list/code_list_import.py:27
+"If there is no title column, use the code column for the title.",,erpnext/edi/doctype/code_list/code_list_import.js:23
+Import Genericode File,,erpnext/edi/doctype/code_list/code_list.js:7; erpnext/edi/doctype/code_list/code_list_list.js:3; erpnext/edi/doctype/common_code/common_code_list.js:3
+Import completed. {0} common codes created.,,erpnext/edi/doctype/code_list/code_list_import.js:130
+Importing Common Codes,,erpnext/edi/doctype/common_code/common_code.py:109
+Parsing Error,,erpnext/edi/doctype/code_list/code_list_import.py:39
+Publisher,,erpnext/edi/doctype/code_list/code_list.json:None
+Publisher ID,,erpnext/edi/doctype/code_list/code_list.json:None
+Select Columns and Filters,,erpnext/edi/doctype/code_list/code_list_import.js:109
+The uploaded file does not match the selected Code List.,,erpnext/edi/doctype/code_list/code_list_import.py:48
+This value shall be used when no matching Common Code for a record is found.,,erpnext/edi/doctype/code_list/code_list.json:None
+You are importing data for the code list:,,erpnext/edi/doctype/code_list/code_list_import.js:29
+as Code,,erpnext/edi/doctype/code_list/code_list_import.js:57
+as Description,,erpnext/edi/doctype/code_list/code_list_import.js:73
+as Title,,erpnext/edi/doctype/code_list/code_list_import.js:48
+by {},,erpnext/edi/doctype/code_list/code_list_import.js:90
+description,,erpnext/edi/doctype/code_list/code_list_import.js:80; erpnext/manufacturing/doctype/production_plan_sub_assembly_item/production_plan_sub_assembly_item.json:None
+{0} {1} is already linked to Common Code {2}.,,erpnext/edi/doctype/common_code/common_code.py:52

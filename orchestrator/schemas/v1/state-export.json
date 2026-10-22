@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "state-export v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "authority": {
+      "const": "sqlite-checkpoint-export-only"
+    },
+    "work_item": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "stage": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "PLAN_SUBMITTED",
+        "NEEDS_REVISION",
+        "APPROVED_FOR_BUILD",
+        "BUILD_IN_PROGRESS",
+        "BUILD_COMPLETE",
+        "CHANGES_REQUESTED",
+        "VERIFIED_FOR_RELEASE",
+        "RELEASED",
+        "CANCELLED",
+        "PAUSED"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "plan_revision_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "roles_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "candidate_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "active_jobs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "completed_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "approval_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unsuccessful_cycles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unchanged_rounds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "last_snapshot_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "unsuccessful_cycles",
+        "unchanged_rounds",
+        "last_snapshot_digest"
+      ]
+    },
+    "pause_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resume_to": {
+      "anyOf": [
+        {
+          "enum": [
+            "DRAFT",
+            "PLAN_SUBMITTED",
+            "NEEDS_REVISION",
+            "APPROVED_FOR_BUILD",
+            "BUILD_IN_PROGRESS",
+            "BUILD_COMPLETE",
+            "CHANGES_REQUESTED",
+            "VERIFIED_FOR_RELEASE",
+            "RELEASED",
+            "CANCELLED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sub_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "PROPOSAL_PENDING",
+                  "PROPOSAL_FROZEN",
+                  "PANEL_REVIEW",
+                  "PANEL_RENEWAL",
+                  "BUNDLE_VALIDATED",
+                  "AI_R_VERIFICATION",
+                  "OWNER_PAYLOAD_AUTHORIZATION",
+                  "DRY_RUN",
+                  "IMPORT_AUTHORIZATION",
+                  "IMPORT",
+                  "POST_IMPORT_EVIDENCE",
+                  "STAGE_4_VERIFIED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "historical": {
+            "type": "boolean"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "visibility": {
+                  "enum": [
+                    "public",
+                    "private"
+                  ]
+                }
+              },
+              "required": [
+                "artifact_id",
+                "sha256",
+                "visibility"
+              ]
+            },
+            "minItems": 0,
+            "uniqueItems": false
+          }
+        },
+        "required": [
+          "sub_status",
+          "historical",
+          "evidence_refs"
+        ]
+      }
+    },
+    "exported_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "authority",
+    "work_item",
+    "stage",
+    "status",
+    "revision",
+    "plan_revision_hash",
+    "roles_hash",
+    "candidate_id",
+    "active_jobs",
+    "completed_dependencies",
+    "approval_refs",
+    "escalation",
+    "pause_reason",
+    "resume_to",
+    "stages",
+    "exported_utc"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PAUSED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "pause_reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resume_to": {
+            "enum": [
+              "DRAFT",
+              "PLAN_SUBMITTED",
+              "NEEDS_REVISION",
+              "APPROVED_FOR_BUILD",
+              "BUILD_IN_PROGRESS",
+              "BUILD_COMPLETE",
+              "CHANGES_REQUESTED",
+              "VERIFIED_FOR_RELEASE",
+              "RELEASED",
+              "CANCELLED"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

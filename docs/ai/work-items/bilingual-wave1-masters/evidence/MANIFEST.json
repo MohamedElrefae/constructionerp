@@ -1,0 +1,174 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "875af38e146bb2bfe37f2437ff2ca34e5055f54065917084f10527105ccbb919",
+    "account-pilot-canary.log": "6af3b4915d3fc0015c1bc3827aaea9de9ec27ed9be28d27ce99eeb7741da9537",
+    "docs/ai/work-items/bilingual-wave1-masters-phase1/SCOPE.md": "1c6bc7bf45546be91c776f9681c80521cb1c5668d0bc1876a1c53ae668c74603",
+    "docs/ai/work-items/bilingual-wave1-masters-phase2/SCOPE.md": "3b846e14217c825340c7c6fd27930bee7a992936af964657c879f13fd71fd01c",
+    "scripts/measure_wave1_p95.py": "c8e3b20fad5b88714e5940ae9ab0f02aad2c7ce9a6c470f7fad3d2a70c26dc87",
+    "wave1-p95-measurement.json": "abba76d5590f96e247f857ffdba342b1c09bbf40229482ffe84326b06d2623e1",
+    "wave1-phase1-tests.log": "af867aa74f2dbc52e5ed56896037b6bd02b3a34648c764f4f59ed36d34f8bbba",
+    "wave1-phase2-tests.log": "d748fcce621d9de4bfd00ec0dab3f797da5385da0f54e3c1ce43e7d219794f39"
+  },
+  "base_commit": "10887841bf887b5dac769f98633f7a1926b07bda",
+  "branch": "feature/bilingual-wave1-masters",
+  "canary_disposition": {
+    "account_dry_run": {
+      "canonical_limit": 1.1,
+      "historical_context": {
+        "note": "4 of 5 historical rounds individually fail 1.10; the recorded pass derives entirely from min-of-rounds selection, so single-run comparison at this ~1.4 ms baseline is invalid",
+        "per_round_ratios": [
+          0.986,
+          1.184,
+          1.19,
+          1.19,
+          1.19
+        ],
+        "preserved_ratio": 1.071
+      },
+      "kind": "read-only dry run; wrote no artefact, mutated no evidence",
+      "observed_ratios": [
+        1.062,
+        1.087
+      ],
+      "protocol": "Account's canonical five-round min-of-rounds statistic",
+      "repin_status": "still deferred to the owner-authorized governance run under erp-arabic-bilingual-data",
+      "verdict": "PASS — Wave 1 code introduced no Account regression"
+    },
+    "artifact_modified_by_this_work_item": false,
+    "artifact_owner": "erp-arabic-bilingual-data",
+    "document": "docs/ai/work-items/bilingual-wave1-masters/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "875af38e146bb2bfe37f2437ff2ca34e5055f54065917084f10527105ccbb919",
+    "latency_gate": "Wave 1 masters MEASURED (1.31-1.45x, sub-1.2ms P95) and accepted as a documented trade-off; Account latency UNEVALUATED pending Stage-3 re-pin",
+    "rationale": "test_comparative_p95_live_measurement_is_balanced_and_bound asserts structural properties only (match-set equivalence, alternating order balance, per-call query counts, environment binding) and performs no P95 comparison. The canonical 1.10x comparison exists only in the hash-bound artifact test, which fails on this branch. No assertion currently in the suite bounds Wave 1 search latency.",
+    "repin_requires": "owner-authorized governance maintenance run under erp-arabic-bilingual-data",
+    "status": "ACCEPTED_KNOWN_MISMATCH"
+  },
+  "head_commit": "21fb37d7031f8b12c13993a58171303917bec1e2",
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Cost Center": 0.811,
+      "Customer": 0.686,
+      "Item": 1.114,
+      "Project": 0.73,
+      "Supplier": 0.675,
+      "Warehouse": 0.779
+    },
+    "artefact": "docs/ai/work-items/bilingual-wave1-masters/evidence/wave1-p95-measurement.json",
+    "caveat": "No doctype meets the canonical 1.10x rule owned by erp-arabic-bilingual-data. This artifact applies no gate rule and claims no conformance. Account latency remains unevaluated pending the Stage-3 re-pin.",
+    "disposition": "MEASURED and accepted as a documented architectural trade-off",
+    "fixture_prefix": "CT-W1-",
+    "fixtures_per_doctype": 12,
+    "harness": "docs/ai/work-items/bilingual-wave1-masters/evidence/scripts/measure_wave1_p95.py",
+    "harness_sha256": "c8e3b20fad5b88714e5940ae9ab0f02aad2c7ce9a6c470f7fad3d2a70c26dc87",
+    "leftover_fixtures": 0,
+    "match_sets_equal_all": true,
+    "ratios": {
+      "Cost Center": 1.4534,
+      "Customer": 1.4086,
+      "Item": 1.4524,
+      "Project": 1.3419,
+      "Supplier": 1.4063,
+      "Warehouse": 1.3092
+    },
+    "samples": 50,
+    "scope": "work-item-local; no canonical gate rule applied or claimed",
+    "sha256": "abba76d5590f96e247f857ffdba342b1c09bbf40229482ffe84326b06d2623e1",
+    "warmup": 5,
+    "why_local_harness": "measure_search_p95 hardcodes the Account doctype in five call sites; parameterising it would modify governed service code and break test_zero_service_edits_guard"
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "erp-arabic-bilingual-data evidence untouched",
+    "no registry promotion to active"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Phase 2 required zero modifications to the Phase 1 generalization",
+    "enforced_by_test": "construction.tests.test_bilingual_wave1_phase2_pilot.test_zero_service_edits_guard",
+    "reference_commit": "81af417deda3566956ed3f25bc1463f55088d1ea",
+    "search_py_diff_lines": 0
+  },
+  "programme_commits": [
+    {
+      "role": "Phase 1 scope descriptor",
+      "sha": "4f2bea4"
+    },
+    {
+      "role": "Phase 1 implementation",
+      "sha": "81af417"
+    },
+    {
+      "role": "Phase 2 scope descriptor",
+      "sha": "5791a11"
+    },
+    {
+      "role": "Phase 2 implementation",
+      "sha": "f270488"
+    },
+    {
+      "role": "Canary disposition",
+      "sha": "21fb37d"
+    }
+  ],
+  "residual_obligations": [
+    "Account latency passes a read-only dry run under its canonical protocol (1.062-1.087 vs 1.10 limit; no regression from Wave 1), but the Stage-3 artifact re-pin under erp-arabic-bilingual-data remains required to restore the account pilot to 53/53.",
+    "No Wave 1 master meets the canonical 1.10x ratio; accepted as a documented trade-off by owner decision, applying no gate rule.",
+    "All six masters remain schema_installed; promotion to active is an owner decision not made by this work item."
+  ],
+  "scope": {
+    "masters": [
+      "Item",
+      "Customer",
+      "Supplier",
+      "Cost Center",
+      "Warehouse",
+      "Project"
+    ],
+    "patches": [
+      "construction.patches.v9_2.add_wave1_arabic_norm_fields",
+      "construction.patches.v9_3.add_wave1_phase2_arabic_fields"
+    ],
+    "registry_states": "all six remain schema_installed"
+  },
+  "test_results": {
+    "account_pilot": {
+      "artifact_recorded_sha256": "753e3e655ca6c4426d37ebaf8a88b0d3124d2dcd9224a2dccd102833d1cf4207",
+      "exit_code": 1,
+      "failure_reason": "preserved Stage-3 P95 artifact is stale for bilingual_service.py",
+      "live_sha256": "cbb37e1577ce280b39936b01bcb341278ed81c03b524b15330003a7446c19012",
+      "module": "construction.tests.test_bilingual_account_pilot",
+      "ran": 53,
+      "result": "FAILED (failures=1)",
+      "sole_failure": "test_comparative_p95_artifact_bound_and_gate"
+    },
+    "wave1_phase1": {
+      "exit_code": 0,
+      "module": "construction.tests.test_bilingual_wave1_pilot",
+      "ran": 8,
+      "result": "OK"
+    },
+    "wave1_phase2": {
+      "exit_code": 0,
+      "module": "construction.tests.test_bilingual_wave1_phase2_pilot",
+      "ran": 8,
+      "result": "OK"
+    }
+  },
+  "work_item": "bilingual-wave1-masters",
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "artefact": "phase1_SCOPE.md / phase2_SCOPE.md",
+      "from": [
+        "phase1_SCOPE.md",
+        "phase2_SCOPE.md"
+      ],
+      "to": [
+        "docs/ai/work-items/bilingual-wave1-masters-phase1/SCOPE.md",
+        "docs/ai/work-items/bilingual-wave1-masters-phase2/SCOPE.md"
+      ],
+      "reason": "paths resolved nowhere; digests unchanged because they already matched the sibling work items' SCOPE.md exactly (content untouched)"
+    }
+  ]
+}

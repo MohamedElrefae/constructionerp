@@ -1,0 +1,134 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "hash",
+  "creation": "2026-06-21 00:00:00",
+  "doctype": "DocType",
+  "editable_grid": 0,
+  "engine": "InnoDB",
+  "field_order": [
+    "user",
+    "report_name",
+    "access_granted",
+    "denial_reason",
+    "scope_section",
+    "company",
+    "cost_center",
+    "project",
+    "department",
+    "request_section",
+    "request_path",
+    "timestamp"
+  ],
+  "fields": [
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "User",
+      "options": "User",
+      "reqd": 1
+    },
+    {
+      "fieldname": "report_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Report Name",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "access_granted",
+      "fieldtype": "Check",
+      "in_standard_filter": 1,
+      "label": "Access Granted"
+    },
+    {
+      "fieldname": "denial_reason",
+      "fieldtype": "Small Text",
+      "label": "Denial Reason"
+    },
+    {
+      "fieldname": "scope_section",
+      "fieldtype": "Section Break",
+      "label": "Scope Context at Time of Access"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Company"
+    },
+    {
+      "fieldname": "cost_center",
+      "fieldtype": "Data",
+      "label": "Cost Center"
+    },
+    {
+      "fieldname": "project",
+      "fieldtype": "Data",
+      "label": "Project"
+    },
+    {
+      "fieldname": "department",
+      "fieldtype": "Data",
+      "label": "Department"
+    },
+    {
+      "fieldname": "request_section",
+      "fieldtype": "Section Break",
+      "label": "Request Metadata"
+    },
+    {
+      "fieldname": "request_path",
+      "fieldtype": "Data",
+      "label": "Request Path"
+    },
+    {
+      "fieldname": "timestamp",
+      "fieldtype": "Datetime",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Timestamp"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-06-21 00:00:00",
+  "modified_by": "Administrator",
+  "module": "Construction",
+  "name": "Scope Report Access Log",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 0,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 0
+    },
+    {
+      "create": 0,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Auditor",
+      "share": 0,
+      "write": 0
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

@@ -1,0 +1,24 @@
+orchestrate_cutover.py phase=cutover dry_run=True
+
+===== PHASE cutover =====
+[PASS] backup-verify[localhost]: 20261006_040258-v16_localhost-database.sql.gz size=71468821B age=44443s sha256=3d3b643ee343c1a9... gzip_ok=True restore_timing=8.63s dry_run=True
+[PASS] census[localhost]: 4/5 commercial doctypes countable (read-only)
+[PASS] backup-verify[v16.localhost]: 20261006_040258-v16_localhost-database.sql.gz size=71468821B age=44460s sha256=3d3b643ee343c1a9... gzip_ok=True restore_timing=8.62s dry_run=True
+[PASS] census[v16.localhost]: 4/5 commercial doctypes countable (read-only)
+[WARN] backup-verify[v16rehearsal.localhost]: no backup present (dry-run advisory)
+[PASS] census[v16rehearsal.localhost]: 4/5 commercial doctypes countable (read-only)
+[DRY_RUN] maintenance[localhost]: would set maintenance_mode=1 (original 0) in /home/mohamed/frappe-bench/sites/localhost/site_config.json
+[DRY_RUN] migrate-drill[localhost]: would run: bench --site localhost migrate --skip-search-index (idempotent patch classification, zero writes)
+[DRY_RUN] maintenance-restore[localhost]: would restore maintenance_mode=0
+[DRY_RUN] maintenance[v16.localhost]: would set maintenance_mode=1 (original 0) in /home/mohamed/frappe-bench/sites/v16.localhost/site_config.json
+[DRY_RUN] migrate-drill[v16.localhost]: would run: bench --site v16.localhost migrate --skip-search-index (idempotent patch classification, zero writes)
+[PASS] bilingual-migration-dry-run: rc=0
+[DRY_RUN] maintenance-restore[v16.localhost]: would restore maintenance_mode=0
+[DRY_RUN] maintenance[v16rehearsal.localhost]: would set maintenance_mode=1 (original 0) in /home/mohamed/frappe-bench/sites/v16rehearsal.localhost/site_config.json
+[DRY_RUN] migrate-drill[v16rehearsal.localhost]: would run: bench --site v16rehearsal.localhost migrate --skip-search-index (idempotent patch classification, zero writes)
+[DRY_RUN] maintenance-restore[v16rehearsal.localhost]: would restore maintenance_mode=0
+[PASS] zero-data-loss[localhost]: drift=none
+[PASS] zero-data-loss[v16.localhost]: drift=none
+[PASS] zero-data-loss[v16rehearsal.localhost]: drift=none
+
+SUMMARY: 19 steps, 0 failures

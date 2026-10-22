@@ -1,0 +1,5 @@
+CANDIDATE_MEASUREMENT: {"arabic_registry_only": 0.722}
+P95_MS: {"baseline": 1.216, "candidate": 0.878}
+TIER: {"candidate_p95_ms": 0.878, "ceiling_pass": true, "ratio": 0.722, "ratio_pass": true, "tier": "2A", "tier_ratio_ceiling": 1.15, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict_if_adopted": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS: {"equal": false, "baseline_subset_of_candidate": true, "baseline_count": 0, "candidate_count": 12}
+CLEANUP_LEFTOVER: 0

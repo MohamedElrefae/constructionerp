@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-09-02T10:15:00+02:00",
+  "site": "v16.localhost",
+  "authoritative_versions": {
+    "frappe": {
+      "source": "apps/frappe/frappe/__init__.py",
+      "version": "16.18.1",
+      "commit": "81aadb9ba1bc07abccd8f720af80f4f2fb4a68a0",
+      "commit_message": "chore(release): Bumped to Version 16.18.1",
+      "branch": "develop",
+      "bench_version_label": "15.x.x-develop (bench version parses branch, not __version__)",
+      "explanation": "bench version --format plain reports 'frappe 15.x.x-develop' because it derives from git branch name, not from frappe/__init__.py __version__. The installed code is 16.18.1 as proven by __version__ and git log 81aadb9."
+    },
+    "erpnext": {
+      "source": "apps/erpnext/erpnext/__init__.py",
+      "version": "16.18.3",
+      "commit": "2807c9f08fff3f161c0a2e10745a26aa6331ffd5",
+      "branch": "version-16"
+    },
+    "construction": {
+      "version": "0.0.5",
+      "commit": "a21b587",
+      "branch": "develop",
+      "remote": "origin/develop",
+      "commits_ahead": 4,
+      "commits": ["95a9bfd", "9011767", "ba24918", "a21b587"]
+    }
+  },
+  "verification_commands": [
+    "cat apps/frappe/frappe/__init__.py | grep __version__",
+    "git -C apps/frappe log --oneline -1",
+    "git -C apps/frappe rev-parse HEAD",
+    "bench version --format plain"
+  ],
+  "notes": "B-11 requires one authoritative version/commit pair. Use frappe/__init__.py and git rev-parse HEAD as source of truth, not bench version label."
+}

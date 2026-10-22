@@ -1,0 +1,130 @@
+== gates (Stage 7 report expansion) ==
+2026-10-05 20:40:20 UTC
+--- scripts/lint_scope_metadata.py ---
+PASS: no scope-dimension field has in_standard_filter=1 (19 DocTypes checked).
+exit=0
+--- scripts/ai_context_check.py ---
+
+------------------------------------------------------------
+SCP-C1. Core Memory Files
+------------------------------------------------------------
+  PASS: AGENTS.md exists (13273 bytes)
+  PASS: SESSION_MEMORY.md exists (110335 bytes)
+
+------------------------------------------------------------
+SCP-C2. Git State
+------------------------------------------------------------
+  PASS: Branch: develop
+  PASS: Latest commit: 234c024
+  PASS: Total commits: 502
+
+------------------------------------------------------------
+SCP-C3. BOQ Item Schema
+------------------------------------------------------------
+  PASS: 'cost_item' field exists
+  PASS: 'structure' field exists
+  PASS: 'item_code' correctly ABSENT
+  PASS: 'item_name' correctly ABSENT
+  PASS: Total fields: 48
+
+------------------------------------------------------------
+SCP-C4. BOQ Structure NestedSet
+------------------------------------------------------------
+  PASS: 'is_group' field exists
+  PASS: 'lft' field exists
+  PASS: 'old_parent' field exists
+  PASS: 'rgt' field exists
+  PASS: 'wbs_code' field exists
+
+------------------------------------------------------------
+SCP-C5. CSS Registration
+------------------------------------------------------------
+  PASS: app_include_css has 6 CSS file registrations
+  PASS: 'modern_theme.css' registered
+  PASS: 'scope_context.css' registered
+  PASS: 'vite_extensions.css' registered
+  PASS: 'vite_form_override.css' registered
+  PASS: 'vite_list_override.css' registered
+  PASS: 'vfc_sections.css' registered
+
+------------------------------------------------------------
+SCP-C6. Theme API Endpoints
+------------------------------------------------------------
+  PASS: Whitelisted endpoints: 17
+  PASS: Total functions: 33
+
+------------------------------------------------------------
+SCP-C7. Migration Patches
+------------------------------------------------------------
+  PASS: All expected migration paths exist
+
+------------------------------------------------------------
+SCP-C8. DocType Registry
+------------------------------------------------------------
+  PASS: All 22 expected DocTypes present
+
+------------------------------------------------------------
+SCP-C8B. Schema Facts Drift
+------------------------------------------------------------
+  PASS: docs/ai/SCHEMA_FACTS.md matches live DocType JSON
+
+------------------------------------------------------------
+SCP-C9. CostItem and PlantResource
+------------------------------------------------------------
+  PASS: costitem: 'cost_item_code' field exists
+  PASS: plantresource: 'resource_code' field exists
+
+------------------------------------------------------------
+SCP-C10. Architecture Decisions
+------------------------------------------------------------
+  PASS: ADR.md contains 8 ADRs
+
+Checks passed: 11
+Checks failed: 0
+
+ALL CHECKS PASSED
+exit=0
+--- scripts/lint_translation_writes.py ---
+Translation write lint PASSED
+exit=0
+--- scripts/schema_drift_checker.py ---
+Schema facts match live DocType JSON.
+Schema-owning DocTypes: 21
+Override-only folders: 1
+exit=0
+--- py_compile ---
+exit=0
+--- bash -n matrix script ---
+exit=0
+--- node --check viewer js ---
+exit=0
+--- ADR reconciler ---
+ADR: docs/ai/work-items/bilingual-performance-sla.md
+§4 rows parsed: 19
+artefacts indexed: 101
+
+  OK       Account: 1.322/1.482/1.121 == 1.322/1.482/1.1210
+  OK       Asset Category: 0.451/0.626/1.388 == 0.451/0.626/1.3880
+  OK       BOQ Header: 0.851/0.644/0.7568 == 0.851/0.644/0.7568
+  OK       BOQ Structure: 0.985/0.757/0.7685 == 0.985/0.757/0.7685
+  OK       Cost Center: 0.558/0.811/1.4534 == 0.558/0.811/1.4534
+  OK       Customer: 0.487/0.686/1.4086 == 0.487/0.686/1.4086
+  OK       Customer Group: 0.444/0.617/1.3896 == 0.444/0.617/1.3896
+  OK       Department: 0.654/0.816/1.2477 == 0.654/0.816/1.2477
+  OK       Employee: 0.569/0.808/1.42 == 0.569/0.808/1.4200
+  OK       Item: 0.767/1.114/1.4524 == 0.767/1.114/1.4524
+  OK       Item Group: 0.44/0.645/1.4659 == 0.44/0.645/1.4659
+  OK       Payment Terms Template: 0.472/0.655/1.3877 == 0.472/0.655/1.3877
+  OK       Project: 0.544/0.73/1.3419 == 0.544/0.73/1.3419
+  OK       Supplier: 0.48/0.675/1.4063 == 0.48/0.675/1.4063
+  OK       Supplier Group: 0.438/0.62/1.4155 == 0.438/0.62/1.4155
+  OK       Task: 0.466/0.654/1.4034 == 0.466/0.654/1.4034
+  OK       Territory: 0.445/0.622/1.3978 == 0.445/0.622/1.3978
+  OK       UOM: 0.96/1.416/1.475 == 0.96/1.416/1.4750
+  OK       Warehouse: 0.595/0.779/1.3092 == 0.595/0.779/1.3092
+
+reconciled: 19/19
+mismatched: 0
+unsourced : 0
+RESULT: PASS - every §4 row matches the evidence artefact it cites
+exit=0

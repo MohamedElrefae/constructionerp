@@ -1,0 +1,94 @@
+{
+  "candidate": "c9e6803c5ac63073aeb0b166c779844d29051d8d",
+  "status": "Design draft only; proposed contracts are not implemented APIs or observed runtime results",
+  "source_file_sha256": {
+    "construction/api/cost_database_api.py": "4e89e81cf8580318e695b0ef792bc73ef8a4f0b1c8c3c66b4620c30077aa7f98",
+    "construction/services/cost_database_service.py": "c25b8a18268a8d52c045926d250d16bfcf7e04f260787985d112dfbfe6d01235",
+    "construction/services/boq_report_service.py": "8ecad22997bc16c54c971b1d11393049a51b1640cb2564457b4db5ac12adca43",
+    "construction/services/boq_rollup_audit.py": "cdf556840b5f3ca562a69975eec21c7cb290e2c8d418cf82c7f28d3ead85a8be",
+    "construction/services/boq_import_service.py": "4d3bb3a80e6e56fce2e5ee01d05d0619d1ae52ce9b1261c58413b7accffe08e9",
+    "construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.py": "835df6388daae5a919e65664e03c5eb7c3143d5b981c3c1c3fdaf7dfdc4b91cf",
+    "construction/construction/doctype/boq_cost_analysis/boq_cost_analysis.json": "a39b7efcea3396b183cb19bb3ab0f559fa132faca313a086346d2cef308a8bce",
+    "construction/construction/doctype/resource_price_history/resource_price_history.json": "55361c5b39a83667178ebf5aafe27b956f8d4853433280d05d65c4329ee982da",
+    "construction/construction/doctype/construction_settings/construction_settings.json": "c589bfe64683ea0a52b85b6bd90b2ac584c0aaf0e1e7023c93264887934ba159",
+    "construction/api/boq_api.py": "76d61daacd401b85328d0d1bbe1cad631faa1eea2ce7877cebf9110d7f73fc43",
+    "construction/overrides/boq_permissions.py": "321c9046b669559a9a945d34a03632e77b61438a750e87c850c67e5ce649bbdf",
+    "construction/services/revised_boq_queries.py": "700d71c87c254a6e4210f45c3b7f481f78e0388b4bf13c30e96e7f438e1ff1a3"
+  },
+  "F18_current_endpoints": [
+    {
+      "name": "construction.api.cost_database_api.download_cost_database_template",
+      "methods": "framework default",
+      "input": "mode blank/sample",
+      "output": "binary XLSX response",
+      "mutates_business_records": false
+    },
+    {
+      "name": "construction.api.cost_database_api.import_cost_database",
+      "methods": [
+        "POST"
+      ],
+      "input": "multipart file/company/dry_run/auto_submit/region/price_date",
+      "default_dry_run": false,
+      "output": [
+        "success",
+        "dry_run",
+        "records_created",
+        "records_updated",
+        "records_skipped",
+        "errors",
+        "warnings"
+      ]
+    },
+    {
+      "name": "construction.api.cost_database_api.reprice_cost_analyses",
+      "methods": [
+        "POST"
+      ],
+      "input": "company/boq_header/boq_item/item_code/resource_type/cost_stream/region/as_of_date/dry_run",
+      "default_dry_run": false,
+      "atomic_service_default": true,
+      "output": [
+        "success",
+        "analyses_touched",
+        "details_updated",
+        "details_unchanged",
+        "errors"
+      ]
+    }
+  ],
+  "F19_current_services": [
+    "get_boq_cost_analysis_summary",
+    "get_boq_item_cost_vs_contract",
+    "get_resource_requirement_summary",
+    "get_resource_price_history",
+    "get_boq_items_missing_analysis",
+    "audit_boq_rollups"
+  ],
+  "observed_source_gaps": {
+    "F18-SC01": "Import/reprice mutation defaults are false for dry_run; UI must explicitly request preview and bind a confirmation to its file/filters/actor/candidate/record state. No existing preview token is claimed.",
+    "F18-SC02": "bulk_reprice_analyses uses limit_page_length=0 and aggregate-only preview response; UI needs server-side caps and exact affected-row/provenance evidence.",
+    "F18-SC03": "_build_bulk_rate_lookup does not select currency/exchange_rate/UOM from history or fallback Item Price; compatibility must be qualified before repricing rates.",
+    "F18-SC04": "resource_type no-match branch omits success; import early failure/preview result shapes differ. Adapter normalization must not invent committed IDs/counts.",
+    "F19-SC01": "Raw SQL/QB report services have no direct Header/document permission checks; new boundary must enforce parent/row scope before query. Internal non-whitelisted source presence is not an active data-leak finding.",
+    "F19-SC02": "Cost analysis summary filters docstatus1 rather than Approved, so includes Superseded. UI must distinguish current and history.",
+    "F19-SC03": "Price history helper lacks company/project scope filters and pagination; do not fetch global rows then hide them in client.",
+    "F19-SC04": "Audit service requires literal Administrator; System Manager cannot be silently substituted or impersonated.",
+    "F19-SC05": "margin_pct is cost markup and returns0 for zero cost; expose zero-basis percentage as undefined rather than a misleading0% business claim."
+  },
+  "proposed_limits": {
+    "report_page_default": 50,
+    "report_page_max": 200,
+    "report_export_max": 2000,
+    "reprice_analysis_max": 200,
+    "reprice_detail_max": 2000,
+    "preview_ttl_minutes": 10
+  },
+  "limits_status": "Initial bounded engineering proposals; confirm against F14/F37 before implementation; not current source limits or promised capacity",
+  "build_manifest_follow_up": {
+    "manifest": "construction_foundation_build_input_manifest_2026-10-12.json",
+    "verification": "1225 app member hashes independently match compliant archives and worktree; 519 tracked/706 untracked using git -z",
+    "provenance_limit": "Current controller site-storage writer is source-confirmed; exact historical producer of package outputs is not established solely by absence of current writer. Same-worktree package-assembly repeatability is distinct from clean tracked-source generation.",
+    "no_artifact_approval_inferred": true
+  }
+}

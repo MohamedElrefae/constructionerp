@@ -1,0 +1,48 @@
+{
+  "artefacts": {
+    "CANARY-DISPOSITION.md": "cc6ef1c6f4434c76f4576b51211c274b722a1b1f2d30bc4aee3c615cd8c88465",
+    "SCOPE.md": "1da26c1501f86966545495319230f4524b9aeab3390b9d4c650135be4a62b05a",
+    "department-p95-measurement.json": "3cc16c6497897371923f6e079ad5cbf4f03a6229425e47fc63889d36bd261d0a",
+    "department-pilot-tests.log": "81e1cfe04d2c9cfca0b74fc7bf16bad3fdea90f99be9385fddc1a1b540354f23",
+    "scripts/measure_department_p95.py": "9427b623ee2fdae04f76010dc2a5e5cbd6a42f5fcd0f4a7343efe6e324b8af24"
+  },
+  "base_commit": "c1d278be009e60f356625bdfd60be250326c27ab",
+  "branch": "feature/bilingual-department-master",
+  "canary_disposition": {
+    "artifact_modified_by_this_work_item": false,
+    "document": "docs/ai/work-items/bilingual-department-master/evidence/CANARY-DISPOSITION.md",
+    "document_sha256": "cc6ef1c6f4434c76f4576b51211c274b722a1b1f2d30bc4aee3c615cd8c88465",
+    "latency_gate": "Department master MEASURED (1.25x, 0.816ms P95) and compliant with Two-Tier Bilingual Search SLA (<= 1.50ms universal ceiling; <= 1.50x Tier 2B sub-millisecond trade-off band)",
+    "status": "COMPLIANT_WITH_TWO_TIER_SLA"
+  },
+  "latency_measurement": {
+    "absolute_p95_ms": {
+      "Department": 0.816
+    },
+    "artefact": "docs/ai/work-items/bilingual-department-master/evidence/department-p95-measurement.json",
+    "disposition": "MEASURED and compliant with Two-Tier Bilingual Search SLA",
+    "fixture_prefix": "CT-DEPT-",
+    "fixtures_count": 12,
+    "harness": "docs/ai/work-items/bilingual-department-master/evidence/scripts/measure_department_p95.py",
+    "harness_sha256": "9427b623ee2fdae04f76010dc2a5e5cbd6a42f5fcd0f4a7343efe6e324b8af24",
+    "leftover_fixtures": 0,
+    "match_sets_equal": true,
+    "ratio": 1.2477,
+    "samples": 50,
+    "sha256": "3cc16c6497897371923f6e079ad5cbf4f03a6229425e47fc63889d36bd261d0a",
+    "warmup": 5
+  },
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "registry initially declared at schema_installed"
+  ],
+  "primary_invariant": {
+    "bilingual_service_py_diff_lines": 0,
+    "claim": "Department master required zero modifications to bilingual_service.py and search.py",
+    "enforced_by_test": "construction.tests.test_bilingual_department_pilot.test_zero_service_edits_guard",
+    "reference_commit": "c1d278be009e60f356625bdfd60be250326c27ab",
+    "search_py_diff_lines": 0
+  }
+}

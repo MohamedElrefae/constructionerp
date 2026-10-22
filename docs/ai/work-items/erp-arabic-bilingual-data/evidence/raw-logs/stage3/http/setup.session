@@ -1,0 +1,10 @@
+import frappe
+parent = frappe.get_value("Account", {"company": "Elrefae", "is_group": 1, "parent_account": ("is", "set")}, "name")
+existing = frappe.get_value("Account", {"company": "Elrefae", "account_number": ("like", "CT-HTTP-%")}, "name")
+if existing:
+    frappe.delete_doc("Account", existing, force=True, ignore_permissions=True)
+doc = frappe.get_doc({"doctype": "Account", "company": "Elrefae", "account_name": "CT HTTP Probe", "account_number": "CT-HTTP-1", "parent_account": parent, "is_group": 0})
+doc.insert(ignore_permissions=True)
+frappe.db.commit()
+print(json.dumps({"setup": "created", "account": doc.name, "account_number": doc.account_number, "utc": frappe.utils.now_datetime().strftime("%Y-%m-%dT%H:%M:%SZ")}))
+exit()

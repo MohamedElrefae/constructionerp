@@ -1,0 +1,83 @@
+{
+  "work_item": "bilingual-translation-catalog-sync",
+  "manifest_number": 34,
+  "branch": "develop",
+  "base_commit": "6c721b8",
+  "base_commit_note": "Briefing named 234c024; concurrent partner sessions A (transactional print formats, 3bd3d1e), B (financial reports expansion, da7c3c6) and D (production cutover runbook, 6c721b8) committed during this cycle, so the audited tree is 6c721b8.",
+  "generated_utc": "2026-10-05T21:53:18Z",
+  "primary_invariant": "Session C harmonises the system Translation catalog against the 47-term glossary. The effective rendered truth (get_all_translations('ar')) was 46/47 conformant with EXACTLY ONE divergence (source 'Add Child'): the released payload carried an owner-directed 2026-09-03 value (commit 4fede75, payload v1.1) that superseded the glossary v1.0 value one day after the glossary was last committed. The owner re-adjudicated: the glossary is the stale artefact and is harmonised TO the released payload. Exactly ONE app-data file was edited (egyptian_construction_glossary.json: term approved_ar + usage_notes + references + version 2.1; meta version 2.1, previous_checksum = prior glossary sha). ZERO Translation doctype writes; the released payload CSV and release_decisions.json are byte-identical; _compute_drift stays false. 24 inert catalog rows (3 divergent + 21 empty across 20 sources) and app-source competing-value producers (patches/v8_4, TreeView.jsx, _load_glossary schema-v1 dead endpoint, dated Stage-2 evidence) are REPORT-ONLY per owner decision. Privacy R4: no Arabic value in any committed artefact.",
+  "decisions_settled": {
+    "R1": "authority = effective rendered output; 46/47 match, 1 divergent (Add Child)",
+    "R2": "owner re-adjudication: glossary -> released payload; payload NOT reverted (reverting it would break scripts/check_localization_gates.py Stage-2 envelopes which pin CSV_SHA256 0a55f3c1 / DECISIONS_SHA256 bf7a5833)",
+    "R3": "governed cycle: audit -> proposal v2 (sha a23a7dce) -> independent AI-A2 rounds 1-3 (APPROVE) -> sha-bound owner approval -> zero-write dry-run -> apply -> post-sync verification",
+    "R4": "privacy: Arabic values only in sites/v16.localhost/private/translation-catalog-sync/; committed artefacts carry sha16 digests and counts only",
+    "R5": "briefing conflicts resolved: frappe.get_doc('Translation').save() is lint-forbidden and unused (0 writes); _load_glossary schema-v1 keys yield 0 terms and are unused",
+    "R6": "deliverables under this work item directory only, plus the single glossary data-file edit; no manifest re-pins",
+    "R7": "report-only: 24 inert rows, patches/v8_4 write path, TreeView.jsx hardcoded labels, dated Stage-2 evidence"
+  },
+  "test_results": {
+    "audit": "PASS - 22,761 ar rows; rendered 46/47 before, 0 forbidden violations, 0 context contradictions, 12/12 master labels present, 42/45 action buttons present",
+    "review": "AI-A2 round 1 REVISE (4 changes) -> round 2 REVISE (1 change: raw U+0640 sentinel) -> round 3 APPROVE",
+    "dry_run": "PASS - proposal sha matched, before-state bound, DB_WRITES_PERFORMED 0",
+    "apply": "PASS - 1 glossary file edit, after-sha exact, payload frozen, Translation digest identical, 0 Translation writes",
+    "post_import_verification": "PASS - rendered 47/47, drift false, loader installed, payload frozen, 0 Translation writes",
+    "regression_matrix": "21 modules / 273 tests, 21/21 OK, 0 failures (redis 11000/13000 started for the run, terminated after)",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check 11/11 PASS, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS"
+  },
+  "private_artefacts": {
+    "note": "site workspace - privacy R4; digests only, Arabic values never committed",
+    "proposal.json": "a23a7dceb6cf4b794af47155317be63267fbab46a7334618bf05dfbceec9b9a0",
+    "dry-run.json": "61e281cb762d96c6b0bc92687e78c884bae56d4b577739eac9984ab270c1e45f",
+    "apply.json": "e258274c7e8fe4b5c730b436c1bd47a8498e223ff2e1fe55ba69fc2fe9102a6b",
+    "post-sync-verification.json": "bede77c82977ce99d97f5f9824f96682a0b18b532be348d08d91d108f46e92b4"
+  },
+  "source_changes": {
+    "construction/data/glossary/egyptian_construction_glossary.json": {
+      "sha256_before": "aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4",
+      "sha256_after": "7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d"
+    },
+    "construction/data/translations/approved_ar_overrides.csv": {
+      "sha256_before": "0a55f3c120cf1ac381c0564407cdc7a9ea975782d68642c6a943807cdd70b421",
+      "sha256_after": "0a55f3c120cf1ac381c0564407cdc7a9ea975782d68642c6a943807cdd70b421",
+      "changed": false
+    },
+    "construction/data/translations/release_decisions.json": {
+      "changed": false
+    }
+  },
+  "site_migration": "none - no schema change, no patch, no fixture; zero Translation doctype writes. The only edit is the glossary app-data file. v16.localhost is a non-production test site; production mutation never authorized.",
+  "causal_order": "startup gates -> audit (S1) -> proposal v1 -> AI-A2 round 1 (REVISE) -> amendments (base-commit binding, master-label baseline discipline, app-source scan, U+0640 escape) -> proposal v2 sha a23a7dce -> AI-A2 rounds 2-3 (APPROVE) -> owner sha-bound approval -> dry-run (0 writes) -> apply (glossary patch, after-sha asserted before write) -> post-sync verification (47/47, drift false) -> matrix 21/21 + reconciler 19/19 + 6 lints -> teardown redis 11000/13000 -> SHA-256 digests -> MANIFEST.json",
+  "out_of_scope_respected": [
+    "no apps/frappe or apps/erpnext modification",
+    "no Translation doctype writes",
+    "no edit to approved_ar_overrides.csv or release_decisions.json",
+    "no edit to patches/v8_4, TreeView.jsx, _load_glossary or dated Stage-2 evidence",
+    "no remote push, no public CI; working tree left unstaged",
+    "foreign work items (A/B/D) untouched"
+  ],
+  "artefacts": {
+    "docs/ai/work-items/bilingual-translation-catalog-sync/SCOPE.md": "1545d14b24fcd7a7c15760832ffc3d451f55fd3890c9e9b541a56ff2b7515982",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/audit-translation-catalog.log": "40e6c6582c0fd7e670af820a6101dbbf5a24eabcba525e1e2333bdac5f67b9e1",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/review-ai-a2.md": "4e82d25a3b91110497c71b5b63c33fcac5f38ab3a3a991801e3536f7a8f0967f",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/owner-approval.md": "420b65a7ada515cc67139cef108ffb68186f592ec7a6a036fed546784d4d2075",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/dry-run.log": "9605e3e89d0b6083ff013dd67f9cacd593eb8ccf6720e2c8ddec5c8f9462bb81",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/apply.log": "37a1eb6fb1cb584eb214a3116d2a67d3fad7a87954880063c8528b42889f6fb3",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/post-sync-verification.log": "1bb5644aafa2bc4b30dde4882623f790246a72e16387e3612610a45e2ef2579a",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/regression-matrix.log": "29f1eaad0ccb5069d6f7cb71280b544cfdce6f6e1cbdb9fe4ce6838218635959",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/reconciliation.log": "b7abbdb7eeda68499a3cfd41ae25c01abf5739fd577220e09172ec6effa83dcd",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/gates.log": "316290bafdbdbbb673986f7ba7654a111b0477904a80b1beee83275181e5d79c",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/scripts/audit_translation_catalog.py": "d0eb642f5000dc225c5ca889957bdbbb6d469fdb44f27757cdc8056d551030e5",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/scripts/dry_run_translation_sync.py": "1493ca0c2264514cc767975e8b56cd756279d625febf60e45fe20b836a245667",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/scripts/apply_translation_sync.py": "401b3f28535c616e6bb40d022e3ee62b410e84aaf226216b5d63579b6ae8a9c4",
+    "docs/ai/work-items/bilingual-translation-catalog-sync/evidence/scripts/verify_translation_sync.py": "e7d5e05a33639163da293781eb20cefec9af2a6fba985b34ed20bc349fad3da8"
+  },
+  "head_at_commit": "see git log at commit time (unsigned; Lead Verifier commits)",
+  "verification": {
+    "rendered_match": 47,
+    "rendered_divergent": 0,
+    "has_drift": false,
+    "translation_db_writes": 0,
+    "translation_digest": "20e391c6041b4be7d7ed81cc7445916276b57c891804a8d00d76559b7b97d6af"
+  }
+}

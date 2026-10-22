@@ -1,0 +1,19 @@
+CUTOVER ORCHESTRATOR site=v16.localhost phase=preflight utc=2026-10-05T22:32:51Z
+Invariants: no database write; production_mutation_authorized is never set by this program; fail-closed on every gate.
+
+[PASS] P1 site: site present; db_name configured=yes; production_mutation_authorized=None (gate closed)
+[PASS] P2 backup: 20261006_021223-v16_localhost-database.sql.gz (68.0 MiB, 110 min old, gzip stream verified end-to-end)
+[PASS] P3 disk: 2.45 GiB free
+[PASS] P4 redis: queue:11000 and cache:13000 answer PING
+[PASS] P5 schema: connection OK (site db name redacted); arabic+norm columns and utf8mb4 on all 15 cutover tables; Account rows=2102
+[PASS] P6 maintenance: maintenance_mode=0 (read-only report)
+
+======================================================================
+CUTOVER ORCHESTRATOR SUMMARY
+  [PASS] P1 site: site present; db_name configured=yes; production_mutation_authorized=None (gate closed)
+  [PASS] P2 backup: 20261006_021223-v16_localhost-database.sql.gz (68.0 MiB, 110 min old, gzip stream verified end-to-end)
+  [PASS] P3 disk: 2.45 GiB free
+  [PASS] P4 redis: queue:11000 and cache:13000 answer PING
+  [PASS] P5 schema: connection OK (site db name redacted); arabic+norm columns and utf8mb4 on all 15 cutover tables; Account rows=2102
+  [PASS] P6 maintenance: maintenance_mode=0 (read-only report)
+RESULT: PASS

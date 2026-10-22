@@ -1,0 +1,194 @@
+{
+ "batch": "stage6-w60b-batch6",
+ "started_utc": "2026-09-22T20:53:45Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 12251
+  },
+  {
+   "name": "translate:2 years ago",
+   "ok": true,
+   "detail": {
+    "expected": "منذ عامين",
+    "got": "منذ عامين"
+   }
+  },
+  {
+   "name": "translate:3 minutes ago",
+   "ok": true,
+   "detail": {
+    "expected": "منذ 3 دقائق",
+    "got": "منذ 3 دقائق"
+   }
+  },
+  {
+   "name": "translate:5 days ago",
+   "ok": true,
+   "detail": {
+    "expected": "منذ 5 أيام",
+    "got": "منذ 5 أيام"
+   }
+  },
+  {
+   "name": "translate:Added",
+   "ok": true,
+   "detail": {
+    "expected": "تمت الإضافة",
+    "got": "تمت الإضافة"
+   }
+  },
+  {
+   "name": "translate:API Key cannot be regenerated",
+   "ok": true,
+   "detail": {
+    "expected": "لا يمكن إعادة إنشاء مفتاح API",
+    "got": "لا يمكن إعادة إنشاء مفتاح API"
+   }
+  },
+  {
+   "name": "translate:About {0} minutes remaining",
+   "ok": true,
+   "detail": {
+    "expected": "بقيت حوالي {0} دقائق",
+    "got": "بقيت حوالي {0} دقائق"
+   }
+  },
+  {
+   "name": "translate:App not found for module: {0}",
+   "ok": true,
+   "detail": {
+    "expected": "التطبيق غير موجود للوحدة: {0}",
+    "got": "التطبيق غير موجود للوحدة: {0}"
+   }
+  },
+  {
+   "name": "translate:Error in Header/Footer Script",
+   "ok": true,
+   "detail": {
+    "expected": "خطأ في سكربت الترويسة/التذييل",
+    "got": "خطأ في سكربت الترويسة/التذييل"
+   }
+  },
+  {
+   "name": "translate:Footer HTML set from attachment {0}",
+   "ok": true,
+   "detail": {
+    "expected": "تم تعيين HTML التذييل من المرفق {0}",
+    "got": "تم تعيين HTML التذييل من المرفق {0}"
+   }
+  },
+  {
+   "name": "translate:API Endpoint Args should be valid JSON",
+   "ok": true,
+   "detail": {
+    "expected": "يجب أن تكون وسيطات نقطة نهاية API قيمة JSON صالحة",
+    "got": "يجب أن تكون وسيطات نقطة نهاية API قيمة JSON صالحة"
+   }
+  },
+  {
+   "name": "translate:Adds a custom client script to a DocType",
+   "ok": true,
+   "detail": {
+    "expected": "يضيف سكربت عميل مخصصًا إلى نوع مستند",
+    "got": "يضيف سكربت عميل مخصصًا إلى نوع مستند"
+   }
+  },
+  {
+   "name": "translate:City",
+   "ok": true,
+   "detail": {
+    "expected": "المدينة",
+    "got": "المدينة"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "12/12"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "التطبيق غير موجود للوحدة: Widgets",
+    "got": "التطبيق غير موجود للوحدة: Widgets"
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "2 years ago": "منذ عامين",
+    "3 minutes ago": "منذ 3 دقائق",
+    "5 days ago": "منذ 5 أيام",
+    "Added": "تمت الإضافة"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-22T20:53:56Z",
+ "summary": {
+  "pass": 21,
+  "fail": 0
+ }
+}

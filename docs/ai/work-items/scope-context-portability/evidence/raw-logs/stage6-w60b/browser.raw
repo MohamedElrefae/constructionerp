@@ -1,0 +1,20 @@
+PASS boot-lang-ar: ar
+PASS boot-messages-ge-1000: 10984
+PASS translate:Ledger: {'expected': 'دفتر الأستاذ', 'got': 'دفتر الأستاذ'}
+PASS translate:On Payment Failed: {'expected': 'عند فشل الدفع', 'got': 'عند فشل الدفع'}
+PASS translate:On Payment Paid: {'expected': 'عند الدفع', 'got': 'عند الدفع'}
+PASS translate:Posting Timestamp: {'expected': 'طابع زمني للترحيل', 'got': 'طابع زمني للترحيل'}
+PASS translate:Select Currency: {'expected': 'تحديد العملة', 'got': 'تحديد العملة'}
+PASS translate:Default display currency: {'expected': 'عملة العرض الافتراضية', 'got': 'عملة العرض الافتراضية'}
+PASS translate:On Payment Authorization: {'expected': 'عند تفويض الدفع', 'got': 'عند تفويض الدفع'}
+PASS translate:On Payment Charge Processed: {'expected': 'عند معالجة الرسوم', 'got': 'عند معالجة الرسوم'}
+PASS translate:On Payment Mandate Acquisition Processed: {'expected': 'عند معالجة اكتساب التفويض', 'got': 'عند معالجة اكتساب التفويض'}
+PASS translate:On Payment Mandate Charge Processed: {'expected': 'عند معالجة رسوم التفويض', 'got': 'عند معالجة رسوم التفويض'}
+PASS all-probe-translations: 10/10
+PASS translate-placeholder: {'expected': 'لا توجد حقول عملة في Currency', 'got': 'لا توجد حقول عملة في Currency'}
+PASS boot-messages-lookup: {'Ledger': 'دفتر الأستاذ', 'On Payment Failed': 'عند فشل الدفع', 'On Payment Paid': 'عند الدفع', 'Posting Timestamp': 'طابع زمني للترحيل'}
+PASS rendered-dom-arabic-words: {'count': 13, 'sample': ['الأدوات', 'الأصول', 'الباطن', 'البيع', 'التصنيع', 'الجودة', 'المحاسبة', 'المخزون', 'المشاريع', 'المشتريات', 'بحث', 'مقاولات', 'منظمة']}
+PASS rendered-workspace-modules: ['الأدوات', 'المحاسبة', 'المشتريات', 'المشاريع', 'المخزون', 'البيع']
+PASS sidebar-arabic-items: ['بحث                                       Ctrl+K', 'إشعار', 'سجل الطريق', 'إعدادات الإشعارات', 'قائمة المهام', 'التقارير', 'قائمة المهام', 'سطح المكتب']
+PASS desk-title-captured: Desktop
+SUMMARY {'pass': 19, 'fail': 0}

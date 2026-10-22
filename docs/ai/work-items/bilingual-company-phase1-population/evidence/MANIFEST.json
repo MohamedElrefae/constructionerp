@@ -1,0 +1,61 @@
+{
+  "work_item": "bilingual-company-phase1-population",
+  "branch": "develop",
+  "base_commit": "5d96f12",
+  "primary_invariant": "D5 triad (bilingual_service.py, searchable_dropdown/api/search.py) and bilingual_registry.json byte-identical to base 5d96f12 (call-only, never edited); zero app-file changes this cycle (no fixture, patch, hook, test, JS, registry or ?v= edits - the diff is this work-item directory only); exactly the 1 owner-approved Phase-1 row (Company Elrefae) written on site v16.localhost via standard doc.save() through the registered validate hooks with server-derived _norm, with queue redis 11000 up per F-5H-2 (owner-approval.md); frozen fields name/company_name/abbr/default_currency/country/parent_company/is_group/chart_of_accounts verified unchanged, disclosed tabCurrency.modified bump (F-5H-6); the 20 excluded test companies, all other doctype data, and every prior bilingual surface (items 8, customers 1, suppliers 0, cost centers 3, warehouses 6, projects 5, accounts 81, groups 6/5/8/4, Department 14/276, UOM 15 Arabic / 253 enabled, uom.json sha unchanged) untouched; no Translation doctype writes; private values under sites/v16.localhost/private/company-phase1-population/ (privacy R4 - Arabic values never enter committed files this cycle); production mutation never authorized",
+  "decisions_settled": {
+    "R1": "in-scope = the active owner company only; export derives classification from live data and asserts against a frozen literal ['Elrefae']; totals frozen at 21 / noise 20; run result PASS (PHASE1_FROZEN_MATCH yes, PRE_STATE_ARABIC 0)",
+    "R2": "D4/D5 cycle with owner approval as hard gate: export -> probes P1-P3 -> proposal v1 -> fresh non-author round-1 review (REVISE, 3 required changes + 6 notes) -> amendments applied -> proposal v2 sha-bound approval (primary display form, 1/20 phasing, queue-redis condition) -> dry-run -> apply -> verification",
+    "R3": "standard doc.save() through enforce_bilingual_arabic_policy + narrative sanitizer hooks; queue redis 11000 required during apply (F-5H-2, P1 empirical + background_jobs.py:608 source + P3 mechanism capture); single attempt, no site-side amendment needed",
+    "R4": "privacy: proposal/proposal-v1/dry-run/apply values private under sites/v16.localhost/private/company-phase1-population/; committed evidence carries counts, classifications, verdicts, sha16 hashes and digests only - export script matches precedent by frozen sha16 (no Arabic literals), review record redacted, zero Arabic-value lines in committed logs",
+    "R5": "completeness = exactly 1 site row with company_name_ar (0 missing / 0 extra), norm consistency 1/1, identity + frozen attributes unchanged 1/1, exclusions 20 intact, total 21, usage surface 5 scope-selector rows resolve the Arabic company name",
+    "R6": "new files under this work-item directory only -> zero shared-file edits -> zero manifest re-pins (Company pinned by no prior manifest); glossary untouched (47 terms, 0 governing company-name terms)",
+    "R7": "no display/config/registry/JS changes; company name/abbr never altered (rename cascades abbr - never authorized); no fixture JSON exists for Company; alternates remain documented for a future owner-requested cycle only"
+  },
+  "test_results": {
+    "regression_matrix": "21 modules / 264 tests, all OK (gate note G1: attempt 1 with cache redis 13000 down failed test_bilingual_account_pilot; 11000+13000 started -> full PASS -> torn down)",
+    "adr_reconciler": "19/19 PASS",
+    "lints": "lint_scope_metadata PASS, ai_context_check PASS, lint_translation_writes PASS, schema_drift_checker PASS, py_compile PASS, bash -n PASS (gates.log)",
+    "inventory_export": "PASS (21 rows classified, PHASE1_FROZEN_MATCH yes for the 1-row allowlist, PRE_STATE_ARABIC 0, excluded 20, usage + brand-root sha16 corroboration + F-5H-1..6 printed)",
+    "probes": "P1 queue-down ConnectionError (no write), P2 queue-up SAVE_OK rolled back, P3 same-value re-save mechanism capture (0 new RQ keys) rolled back - 0 residue",
+    "review": "fresh non-author REVISE (3 required changes: precedent framing, owner decision marker, R4 sha16 scrub) + 6 NOTEs, all applied -> v2",
+    "dry_run": "PASS (1/1 validated, PLAIN save planned, approved v2 sha matched, 0 writes)",
+    "apply": "PASS (1/1 written, 0 skipped, 0 failed, only company_name_ar + _norm changed, transaction committed, queue gate green)",
+    "post_import_verification": "PASS (populated=1 norm_consistent=1 identity_unchanged=1 frozen_unchanged=1, site Arabic total exactly 1, exclusions 20 intact, usage surface yes, frozen prior surfaces incl. Department 14/276 + 5F UOM + uom.json sha unchanged, get_root_of patch restored)"
+  },
+  "private_artefacts": {
+    "note": "site master data - privacy R4; digests only, values never committed",
+    "proposal.json": "b5fcc02a6854ebb27b71082b71c1b3f9d4ac43f737b013809697c2a23e79478a (owner-approved, version 2, 1 row)",
+    "proposal-v1.json": "e707a850851c472459c3b7cb6dbf60eaf5892ee4a80d9ac8ff0eab606b551f23 (round-1 input, archived)",
+    "dry-run.json": "747cf6b9e9a8aadde90965e0b1949b159b9f68c0ce357e2d5d72fa4e823d20f7 (rollback: before-value empty, frozen-field snapshot)",
+    "apply.json": "9f04a1a6cf382b5816f6f406e5740709996d56858439a41283f380875fba7f8e"
+  },
+  "site_migration": "none - no patch, no schema change; site data only: 1 bilingual Company row (company_name_ar + server-derived _norm) populated on v16.localhost, a non-production test site, plus the disclosed tabCurrency.modified bump on EGP (F-5H-6)",
+  "causal_order": "export/inventory -> probes P1-P2 -> proposal v1 -> fresh non-author review (REVISE, 3 changes + 6 notes) -> amendments (R4 sha16 scrub + rationale + decision marker + F-5H-6) -> v2 sha-bound owner approval -> dry-run (0 writes) -> apply PASS (queue up, 1/1) -> probe P3 mechanism capture -> post-import verification -> matrix + reconciler + lints (G1 redis note) -> capture logs (2>&1) -> git add -f the .log -> SHA-256 digests -> MANIFEST.json -> commit",
+  "amendments": [],
+  "out_of_scope_respected": [
+    "no orchestrator/ modification",
+    "no apps/frappe or apps/erpnext modification",
+    "all foreign work item evidence untouched",
+    "20 test companies not populated",
+    "glossary and registry untouched",
+    "no rename/abbr action"
+  ],
+  "artefacts": {
+    "docs/ai/work-items/bilingual-company-phase1-population/SCOPE.md": "728f438caef2dd07abb52e601dcb2d1695502fa7892ef2a581d514ac294cd402",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/apply.log": "308e7f7d22a60b47fd027e84fff69c0dea424a45c687e2bd65e34e3720b72d82",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/dry-run.log": "3001eaba77c8dd879ac02ed771211a381234b4ea1070fcb9875e9b20a3821335",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/gates.log": "ed9cd3ed9977b491e020b146b64b2a2ddbab1d25bf647901d0e68e04c0c9d4ef",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/inventory-export.log": "11b6ba0bab81112842741b1e660f1b1ac7696241eecef81ca7f44d0b8c7e1099",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/owner-approval.md": "351f76d91590f1083532aca925c8abc9a9ed17f408c84b6d49faacbe2bf3c4c3",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/post-import-verification.log": "b4598771c9c6d021618152cb6b2e9e3df93b9151f692b46a9fb288984e659405",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/reconciliation.log": "c275c7ef647847a29183ba4ef2b0d67de786be14e9c9d2976017a962f653c16d",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/regression-matrix.log": "8327e0ee09097848817a18a7e7b42150a83925b66e08f9e7c8ad9a5295c1f011",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/review-ai-a2.md": "052b45cf9705a9e9fd8650d1365ae8a453fd03791eab2048d6d840688c3a621c",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/scripts/apply_company_phase1.py": "baf4b4ab6b13cb5c6d76fffce85a2a17328c346277af80d8244a8b9f7ccb8aa1",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/scripts/dry_run_company_phase1.py": "5e1a350883f5f1c2ab859233a3e9e2e7a9b84990e58c398d16c804469c84da53",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/scripts/export_company_inventory.py": "d4008bab1724047377b548f0ab852eaf25e8500b7ed64750eb80f8a0d402a098",
+    "docs/ai/work-items/bilingual-company-phase1-population/evidence/scripts/verify_company_phase1.py": "255e211e183b0ac1a5bb0e2728a165ace491794310eb606c473ae3b1820de955"
+  },
+  "head_at_commit": "bf1ad4f (docs-only confidentiality commit landed mid-tier; tier data base remains 5d96f12)"
+}

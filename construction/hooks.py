@@ -1,0 +1,528 @@
+from . import __version__ as app_version
+
+app_name = "construction"
+app_title = "Construction ERP"
+app_publisher = "Mohamed Elrefae"
+app_description = "Construction ERP App for BOQ, Cost Estimation, and Project Management"
+app_email = "melrefa3@hotmail.com"
+app_license = "MIT"
+
+# Hard install-time dependency: UOM fixtures, Item/Company custom fields,
+# ERPNext standard filters, and accounting dimensions all require ERPNext.
+# Declaring it makes install-app fail with a clear message instead of a
+# cryptic missing-table error (e.g. tabUOM) on frappe-only sites.
+required_apps = ["erpnext"]
+
+# Module registration (fixes DocType import resolution)
+modules = [
+    {
+        "module_name": "Construction",
+        "color": "#3498db",
+        "icon": "octicon octicon-file-directory",
+        "type": "module",
+        "label": "Construction",
+    }
+]
+
+# v16 Desktop icon registration
+# Displays the Construction app icon on the Desktop grid and in the Apps screen
+add_to_apps_screen = [
+    {
+        "name": "construction",
+        "logo": "/assets/construction/images/construction_logo.svg",
+        "title": "Construction",
+        "route": "/app/construction",
+    }
+]
+
+module_app = {
+    "construction": "construction",
+}
+
+# Module configuration - makes DocTypes visible in the Construction module menu
+# These will appear in the Construction module's left sidebar
+desk_links = {
+    "Construction": [
+        {
+            "type": "doctype",
+            "name": "Variation Order",
+            "label": "Variation Order",
+            "description": "Manage post-lock BOQ scope changes (Variation Orders)",
+        },
+        {
+            "type": "doctype",
+            "name": "Construction Theme",
+            "label": "Theme Configuration",
+            "description": "Manage construction themes and colors",
+        },
+        {
+            "type": "doctype",
+            "name": "Modern Theme Settings",
+            "label": "Theme Settings",
+            "description": "Configure site-wide theme settings",
+        },
+        {
+            "type": "doctype",
+            "name": "User Desk Theme",
+            "label": "User Desk Theme",
+            "description": "Manage per-user Desk theme and typography settings",
+        },
+        {
+            "type": "doctype",
+            "name": "User Scope Context",
+            "label": "User Scope Context",
+            "description": "Manage user company, cost center, project scope",
+        },
+        {
+            "type": "doctype",
+            "name": "Construction Settings",
+            "label": "Scope Context Settings",
+            "description": "Enable/disable scope context feature",
+        },
+        {
+            "type": "doctype",
+            "name": "BOQ Cost Analysis",
+            "label": "BOQ Cost Analysis",
+            "description": "Resource-based unit-rate analysis for BOQ Items",
+        },
+        {
+            "type": "doctype",
+            "name": "Resource Price History",
+            "label": "Resource Price History",
+            "description": "Auditable price ledger for construction resources",
+        },
+    ]
+}
+
+# Doctype-specific JavaScript files
+# Paths are relative to the app module folder (construction/construction/)
+doctype_js = {
+    "BOQ Header": "construction/construction/doctype/boq_header/boq_header.js",
+    "BOQ Item": "construction/construction/doctype/boq_item/boq_item.js",
+    "BOQ Item Stage": "construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+    "Construction Settings": "construction/construction/doctype/construction_settings/construction_settings.js",
+    "Scope Report Access Log": "construction/construction/doctype/scope_report_access_log/scope_report_access_log.js",
+    "User Desk Theme": "construction/construction/doctype/user_desk_theme/user_desk_theme.js",
+    "Variation Order": "construction/construction/doctype/variation_order/variation_order.js",
+    # Stage 3 bilingual pilot — path is resolved from the app module folder
+    # (frappe.get_app_path), so it must NOT repeat the leading "construction/".
+    "Account": "public/js/bilingual/account_form.js",
+}
+
+doctype_list_js = {
+    "Item": "construction/public/js/item_list.js",
+    "BOQ Item": "construction/construction/doctype/boq_item/boq_item_list.js",
+    "BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_list.js",
+    "Variation Order": "construction/construction/doctype/variation_order/variation_order_list.js",
+}
+
+doctype_tree_js = {
+    "BOQ Structure": "construction/construction/doctype/boq_structure/boq_structure_tree.js",
+    # Stage 3 bilingual pilot — loads AFTER the vendor account_tree.js and
+    # wraps frappe.treeview_settings["Account"] (module-folder-relative path).
+    "Account": "public/js/bilingual/account_tree.js",
+}
+
+# CSS includes for authenticated users (desk)
+# v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
+app_include_css = [
+    "/assets/construction/css/modern_theme.css?v=2.5.9",
+    "/assets/construction/css/scope_context.css?v=2",
+    # ─── Vite UI — MUST load LAST to win cascade ───
+    # Phase 1: Visual Foundation
+    "/assets/construction/css/vite_extensions.css?v=1.3",
+    "/assets/construction/css/vite_form_override.css?v=1.6",
+    "/assets/construction/css/vite_list_override.css?v=1.3",
+    # Phase 2: Form Layout Engine section card styles
+    "/assets/construction/css/vfc_sections.css?v=1.6",
+]
+
+# Global JS includes (raw asset path — loaded directly, not bundled)
+# CSS-only theming: theme_loader handles sync/navbar dropdown; theme_loader_v16 is a no-op safety net
+app_include_js = [
+    # Shared BOQ column definitions — must load before doctype JS that uses window.BOQ_EXPORT_COLUMNS
+    "/assets/construction/js/boq_export_columns.js?v=1",
+    "/assets/construction/js/print_settings_dialog.js",
+    "/assets/construction/js/construction_export_menu.js",
+    "/assets/construction/js/generic_export_menu.js?v=1",
+    "/assets/construction/js/theme_loader_v24.js?v=2.6.2",
+    "/assets/construction/js/typography_settings.js?v=21",
+    # Timesheet direct-labor designation derivation (employee -> row designation)
+    "/assets/construction/js/timesheet_designation.js?v=4",
+    # Searchable Dropdown Module — base class (must load before overrides)
+    "/assets/construction/js/searchable_dropdown/utils.js",
+    "/assets/construction/js/searchable_dropdown/searchable_dropdown.js?v=1",
+    # Phase 2: Global ControlSelect override — searchable themed dropdown for all <select> fields
+    # Replaces native HTML <select> app-wide (forms + report filters confirmed by diagnostic)
+    "/assets/construction/js/overrides/ct_select_control.js?v=3",
+    # Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
+    # Auto-applies SearchableDropdownEnhancer to all Link fields on every page
+    # v20: the themed BOQ dropdown reads the BOQ Header of the CHILD ROW
+    # document of a transaction grid row (collapsed and expanded) instead of
+    # the parent transaction, and its BOQ search goes through the REAL pinned
+    # native contract of the control (get_search_args / set_custom_query),
+    # asked with the identity of the edited row, so the native query, the
+    # DocField restrictions, the gate, the scope, the omission and the
+    # accounting-dimension policy reach the request. A native policy that is
+    # absent, failed or malformed closes the search; there is no fallback.
+    "/assets/construction/js/overrides/ct_link_control.js?v=20",
+    # v16 runtime safety net — no-op (CSS handles all styling)
+    "/assets/construction/js/theme_loader_v16.js?v=2",
+    # Scope Context — core class for managing user company/cost_center/project/dept scope
+    "/assets/construction/js/scope_context.js?v=3",
+    # Frappe Desk compatibility fixes that must run before list views initialize
+    "/assets/construction/js/frappe_compat_patches.js?v=2",
+    # Scope Context — navbar UI selectors (cascading company/cost_center/project/dept dropdowns)
+    "/assets/construction/js/scope_context_ui.js?v=5",
+    # Scope Context — list view auto-filtering
+    "/assets/construction/js/scope_context_list_filter.js?v=3",
+    # Scope Context — form default population for new documents
+    "/assets/construction/js/scope_context_form_defaults.js?v=3",
+    # Scope Context — report filter lock and dynamic sync
+    "/assets/construction/js/vfc_config.js?v=1",
+    # VFC debug log gating — must load BEFORE vite_layout_controls and vfc_layout_engine
+    "/assets/construction/js/scope_context_report_filters.js?v=4",
+    # CT List View Config — hides like column, collapses level-right, fixes dropdown z-index
+    # Must load AFTER list view initializes but BEFORE user interaction
+    "/assets/construction/js/ct_list_view_config.js?v=1",
+    # Sidebar accordion — only one section stays expanded at a time
+    "/assets/construction/js/sidebar_accordion.js?v=1",
+    # Translation workflow helpers (Arabic backlog + filters + catalog workbench)
+    "/assets/construction/js/translation_list_tools.js?v=6",
+    # BOQ integration filters for transaction child rows
+    # v12: the BOQ Item Link query is pinned on the grid field info and composed
+    # with the native ERPNext accounting-dimension account policy, so the
+    # asynchronous ERPNext dimension setup can no longer replace it.
+    # v13: a failing native query closes the BOQ Item search instead of
+    # continuing without the native per-account Accounting Dimension Filter.
+    "/assets/construction/js/boq_filters.js?v=13",
+    # Filter fix — injected AFTER Frappe bundle to win cascade order
+    "/assets/construction/js/filter_fix.js?v=11",
+    # Must load last: native Frappe affordances remain available after theme styling
+    "/assets/construction/js/native_frappe_controls_compat.js?v=9",
+    # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
+    "/assets/construction/js/vite_layout_controls.js?v=1.25",
+    # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
+    # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
+    "/assets/construction/js/vfc_layout_engine.js?v=1.44",
+]
+
+
+# CSS includes for unauthenticated pages (login, etc.)
+# v2.4-r3: modern_theme.css handles all theming including login
+web_include_css = [
+    "/assets/construction/css/modern_theme.css?v=2.5.9",
+    "/assets/construction/css/email_theme.css",
+]
+
+# v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.2"
+
+# ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
+brand_html = "construction/templates/includes/navbar_brand.html"
+login_page_title = "Construction ERP — Login"
+homepage = "index"
+
+website_context = {
+    "favicon": "/assets/construction/images/construction_logo.svg",
+    "splash_image": "/assets/construction/images/construction_logo.svg",
+    "brand_html": brand_html,
+}
+
+email_css = ["/assets/construction/css/email_theme.css"]
+
+# ─── PDF & PRINT STYLING ───
+print_css = "/assets/construction/css/print_theme.css"
+pdf_header_html = "construction.api.theme_api.get_pdf_header"
+pdf_footer_html = "construction.api.theme_api.get_pdf_footer"
+
+jinja = {
+    "filters": [
+        "construction.services.narrative_sanitizer.bdi_join",
+    ],
+}
+
+
+# Override Frappe's theme switcher for custom integration
+# Using simplified SQL-based version to avoid Python controller import issues
+override_whitelisted_methods = {
+    "frappe.core.doctype.user.user.switch_theme": "construction.overrides.switch_theme_simple.switch_theme",
+    "frappe.utils.change_log.show_update_popup": "construction.api.theme_api.ignore_update_popup",
+    "frappe.translate.update_translations_for_source": "construction.api.translation_tools.update_translations_for_source_safe",
+    # Stage 3 P0: the standard Account identity-rename endpoint must never be
+    # callable without the required reason — all callers (including the
+    # vendor form flow) are routed through the governed, atomic wrapper.
+    "erpnext.accounts.doctype.account.account.update_account_number": "construction.services.bilingual_service.governed_rename_account",
+    "frappe.desk.search.search_link": "construction.api.desk_link_search.search_link",
+    # F11: vendor file download performs no attached-document check; the
+    # wrapper enforces the BOQ attachment boundary and delegates the rest.
+    "frappe.handler.download_file": "construction.overrides.file_download.download_file",
+}
+
+# Override core Translation controller so edited catalog rows become runtime translations.
+# Retained architecture exception: catalog-aware subclass delegates native validate/on_update;
+# construction.tests.test_translation_catalog covers catalog preservation and runtime upserts.
+override_doctype_class = {  # nosemgrep: override-doctype-class -- reviewed superclass-preserving Translation extension
+    "Translation": "construction.overrides.translation.CustomTranslation",
+}
+
+# Boot session hook - inject user's theme into frappe.boot
+# This ensures the correct theme is available immediately on page load
+boot_session = "construction.api.theme_api.add_theme_to_boot"
+
+# Extend bootinfo with scope context data
+extend_bootinfo = "construction.boot.extend_bootinfo"
+
+# Server-side enforcement: branch-company integrity (always) + scope context (optional)
+# validate runs on both insert AND update
+doc_events = {
+    "*": {"validate": "construction.overrides.scope_enforcement.validate"},
+    "Purchase Order": {
+        "validate": "construction.services.boq_transaction_validation.validate_document",
+        "on_submit": "construction.services.resource_price_service.capture_price_from_purchase_document",
+        "on_cancel": "construction.services.resource_price_service.cancel_price_history_for_document",
+    },
+    "Purchase Receipt": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "Purchase Invoice": {
+        "validate": "construction.services.boq_transaction_validation.validate_document",
+        "on_submit": "construction.services.resource_price_service.capture_price_from_purchase_document",
+        "on_cancel": "construction.services.resource_price_service.cancel_price_history_for_document",
+    },
+    "Stock Entry": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "Timesheet": {
+        "validate": [
+            # Derive the row designation from the selected employee BEFORE the BOQ
+            # gate validation reads it, so a stale/spoofed client value can never
+            # survive a save and the gate input is always authentic.
+            "construction.services.timesheet_designation.derive_row_designations",
+            "construction.services.boq_transaction_validation.validate_document",
+        ]
+    },
+    "Journal Entry": {
+        "validate": [
+            # The shared BOQ validator normalizes the BOQ chain and validates the
+            # BOQ Header status first; the Journal Entry helper then derives and
+            # validates the authoritative BOQ project of every BOQ-bearing row,
+            # because the wildcard scope hook never sees a Journal Entry Account
+            # project (a Journal Entry has no parent ``project`` field).
+            "construction.services.boq_transaction_validation.validate_document",
+            "construction.services.boq_journal_project.validate_document",
+        ]
+    },
+    "Sales Invoice": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "Material Request": {"validate": "construction.services.boq_transaction_validation.validate_document"},
+    "BOQ Item Stage": {"before_delete": "construction.services.boq_lifecycle.before_delete_boq_item_stage"},
+    # Stage 3 P0: Arabic account-name writes are confined to the governed
+    # bilingual API; any direct form/REST save that changes the field is
+    # refused. The hook also maintains the normalized Arabic search key.
+    "Account": {
+        "validate": "construction.services.bilingual_service.enforce_account_arabic_policy",
+        "on_update": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+        "on_trash": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+        "after_rename": "construction.services.report_bilingual_extension.bust_account_mapping_cache",
+    },
+    "Item": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Customer": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Supplier": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Cost Center": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Warehouse": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Project": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Item Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Customer Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Supplier Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Territory": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "UOM": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Employee": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Department": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "BOQ Structure": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "BOQ Header": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Task": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Asset Category": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Payment Terms Template": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Payment Term": {
+        "validate": "construction.services.narrative_sanitizer.validate_narrative_fields",
+    },
+    "Brand": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    "Terms and Conditions": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+    # Asset has no narrative field (sanitizer reports {}), so F1 applies in single-hook form.
+    "Asset": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
+    "Company": {
+        "validate": [
+            "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
+            "construction.services.narrative_sanitizer.validate_narrative_fields",
+        ]
+    },
+}
+
+# Server-side query injection: applies scope filters to ALL database queries
+# Uses the wildcard '*' to fire for every doctype
+permission_query_conditions = {
+    "*": "construction.overrides.scope_query.add_scope_conditions",
+    **{
+        doctype: "construction.overrides.boq_permissions.boq_parent_query_conditions"
+        for doctype in (
+            "BOQ Item",
+            "BOQ Structure",
+            "BOQ Item Stage",
+            "BOQ Quantity Revision",
+            "BOQ Cost Analysis",
+            "Variation Order",
+        )
+    },
+}
+permission_query_conditions["Form Layout Profile"] = (
+    "construction.overrides.layout_permissions.form_layout_profile_query_conditions"
+)
+
+has_permission = {
+    doctype: "construction.overrides.boq_permissions.has_boq_parent_permission"
+    for doctype in (
+        "BOQ Item",
+        "BOQ Structure",
+        "BOQ Item Stage",
+        "BOQ Quantity Revision",
+        "BOQ Cost Analysis",
+        "Variation Order",
+    )
+}
+
+# F11-D002: BOQ Header direct reads/writes additionally require the selected
+# scope to cover the header's project/company (authorization boundary, not a
+# list filter). Native role/User Permission checks still apply independently.
+has_permission["BOQ Header"] = "construction.overrides.boq_permissions.has_boq_header_permission"
+
+# F11: Files attached to BOQ doctypes inherit the parent's read/write
+# boundary; all other files keep vendor behavior.
+has_permission["File"] = "construction.overrides.file_permissions.has_file_parent_permission"
+has_permission["Form Layout Profile"] = (
+    "construction.overrides.layout_permissions.has_form_layout_profile_permission"
+)
+
+# Fixtures - Phase 2: Construction Theme records
+fixtures = [
+    {"doctype": "Construction Theme", "filters": [["is_system_theme", "=", 1]]},
+]
+
+# Note: Workspace Sidebar is created via after_migrate hook, not fixture
+# (DocType may not exist in all Frappe versions)
+
+# After install - create system themes and setup Custom Fields
+after_install = [
+    "construction.install.setup_website_branding",
+    "construction.install.create_system_themes",
+    "construction.install.setup_boq_integration",
+    "construction.install.setup_transaction_print_formats",
+    "construction.install.setup_branch_company_field",
+    "construction.install.setup_variation_order_custom_field",
+    "construction.install.setup_erpnext_standard_filters",
+    "construction.install.fix_select_permissions",
+    "construction.install.fix_system_manager_permissions",
+    "construction.install.seed_construction_roles",
+    "construction.install.seed_form_layout_profiles",
+    "construction.install.setup_item_construction_fields",
+    "construction.setup.bilingual_schema.ensure_bilingual_schema",
+    "construction.setup.translation_catalog_fields.ensure_translation_identity",
+    "construction.translation_service.import_released_overrides_hook",
+]
+
+# After migrate - ensure system themes and workspace sidebar exist
+# Order matters: themes, workspace page (which creates its sidebar), health check.
+after_migrate = [
+    "construction.api.theme_api.whitelabel_patch",
+    "construction.install.setup_website_branding",
+    "construction.install.create_system_themes",
+    "construction.install.setup_construction_workspace_page",
+    "construction.install.verify_workspace_visibility",
+    "construction.install.setup_boq_integration",
+    "construction.install.setup_transaction_print_formats",
+    "construction.install.setup_branch_company_field",
+    "construction.install.setup_variation_order_custom_field",
+    "construction.install.setup_erpnext_standard_filters",
+    "construction.install.fix_select_permissions",
+    "construction.install.fix_system_manager_permissions",
+    "construction.install.seed_construction_roles",
+    "construction.install.seed_form_layout_profiles",
+    "construction.install.setup_item_construction_fields",
+    "construction.setup.bilingual_schema.ensure_bilingual_schema",
+    "construction.setup.translation_catalog_fields.ensure_translation_identity",
+    "construction.translation_service.import_released_overrides_hook",
+]
+
+# Patches
+patches = "construction.patches.txt"
+
+# Translations
+translated_doctypes = {
+    "BOQ Header": ["ar"],
+    "BOQ Item": ["ar"],
+    "BOQ Item Stage": ["ar"],
+    "BOQ Structure": ["ar"],
+    "CostItem": ["ar"],
+    "PlantResource": ["ar"],
+    "BOQ Cost Analysis": ["ar"],
+    "BOQ Cost Analysis Detail": ["ar"],
+    "Resource Price History": ["ar"],
+    "Construction Settings": ["ar"],
+    "Construction Theme": ["ar"],
+    "Direct Labor Designation": ["ar"],
+    "Modern Theme Settings": ["ar"],
+    "User Desk Theme": ["ar"],
+    "User Scope Context": ["ar"],
+    "Variation Order": ["ar"],
+    "VO Line": ["ar"],
+}

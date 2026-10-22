@@ -1,0 +1,48 @@
+.ct-scope-selectors {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+html.ct-enterprise .ct-scope-selectors select {
+  height: 28px;
+  padding: 2px 24px 2px 8px;
+  font-size: 0.8125rem;
+  border: 1px solid var(--ct-border);
+  border-radius: 6px;
+  background-color: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  cursor: pointer;
+  max-width: 140px;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .ct-scope-selectors select:hover {
+  background-color: var(--ct-surface-hover) !important;
+  color: var(--ct-primary) !important;
+  border-color: var(--ct-primary) !important;
+  transform: translateY(-1px);
+}
+
+html.ct-enterprise .ct-scope-selectors select:focus {
+  border-color: var(--ct-primary);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--ct-primary);
+}
+
+.ct-scope-separator {
+  color: var(--ct-text-secondary);
+  font-size: 0.75rem;
+  padding: 0 2px;
+}
+
+@media (max-width: 768px) {
+  .ct-scope-selectors {
+    display: none;
+  }
+}
+
+[dir="rtl"] .ct-scope-selectors {
+  flex-direction: row-reverse;
+}

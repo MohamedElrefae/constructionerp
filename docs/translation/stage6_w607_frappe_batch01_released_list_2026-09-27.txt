@@ -1,0 +1,247 @@
+'*' is only allowed in {0} SQL function(s)
+A download link with your data will be sent to the email address associated with your account.
+Accurate count can not be fetched, click here to view all documents
+Aggregate Field is required to create a number card
+All fields are necessary to submit the comment.
+Allow Sending Usage Data for Improving Applications
+Allow recording my first session to improve user experience
+Allow sending usage data for improving applications
+Allow users to log in without a password, using a login link sent to their email
+Allows enabled Social Login Key Base URL to be shown as authorization server.
+Allows skipping authorization if a user has active tokens.
+Always use this email address as sender address
+An email to verify your request has been sent to your email address. Please verify your request to complete the process.
+An unexpected error occurred while authorizing {}.
+Are you sure you want to cancel the invitation?
+Are you sure you want to clear the assignments?
+Are you sure you want to delete the column? All the fields in the column will be moved to the previous column.
+Are you sure you want to delete this record?
+Are you sure you want to discard the changes?
+Are you sure you want to generate a new report?
+Are you sure you want to re-enable scheduler?
+Are you sure you want to remove all failed jobs?
+Are you sure you want to remove the {0} filter?
+Are you sure you want to save this document?
+As document sharing is disabled, please give them the required permissions before assigning.
+As per your request, your account and data on {0} associated with email {1} has been permanently deleted
+Assignment Rule is not allowed on document type {0}
+At least one column is required to show in the grid.
+At least one field is required in Web Form Fields Table
+At least one field of Parent Document Type is mandatory
+Attached To Name must be a string or an integer
+Auto Repeat Day{0} {1} has been repeated.
+Auto follow documents that are assigned to you
+Auto follow documents that are shared with you
+Auto follow documents that you comment on
+Auto repeat failed. Please enable auto repeat after fixing the issues.
+Automate processes and extend standard functionality using scripts and background jobs
+Automatic sending of emails is disabled via site config.
+Automatically applied a filter for recent data. You can disable this behavior from the list view settings.
+Automatically delete account within (hours)
+Awesome, now try making an entry yourself
+Bulk approval only support up to 500 documents.
+Bulk operation is enqueued in background.
+Bulk operations only support up to 500 documents.
+By "Naming Series" field
+CSS selector for the element you want to highlight.
+Can not rename as column {0} is already present on DocType.
+Can only change to/from Autoincrement naming rule when there is no data in the doctype
+Can only list down the document types which has been linked to the User document type.
+Can't follow since changes are not tracked.
+Can't rename {0} to {1} because {0} doesn't exist.
+Cannot change docstatus from 0 (Draft) to 2 (Cancelled)
+Cannot change docstatus from 1 (Submitted) to 0 (Draft)
+Cannot change to/from autoincrement autoname in Customize Form
+Cannot create private workspace of other users
+Cannot delete standard field. You can hide it if you want
+Cannot edit filters for standard number cards
+Cannot enable {0} for a non-submittable doctype
+Cannot import table with more than 5000 rows.
+Cannot map because following condition fails:
+Cannot set Notification with event {0} on Document Type {1}
+Cannot share {0} with submit permission as the doctype {1} is not submittable
+Changing any setting will reflect on all the email accounts associated with this domain.
+Changing rounding method on site with data can result in unexpected behaviour.
+Check columns to select, drag to set order.
+Check to display the full numeric value (e.g., 1,234,567 instead of 1.2M).
+Child Table {0} for field {1} must be virtual
+Child query fields for '{0}' must be a list or tuple.
+Chromium is not downloaded. Please run the setup first.
+Clear the email message and add the template
+Click On Customize to add your first widget
+Comment publicity can only be updated by the original author or a System Manager.
+Configure various aspects of how document naming works like naming series, current counter.
+Controls whether new users can sign up using this Social Login Key. If unset, Website Settings is respected.
+Could not start Chromium. Check logs for details.
+Creation of this document is only permitted in developer mode.
+Cron format is required for job types with Cron frequency.
+Currency list stores the currency value, its symbol and fraction unit
+Custom Document Types (Select Permission)
+Custom field renamed to {0} successfully.
+Custom get_list method for {0} must return a QueryBuilder object or None, got {1}
+Customize properties, naming, fields and more for standard doctypes
+Database Table Row Size Utilization: {0}%, this limits number of fields you can add.
+Decimal Separator must be '.' when Quoting is set to Non-numeric
+Decimal Separator must be a single character
+Defines actions on states and the next step and allowed roles.
+Defines how long exported reports sent via email are kept in the system. Older files will be automatically deleted.
+Defines workflow states and rules for a document.
+Deletion of this document is only permitted in developer mode.
+Delimiter detection failed. Try to enable custom delimiters and adjust the delimiter options as per your data.
+Description to inform the user about any action that is going to be performed
+Do not create new user if user with email does not exist in the system
+DocType is a Table / Form in the application.
+DocTypes cannot be modified, please use {0} instead
+Doctype name is limited to {0} characters ({1})
+Document Links Row #{0}: Could not find field {1} in {2} DocType
+Document Links Row #{0}: Invalid doctype or fieldname.
+Document Links Row #{0}: Parent DocType is mandatory for internal links
+Document Links Row #{0}: Table Fieldname is mandatory for internal links
+Document Type and Function are required to create a number card
+Document cannot be used as a filter value
+Document follow is not enabled for this user.
+Document is only editable by users with role
+Document renaming from {0} to {1} has been queued
+Drag & Drop a section here from another tab
+Drag elements from the sidebar to add. Drag them back to trash.
+Email Account not setup. Please create a new Email Account from Settings > Email Account
+Email Queue flushing aborted due to too many failures.
+Email not sent to {0} (unsubscribed / disabled)
+Email queue is currently suspended. Resume to automatically send other emails.
+Emails are already being pulled from this account.
+Enabling this will submit documents in background
+Encryption key is invalid! Please check site_config.json
+Ensure the user and group search paths are correct.
+Enter Email Recipient(s) in the To, CC, or BCC fields
+Error validating "Ignore User Permissions"
+Error: {0} Row #{1}: Value missing for: {2}
+Example: Setting this to 24:00 will log out a user if they are not active for 24:00 hours.
+Expected 'and' or 'or' operator, found: {0}
+Exported permissions will be force-synced on every migrate overriding any other customization.
+Failed to aquire lock: {}. Lock may be held by another process.
+Failed to get method for command {0} with {1}
+Failed to import virtual doctype {}, is controller file present?
+Field "title" is mandatory if "Website Search Field" is set.
+Field {0} is referring to non-existing doctype {1}.
+Field {0} must be a virtual field to support virtual doctype.
+Field {0} on document {1} is neither a Mobile number field nor a Customer or User link
+Fieldname '{0}' conflicting with a {1} of the name {2} in {3}
+Fieldname called {0} must exist to enable autonaming
+Fields `file_name` or `file_url` must be set for File
+Fields must be a list or tuple when as_list is enabled
+Fields must be a string, list, tuple, pypika Field, or pypika Function
+Fieldtype cannot be changed from {0} to {1}
+File "{0}" was skipped because of invalid file type
+Footer "Powered By"
+For multiple addresses, enter the address on different line. e.g. test@test.com ⏎ test1@test.com
+Function {0} requires arguments but none were provided
+Generate Separate Documents For Each Assignee
+Get Header and Footer wkhtmltopdf variables
+Get a preview of generated names with a series.
+Get notified when an email is received on any of the documents assigned to you.
+Google Calendar - Could not find Calendar for {0}, error code {1}.
+Header/Footer scripts can be used to add dynamic behaviours.
+Help: To link to another record in the system, use "/desk/note/[Note Name]" as the Link URL. (don't use "http://")
+Human-readable name intended for display to the end user.
+IDs must contain only alphanumeric characters, not contain spaces, and should be unique.
+If a Role does not have access at Level 0, then higher levels are meaningless.
+If checked, a confirmation will be required before performing workflow actions.
+If checked, negative numeric values of Currency, Quantity or Count would be shown as positive
+If enabled, all responses on the web form will be submitted anonymously
+If left empty, the default workspace will be the last visited workspace
+If these instructions where not helpful, please add in your suggestions on GitHub Issues.
+If this was a mistake or you need access again, please reach out to your team.
+If unchecked, the value will always be re-fetched on save.
+If you have any questions, reach out to your system administrator.
+Implement `clear_old_logs` method to enable auto error clearing.
+Incomplete Virtual Doctype Implementation
+Index created successfully on column {0} of doctype {1}
+Input existing role name if you would like to extend it with access of another role.
+Invalid "mandatory_depends_on" expression
+Invalid Credentials for Email Account: {0}
+Invalid Outgoing Mail Server or Port: {0}
+Invalid alias format: {0}. Alias must be a simple identifier.
+Invalid argument format: {0}. Only quoted string literals or simple field names are allowed.
+Invalid argument type: {0}. Only strings, numbers, dicts, and None are allowed.
+Invalid characters in fieldname: {0}. Only letters, numbers, and underscores are allowed.
+Invalid condition type in nested filters: {0}
+Invalid direction in Order By: {0}. Must be 'ASC' or 'DESC'.
+Invalid field format for SELECT: {0}. Field names must be simple, backticked, table-qualified, aliased, or '*'.
+Invalid field format in {0}: {1}. Use 'field', 'link_field.field', or 'child_table.field'.
+Invalid filter condition: {0}. Expected a list or tuple.
+Invalid filter field format: {0}. Use 'fieldname' or 'link_fieldname.target_fieldname'.
+Invalid function argument type: {0}. Only strings, numbers, lists, and None are allowed.
+Invalid name type (integer) for varchar name column
+Invalid naming series {}: dot (.) missing
+Invalid nested expression: dictionary must represent a function or operator
+Invalid start for filter condition: {0}. Expected a list or tuple.
+Invalid token state! Check if the token has been created by the OAuth user.
+Job is in {0} state and can't be cancelled
+LDAP settings incorrect. validation response was: {0}
+Layout will be reset to standard layout, are you sure you want to do this?
+Length of passed data array is greater than value of maximum allowed label points!
+Letter Head cannot be both disabled and default
+Link for About Us Page is "/about".
+Login is required to see web form list view. Enable {0} to see list settings
+Login with email link expiry (in minutes)
+Login with username and password is not allowed.
+Looks like you haven’t added any third party apps.
+Looks like you haven’t received any notifications.
+Make sure to configure a Social Login Key before disabling to prevent lockout
+Maximum Attachment Limit of {0} has been reached for {1} {2}.
+Maximum attachment limit of {0} has been reached.
+Message to be displayed on successful completion
+Method is required to create a number card
+Monitor logs for errors, background jobs, communications, and user activity
+Move current and all subsequent sections to a new tab
+Move the current field and the following fields to a new column
+Move to next step when clicked inside highlighted area.
+Mozilla doesn't support :has() so you can pass parent selector here as workaround
+NOTE: This box is due for depreciation. Please re-setup LDAP to work with the newer settings
+Name already taken, please set a new name
+Need Workspace Manager role to edit private workspace of other users
+Nested filters must be provided as a list or tuple.
+Newly created user {0} has no roles enabled.
+No RQ Workers connected. Try restarting the bench.
+No automatic optimization suggestions available.
+No changes made because old and new name are the same.
+No fields found that can be used as a Kanban Column. Use the Customize Form to add a Custom Field of type "Select".
+No {0} found with matching filters. Clear filters to see all {0}.
+Not allowed to create custom Virtual DocType.
+Not allowed via controller permission check
+Note: Etc timezones have their signs reversed.
+Note: Your request for account deletion will be fulfilled within {0} hours.
+Notification: customer {0} has no Mobile number set
+Notification: document {0} has no {1} number set (field: {2})
+Notification: user {0} has no Mobile number set
+Number of attachment fields are more than {}, limit updated to {}.
+Number of backups must be greater than zero.
+OAuth has been enabled but not authorised. Please use "Authorise API Access" button to do the same.
+OTP setup using OTP App was not completed. Please contact Administrator.
+On checking this option, URL will be treated like a jinja template string
+Only System Managers can make this file public.
+Only Workspace Manager can edit public workspaces
+Only allow System Managers to upload public files
+Only allowed to export customizations in developer mode
+Only the Administrator can delete a standard DocType.
+Only the assignee can complete this to-do.
+Only {0} emailed reports are allowed per user.
+OpenID Configuration fetched successfully!
+Operator {0} requires exactly 2 arguments (left and right operands)
+Options for Rating field can range from 3 to 10
+Options is required for field {0} of type {1}
+PDF printing via "Raw Print" is not supported.
+Packages are lightweight apps (collection of Module Defs) that can be created, imported, or released right from the UI
+Parent Document Type is required to create a number card
+Parent document type is required to create a dashboard chart
+Parenttype, Parent and Parentfield are required to insert a child record
+Password reset instructions have been sent to {}'s email
+Password size exceeded the maximum allowed size
+Password size exceeded the maximum allowed size.
+Permission Type '{0}' is reserved. Please choose another name.
+Permissions are automatically applied to Standard Reports and searches.
+Permissions at level 0 are Document Level permissions, i.e. they are primary for access to the document.
+Permissions get applied on Users based on what Roles they are assigned.
+Phone Number {0} set in field {1} is not valid.
+Please Authorize OAuth for Email Account {0}
+Please Authorize OAuth for Email Account {}

@@ -1,0 +1,9 @@
+ROW_OK 'Elrefae' value=63f48828f9f20a78 norm=63f48828f9f20a78 identity=unchanged frozen=unchanged
+COMPLETENESS site_arabic_total=1 approved=1 missing=0 extra=0
+EXCLUSIONS excluded=20 excluded_arabic=0 total=21
+USAGE_SURFACE scope_selector_rows=5 company_arabic_visible=yes currency_egp_enabled=1 modified_bump=expected(F-5H-6)
+FROZEN_SURFACES accounts_ar=81 cost_centers_ar=3 customers_ar=1 departments_ar=14 departments_total=276 items_ar=8 projects_ar=5 suppliers_ar=0 warehouses_ar=6 groups={"Item Group": 6, "Customer Group": 5, "Supplier Group": 8, "Territory": 4} uom_arabic=15 uom_enabled=253 uom_json=unchanged
+PATCH_RESTORATION get_root_of_restored=True
+SUMMARY approved=1 populated=1 norm_consistent=1 identity_unchanged=1 frozen_unchanged=1 exclusions=20 intact usage_surface=yes prior_frozen=yes patch_restored=yes
+ROLLBACK_REF dry-run.json (before-values all empty) sha256=747cf6b9e9a8aadde90965e0b1949b159b9f68c0ce357e2d5d72fa4e823d20f7
+VERIFICATION RESULT: PASS

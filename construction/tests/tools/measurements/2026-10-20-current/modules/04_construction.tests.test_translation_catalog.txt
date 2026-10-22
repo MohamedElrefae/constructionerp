@@ -1,0 +1,15 @@
+Starting test run with parameters: site=v16-protocol.localhost, app=construction, module=construction.tests.test_translation_catalog, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /tmp/opencode/f44-bench/logs/frappe.testing.log
+
+Running 3 old-frappe-test-class-category tests for construction
+
+construction.tests.test_translation_catalog.TestTranslationCatalogRuntime
+   [32m ✔ [0m test_approved_review_updates_list_value_but_preserves_po_baseline
+   [32m ✔ [0m test_catalog_edit_upserts_one_runtime_row_and_preserves_catalog
+   [32m ✔ [0m test_runtime_loader_skips_catalog_and_resolves_duplicates_deterministically
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.915s
+
+OK

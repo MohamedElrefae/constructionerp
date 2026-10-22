@@ -1,0 +1,252 @@
+Not Helpful
+Not a valid user
+Not active
+Number Card Name
+Number of Queries
+Number of keys
+OAuth Client Role
+OAuth Error
+OAuth Scope
+OAuth Settings
+OTP SMS Template
+Offset X
+Offset Y
+Onboarding Status
+OpenID Configuration
+Optimizing image...
+Original Value
+Outgoing Server
+Outgoing Settings
+PDF Generator
+Package Name
+Package Release
+Page Route
+Page Title
+Parent DocType
+Parent Field
+Parent Icon
+Parent Missing
+Parent Page
+Partial Success
+Partially Sent
+Password Email Sent
+Payload Count
+Peak Memory Usage
+Pending Emails
+Pending Jobs
+Permission Inspector
+Permission Levels
+Permission Log
+Permission Manager
+Permission Query
+Permission Type
+Permissions Error
+Permitted Roles
+Plain Text
+Please select {0}
+Popover Element
+Prefer not to say
+Private Files (MB)
+Profile Picture
+Protected File
+Public Files (MB)
+Published Web Forms
+Published Web Pages
+Publishing Dates
+Pull Emails
+Pulling emails...
+Purchase Manager
+Purchase User
+Push Notifications
+Put on Hold
+Query Parameters
+Queue Overloaded
+Queue Status
+Queue Type(s)
+Queued At
+Queued By
+Quick Entry
+Quick Lists
+Rate Limiting
+Raw Printing Setting
+Re-Run in Console
+Read mode
+Recorder Query
+Recursive Fetch From
+Redirect HTTP Status
+Redirect To Path
+Reference Datetime
+Reference Doc
+Reference Document
+Reference Name
+Relay Settings
+Release Notes
+Repeat on Days
+Request Body
+Request Description
+Request Headers
+Request ID
+Request Limit
+Request Method
+Requested Numbers
+Reset Layout
+Resource Name
+Response Headers
+Retry Sending
+Right Bottom
+Right Center
+Role Profiles
+Role Replication
+Roles & Permissions
+Rounding Method
+Row #
+Row Format
+Row Indexes
+Row Number
+Row Values Changed
+Row {0}
+Runtime in Minutes
+Runtime in Seconds
+SMS Log
+SMS Settings
+SQL Queries
+Sales Manager
+Sales Master Manager
+Sales User
+Scheduled Against
+Scheduled Jobs Logs
+Scheduler Inactive
+Scheduler Status
+Scheduler: Active
+Scheduler: Inactive
+Scopes Supported
+Scripting / Style
+Section ID
+Select Country
+Select Page
+Select Time Zone
+Select Workflow
+Select Workspaces
+Send Email On State
+Send Now
+Sender Email
+Sender Email Field
+Sender Name
+Sender Name Field
+Sent Folder Name
+Sent On
+Sent To
+Sequence Id
+Session Created
+Set Limit
+Set Properties
+Set only once
+Set size in MB
+Setup failed
+Show Absolute Values
+Show Full Number
+Show Language Picker
+Show Processlist
+Show Related Errors
+Show Tour
+Show Traceback
+Show attachments
+Show footer on login
+Show list
+Show on Timeline
+Sign Out
+Sign ups
+Size (MB)
+Slack Webhook URL
+Software ID
+Software Version
+Source Name
+Splash Image
+Stack Trace
+Standard Permissions
+Start Recording
+Start Time
+Started At
+Storage Usage (MB)
+Submission Queue
+Success message
+Success title
+Successful Job Count
+Suggested Indexes
+Sync {0} Fields
+Synced Fields
+Syntax Error
+System Health
+System Logs
+Table Field
+Table Fieldname
+Table Trimmed
+Template File
+Test Data
+Test Job ID
+Test Spanish
+Time Taken
+Time in Queries
+Timed Out
+Timeless Launchpad
+Timeout (In Seconds)
+To Date
+Token Cache
+Token Type
+Too Many Documents
+Top 10
+Top Errors
+Total Users
+Total Working Time
+Trace ID
+Track Steps
+Transition Tasks
+Trigger caching
+Trim Table
+Try a Naming Series
+UI Tour
+Uncaught Exception
+Unhandled Emails
+Unsafe SQL query
+Unsubscribe Params
+Unsupported {0}: {1}
+Upgrade plan
+Used OAuth
+User Details
+User Id Field
+User Invitation
+User Role
+User Role Profile
+User Session Display
+User Type Module
+User does not exist.
+User is disabled
+User {0} is disabled
+Utilization %
+Value Change
+Values Changed
+Visit Desktop
+Visitor ID
+Webhook Request Log
+Webhook Secret
+Webhook Trigger
+Webhook URL
+Website Manager
+Website Script
+Website Theme
+Website Visits
+Welcome URL
+Welcome to {0}
+Worker Information
+Worker Name
+Workflow Builder ID
+Workflow Data
+Workflow Task
+Wrapping up
+'{0}' is not a valid IBAN
+'{0}' is not a valid URL
+1 day ago
+1 second ago
+2 hours ago
+2 months ago
+2 weeks ago

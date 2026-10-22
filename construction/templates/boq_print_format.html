@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html dir="{{ direction or 'ltr' }}" lang="{% if is_arabic %}ar{% else %}en{% endif %}">
+<head>
+    <meta charset="utf-8">
+    <title>Bill of Quantities - {{ (header.title if header is defined and header else title) | e }}</title>
+    <style>
+        :root {
+            --print-border-color: #ddd;
+            --print-text-primary: #333;
+            --print-text-secondary: #666;
+            --print-text-muted: #999;
+            --print-header-bg: #333;
+            --print-header-text: #fff;
+            --print-section-bg: #f0f0f0;
+            --print-body-bg: #fff;
+            --print-body-text: #000;
+        }
+
+        body {
+            font-family: "Noto Naskh Arabic", "Noto Kufi Arabic", Amiri, Arial, sans-serif;
+            font-size: 10px;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--print-body-bg);
+            color: var(--print-body-text);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--print-text-primary);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+
+        .header h2 {
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            color: var(--print-text-secondary);
+        }
+
+        .header-info {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .header-info table {
+            width: 100%;
+            border: none;
+            margin-top: 0;
+        }
+
+        .header-info td {
+            text-align: {{ text_align or 'left' }};
+            border: none;
+            padding: 2px 5px;
+            width: 33%;
+        }
+
+        .header-info .label {
+            font-weight: bold;
+            color: var(--print-text-primary);
+            white-space: nowrap;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background-color: var(--print-header-bg);
+            color: var(--print-header-text);
+            padding: 8px 5px;
+            text-align: {{ text_align or 'left' }};
+            font-size: 9px;
+        }
+
+        td {
+            padding: 5px;
+            border-bottom: 1px solid var(--print-border-color);
+        }
+
+        .section-row {
+            background-color: var(--print-section-bg);
+            font-weight: bold;
+        }
+
+        .item-row td {
+            padding-left: 15px;
+        }
+
+        .wbs-code {
+            font-family: monospace;
+        }
+
+        .number {
+            text-align: {{ opposite_align or 'right' }};
+        }
+
+        .total-row {
+            background-color: var(--print-header-bg);
+            color: var(--print-header-text);
+            font-weight: bold;
+        }
+
+        .total-row td {
+            padding: 10px 5px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 8px;
+            color: var(--print-text-muted);
+            border-top: 1px solid var(--print-border-color);
+            padding-top: 10px;
+        }
+
+        @media print {
+            body { padding: 0; }
+            .header { page-break-inside: avoid; }
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ labels["Bill of Quantities"] | e }}</h1>
+        {% if is_bilingual_print and header.title_ar %}
+        <h2>{{ [header.title, header.title_ar] | bdi_join(" / ") }}</h2>
+        {% elif is_arabic and header.title_ar %}
+        <h2>{{ header.title_ar | e }}</h2>
+        {% else %}
+        <h2>{{ header.title | e }}</h2>
+        {% endif %}
+        <div class="header-info">
+            <table>
+                <tr>
+                    <td>
+                        <span class="label">{{ labels["Project"] | e }}:</span>
+                        {% if is_bilingual_print and header.project_name_ar %}
+                        {{ [header.project_name, header.project_name_ar] | bdi_join(" / ") }}
+                        {% elif is_arabic and header.project_name_ar %}
+                        {{ header.project_name_ar | e }}
+                        {% else %}
+                        {{ (header.project_name or header.project) | e }}
+                        {% endif %}<br>
+                        <span class="label">{{ labels["BOQ Type"] | e }}:</span> {{ header.boq_type | e }}
+                    </td>
+                    <td>
+                        <span class="label">{{ labels["Status"] | e }}:</span> {{ header.status | e }}<br>
+                        <span class="label">{{ labels["Version"] | e }}:</span> {{ header.version | e }}
+                    </td>
+                    <td>
+                        <span class="label">{{ labels["Export Date"] | e }}:</span> {{ export_date | e }}<br>
+                        <span class="label">{{ labels["Company"] | e }}:</span> {{ company | e }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    {# Numeric column keys that need %.2f formatting and right-alignment #}
+    {% set numeric_keys = ["quantity", "vo_qty_delta", "revised_qty", "contract_unit_price", "factor", "line_total", "vo_value_delta", "revised_value"] %}
+
+    <table>
+        <thead>
+            <tr>
+                {% for col in columns %}
+                <th style="width: {{ col.width | float }}%">{{ col.label | e }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for node in items %}
+            <tr class="{% if node.is_group %}section-row{% else %}item-row{% endif %}">
+                {% for col in columns %}
+                {% set key = col.key %}
+                {# Determine CSS classes for this cell #}
+                {% set cell_classes = [] %}
+                {% if key == "wbs_code" %}{% set _ = cell_classes.append("wbs-code") %}{% endif %}
+                {% if key in numeric_keys %}{% set _ = cell_classes.append("number") %}{% endif %}
+                <td{% if cell_classes %} class="{{ cell_classes | join(' ') }}"{% endif %}>
+                    {# Map column key to node value with appropriate formatting #}
+                    {% if key == "title" %}
+                        {% if is_bilingual_print and node.title_ar %}
+                            {{ node.indent }}{{ [node.title, node.title_ar] | bdi_join(" / ") }}
+                        {% elif is_arabic and node.title_ar %}
+                            {{ node.indent }}{{ node.title_ar | e }}
+                        {% else %}
+                            {{ node.indent }}{{ node.title | e }}
+                        {% endif %}
+                    {% elif key == "type" %}
+                        {% if node.is_group %}{{ labels["Section"] | e }}{% else %}{{ labels["Item"] | e }}{% endif %}
+                    {% elif key in numeric_keys %}
+                        {% set val = node[key] %}
+                        {% if val %}{{ "%.2f"|format(val) }}{% endif %}
+                    {% else %}
+                        {{ (node[key] or '') | e }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+            {# Grand total row — find line_total column position for dynamic spanning #}
+            {% set ns = namespace(line_total_idx=-1) %}
+            {% for col in columns %}
+                {% if col.key == "line_total" %}
+                    {% set ns.line_total_idx = loop.index0 %}
+                {% endif %}
+            {% endfor %}
+            <tr class="total-row">
+                {% if ns.line_total_idx > 0 %}
+                <td colspan="{{ ns.line_total_idx }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ (labels.get("GRAND TOTAL", "GRAND TOTAL") if labels is defined and labels else "GRAND TOTAL") | e }}</td>
+                <td class="number">{{ "%.2f"|format(grand_total or 0.0) }}</td>
+                {% if ns.line_total_idx < columns|length - 1 %}
+                <td colspan="{{ columns|length - ns.line_total_idx - 1 }}"></td>
+                {% endif %}
+                {% elif ns.line_total_idx == 0 %}
+                <td class="number">{{ "%.2f"|format(grand_total or 0.0) }}</td>
+                {% if columns|length > 1 %}
+                <td colspan="{{ columns|length - 1 }}"></td>
+                {% endif %}
+                {% else %}
+                {# line_total column not present — span all columns #}
+                <td colspan="{{ columns|length }}" style="text-align: {{ opposite_align or 'right' }}; padding-right: 20px;">{{ (labels.get("GRAND TOTAL", "GRAND TOTAL") if labels is defined and labels else "GRAND TOTAL") | e }}: {{ "%.2f"|format(grand_total or 0.0) }}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>{{ _("Construction ERP - BOQ Management System") }}</p>
+        <p>{{ (labels.get("BOQ ID", "BOQ ID") if labels is defined and labels else "BOQ ID") | e }}: {{ (header.name if header is defined and header else '') | e }} | {{ (labels.get("Total Contract Value", "Total Contract Value") if labels is defined and labels else "Total Contract Value") | e }}: {{ "%.2f"|format((header.total_contract_value if header is defined and header else 0.0) or 0.0) }}</p>
+    </div>
+</body>
+</html>

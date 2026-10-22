@@ -1,0 +1,96 @@
+PHASE2_INVENTORY_EXPORT v1 site=v16.localhost operating_company='Elrefae'
+COST_CENTER total=47 in_scope=3 vendor_fixture=17 other_company=27
+  ROW IN_SCOPE name='Elrefae - E' label='Elrefae' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='Main - E' label='Main' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='Stage 8 Pilot - E' label='Stage 8 Pilot' arabic=None company='Elrefae'
+  ROW VENDOR_FIXTURE name='Test Quality Company - TQC' label='Test Quality Company' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company - _TC' label='_Test Company' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 1 - _TC1' label='_Test Company 1' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 2 - _TC2' label='_Test Company 2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 3 - _TC3' label='_Test Company 3' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 4 - _TC4' label='_Test Company 4' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 5 - _TC5' label='_Test Company 5' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 6 - _TC6' label='_Test Company 6' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company 7 - _TC7' label='_Test Company 7' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company SA VAT - _TCSV' label='_Test Company SA VAT' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company UAE VAT - _TCUV' label='_Test Company UAE VAT' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Company with perpetual inventory - TCP1' label='_Test Company with perpetual inventory' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Cost Center - _TC' label='_Test Cost Center' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Cost Center 2 - _TC' label='_Test Cost Center 2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Opening Invoice Company - _TOIC' label='_Test Opening Invoice Company' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Support SLA - _TSS' label='_Test Support SLA' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Write Off Cost Center - _TC' label='_Test Write Off Cost Center' arabic=None
+  OTHER_COMPANY 'Best Test' rows=2 names=['Best Test - BT', 'Main - BT']
+  OTHER_COMPANY 'Child Company India' rows=2 names=['Child Company India - CCI', 'Main - CCI']
+  OTHER_COMPANY 'Child Company US' rows=2 names=['Child Company US - CCU', 'Main - CCU']
+  OTHER_COMPANY 'Parent Group Company India' rows=2 names=['Main - PGCI', 'Parent Group Company India - PGCI']
+  OTHER_COMPANY 'Test Quality Company' rows=1 names=['Main - TQC']
+  OTHER_COMPANY 'Trial Balance Company' rows=2 names=['Main - TBC', 'Trial Balance Company - TBC']
+  OTHER_COMPANY 'Wind Power LLC' rows=2 names=['Main - WP', 'Wind Power LLC - WP']
+  OTHER_COMPANY '_Test Company' rows=2 names=['Main - _TC', 'Sub - _TC']
+  OTHER_COMPANY '_Test Company 1' rows=1 names=['Main - _TC1']
+  OTHER_COMPANY '_Test Company 2' rows=1 names=['Main - _TC2']
+  OTHER_COMPANY '_Test Company 3' rows=1 names=['Main - _TC3']
+  OTHER_COMPANY '_Test Company 4' rows=1 names=['Main - _TC4']
+  OTHER_COMPANY '_Test Company 5' rows=1 names=['Main - _TC5']
+  OTHER_COMPANY '_Test Company 6' rows=1 names=['Main - _TC6']
+  OTHER_COMPANY '_Test Company 7' rows=1 names=['Main - _TC7']
+  OTHER_COMPANY '_Test Company SA VAT' rows=1 names=['Main - _TCSV']
+  OTHER_COMPANY '_Test Company UAE VAT' rows=1 names=['Main - _TCUV']
+  OTHER_COMPANY '_Test Company with perpetual inventory' rows=1 names=['Main - TCP1']
+  OTHER_COMPANY '_Test Opening Invoice Company' rows=1 names=['Main - _TOIC']
+  OTHER_COMPANY '_Test Support SLA' rows=1 names=['Main - _TSS']
+WAREHOUSE total=118 in_scope=5 vendor_fixture=13 other_company=100
+  ROW IN_SCOPE name='All Warehouses - E' label='All Warehouses' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='Finished Goods - E' label='Finished Goods' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='Goods In Transit - E' label='Goods In Transit' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='Stores - E' label='Stores' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='Work In Progress - E' label='Work In Progress' arabic=None company='Elrefae'
+  ROW VENDOR_FIXTURE name='CT-TEST-P2-WH-01 - TQC' label='CT-TEST-P2-WH-01' arabic='مستودع إعادة التسمية'
+  ROW VENDOR_FIXTURE name='_Test Rejected Warehouse - _TC' label='_Test Rejected Warehouse' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Scrap Warehouse - _TC' label='_Test Scrap Warehouse' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse - _TC' label='_Test Warehouse' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse 1 - _TC' label='_Test Warehouse 1' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse 2 - _TC' label='_Test Warehouse 2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse 2 - _TC1' label='_Test Warehouse 2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse Group - _TC' label='_Test Warehouse Group' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse Group-C1 - _TC' label='_Test Warehouse Group-C1' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse Group-C2 - _TC' label='_Test Warehouse Group-C2' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse No Account - _TC' label='_Test Warehouse No Account' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse for Stock Reco1 - _TC' label='_Test Warehouse for Stock Reco1' arabic=None
+  ROW VENDOR_FIXTURE name='_Test Warehouse for Stock Reco2 - _TC' label='_Test Warehouse for Stock Reco2' arabic=None
+  OTHER_COMPANY 'Best Test' rows=5 names=['All Warehouses - BT', 'Finished Goods - BT', 'Goods In Transit - BT', 'Stores - BT', 'Work In Progress - BT']
+  OTHER_COMPANY 'Child Company India' rows=5 names=['All Warehouses - CCI', 'Finished Goods - CCI', 'Goods In Transit - CCI', 'Stores - CCI', 'Work In Progress - CCI']
+  OTHER_COMPANY 'Child Company US' rows=5 names=['All Warehouses - CCU', 'Finished Goods - CCU', 'Goods In Transit - CCU', 'Stores - CCU', 'Work In Progress - CCU']
+  OTHER_COMPANY 'Parent Group Company India' rows=5 names=['All Warehouses - PGCI', 'Finished Goods - PGCI', 'Goods In Transit - PGCI', 'Stores - PGCI', 'Work In Progress - PGCI']
+  OTHER_COMPANY 'Test Quality Company' rows=5 names=['All Warehouses - TQC', 'Finished Goods - TQC', 'Goods In Transit - TQC', 'Stores - TQC', 'Work In Progress - TQC']
+  OTHER_COMPANY 'Trial Balance Company' rows=5 names=['All Warehouses - TBC', 'Finished Goods - TBC', 'Goods In Transit - TBC', 'Stores - TBC', 'Work In Progress - TBC']
+  OTHER_COMPANY 'Wind Power LLC' rows=5 names=['All Warehouses - WP', 'Finished Goods - WP', 'Goods In Transit - WP', 'Stores - WP', 'Work In Progress - WP']
+  OTHER_COMPANY '_Test Company' rows=5 names=['All Warehouses - _TC', 'Finished Goods - _TC', 'Goods In Transit - _TC', 'Stores - _TC', 'Work In Progress - _TC']
+  OTHER_COMPANY '_Test Company 1' rows=5 names=['All Warehouses - _TC1', 'Finished Goods - _TC1', 'Goods In Transit - _TC1', 'Stores - _TC1', 'Work In Progress - _TC1']
+  OTHER_COMPANY '_Test Company 2' rows=5 names=['All Warehouses - _TC2', 'Finished Goods - _TC2', 'Goods In Transit - _TC2', 'Stores - _TC2', 'Work In Progress - _TC2']
+  OTHER_COMPANY '_Test Company 3' rows=5 names=['All Warehouses - _TC3', 'Finished Goods - _TC3', 'Goods In Transit - _TC3', 'Stores - _TC3', 'Work In Progress - _TC3']
+  OTHER_COMPANY '_Test Company 4' rows=5 names=['All Warehouses - _TC4', 'Finished Goods - _TC4', 'Goods In Transit - _TC4', 'Stores - _TC4', 'Work In Progress - _TC4']
+  OTHER_COMPANY '_Test Company 5' rows=5 names=['All Warehouses - _TC5', 'Finished Goods - _TC5', 'Goods In Transit - _TC5', 'Stores - _TC5', 'Work In Progress - _TC5']
+  OTHER_COMPANY '_Test Company 6' rows=5 names=['All Warehouses - _TC6', 'Finished Goods - _TC6', 'Goods In Transit - _TC6', 'Stores - _TC6', 'Work In Progress - _TC6']
+  OTHER_COMPANY '_Test Company 7' rows=5 names=['All Warehouses - _TC7', 'Finished Goods - _TC7', 'Goods In Transit - _TC7', 'Stores - _TC7', 'Work In Progress - _TC7']
+  OTHER_COMPANY '_Test Company SA VAT' rows=5 names=['All Warehouses - _TCSV', 'Finished Goods - _TCSV', 'Goods In Transit - _TCSV', 'Stores - _TCSV', 'Work In Progress - _TCSV']
+  OTHER_COMPANY '_Test Company UAE VAT' rows=5 names=['All Warehouses - _TCUV', 'Finished Goods - _TCUV', 'Goods In Transit - _TCUV', 'Stores - _TCUV', 'Work In Progress - _TCUV']
+  OTHER_COMPANY '_Test Company with perpetual inventory' rows=5 names=['All Warehouses - TCP1', 'Finished Goods - TCP1', 'Goods In Transit - TCP1', 'Stores - TCP1', 'Work In Progress - TCP1']
+  OTHER_COMPANY '_Test Opening Invoice Company' rows=5 names=['All Warehouses - _TOIC', 'Finished Goods - _TOIC', 'Goods In Transit - _TOIC', 'Stores - _TOIC', 'Work In Progress - _TOIC']
+  OTHER_COMPANY '_Test Support SLA' rows=5 names=['All Warehouses - _TSS', 'Finished Goods - _TSS', 'Goods In Transit - _TSS', 'Stores - _TSS', 'Work In Progress - _TSS']
+PROJECT total=11 in_scope=5 vendor_fixture=6 other_company=0
+  ROW IN_SCOPE name='PROJ-0001' label='test project' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='PROJ-0002' label='مشروع تجربة مشروع عمل تصنيف المقايسة ' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='PROJ-0003' label='test ui' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='PROJ-0008' label='VO QA Project' arabic=None company='Elrefae'
+  ROW IN_SCOPE name='PROJ-0009' label='مشروع تجربة البرنامج حتي التسعير' arabic=None company='Elrefae'
+  ROW VENDOR_FIXTURE name='PROJ-0004' label='_Test BOQ Transaction Project' arabic=None
+  ROW VENDOR_FIXTURE name='PROJ-0005' label='_Test BOQ Other Project' arabic=None
+  ROW VENDOR_FIXTURE name='PROJ-0006' label='_Test Project' arabic=None
+  ROW VENDOR_FIXTURE name='PROJ-0007' label='_Test Construction BOQ Project' arabic=None
+  ROW VENDOR_FIXTURE name='PROJ-0010' label='_Test Security Audit Project' arabic=None
+  ROW VENDOR_FIXTURE name='PROJ-0011' label='_Test Security Project 2' arabic=None
+PRE_EXISTING_ARABIC Warehouse 'CT-TEST-P2-WH-01 - TQC' value='مستودع إعادة التسمية' company='Test Quality Company' tag=VENDOR_FIXTURE
+SUMMARY {"Cost Center": [47, 3, 17, 27], "Project": [11, 5, 6, 0], "Warehouse": [118, 5, 13, 100]}
+INVENTORY RESULT: PASS (R1 rule-derived in-scope matches frozen allowlist; pre-state of in-scope rows empty; all non-Elrefae rows classified as exceptions)

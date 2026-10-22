@@ -1,0 +1,258 @@
+2 years ago
+3 minutes ago
+5 days ago
+API Endpoint Args should be valid JSON
+API Key cannot be regenerated
+About {0} minute remaining
+About {0} minutes remaining
+About {0} seconds remaining
+Added
+Added default log doctypes: {}
+Adds a custom client script to a DocType
+Adds a custom field to a DocType
+Administrator can't follow
+Alias must be a string
+Align
+Allow Consecutive Login Attempts
+Allow incomplete forms
+Allow multiple responses
+Allowed File Extensions
+Allowed Public Client Origins
+Allowed embedding domains
+Always use this name as sender name
+Amended Document Naming Settings
+Amendment Naming Override
+Amendment Not Allowed
+Amendment naming rules updated.
+Announcements
+Annual
+App Name (Client Name)
+App not found for module: {0}
+Application is not installed
+Apply User Permission On
+Apply document permissions
+Assignee
+Assignment
+Assignment of {0} removed by {1}
+Asynchronous
+Auth URL data should be valid JSON
+Authenticate as Service Principal
+Authorization
+Auto follow documents that you Like
+Auto follow documents that you create
+Background Job Activity
+Background Jobs Check
+Background Jobs Queue
+Backup Encryption Key
+Beginner
+Brand
+Bulk Operation Failed
+Bulk Operation Successful
+Bulk {0} is enqueued in background.
+Cache
+Campaign Description (Optional)
+Cannot access file path {0}
+Cannot edit Standard Dashboards
+Cannot edit Standard charts
+Cannot find file {} on disk
+Cannot get file contents of a Folder
+Cannot use sub-query here.
+Cannot use {0} in order/group by
+Child DocTypes are not allowed
+Clear Logs After (days)
+Click to Set Dynamic Filters
+Committed
+Common words are easy to guess.
+Communication secret not set
+Compressed
+Condition
+Condition description
+Conditions
+Configuration
+Console Logs can not be deleted
+Constraints
+Contacts
+Contains {0} security fix
+Contains {0} security fixes
+Content data shoud be a list
+Could not parse field: {0}
+Country Code Required
+Custom Document Types Limit Exceeded
+Customize Child Table
+Database
+Database Storage Usage By Tables
+Database Table Row Size Limit
+Default Amendment Naming
+Default Email Template
+Default Template For Field
+Delayed
+Deleted all documents successfully
+Disable Automatic Recency Filters
+Disable Comment Count
+Disable Document Sharing
+Disable Product Suggestion
+Disable Username/Password Login
+Discarded
+Do you still want to proceed?
+DocType must be a string
+DocType not supported by Log Settings.
+DocType {0} does not exist.
+Document Name must be a string
+Document Naming Settings
+Document Types (Select Permissions Only)
+Document Types and Permissions
+Document not Relinked
+Document {0} {1} does not exist
+Dr
+Dynamic
+Either key or IP flag is required.
+Email Account Disabled.
+Email Account {0} Disabled
+Email Threads on Assigned Document
+Email is mandatory to create User Email
+Emails
+Empty alias is not allowed
+Empty string arguments are not allowed
+Enable Action Confirmation
+Enable Address Autocompletion
+Enable Dynamic Client Registration
+Enable Google indexing
+Enable in-app website tracking
+Enables Calendar and Gantt views.
+Encryption key is in invalid format!
+End Date cannot be today.
+Endpoints
+Enqueued creation of indexes
+Error connecting via IMAP/POP3: {e}
+Error connecting via SMTP: {e}
+Error in Header/Footer Script
+Error in print format on line {0}: {1}
+Error in {0}.get_list: {1}
+Error parsing nested filters: {0}. {1}
+Error: Data missing in table {0}
+Errors
+Executing...
+Expired
+Fail
+Failed Logins (Last 30 days)
+Failed to compute request body: {}
+Failed to decrypt key {0}
+Failed to enable scheduler: {0}
+Failed to evaluate conditions: {}
+Failed to generate names from the series
+Failed to get method {0} with {1}
+Failed to get site info
+Failed to optimize image: {0}
+Failed to render message: {}
+Failed to render subject: {}
+Failed to request login to Frappe Cloud
+Failed to send email with subject:
+Failed to update global settings
+Failed while calling API {0}
+Failing Scheduled Jobs (last 7 days)
+Failure
+Female
+Fetching fields from {0}...
+Field not permitted in query
+Field {0} does not exist on {1}
+File type of {0} is not allowed
+First Day of the Week
+Following document {0}
+Footer HTML set from attachment {0}
+Footer \"Powered By\"
+Force Web Capture Mode for Uploads
+Forward Query Parameters
+Frappe Mail OAuth Error
+Frappe page builder using components
+Function {0} is not whitelisted.
+GNU Affero General Public License
+GNU General Public License
+Genderqueer
+Get Backup Encryption Key
+Get OpenID Configuration
+Github flavoured markdown syntax
+Go to this URL after completing the form
+Google Analytics anonymise IP
+Google Drive Picker Enabled
+Gray
+HERE
+HTML with jinja support
+Headers must be a dictionary
+Helpful
+Hidden columns include: {0}
+Hide Empty Read-Only Fields
+Highlight
+Image link '{0}' is not valid
+Image: Corrupted Data Stream
+Impersonate
+Importing {0} is not allowed.
+Importing {0} of {1}, {2}
+Incoming
+Incoming (POP/IMAP) Settings
+Incoming Emails (Last 7 days)
+Incorrect value in row {0}:
+Indexing authorization code
+Insufficient Permission Level for {0}
+Insufficient attachment limit
+Intermediate
+Internal record of document shares
+Introduction
+Invalid
+Invalid Code. Please try again.
+Invalid Condition: {}
+Invalid Naming Series: {}
+Invalid Table Fieldname
+Invalid Webhook Secret
+Invalid aggregate function
+Invalid characters in table name: {0}
+Invalid field type: {0}
+Invalid redirect regex in row #{}: {}
+Invalid request arguments
+Invalid value specified for UUID: {}
+Invalid wkhtmltopdf version
+Invalid {0} dictionary format
+Invitation already accepted
+Invitation already exists
+Invitation cannot be cancelled
+Invitation is cancelled
+Invitation is expired
+Invitation to join {0} cancelled
+Invitation to join {0} expired
+Is Calendar and Gantt
+Job Stopped Successfully
+Job stopped successfully
+Join video conference with {0}
+Keep track of all update feeds
+Keeps track of all communications
+Last Reset Password Key Generated On
+Length
+Let's set up your account
+Likes
+Limit must be a non-negative integer
+Location
+Login with email link
+Madam
+Major
+Make Attachment Public (by default)
+Make Attachments Public by Default
+Male
+Master
+Max auto email report per user
+Max signups allowed per hour
+Meeting
+Members
+Metadata
+Middle Name (Optional)
+Minor
+Misconfigured
+Miss
+Missing Filters Required
+Mobile
+Module onboarding progress reset
+Most probably your password is too long.
+Mr
+Mrs
+Ms
+Network Printer Settings
+No Email field found in {0}
+No email addresses to invite

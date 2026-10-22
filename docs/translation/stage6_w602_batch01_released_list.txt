@@ -1,0 +1,85 @@
+Added Supplier Role to User {0}.
+Allow Purchase Order with Zero Quantity
+Allow Request for Quotation with Zero Quantity
+Allow Supplier Quotation with Zero Quantity
+Analysis Chart
+Billed, Received & Returned
+Configure the action to stop the transaction or just warn if the same rate is not maintained.
+Could not find path for
+Creating Subcontracting Order ...
+Criteria weights must add up to 100%
+Expires in a week or less
+Expires today or already expired
+How often should Project be updated of Total Purchase Cost ?
+If checked, Rejected Quantity will be included while making Purchase Invoice from Purchase Receipt.
+If enabled, a print of this document will be attached to each email
+If enabled, all files attached to this document will be attached to each email
+If enabled, the system will generate an accounting entry for materials rejected in the Purchase Receipt.
+Internal Supplier for company {0} already exists
+Learn Procurement
+Linking to Customer Failed. Please try again.
+Partnership
+Percentage you are allowed to order beyond the Blanket Order quantity.
+Please add 'Supplier' role to user {0}.
+Please add Request for Quotation to the sidebar in Portal Settings.
+Portal Users
+Price ({0})
+Price Per Unit ({0})
+Purchase Receipt (Draft) will be auto-created on submission of Subcontracting Receipt.
+Raw materials consumed qty will be validated based on FG BOM required qty
+Row #{0}: BOM is not specified for subcontracting item {0}
+Row #{0}: Default BOM not found for FG Item {1}
+Row #{0}: Finished Good Item Qty can not be zero
+Row #{0}: Finished Good Item is not specified for service item {1}
+Row #{0}: Finished Good Item {1} must be a sub-contracted item
+Row #{0}: Item {1} does not exist
+Row #{1}: Warehouse is mandatory for stock Item {0}
+Subcontracting Order (Draft) will be auto-created on submission of Purchase Order.
+Subcontracting Order {0} created.
+Successfully linked to Customer
+Supplied Item
+Supplier of Goods or Services.
+This Purchase Order has been fully subcontracted.
+This is a preview of the email to be sent. A PDF of the document will automatically be attached with the email.
+To be Delivered to Customer
+Unable to find variable:
+{}  To Receive
+{} Pending
+% of materials billed against this Sales Order
+% of materials delivered against this Sales Order
+'Allow Multiple Sales Orders Against a Customer's Purchase Order'
+Action if Same Rate is Not Maintained Throughout Sales Cycle
+All the items have been already returned.
+Allow Item to be Added Multiple Times in a Transaction
+Allow Quotation with Zero Quantity
+Allow Sales Order Creation For Expired Quotation
+Allow Sales Order with Zero Quantity
+Buyer of Goods and Services.
+Bypass credit check at Sales Order
+Calculate Product Bundle Price based on Child Items' Rates
+Changed customer name to '{}' as '{}' already exists.
+Click to add email / phone
+Creating Delivery Schedule...
+Creating Subcontracting Inward Order ...
+Curves
+Discount cannot be greater than 100%
+Discount cannot be greater than 100%.
+Don't Reserve Sales Order Qty on Sales Return
+Editing {0} is not allowed as per POS Profile settings
+Enable Cut-Off Date on Bulk Delivery Note Creation
+Fetched only {0} available serial numbers.
+If enabled, additional ledger entries will be made for discounts in a separate Discount Account
+Internal Customer for company {0} already exists
+Item is removed since no serial / batch no selected.
+Item {0} has no Serial No. Only serialized items can have delivery based on Serial No
+Learn Sales Management
+Linking to Supplier Failed. Please try again.
+Mention if non-standard Receivable account
+Multiple Loyalty Programs found for Customer {}. Please select manually.
+No of Deliveries
+Non-Zeros
+Only Value available for Payment Entry
+Opportunities by Campaign
+Opportunities by Medium
+Opportunities by Source
+POS Opening Entry has been cancelled. Please refresh the page.

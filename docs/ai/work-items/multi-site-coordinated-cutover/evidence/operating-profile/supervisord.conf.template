@@ -1,0 +1,63 @@
+; Production supervisord template — isolated bench operating profile (G15)
+; Render with: envsubst < supervisord.conf.template > supervisord.conf
+[unix_http_server]
+file=/var/run/supervisord-frappe-prod.sock
+
+[supervisord]
+logfile=/var/log/frappe-prod/supervisord.log
+pidfile=/var/run/supervisord-frappe-prod.pid
+childlogdir=/var/log/frappe-prod
+nodaemon=false
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisord-frappe-prod.sock
+
+[program:frappe-web]
+command=/home/frappe/frappe-bench/env/bin/gunicorn -w 4 -b 127.0.0.1:18000 --timeout 120 frappe.app:application --preload
+directory=/home/frappe/frappe-bench/sites
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/frappe-prod/web.err.log
+stdout_logfile=/var/log/frappe-prod/web.out.log
+user=frappe
+priority=10
+
+[program:frappe-worker-default]
+command=/home/frappe/frappe-bench/env/bin/bench worker --queue default --site all
+directory=/home/frappe/frappe-bench/sites
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/frappe-prod/worker-default.err.log
+user=frappe
+priority=20
+
+[program:frappe-worker-long]
+command=/home/frappe/frappe-bench/env/bin/bench worker --queue long,timeouts --site all
+directory=/home/frappe/frappe-bench/sites
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/frappe-prod/worker-long.err.log
+user=frappe
+priority=20
+
+[program:frappe-scheduler]
+command=/home/frappe/frappe-bench/env/bin/bench schedule
+directory=/home/frappe/frappe-bench/sites
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/frappe-prod/scheduler.err.log
+user=frappe
+priority=30
+
+[program:frappe-socketio]
+command=/usr/bin/node /home/frappe/frappe-bench/apps/frappe/socketio.js
+directory=/home/frappe/frappe-bench/sites
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/frappe-prod/socketio.err.log
+user=frappe
+priority=15
+environment=NODE_OPTIONS="--max-old-space-size=512"

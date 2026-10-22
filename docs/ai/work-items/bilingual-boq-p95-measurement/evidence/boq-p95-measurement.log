@@ -1,0 +1,19 @@
+=== MEASURING BOQ HEADER (n=100, 5 rounds) ===
+BOQ Header baseline P95 (min-of-rounds): 0.851 ms
+BOQ Header governed P95 (min-of-rounds): 0.644 ms
+BOQ Header ratio: 0.7568
+BOQ Header tier: 2B
+BOQ Header relative gate: 1.50x OK
+BOQ Header absolute gate: OK
+BOQ Header match_sets_equal: True
+BOQ Header cleanup leftover: 0
+
+=== MEASURING BOQ STRUCTURE (n=100, 5 rounds) ===
+BOQ Structure baseline P95 (min-of-rounds): 0.985 ms
+BOQ Structure governed P95 (min-of-rounds): 0.757 ms
+BOQ Structure ratio: 0.7685
+BOQ Structure tier: 2B
+BOQ Structure relative gate: 1.50x OK
+BOQ Structure absolute gate: OK
+BOQ Structure match_sets_equal: True
+BOQ Structure cleanup leftover: 0

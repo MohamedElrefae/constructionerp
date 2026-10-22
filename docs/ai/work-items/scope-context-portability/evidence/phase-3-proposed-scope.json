@@ -1,0 +1,84 @@
+{
+  "allowed_paths": [
+    "scripts/ai_context_check.py",
+    "scripts/lint_scope_metadata.py",
+    "tests_offline/",
+    "docs/ai/SCHEMA_FACTS.md"
+  ],
+  "requirements": [
+    "SCP-R1",
+    "SCP-R2",
+    "SCP-R3",
+    "SCP-R4",
+    "SCP-R5",
+    "SCP-R6",
+    "SCP-R7"
+  ],
+  "requirement_descriptions": {
+    "SCP-R1": "Derive repo root using Path(__file__).resolve().parents[1]; pass derived root to schema_drift_checker.py in Check 8B.",
+    "SCP-R2": "Import-safe main() with __main__ guard; importing performs no checks or sys.exit.",
+    "SCP-R3": "Argparse --repo-root, --json and --help; never prompt or require --site/TARGET_SITE.",
+    "SCP-R4": "Preserve checks/failure semantics; missing or malformed input yields clear recorded FAIL and exit 1 without traceback.",
+    "SCP-R5": "Prove lint_scope_metadata.py offline path independence; change only for demonstrated gap.",
+    "SCP-R6": "Root tests_offline/conftest.py prevents Frappe package imports. Cover scope-field violations, malformed JSON, drift subprocess behavior, changed CWD, relocated copy, import safety and CLI exits.",
+    "SCP-R7": "Fresh-copy gate: pytest tests_offline and both checkers pass from clean copied checkout without site or app/Frappe packages. Preserve fixture-vs-real-evidence distinction."
+  },
+  "validation_commands": [
+    [
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+      "-m",
+      "pytest",
+      "tests_offline/",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    [
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+      "scripts/ai_context_check.py",
+      "--json"
+    ],
+    [
+      "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+      "scripts/lint_scope_metadata.py"
+    ]
+  ],
+  "requirement_paths": {
+    "SCP-R1": [
+      "scripts/ai_context_check.py"
+    ],
+    "SCP-R2": [
+      "scripts/ai_context_check.py"
+    ],
+    "SCP-R3": [
+      "scripts/ai_context_check.py"
+    ],
+    "SCP-R4": [
+      "scripts/ai_context_check.py"
+    ],
+    "SCP-R5": [
+      "scripts/lint_scope_metadata.py"
+    ],
+    "SCP-R6": [
+      "scripts/ai_context_check.py"
+    ],
+    "SCP-R7": [
+      "scripts/ai_context_check.py"
+    ]
+  },
+  "constraints": [
+    "Architecture and plan review only until explicit owner PLAN token; no builder launch before that gate.",
+    "No Git commit, push, merge, native tool reconfiguration, external memory/MCP calls, or ERP/site operations.",
+    "Read and work only in the execution root; never access /home/mohamed/frappe-bench/apps/construction or private ERP data.",
+    "Do not execute the old ai_context_check.py before its hard-coded root is removed; inspect it as source only.",
+    "Keep frozen orchestrator and all files outside allowed_paths unchanged.",
+    "Existing approved Phase 1/2 evidence is historical, do not rerun it.",
+    "All pilot validation is offline; use the provided stdlib+pytest environment, no package downloads or Frappe imports.",
+    "Architect must identify genuine baseline blockers rather than weakening checks or manufacturing findings. Test fixtures must not substitute for the real fresh-copy gate.",
+    "The only documentation change is regeneration of SCHEMA_FACTS.md from unchanged local DocType JSON to reconcile baseline Variation Order fields and generated metadata. Preserve all drift checks; no schema or site changes."
+  ],
+  "control_runtime": "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator",
+  "control_source_sha256": "4e01059e861249015363eabb487731477952c3943f0160f582f33485ebb1cc5c",
+  "execution_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+  "test_python": "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python"
+}

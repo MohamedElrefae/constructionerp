@@ -1,0 +1,22 @@
+==============================================================================
+POST-SYNC VERIFICATION bilingual-translation-catalog-sync
+==============================================================================
+glossary sha256         : 7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d
+glossary sha256 expected: 7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d
+payload sha256          : 0a55f3c120cf1ac381c0564407cdc7a9ea975782d68642c6a943807cdd70b421
+glossary meta version   : 2.1 (previous 2.0)
+glossary terms          : 47
+loader installed        : True
+rendered dict size      : 14439
+rendered match          : 47/47
+rendered divergent      : 0
+rendered absent/empty   : 0
+forbidden violations    : 0
+health.loader_installed : True
+health.has_drift        : False
+health.has_duplicates   : False
+Translation rows        : 22761
+Translation digest      : 20e391c6041b4be7d7ed81cc7445916276b57c891804a8d00d76559b7b97d6af
+apply-time digest       : 20e391c6041b4be7d7ed81cc7445916276b57c891804a8d00d76559b7b97d6af
+private verification sha: bede77c82977ce99d97f5f9824f96682a0b18b532be348d08d91d108f46e92b4
+POST-SYNC RESULT: PASS (47/47 rendered; drift false; payload frozen; 0 Translation writes)

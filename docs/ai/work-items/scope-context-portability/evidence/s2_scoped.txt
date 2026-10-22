@@ -1,0 +1,2 @@
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+checked={"construction/locale/ar.po": 805, "extract_scoped": {"files": 2, "json_labels": 0, "missing": 0, "wrapped": 6}, "json_labels": 19} errors=0

@@ -1,0 +1,539 @@
+{
+ "entries": [
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Account",
+   "meta_search_fields": [
+    "account_number"
+   ],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "account_name",
+    "account_name_ar",
+    "account_number"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "account_number",
+    "name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Asset",
+   "meta_search_fields": [
+    "asset_name"
+   ],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "asset_name",
+    "asset_name_ar"
+   ],
+   "title_field": "asset_name",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "asset_name",
+    "name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Asset Category",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "asset_category_name",
+    "asset_category_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "BOQ Header",
+   "meta_search_fields": [
+    "project_name",
+    "title"
+   ],
+   "missing_actual": [
+    "project_name"
+   ],
+   "missing_candidate": [
+    "project_name"
+   ],
+   "registry_search_fields": [
+    "title",
+    "title_ar"
+   ],
+   "title_field": "title",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name",
+    "project_name",
+    "title"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "BOQ Structure",
+   "meta_search_fields": [
+    "boq_header",
+    "is_group",
+    "parent_structure",
+    "title"
+   ],
+   "missing_actual": [
+    "boq_header",
+    "parent_structure"
+   ],
+   "missing_candidate": [
+    "boq_header",
+    "is_group",
+    "parent_structure"
+   ],
+   "registry_search_fields": [
+    "title",
+    "title_ar",
+    "wbs_code"
+   ],
+   "title_field": "title",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "boq_header",
+    "name",
+    "parent_structure",
+    "title"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Brand",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "brand",
+    "brand_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Company",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "company_name",
+    "company_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Cost Center",
+   "meta_search_fields": [
+    "is_group",
+    "parent_cost_center"
+   ],
+   "missing_actual": [
+    "parent_cost_center"
+   ],
+   "missing_candidate": [
+    "is_group",
+    "parent_cost_center"
+   ],
+   "registry_search_fields": [
+    "cost_center_name",
+    "cost_center_name_ar",
+    "cost_center_number"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name",
+    "parent_cost_center"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Customer",
+   "meta_search_fields": [
+    "customer_group",
+    "customer_name",
+    "mobile_no",
+    "primary_address",
+    "territory"
+   ],
+   "missing_actual": [
+    "customer_group",
+    "mobile_no",
+    "primary_address",
+    "territory"
+   ],
+   "missing_candidate": [
+    "customer_group",
+    "mobile_no",
+    "primary_address",
+    "territory"
+   ],
+   "registry_search_fields": [
+    "customer_name",
+    "customer_name_in_arabic"
+   ],
+   "title_field": "customer_name",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "customer_group",
+    "customer_name",
+    "mobile_no",
+    "name",
+    "primary_address",
+    "territory"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Customer Group",
+   "meta_search_fields": [
+    "parent_customer_group"
+   ],
+   "missing_actual": [
+    "parent_customer_group"
+   ],
+   "missing_candidate": [
+    "parent_customer_group"
+   ],
+   "registry_search_fields": [
+    "customer_group_name",
+    "customer_group_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": true,
+   "vendor_actual_fields": [
+    "name",
+    "parent_customer_group"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Department",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "department_name",
+    "department_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Employee",
+   "meta_search_fields": [
+    "employee_name"
+   ],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "employee_name",
+    "employee_name_ar"
+   ],
+   "title_field": "employee_name",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "employee_name",
+    "name"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Item",
+   "meta_search_fields": [
+    "customer_code",
+    "description",
+    "item_group",
+    "item_name"
+   ],
+   "missing_actual": [
+    "customer_code",
+    "description",
+    "item_group"
+   ],
+   "missing_candidate": [
+    "customer_code",
+    "description",
+    "item_group"
+   ],
+   "registry_search_fields": [
+    "item_code",
+    "item_name",
+    "item_name_ar"
+   ],
+   "title_field": "item_name",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "customer_code",
+    "description",
+    "item_group",
+    "item_name",
+    "name"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Item Group",
+   "meta_search_fields": [
+    "parent_item_group"
+   ],
+   "missing_actual": [
+    "parent_item_group"
+   ],
+   "missing_candidate": [
+    "parent_item_group"
+   ],
+   "registry_search_fields": [
+    "item_group_name",
+    "item_group_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": true,
+   "vendor_actual_fields": [
+    "name",
+    "parent_item_group"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Payment Terms Template",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "template_name",
+    "template_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Project",
+   "meta_search_fields": [
+    "customer",
+    "is_active",
+    "priority",
+    "project_name",
+    "status"
+   ],
+   "missing_actual": [
+    "customer",
+    "is_active",
+    "priority",
+    "status"
+   ],
+   "missing_candidate": [
+    "customer",
+    "is_active",
+    "priority",
+    "status"
+   ],
+   "registry_search_fields": [
+    "project_name",
+    "project_name_ar"
+   ],
+   "title_field": "project_name",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "customer",
+    "is_active",
+    "name",
+    "priority",
+    "project_name",
+    "status"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Supplier",
+   "meta_search_fields": [
+    "supplier_group",
+    "supplier_name"
+   ],
+   "missing_actual": [
+    "supplier_group"
+   ],
+   "missing_candidate": [
+    "supplier_group"
+   ],
+   "registry_search_fields": [
+    "supplier_name",
+    "supplier_name_in_arabic"
+   ],
+   "title_field": "supplier_name",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name",
+    "supplier_group",
+    "supplier_name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Supplier Group",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "supplier_group_name",
+    "supplier_group_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": true,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Task",
+   "meta_search_fields": [
+    "subject"
+   ],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "subject",
+    "subject_ar"
+   ],
+   "title_field": "subject",
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name",
+    "subject"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Terms and Conditions",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "title",
+    "title_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": false,
+   "covers_candidate": false,
+   "doctype": "Territory",
+   "meta_search_fields": [
+    "parent_territory",
+    "territory_manager"
+   ],
+   "missing_actual": [
+    "parent_territory",
+    "territory_manager"
+   ],
+   "missing_candidate": [
+    "parent_territory",
+    "territory_manager"
+   ],
+   "registry_search_fields": [
+    "territory_name",
+    "territory_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": true,
+   "vendor_actual_fields": [
+    "name",
+    "parent_territory",
+    "territory_manager"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "UOM",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "common_code",
+    "uom_name",
+    "uom_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": true,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  },
+  {
+   "covers_actual": true,
+   "covers_candidate": true,
+   "doctype": "Warehouse",
+   "meta_search_fields": [],
+   "missing_actual": [],
+   "missing_candidate": [],
+   "registry_search_fields": [
+    "warehouse_name",
+    "warehouse_name_ar"
+   ],
+   "title_field": null,
+   "translated_doctype": false,
+   "vendor_actual_fields": [
+    "name"
+   ]
+  }
+ ],
+ "registry_load_errors": []
+}

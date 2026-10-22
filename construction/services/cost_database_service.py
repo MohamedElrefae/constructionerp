@@ -1,0 +1,1678 @@
+import io
+import posixpath
+import xml.etree.ElementTree as ET
+import zipfile
+from datetime import datetime
+
+import frappe
+from frappe import _
+from frappe.utils import cint, flt, getdate, today
+
+from construction.services.boq_import_service import BOQImportService
+from construction.services.boq_pricing import number
+from construction.services.resource_price_service import get_suggested_rate
+
+# ---------------------------------------------------------------------------
+# Bulk Repricing
+# ---------------------------------------------------------------------------
+
+# Valid BOQ Cost Analysis Detail.cost_stream codes (Material, Labor, Plant,
+# Subcontract, Overhead). Used to validate an incoming cost_stream filter so a
+# mistyped or unfiltered request can never widen beyond the requested stream.
+VALID_COST_STREAMS = frozenset({"M", "L", "P", "S", "O"})
+
+# Keep the offered import path within the established BOQ XLSX safety envelope.
+COST_DATABASE_MAX_FILE_SIZE_BYTES = BOQImportService.MAX_FILE_SIZE
+COST_DATABASE_MAX_WORKSHEETS = 10
+COST_DATABASE_MAX_IMPORTED_ROWS = 2000
+COST_DATABASE_MAX_TRAVERSED_ROWS = 50000
+COST_DATABASE_MAX_RESULT_MESSAGES = 100
+
+
+def bulk_reprice_analyses(
+    boq_header=None,
+    boq_item=None,
+    item_code=None,
+    resource_type=None,
+    cost_stream=None,
+    company=None,
+    region=None,
+    as_of_date=None,
+    dry_run=False,
+    atomic=True,
+):
+    """Update cost_rate on BOQ Cost Analysis Detail rows from latest Resource Price History.
+
+    Only Draft analyses are repriced by default. Approved analyses should be superseded
+    by new approved versions rather than silently mutated.
+
+    Scalability: analyses/details and the rate lookups are bulk-preloaded in bounded
+    queries (no per-analysis / per-key N+1), and rates are resolved in memory.
+
+    Atomicity: when ``atomic`` is True (default) the whole batch is wrapped in a
+    savepoint and rolled back on any failure — no partially repriced dataset is
+    left behind. When ``atomic`` is False a partial mode is used (per-analysis
+    errors are collected and survivors are kept).
+
+    Returns a summary dict:
+        {
+            "success": bool,
+            "analyses_touched": int,
+            "details_updated": int,
+            "details_unchanged": int,
+            "errors": [str],
+        }
+    """
+    errors = []
+    counters = {"updated": 0, "unchanged": 0}
+    analyses_touched = set()
+
+    filters = {"docstatus": 0, "analysis_status": "Draft"}
+    if boq_header:
+        filters["boq_header"] = boq_header
+    if boq_item:
+        filters["boq_item"] = boq_item
+    if company:
+        filters["company"] = company
+
+    analysis_names = frappe.get_list(
+        "BOQ Cost Analysis",
+        filters=filters,
+        pluck="name",
+        order_by="modified desc",
+        limit_page_length=0,
+    )
+
+    detail_filters = {}
+    resource_type_items = None
+    if item_code:
+        detail_filters["item_code"] = item_code
+    if cost_stream:
+        # cost_stream is a Select field (M/L/P/S/O). Reject invalid codes up
+        # front so a mistyped filter cannot silently widen the repricing scope.
+        if cost_stream not in VALID_COST_STREAMS:
+            frappe.throw(
+                _("Invalid cost_stream '{0}'. Valid values: {1}").format(
+                    cost_stream, ", ".join(sorted(VALID_COST_STREAMS))
+                )
+            )
+        detail_filters["cost_stream"] = cost_stream
+    if resource_type:
+        # BOQ Cost Analysis Detail rows carry no resource_type field; resolve it
+        # from the linked Item's construction_resource_type custom field instead.
+        resource_type_items = set(
+            frappe.get_list(
+                "Item",
+                filters={"construction_resource_type": resource_type},
+                pluck="name",
+                limit_page_length=0,
+            )
+        )
+        if not resource_type_items:
+            return {
+                "analyses_touched": 0,
+                "details_updated": 0,
+                "details_unchanged": 0,
+                "errors": [],
+            }
+
+    # ── 1. Bulk-load the candidate analyses + their details (one bounded pass) ──
+    analyses = []
+    item_codes = set()
+    if analysis_names:
+        detail_rows = frappe.get_all(
+            "BOQ Cost Analysis Detail",
+            filters=[["parent", "in", analysis_names]],
+            fields=["name", "parent", "item_code", "supplier", "cost_rate", "rate_source", "cost_stream"],
+            limit_page_length=0,
+        )
+        if detail_filters:
+            detail_rows = [r for r in detail_rows if all(r.get(k) == v for k, v in detail_filters.items())]
+        if resource_type_items is not None:
+            detail_rows = [r for r in detail_rows if r.item_code in resource_type_items]
+        item_codes = {r["item_code"] for r in detail_rows if r["item_code"]}
+
+    # ── 2. Bulk-preload the rate lookups (no per-key N+1) ──
+    bulk_rate_lookup = _build_bulk_rate_lookup(item_codes, as_of_date=as_of_date)
+
+    # ── 3. Apply the repricing atomically (or in partial mode) ──
+    savepoint = None
+    if not dry_run and atomic:
+        savepoint = f"sp_bulk_reprice_{frappe.generate_hash(length=8)}"
+        frappe.db.savepoint(savepoint)
+
+    try:
+        for analysis_name in analysis_names:
+            try:
+                if frappe.session.user != "Administrator":
+                    frappe.has_permission("BOQ Cost Analysis", "write", doc=analysis_name, throw=True)
+                _apply_bulk_reprice_to_analysis(
+                    analysis_name,
+                    detail_rows,
+                    bulk_rate_lookup,
+                    as_of_date=as_of_date,
+                    region=region,
+                    cost_stream=cost_stream,
+                    dry_run=dry_run,
+                    analyses_touched=analyses_touched,
+                    counters=counters,
+                )
+            except Exception as e:
+                errors.append(f"{analysis_name}: {str(e)}")
+                if atomic and savepoint:
+                    raise
+    except Exception:
+        if savepoint:
+            frappe.db.rollback(save_point=savepoint)
+        raise
+
+    if savepoint:
+        frappe.db.savepoint(savepoint)  # commit batch *to* the savepoint boundary
+
+    return {
+        "success": len(errors) == 0,
+        "analyses_touched": len(analyses_touched),
+        "details_updated": counters["updated"],
+        "details_unchanged": counters["unchanged"],
+        "errors": errors,
+    }
+
+
+def _apply_bulk_reprice_to_analysis(
+    analysis_name,
+    detail_rows,
+    bulk_rate_lookup,
+    as_of_date=None,
+    region=None,
+    cost_stream=None,
+    dry_run=False,
+    analyses_touched=None,
+    counters=None,
+):
+    """Apply the rate updates for one analysis given its preloaded detail rows.
+
+    ``counters`` is mutated in place (a dict with 'updated'/'unchanged') so the
+    caller can aggregate without a second pass. When ``cost_stream`` is set, only
+    detail rows in that stream are repriced (defense in depth — the caller also
+    pre-filters detail_rows).
+    """
+    if analyses_touched is None:
+        analyses_touched = set()
+    if counters is None:
+        counters = {"updated": 0, "unchanged": 0}
+
+    doc = frappe.get_doc("BOQ Cost Analysis", analysis_name)
+    rows_for_doc = [r for r in detail_rows if r.get("parent") == analysis_name]
+    changed = False
+
+    # Eligible rows are identified by their EXACT child-row name, not by
+    # (item_code, supplier): two rows can legitimately share the same item and
+    # supplier while belonging to different cost streams. Keying eligibility on
+    # the tuple would let one stream's filter update a row of another stream.
+    eligible_by_name = {r.get("name") for r in rows_for_doc if r.get("name")}
+
+    for row in doc.get("details") or []:
+        # Every filter (resource code/type/stream) applies to exact rows.
+        if row.get("name") not in eligible_by_name:
+            continue
+
+        # Match the preloaded detail row so row.item_code/supplier are canonical.
+        suggested = bulk_rate_lookup.resolve(
+            item_code=row.item_code,
+            supplier=row.supplier,
+            company=doc.company,
+            region=region or doc.get("region"),
+            as_of_date=as_of_date,
+        )
+        new_rate = flt(suggested.get("rate"))
+        if new_rate <= 0:
+            continue
+        if abs(flt(row.cost_rate) - new_rate) < 0.0001:
+            counters["unchanged"] += 1
+            continue
+
+        if not dry_run:
+            row.cost_rate = new_rate
+            row.rate_source = suggested.get("source", "Resource Price History")
+        counters["updated"] += 1
+        changed = True
+
+    if changed:
+        analyses_touched.add(analysis_name)
+        if not dry_run:
+            doc.calculate_totals()
+            doc.save()
+
+
+class _BulkRateLookup:
+    """In-memory rate resolver built from bulk-preloaded Resource Price History
+    and Item Price rows. Mirrors get_suggested_rate's priority:
+    Last PI > Last PO > other history > Item Price."""
+
+    def __init__(self, history_rows, item_prices):
+        # history_rows: list of dicts (item_code, supplier, company, region,
+        # source_doctype, rate, price_date). item_prices: item_code -> rate.
+        self._prices = item_prices
+        # Group history by item_code, keeping only latest per (source_doctype,
+        # supplier, company, region).
+        self._by_item = {}
+        for row in history_rows:
+            key = (
+                row.get("supplier"),
+                row.get("company"),
+                row.get("region"),
+                row.get("source_doctype"),
+            )
+            bucket = self._by_item.setdefault(row["item_code"], {})
+            existing = bucket.get(key)
+            if existing is None or _row_is_newer(row, existing):
+                bucket[key] = row
+
+    def resolve(self, item_code, supplier=None, company=None, region=None, as_of_date=None):
+        source_doctype_order = {
+            "Purchase Invoice": 0,
+            "Purchase Order": 1,
+            None: 2,
+        }
+        # Collect candidate rows matching this key's attributes.
+        candidates = []
+        for (i_supplier, i_company, i_region, source_doctype), row in self._by_item.get(
+            item_code, {}
+        ).items():
+            if supplier and i_supplier != supplier:
+                continue
+            if company and i_company != company:
+                continue
+            if region and i_region != region:
+                continue
+            if as_of_date and row.get("price_date") and row["price_date"] > as_of_date:
+                continue
+            candidates.append(row)
+
+        # Sort by source priority, then price_date desc, modified desc.
+        candidates.sort(key=lambda r: (source_doctype_order.get(r.get("source_doctype"), 3), -_row_ts(r)))
+        for row in candidates:
+            rate = flt(row.get("rate"))
+            if rate and rate > 0:
+                return {
+                    "rate": rate,
+                    "source": _source_label(row.get("source_doctype")),
+                    "source_name": row.get("source_name"),
+                }
+
+        price = flt(self._prices.get(item_code, 0))
+        if price > 0:
+            return {"rate": price, "source": "Item Price", "source_name": None}
+
+        return {"rate": 0, "source": "None", "source_name": None}
+
+
+def _build_bulk_rate_lookup(item_codes, as_of_date=None):
+    """Bulk-load Resource Price History and Item Price for all ``item_codes``."""
+    prices = {}
+    history_rows = []
+    if item_codes:
+        item_list = list(item_codes)
+        rph_filters = [["item_code", "in", item_list], ["status", "Active"]]
+        if as_of_date:
+            rph_filters.append(["price_date", "<=", as_of_date])
+        history_rows = frappe.get_list(
+            "Resource Price History",
+            filters=rph_filters,
+            fields=[
+                "item_code",
+                "supplier",
+                "company",
+                "region",
+                "source_doctype",
+                "rate",
+                "price_date",
+                "source_name",
+                "modified",
+            ],
+            order_by="price_date desc, modified desc",
+            limit_page_length=0,
+        )
+        # Item Price fallback (Standard Buying, buying).
+        price_rows = frappe.get_list(
+            "Item Price",
+            filters=[["item_code", "in", item_list], ["buying", 1], ["price_list", "Standard Buying"]],
+            fields=["item_code", "price_list_rate"],
+            order_by="valid_from desc",
+            limit_page_length=0,
+        )
+        for pr in price_rows:
+            if pr["item_code"] not in prices:
+                prices[pr["item_code"]] = flt(pr["price_list_rate"])
+    return _BulkRateLookup(history_rows, prices)
+
+
+def _row_ts(row):
+    """Sortable timestamp numeric key (days-since-epoch from price_date).
+    A date cannot be negated, so return an int for stable descending sort."""
+    from frappe.utils import flt, getdate
+
+    return int(flt(getdate(row.get("price_date") or "1970-01-01").toordinal()))
+
+
+def _row_is_newer(a, b):
+    return _row_ts(a) > _row_ts(b) or (
+        _row_ts(a) == _row_ts(b) and (a.get("modified") or "") > (b.get("modified") or "")
+    )
+
+
+def _source_label(source_doctype):
+    labels = {
+        "Purchase Invoice": "Last PI",
+        "Purchase Order": "Last PO",
+    }
+    return labels.get(source_doctype, "Last Price History")
+
+
+# ---------------------------------------------------------------------------
+# Excel Import
+# ---------------------------------------------------------------------------
+
+# Canonical column -> list of accepted aliases (case-insensitive)
+COLUMN_ALIASES = {
+    "resource_code": ["resource_code", "code", "كود المورد", "resource_id"],
+    "name_en": ["name_en", "name", "الاسم انجليزي"],
+    "name_ar": ["name_ar", "الاسم عربي", "description_ar"],
+    "resource_type": ["resource_type", "type", "نوع المورد"],
+    "cost_stream": ["cost_stream", "stream", "تصنيف التكلفة"],
+    "category": ["category", "الفئة"],
+    "uom": ["uom", "unit", "وحدة"],
+    "unit_price_egp": ["unit_price_egp", "price", "السعر", "unit_price", "rate"],
+    "currency": ["currency", "العملة"],
+    "exchange_rate": ["exchange_rate", "سعر الصرف"],
+    "company": ["company", "الشركة"],
+    "region": ["region", "المنطقة", "location", "city"],
+    "price_date": ["price_date", "date", "التاريخ", "effective_date"],
+    "source_name": ["source_name", "source", "المصدر"],
+    "supplier": ["supplier", "المورد"],
+    "remarks": ["remarks", "ملاحظات"],
+    "template_name": ["template_name", "boq_item_code", "item_code", "boq_code", "كود البند"],
+    "description_en": ["description_en", "description", "الوصف انجليزي"],
+    "description_ar": ["description_ar", "الوصف عربي"],
+    "overhead_pct": ["overhead_pct", "overhead", "نسبة العمارة"],
+    "profit_pct": ["profit_pct", "profit", "نسبة الربح"],
+    "tender_tax_pct": [
+        "tender_tax_pct",
+        "tax_allowance_pct",
+        "tender_tax",
+        "tax_allowance",
+        "نسبة ضريبة المناقصة",
+        "نسبة الضريبة",
+    ],
+    "qty_per_boq_unit": ["qty_per_boq_unit", "quantity", "الكمية", "coef", "qty"],
+    "wastage_pct": ["wastage_pct", "wastage", "الهالك", "loss", "wastage_percent"],
+    "cost_rate": ["cost_rate", "cost_rate", "سعر الوحدة", "unit_cost"],
+    "rate_source": ["rate_source", "مصدر السعر"],
+}
+
+REQUIRED_RESOURCE_COLUMNS = {
+    "resource_code",
+    "name_en",
+    "resource_type",
+    "cost_stream",
+    "uom",
+    "unit_price_egp",
+}
+REQUIRED_TEMPLATE_COLUMNS = {"template_name", "description_en", "uom", "overhead_pct", "profit_pct"}
+REQUIRED_RATE_COLUMNS = {"template_name", "resource_code", "qty_per_boq_unit", "cost_stream", "cost_rate"}
+
+RESOURCE_TYPE_TO_STREAM = {
+    "Material": "M",
+    "Labor": "L",
+    "Plant": "P",
+    "Subcontract": "S",
+    "Overhead": "O",
+}
+
+
+def import_cost_database_from_excel(
+    file_content,
+    file_name,
+    company,
+    dry_run=False,
+    auto_submit=False,
+    region=None,
+    price_date=None,
+):
+    """Import a cost database from an Excel workbook.
+
+    Expected sheets (in Arabic or English aliases):
+        - Resources
+        - BOQItemTemplates
+        - RateAnalysis
+
+    Returns:
+        {
+            "success": bool,
+            "dry_run": bool,
+            "records_created": {...},
+            "errors": [str],
+            "warnings": [str],
+        }
+    """
+    try:
+        import openpyxl
+    except ImportError:
+        return {
+            "success": False,
+            "dry_run": dry_run,
+            "errors": ["openpyxl is required for Excel import"],
+            "warnings": [],
+            "records_created": {},
+            "records_updated": {},
+            "records_skipped": {},
+        }
+
+    errors = []
+    warnings = []
+    records_created = {
+        "items": [],
+        "resource_price_history": [],
+        "boq_cost_analysis_templates": [],
+    }
+    records_updated = {
+        "items": [],
+        "boq_cost_analysis_templates": [],
+    }
+    records_skipped = {
+        "resource_price_history": [],
+        "boq_cost_analysis_templates": [],
+    }
+
+    if not isinstance(file_content, (bytes | bytearray)):
+        errors.append("Excel file content must be bytes")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+    if len(file_content) > COST_DATABASE_MAX_FILE_SIZE_BYTES:
+        limit_mib = COST_DATABASE_MAX_FILE_SIZE_BYTES // (1024 * 1024)
+        errors.append(f"Uploaded file exceeds the maximum allowed size of {limit_mib} MiB")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    if not company:
+        errors.append("company is required")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    if frappe.session.user != "Administrator":
+        # Preview and commit have the same authorization contract. Validate
+        # before parsing or returning company defaults/existing record names.
+        frappe.has_permission("Company", "read", doc=company, throw=True)
+        for doctype in ("Resource Price History", "Item", "BOQ Cost Analysis"):
+            frappe.has_permission(doctype, "create", throw=True)
+
+    if not frappe.db.exists("Company", company):
+        errors.append(f"Company {company} does not exist")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    default_currency = frappe.db.get_value("Company", company, "default_currency") or "EGP"
+    default_price_date = price_date or today()
+
+    try:
+        # Reuse the BOQ importer's ZIP/XML pre-scan before openpyxl can parse
+        # worksheet objects. The archive is already bounded to 25 MiB.
+        sheet_bounds = _prescan_cost_database_xlsx(file_content)
+        wb = openpyxl.load_workbook(io.BytesIO(file_content), data_only=True, read_only=True)
+    except Exception as e:
+        errors.append(f"Could not read Excel file safely: {str(e)}")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    if len(wb.worksheets) > COST_DATABASE_MAX_WORKSHEETS:
+        wb.close()
+        errors.append(f"Workbook contains more than {COST_DATABASE_MAX_WORKSHEETS} worksheets")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    resources_sheet = _find_sheet(wb, ["Resources", "resources", "موارد"])
+    templates_sheet = _find_sheet(
+        wb, ["BOQItemTemplates", "boqitemtemplates", "Templates", "templates", "بنود"]
+    )
+    rate_sheet = _find_sheet(
+        wb, ["RateAnalysis", "rateanalysis", "Rate Analysis", "rate analysis", "تحليل الأسعار"]
+    )
+
+    if not resources_sheet:
+        wb.close()
+        errors.append("Resources sheet not found")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+    if not templates_sheet:
+        wb.close()
+        errors.append("BOQItemTemplates sheet not found")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+    if not rate_sheet:
+        wb.close()
+        errors.append("RateAnalysis sheet not found")
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    for sheet in (resources_sheet, templates_sheet, rate_sheet):
+        # Read-only mode trusts declared dimensions. The pre-scan found real
+        # XML bounds, so clear the cache before iterating with those bounds.
+        sheet.reset_dimensions()
+
+    try:
+        remaining_rows = COST_DATABASE_MAX_IMPORTED_ROWS
+        remaining_traversed = COST_DATABASE_MAX_TRAVERSED_ROWS
+        resources_data, traversed = _sheet_to_records(
+            resources_sheet, remaining_rows, remaining_traversed, sheet_bounds[resources_sheet.title]
+        )
+        remaining_rows -= len(resources_data)
+        remaining_traversed -= traversed
+        templates_data, traversed = _sheet_to_records(
+            templates_sheet, remaining_rows, remaining_traversed, sheet_bounds[templates_sheet.title]
+        )
+        remaining_rows -= len(templates_data)
+        remaining_traversed -= traversed
+        rate_data, _ = _sheet_to_records(
+            rate_sheet, remaining_rows, remaining_traversed, sheet_bounds[rate_sheet.title]
+        )
+    except (ValueError, frappe.ValidationError) as e:
+        wb.close()
+        errors.append(str(e))
+        return _build_result(False, dry_run, records_created, errors, warnings)
+    finally:
+        wb.close()
+
+    # --- Validate headers ---
+    if resources_data:
+        missing = REQUIRED_RESOURCE_COLUMNS - set(resources_data[0].keys())
+        if missing:
+            errors.append(f"Resources sheet missing columns: {', '.join(sorted(missing))}")
+    if templates_data:
+        missing = REQUIRED_TEMPLATE_COLUMNS - set(templates_data[0].keys())
+        if missing:
+            errors.append(f"BOQItemTemplates sheet missing columns: {', '.join(sorted(missing))}")
+    if rate_data:
+        missing = REQUIRED_RATE_COLUMNS - set(rate_data[0].keys())
+        if missing:
+            errors.append(f"RateAnalysis sheet missing columns: {', '.join(sorted(missing))}")
+
+    if errors:
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    # --- Build lookup maps ---
+    for sheet_name, rows, fields in (
+        ("Resources", resources_data, ("unit_price_egp", "exchange_rate")),
+        ("BOQItemTemplates", templates_data, ("overhead_pct", "profit_pct", "tender_tax_pct")),
+        ("RateAnalysis", rate_data, ("qty_per_boq_unit", "wastage_pct", "cost_rate")),
+    ):
+        for index, row in enumerate(rows, start=2):
+            for field in fields:
+                value = row.get(field)
+                if field == "exchange_rate" and value in (None, ""):
+                    value = 1
+                try:
+                    row[field] = number(
+                        value,
+                        field,
+                        maximum=100 if field.endswith("_pct") else None,
+                        positive=field == "exchange_rate",
+                    )
+                except frappe.ValidationError as exc:
+                    errors.append(f"{sheet_name} row {index}: {exc}")
+    if errors:
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    resource_code_to_name = {}
+    template_name_to_doc = {}
+
+    # --- Validate resources ---
+    valid_resource_types = set(RESOURCE_TYPE_TO_STREAM.keys())
+    valid_streams = set(RESOURCE_TYPE_TO_STREAM.values())
+
+    for idx, row in enumerate(resources_data, start=2):
+        resource_code = _clean_string(row.get("resource_code"))
+        if not resource_code:
+            errors.append(f"Resources row {idx}: resource_code is required")
+            continue
+
+        # F18: rows carry their own company scope. A non-empty row company
+        # that differs from the requested import company is refused in both
+        # preview and commit — never silently restamped.
+        row_company = _clean_string(row.get("company"))
+        if row_company and row_company != company:
+            errors.append(
+                f"Resources row {idx}: row company '{row_company}' does not match import company '{company}'"
+            )
+            continue
+
+        resource_type = _clean_string(row.get("resource_type"))
+        if resource_type not in valid_resource_types:
+            errors.append(f"Resources row {idx}: invalid resource_type '{resource_type}'")
+            continue
+
+        cost_stream = _clean_string(row.get("cost_stream"))
+        expected_stream = RESOURCE_TYPE_TO_STREAM.get(resource_type)
+        if cost_stream and cost_stream not in valid_streams:
+            errors.append(f"Resources row {idx}: invalid cost_stream '{cost_stream}'")
+            continue
+        if cost_stream and cost_stream != expected_stream:
+            warnings.append(
+                f"Resources row {idx}: cost_stream '{cost_stream}' does not match expected '{expected_stream}' for {resource_type}"
+            )
+
+        resource_code_to_name[resource_code] = _clean_string(row.get("name_en"))
+
+        # F18 preview-time shared-master check (read-only): the same
+        # compatibility rule enforced at commit, so conflicts and proposed
+        # creations are visible before confirmation.
+        if frappe.db.exists("Item", resource_code):
+            existing = frappe.db.get_value(
+                "Item",
+                resource_code,
+                [
+                    "item_name",
+                    "item_name_ar",
+                    "is_construction_resource",
+                    "construction_resource_type",
+                    "default_cost_stream",
+                    "stock_uom",
+                ],
+                as_dict=True,
+            )
+            if existing:
+                _conflicts = []
+                _name_en = _clean_string(row.get("name_en"))
+                _name_ar = _clean_string(row.get("name_ar"))
+                _rtype = _clean_string(row.get("resource_type"))
+                _stream = _clean_string(row.get("cost_stream")) or RESOURCE_TYPE_TO_STREAM.get(_rtype)
+                _uom = _clean_string(row.get("uom"))
+                if _name_en and existing.item_name != _name_en:
+                    _conflicts.append("item_name differs")
+                if _name_ar and existing.item_name_ar != _name_ar:
+                    _conflicts.append("item_name_ar differs")
+                if not existing.is_construction_resource:
+                    _conflicts.append("not a construction resource")
+                if _rtype and existing.construction_resource_type != _rtype:
+                    _conflicts.append("resource type differs")
+                if _stream and existing.default_cost_stream != _stream:
+                    _conflicts.append("cost stream differs")
+                # F35: UOM codes are identifiers, not prose. The framework normalises a
+                # Link value to the canonical target name on save ("Ton" is stored as
+                # "TON"), so an exact string compare false-conflicts on re-import.
+                # Compare case-insensitively; names/type/stream stay exact.
+                if (
+                    _uom
+                    and (existing.stock_uom or "") != _uom
+                    and (existing.stock_uom or "").lower() != _uom.lower()
+                ):
+                    _conflicts.append("stock UOM differs")
+                if _conflicts:
+                    errors.append(
+                        f"Resources row {idx}: existing Item {resource_code} conflicts "
+                        f"({'; '.join(_conflicts)}). Reuse requires identical values."
+                    )
+                    continue
+
+    # --- Validate templates ---
+    template_names = set()
+    for idx, row in enumerate(templates_data, start=2):
+        template_name = _clean_string(row.get("template_name"))
+        if not template_name:
+            errors.append(f"BOQItemTemplates row {idx}: template_name is required")
+            continue
+        template_names.add(template_name)
+
+    # --- Validate rate analysis ---
+    for idx, row in enumerate(rate_data, start=2):
+        template_name = _clean_string(row.get("template_name"))
+        resource_code = _clean_string(row.get("resource_code"))
+        if template_name and template_name not in template_names:
+            errors.append(
+                f"RateAnalysis row {idx}: template_name '{template_name}' not found in BOQItemTemplates"
+            )
+        if resource_code and resource_code not in resource_code_to_name:
+            errors.append(f"RateAnalysis row {idx}: resource_code '{resource_code}' not found in Resources")
+
+        qty = flt(row.get("qty_per_boq_unit"))
+        if qty < 0:
+            errors.append(f"RateAnalysis row {idx}: qty_per_boq_unit must be >= 0")
+        wastage = flt(row.get("wastage_pct", 0))
+        if wastage < 0 or wastage > 100:
+            errors.append(f"RateAnalysis row {idx}: wastage_pct must be between 0 and 100")
+
+    if errors:
+        return _build_result(False, dry_run, records_created, errors, warnings)
+
+    if frappe.session.user != "Administrator":
+        # Per-write authorization, checked before parsing results are used.
+        # Item writes are absent by design (reuse-or-refuse above), so only
+        # Item create is required — never Item write. UOM inserts below reuse
+        # this same-request check.
+        for row in resources_data:
+            code = _clean_string(row.get("resource_code"))
+            if code and frappe.db.exists("Item", code):
+                continue  # reuse path performs no write; conflicts already refused above
+            uom = _clean_string(row.get("uom"))
+            if uom and not frappe.db.exists("UOM", uom):
+                frappe.has_permission("UOM", "create", throw=True)
+        for row in templates_data:
+            existing = frappe.db.get_value(
+                "BOQ Cost Analysis",
+                {
+                    "template_name": _clean_string(row.get("template_name")),
+                    "company": company,
+                    "is_template": 1,
+                },
+                "name",
+            )
+            if existing:
+                doc = frappe.get_doc("BOQ Cost Analysis", existing)
+                frappe.has_permission(
+                    "BOQ Cost Analysis", "read" if doc.docstatus else "write", doc=doc, throw=True
+                )
+                if auto_submit and doc.docstatus == 0:
+                    frappe.has_permission("BOQ Cost Analysis", "submit", doc=doc, throw=True)
+        if auto_submit:
+            frappe.has_permission("BOQ Cost Analysis", "submit", throw=True)
+
+    if dry_run:
+        # F18: preview discloses proposed shared-master creations (no writes here).
+        proposed = {"items": [], "uoms": []}
+        for row in resources_data:
+            _code = _clean_string(row.get("resource_code"))
+            if _code and not frappe.db.exists("Item", _code):
+                proposed["items"].append(_code)
+            _uom = _clean_string(row.get("uom"))
+            if _uom and not frappe.db.exists("UOM", _uom) and _uom not in proposed["uoms"]:
+                proposed["uoms"].append(_uom)
+        _result = _build_result(True, dry_run, records_created, errors, warnings)
+        _result["proposed_creates"] = proposed
+        return _result
+
+    if frappe.session.user != "Administrator":
+        frappe.has_permission("Resource Price History", "create", throw=True)
+        frappe.has_permission("Item", "create", throw=True)
+        frappe.has_permission("BOQ Cost Analysis", "create", throw=True)
+
+    save_point = "cost_db_import"
+    frappe.db.savepoint(save_point)
+
+    # --- Create/update Items and Resource Price History ---
+    for idx, row in enumerate(resources_data, start=2):
+        resource_code = _clean_string(row.get("resource_code"))
+        if not resource_code:
+            continue
+
+        name_en = _clean_string(row.get("name_en"))
+        name_ar = _clean_string(row.get("name_ar"))
+        resource_type = _clean_string(row.get("resource_type"))
+        cost_stream = _clean_string(row.get("cost_stream")) or RESOURCE_TYPE_TO_STREAM.get(resource_type)
+        uom = _clean_string(row.get("uom"))
+        unit_price = flt(row.get("unit_price_egp"))
+        currency = _clean_string(row.get("currency")) or default_currency
+        exchange_rate = flt(row.get("exchange_rate", 1.0)) or 1.0
+        row_region = _clean_string(row.get("region")) or region
+        row_price_date = _parse_date(row.get("price_date")) or default_price_date
+        source_name = _clean_string(row.get("source_name")) or file_name
+        supplier = _clean_string(row.get("supplier"))
+        remarks = _clean_string(row.get("remarks"))
+
+        # Ensure UOM exists
+        if uom and not frappe.db.exists("UOM", uom):
+            try:
+                frappe.get_doc({"doctype": "UOM", "uom_name": uom}).insert()
+            except Exception as e:
+                warnings.append(f"Could not create UOM {uom}: {str(e)}")
+
+        # Create or update Item
+        if not frappe.db.exists("Item", resource_code):
+            try:
+                item_doc = frappe.get_doc(
+                    {
+                        "doctype": "Item",
+                        "item_code": resource_code,
+                        "item_name": name_en,
+                        "item_name_ar": name_ar,
+                        "item_group": "All Item Groups",
+                        "stock_uom": uom,
+                        "is_stock_item": 0,
+                        "is_construction_resource": 1,
+                        "construction_resource_type": resource_type,
+                        "default_cost_stream": cost_stream,
+                    }
+                )
+                item_doc.insert()
+                records_created["items"].append(resource_code)
+            except Exception as e:
+                errors.append(f"Resources row {idx}: failed to create Item {resource_code}: {str(e)}")
+                continue
+        else:
+            # F18 shared-master isolation: an existing Item is reused only when
+            # every managed field the row provides already matches. Any
+            # conflict — different names, a non-construction item, a different
+            # type/stream/UOM — is a row error, never a silent rename or
+            # re-flag. UI confirmation must not authorize shared-master
+            # changes, so there is no override path here. This also removes
+            # the need for Item write authority: importing creates new codes
+            # (Item create) but never modifies existing ones.
+            try:
+                item_doc = frappe.get_doc("Item", resource_code)
+                conflicts = []
+                if name_en and item_doc.item_name != name_en:
+                    conflicts.append(f"item_name is '{item_doc.item_name}'")
+                if name_ar and item_doc.get("item_name_ar") != name_ar:
+                    conflicts.append("item_name_ar differs")
+                if not item_doc.get("is_construction_resource"):
+                    conflicts.append("not a construction resource")
+                if resource_type and item_doc.get("construction_resource_type") != resource_type:
+                    conflicts.append(f"resource type is '{item_doc.get('construction_resource_type')}'")
+                if cost_stream and item_doc.get("default_cost_stream") != cost_stream:
+                    conflicts.append(f"cost stream is '{item_doc.get('default_cost_stream')}'")
+                # F35: same case-insensitive UOM rule as the create-path check above —
+                # the framework stores the canonical target name ("TON" for "Ton").
+                if (
+                    uom
+                    and (item_doc.get("stock_uom") or "") != uom
+                    and (item_doc.get("stock_uom") or "").lower() != uom.lower()
+                ):
+                    conflicts.append(f"stock UOM is '{item_doc.get('stock_uom')}'")
+                if conflicts:
+                    errors.append(
+                        f"Resources row {idx}: existing Item {resource_code} conflicts "
+                        f"({'; '.join(conflicts)}). Reuse requires identical values."
+                    )
+                    continue
+            except Exception as e:
+                errors.append(f"Resources row {idx}: failed to verify Item {resource_code}: {str(e)}")
+                continue
+
+        # Create Resource Price History (idempotent: skip identical existing rows)
+        try:
+            dup_filters = {
+                "item_code": resource_code,
+                "price_date": row_price_date,
+                "rate": unit_price,
+                "currency": currency,
+                "uom": uom,
+                "company": company,
+                "region": row_region,
+                "supplier": supplier,
+                "source_name": source_name,
+                "status": "Active",
+            }
+            existing = frappe.db.get_value("Resource Price History", dup_filters, "name")
+            if existing:
+                records_skipped["resource_price_history"].append(existing)
+            else:
+                history = frappe.get_doc(
+                    {
+                        "doctype": "Resource Price History",
+                        "item_code": resource_code,
+                        "resource_type": resource_type,
+                        "rate": unit_price,
+                        "currency": currency,
+                        "exchange_rate": exchange_rate,
+                        "uom": uom,
+                        "price_date": row_price_date,
+                        "company": company,
+                        "region": row_region,
+                        "supplier": supplier,
+                        "source_doctype": "Import",
+                        "source_name": source_name,
+                        "status": "Active",
+                        "remarks": remarks,
+                    }
+                )
+                history.insert()
+                records_created["resource_price_history"].append(history.name)
+        except Exception as e:
+            errors.append(f"Resources row {idx}: failed to create Resource Price History: {str(e)}")
+
+    # --- Create BOQ Cost Analysis templates ---
+    for idx, row in enumerate(templates_data, start=2):
+        template_name = _clean_string(row.get("template_name"))
+        if not template_name:
+            continue
+
+        description_en = _clean_string(row.get("description_en"))
+        description_ar = _clean_string(row.get("description_ar"))
+        uom = _clean_string(row.get("uom"))
+        overhead_pct = flt(row.get("overhead_pct"))
+        profit_pct = flt(row.get("profit_pct"))
+        # Preserve malformed inputs for the controller's numeric validation;
+        # flt("invalid") would silently turn a tax allowance into zero.
+        tender_tax_pct = row.get("tender_tax_pct")
+        currency = _clean_string(row.get("currency")) or default_currency
+
+        # Build details from rate analysis
+        details = []
+        for rate_row in rate_data:
+            if _clean_string(rate_row.get("template_name")) != template_name:
+                continue
+            resource_code = _clean_string(rate_row.get("resource_code"))
+            if not resource_code:
+                continue
+            details.append(
+                {
+                    "cost_stream": _clean_string(rate_row.get("cost_stream")),
+                    "item_code": resource_code,
+                    "resource_uom": frappe.db.get_value("Item", resource_code, "stock_uom") or "Nos",
+                    "qty_per_boq_unit": flt(rate_row.get("qty_per_boq_unit")),
+                    "wastage_pct": flt(rate_row.get("wastage_pct", 0)),
+                    "cost_rate": flt(rate_row.get("cost_rate")),
+                    "rate_source": _clean_string(rate_row.get("rate_source")) or "Resource Price History",
+                }
+            )
+
+        try:
+            existing_template = frappe.db.get_value(
+                "BOQ Cost Analysis",
+                {"template_name": template_name, "company": company, "is_template": 1},
+                "name",
+            )
+
+            if existing_template:
+                existing_doc = frappe.get_doc("BOQ Cost Analysis", existing_template)
+                if existing_doc.docstatus == 1:
+                    records_skipped["boq_cost_analysis_templates"].append(existing_template)
+                    warnings.append(
+                        f"BOQItemTemplates row {idx}: template '{template_name}' already submitted ({existing_template}); skipped"
+                    )
+                    continue
+
+                # Update the draft template in place (idempotent re-import)
+                existing_doc.title = description_en or template_name
+                existing_doc.description_ar = description_ar
+                existing_doc.category = _clean_string(row.get("category"))
+                existing_doc.analysis_uom = uom
+                existing_doc.overhead_pct = overhead_pct
+                existing_doc.profit_pct = profit_pct
+                existing_doc.tender_tax_pct = tender_tax_pct
+                existing_doc.currency = currency
+                existing_doc.details = []
+                for detail in details:
+                    existing_doc.append("details", detail)
+                if auto_submit:
+                    existing_doc.submit()
+                else:
+                    existing_doc.save()
+                records_updated["boq_cost_analysis_templates"].append(existing_template)
+                continue
+
+            analysis = frappe.get_doc(
+                {
+                    "doctype": "BOQ Cost Analysis",
+                    "title": description_en or template_name,
+                    "is_template": 1,
+                    "template_name": template_name,
+                    "description_ar": description_ar,
+                    "category": _clean_string(row.get("category")),
+                    "analysis_uom": uom,
+                    "analysis_qty": 1,
+                    "currency": currency,
+                    "company": company,
+                    "overhead_pct": overhead_pct,
+                    "profit_pct": profit_pct,
+                    "tender_tax_pct": tender_tax_pct,
+                    "analysis_status": "Draft",
+                    "details": details,
+                }
+            )
+            analysis.insert()
+
+            if auto_submit:
+                analysis.submit()
+
+            records_created["boq_cost_analysis_templates"].append(analysis.name)
+        except Exception as e:
+            errors.append(f"BOQItemTemplates row {idx}: failed to create template {template_name}: {str(e)}")
+
+    if not dry_run and errors:
+        frappe.db.rollback(save_point=save_point)
+
+    return _build_result(
+        success=len(errors) == 0,
+        dry_run=dry_run,
+        records_created=records_created
+        if not errors
+        else {"items": [], "resource_price_history": [], "boq_cost_analysis_templates": []},
+        errors=errors,
+        warnings=warnings,
+        records_updated=records_updated,
+        records_skipped=records_skipped,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Excel Template Generation
+# ---------------------------------------------------------------------------
+
+
+def generate_cost_database_template(mode="blank"):
+    """Generate an Excel workbook template for cost database import.
+
+    Args:
+        mode: "blank" for headers and validation only, "sample" for pre-filled
+            illustrative Egyptian construction data.
+
+    Returns:
+        bytes: The workbook content as an in-memory .xlsx file.
+    """
+    try:
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill
+        from openpyxl.worksheet.datavalidation import DataValidation
+    except ImportError:
+        raise RuntimeError("openpyxl is required for Excel template generation")
+
+    wb = openpyxl.Workbook()
+
+    # Remove default sheet; we'll add named sheets
+    wb.remove(wb.active)
+
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill("solid", fgColor="366092")
+
+    # --- Resources sheet ---
+    resources_headers = [
+        "resource_code",
+        "name_en",
+        "name_ar",
+        "resource_type",
+        "cost_stream",
+        "uom",
+        "unit_price_egp",
+        "currency",
+        "exchange_rate",
+        "company",
+        "region",
+        "price_date",
+        "source_name",
+        "supplier",
+        "remarks",
+    ]
+    ws_res = wb.create_sheet("Resources")
+    ws_res.append(resources_headers)
+    _style_header_row(ws_res, 1, header_font, header_fill)
+    _add_resource_validation(ws_res)
+
+    # --- BOQItemTemplates sheet ---
+    template_headers = [
+        "template_name",
+        "description_en",
+        "description_ar",
+        "category",
+        "uom",
+        "overhead_pct",
+        "profit_pct",
+        "tender_tax_pct",
+        "currency",
+    ]
+    ws_tpl = wb.create_sheet("BOQItemTemplates")
+    ws_tpl.append(template_headers)
+    _style_header_row(ws_tpl, 1, header_font, header_fill)
+
+    # --- RateAnalysis sheet ---
+    rate_headers = [
+        "template_name",
+        "resource_code",
+        "qty_per_boq_unit",
+        "wastage_pct",
+        "cost_stream",
+        "cost_rate",
+        "rate_source",
+        "supplier",
+        "remarks",
+    ]
+    ws_rate = wb.create_sheet("RateAnalysis")
+    ws_rate.append(rate_headers)
+    _style_header_row(ws_rate, 1, header_font, header_fill)
+    _add_rate_validation(ws_rate)
+
+    # --- PriceHistory sheet ---
+    ws_hist = wb.create_sheet("PriceHistory")
+    ws_hist.append(resources_headers)
+    _style_header_row(ws_hist, 1, header_font, header_fill)
+    _add_resource_validation(ws_hist)
+
+    # --- Metadata sheet (hidden) ---
+    ws_meta = wb.create_sheet("_Metadata")
+    ws_meta.append(["key", "value"])
+    ws_meta.append(["schema_version", "1.0"])
+    ws_meta.append(["generated_by", "Construction ERP"])
+    ws_meta.append(["import_mode", "validate_only_or_import"])
+    ws_meta.sheet_state = "hidden"
+
+    if mode == "sample":
+        _add_sample_resources(ws_res)
+        _add_sample_templates(ws_tpl)
+        _add_sample_rate_analysis(ws_rate)
+
+    # Adjust column widths (best-effort)
+    for ws in (ws_res, ws_tpl, ws_rate, ws_hist):
+        for col in ws.columns:
+            max_length = 0
+            col_letter = col[0].column_letter
+            for cell in col:
+                if cell.value:
+                    max_length = max(max_length, len(str(cell.value)))
+            ws.column_dimensions[col_letter].width = min(max(max_length + 2, 10), 40)
+
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    return output.getvalue()
+
+
+def _style_header_row(ws, row_idx, font, fill):
+    for cell in ws[row_idx]:
+        cell.font = font
+        cell.fill = fill
+
+
+def _add_resource_validation(ws):
+    try:
+        from openpyxl.utils import get_column_letter
+        from openpyxl.worksheet.datavalidation import DataValidation
+    except ImportError:
+        return
+
+    resource_type_dv = DataValidation(
+        type="list",
+        formula1='"Material,Labor,Plant,Subcontract,Overhead"',
+        allow_blank=True,
+    )
+    resource_type_dv.error = "resource_type must be one of the allowed values"
+    resource_type_dv.errorTitle = "Invalid Resource Type"
+    cost_stream_dv = DataValidation(
+        type="list",
+        formula1='"M,L,P,S,O"',
+        allow_blank=True,
+    )
+    cost_stream_dv.error = "cost_stream must be M, L, P, S, or O"
+    cost_stream_dv.errorTitle = "Invalid Cost Stream"
+
+    ws.add_data_validation(resource_type_dv)
+    ws.add_data_validation(cost_stream_dv)
+    # Apply to all rows below header in the relevant columns
+    resource_type_col = None
+    cost_stream_col = None
+    for idx, header in enumerate(ws[1], start=1):
+        if header.value == "resource_type":
+            resource_type_col = idx
+        elif header.value == "cost_stream":
+            cost_stream_col = idx
+    if resource_type_col:
+        resource_type_dv.add(
+            f"{get_column_letter(resource_type_col)}2:{get_column_letter(resource_type_col)}1048576"
+        )
+    if cost_stream_col:
+        cost_stream_dv.add(
+            f"{get_column_letter(cost_stream_col)}2:{get_column_letter(cost_stream_col)}1048576"
+        )
+
+
+def _add_rate_validation(ws):
+    try:
+        from openpyxl.utils import get_column_letter
+        from openpyxl.worksheet.datavalidation import DataValidation
+    except ImportError:
+        return
+
+    cost_stream_dv = DataValidation(
+        type="list",
+        formula1='"M,L,P,S,O"',
+        allow_blank=True,
+    )
+    cost_stream_dv.error = "cost_stream must be M, L, P, S, or O"
+    cost_stream_dv.errorTitle = "Invalid Cost Stream"
+
+    rate_source_dv = DataValidation(
+        type="list",
+        formula1='"Manual,Import,Item Price,Last PI,Last PO,Weighted Average,Supplier-Specific,Project-Specific,Resource Price History,Template"',
+        allow_blank=True,
+    )
+    rate_source_dv.error = "rate_source must be one of the allowed values"
+    rate_source_dv.errorTitle = "Invalid Rate Source"
+
+    ws.add_data_validation(cost_stream_dv)
+    ws.add_data_validation(rate_source_dv)
+
+    cost_stream_col = None
+    rate_source_col = None
+    for idx, header in enumerate(ws[1], start=1):
+        if header.value == "cost_stream":
+            cost_stream_col = idx
+        elif header.value == "rate_source":
+            rate_source_col = idx
+    if cost_stream_col:
+        cost_stream_dv.add(
+            f"{get_column_letter(cost_stream_col)}2:{get_column_letter(cost_stream_col)}1048576"
+        )
+    if rate_source_col:
+        rate_source_dv.add(
+            f"{get_column_letter(rate_source_col)}2:{get_column_letter(rate_source_col)}1048576"
+        )
+
+
+def _add_sample_resources(ws):
+    sample = [
+        [
+            "MAT-CEM-001",
+            "Portland Cement",
+            "أسمنت بورتلاندي",
+            "Material",
+            "M",
+            "Ton",
+            3500,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ministry of Housing June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "MAT-SAND-001",
+            "Clean Sand",
+            "رمل نظيف",
+            "Material",
+            "M",
+            "m³",
+            400,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ministry of Housing June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "MAT-AGG-001",
+            "Gravel / Aggregate",
+            "زلط / سن",
+            "Material",
+            "M",
+            "m³",
+            500,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ministry of Housing June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "MAT-STEEL-001",
+            "Reinforcement Steel",
+            "حديد تسليح",
+            "Material",
+            "M",
+            "Ton",
+            45000,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Ezz Steel June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "LAB-MASON-001",
+            "Mason",
+            "عامل بناء / مبيض",
+            "Labor",
+            "L",
+            "Day",
+            250,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Market survey June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "LAB-HELP-001",
+            "Helper",
+            "مساعد عام",
+            "Labor",
+            "L",
+            "Day",
+            150,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Market survey June 2026",
+            "",
+            "Illustrative price",
+        ],
+        [
+            "PLT-MIXER-001",
+            "Concrete Mixer",
+            "خلاطة خرسانة",
+            "Plant",
+            "P",
+            "Hour",
+            80,
+            "EGP",
+            1.0,
+            "_Test Estimation Company",
+            "Cairo",
+            "2026-06-01",
+            "Market survey June 2026",
+            "",
+            "Illustrative price",
+        ],
+    ]
+    for row in sample:
+        ws.append(row)
+
+
+def _add_sample_templates(ws):
+    sample = [
+        [
+            "01-CONC-PLN",
+            "Plain Concrete (Blinding) 10 cm",
+            "خرسانة عادية نظافة 10 سم",
+            "Concrete Works",
+            "m³",
+            12,
+            8,
+            0,
+            "EGP",
+        ],
+        [
+            "01-CONC-RC-COL",
+            "Reinforced Concrete Columns",
+            "خرسانة مسلحة أعمدة",
+            "Concrete Works",
+            "m³",
+            12,
+            8,
+            0,
+            "EGP",
+        ],
+        ["02-WALL-BRK-10", "10 cm Red Brick Wall", "حائط طوب أحمر 10 سم", "Blockwork", "m²", 10, 8, 0, "EGP"],
+    ]
+    for row in sample:
+        ws.append(row)
+
+
+def _add_sample_rate_analysis(ws):
+    sample = [
+        ["01-CONC-PLN", "MAT-CEM-001", 0.250, 3, "M", 3500, "Import", "", ""],
+        ["01-CONC-PLN", "MAT-SAND-001", 0.500, 5, "M", 400, "Import", "", ""],
+        ["01-CONC-PLN", "MAT-AGG-001", 0.800, 5, "M", 500, "Import", "", ""],
+        ["01-CONC-PLN", "LAB-MASON-001", 0.500, 0, "L", 250, "Import", "", ""],
+        ["01-CONC-PLN", "LAB-HELP-001", 1.000, 0, "L", 150, "Import", "", ""],
+        ["01-CONC-PLN", "PLT-MIXER-001", 0.250, 0, "P", 80, "Import", "", ""],
+    ]
+    for row in sample:
+        ws.append(row)
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+
+def _find_sheet(wb, candidates):
+    """Find a worksheet by one of several possible names."""
+    names = {s.title.strip().lower(): s for s in wb.worksheets}
+    for candidate in candidates:
+        if candidate.strip().lower() in names:
+            return names[candidate.strip().lower()]
+    return None
+
+
+def _prescan_cost_database_xlsx(file_content):
+    """Apply shared archive guards and scan worksheet parts resolved via workbook relationships."""
+    archive = io.BytesIO(file_content)
+    BOQImportService._prescan_xlsx(archive)
+    archive.seek(0)
+    try:
+        with zipfile.ZipFile(archive, "r") as workbook_zip:
+            relationships = {}
+            with workbook_zip.open("xl/_rels/workbook.xml.rels") as stream:
+                for _, element in ET.iterparse(stream, events=("end",)):
+                    if element.tag.rsplit("}", 1)[-1] == "Relationship":
+                        rel_id = element.get("Id")
+                        rel_type = element.get("Type") or ""
+                        if rel_id and rel_type.endswith("/worksheet"):
+                            target_mode = (element.get("TargetMode") or "").lower()
+                            target = element.get("Target") or ""
+                            relationships[rel_id] = _resolve_worksheet_target(target, target_mode)
+                    element.clear()
+
+            sheet_refs = []
+            with workbook_zip.open("xl/workbook.xml") as stream:
+                for _, element in ET.iterparse(stream, events=("end",)):
+                    if element.tag.rsplit("}", 1)[-1] == "sheet":
+                        rel_id = next(
+                            (
+                                value
+                                for key, value in element.attrib.items()
+                                if key.rsplit("}", 1)[-1] == "id"
+                            ),
+                            None,
+                        )
+                        sheet_refs.append((element.get("name") or "", rel_id))
+                    element.clear()
+            if len(sheet_refs) > COST_DATABASE_MAX_WORKSHEETS:
+                raise ValueError(f"Workbook contains more than {COST_DATABASE_MAX_WORKSHEETS} worksheets")
+            worksheet_targets = []
+            for title, rel_id in sheet_refs:
+                if not rel_id or rel_id not in relationships:
+                    raise ValueError(f"Worksheet {title!r} has no internal worksheet relationship")
+                worksheet_targets.append((title, relationships[rel_id]))
+            target_names = [target for _, target in worksheet_targets]
+            if len(set(target_names)) != len(target_names):
+                raise ValueError("Multiple worksheet entries resolve to the same XML part")
+            if len(worksheet_targets) > COST_DATABASE_MAX_WORKSHEETS:
+                raise ValueError(
+                    f"Workbook archive contains more than {COST_DATABASE_MAX_WORKSHEETS} worksheet parts"
+                )
+            sheet_bounds = {}
+            for title, name in worksheet_targets:
+                try:
+                    info = workbook_zip.getinfo(name)
+                except KeyError as exc:
+                    raise ValueError(f"Worksheet XML part {name!r} is missing") from exc
+                sheet_bounds[title] = _prescan_worksheet_part(workbook_zip, info, title)
+            return sheet_bounds
+    except (KeyError, zipfile.BadZipFile, ET.ParseError, ValueError) as exc:
+        raise ValueError(f"Invalid or unsafe cost database workbook: {exc}") from exc
+
+
+def _resolve_worksheet_target(target, target_mode=""):
+    """Resolve relationship targets while confining them to worksheet parts."""
+    if target_mode == "external" or not target or "\\" in target or "?" in target or "#" in target:
+        raise ValueError("External or invalid worksheet relationship target")
+    from urllib.parse import unquote
+
+    decoded = unquote(target)
+    if any(part in (".", "..") for part in decoded.split("/")):
+        raise ValueError("Worksheet relationship target contains a traversal segment")
+    if decoded.startswith("/"):
+        if not decoded.startswith("/xl/"):
+            raise ValueError("Absolute worksheet relationship target is outside the workbook")
+        resolved = posixpath.normpath(decoded.lstrip("/"))
+    else:
+        resolved = posixpath.normpath(posixpath.join("xl", decoded))
+    if not resolved.startswith("xl/worksheets/") or resolved == "xl/worksheets/":
+        raise ValueError("Worksheet relationship target is outside xl/worksheets")
+    return resolved
+
+
+def _prescan_worksheet_part(workbook_zip, info, title):
+    """Enforce worksheet XML size, dimensions, row/cell coordinates, and merge bounds."""
+    if info.file_size > BOQImportService.MAX_WORKSHEET_XML_BYTES:
+        raise ValueError(f"Worksheet {title!r} XML part exceeds its size limit")
+    row_count = 0
+    max_row = 0
+    max_column = 0
+    merge_count = 0
+    merged_area = 0
+    with workbook_zip.open(info, "r") as stream:
+        for _, element in ET.iterparse(stream, events=("end",)):
+            local_name = element.tag.rsplit("}", 1)[-1]
+            if local_name == "dimension":
+                declared_row, declared_column = BOQImportService._dimension_bounds(element.get("ref") or "")
+                if declared_row > BOQImportService.MAX_ROWS or declared_column > BOQImportService.MAX_COLS:
+                    raise ValueError(f"Worksheet {title!r} declared dimensions exceed safety limits")
+                max_row = max(max_row, declared_row)
+                max_column = max(max_column, declared_column)
+            elif local_name == "row":
+                row_count += 1
+                row_text = element.get("r")
+                if row_text and not row_text.isdigit():
+                    raise ValueError(f"Worksheet {title!r} has an invalid row coordinate")
+                actual_row = int(row_text) if row_text else row_count
+                if actual_row < 1 or actual_row > BOQImportService.MAX_ROWS:
+                    raise ValueError(f"Worksheet {title!r} row coordinate exceeds safety limits")
+                max_row = max(max_row, actual_row)
+            elif local_name == "c":
+                actual_row, actual_column = BOQImportService._cell_ref_to_indices(element.get("r") or "")
+                if (
+                    not actual_row
+                    or not actual_column
+                    or actual_row > BOQImportService.MAX_ROWS
+                    or actual_column > BOQImportService.MAX_COLS
+                ):
+                    raise ValueError(f"Worksheet {title!r} cell coordinate exceeds safety limits")
+                max_row = max(max_row, actual_row)
+                max_column = max(max_column, actual_column)
+            elif local_name == "mergeCell":
+                merge_count += 1
+                if merge_count > BOQImportService.MAX_MERGED_RANGES:
+                    raise ValueError(f"Worksheet {title!r} has too many merged ranges")
+                ref = element.get("ref") or ""
+                merged_area += BOQImportService._merged_range_cell_area(ref)
+                endpoints = ref.split(":")
+                if len(endpoints) != 2:
+                    raise ValueError(f"Worksheet {title!r} has an invalid merged range")
+                first_row, first_column = BOQImportService._cell_ref_to_indices(endpoints[0])
+                last_row, last_column = BOQImportService._cell_ref_to_indices(endpoints[1])
+                if not all((first_row, first_column, last_row, last_column)):
+                    raise ValueError(f"Worksheet {title!r} has an invalid merged range")
+                merged_row = max(first_row, last_row)
+                merged_column = max(first_column, last_column)
+                if (
+                    merged_area > BOQImportService.MAX_TOTAL_MERGED_CELLS
+                    or merged_row > BOQImportService.MAX_ROWS
+                    or merged_column > BOQImportService.MAX_COLS
+                ):
+                    raise ValueError(f"Worksheet {title!r} merged ranges exceed safety limits")
+                max_row = max(max_row, merged_row)
+                max_column = max(max_column, merged_column)
+            element.clear()
+    if row_count > BOQImportService.MAX_ROWS:
+        raise ValueError(f"Worksheet {title!r} exceeds its row-count limit")
+    return max(max_row, 1), max(max_column, 1)
+
+
+def _sheet_to_records(
+    sheet,
+    imported_row_limit=COST_DATABASE_MAX_IMPORTED_ROWS,
+    traversed_row_limit=COST_DATABASE_MAX_TRAVERSED_ROWS,
+    verified_bounds=(1, 1),
+):
+    """Convert an openpyxl sheet to a list of dicts with normalized column names."""
+    if not sheet:
+        return [], 0
+
+    max_row, max_column = verified_bounds
+    header_rows = sheet.iter_rows(min_row=1, max_row=1, max_col=max_column, values_only=True)
+    headers = [_canonical_column(value) for value in next(header_rows, ())]
+
+    records = []
+    traversed_rows = 0
+    for row in sheet.iter_rows(min_row=2, max_row=max_row, max_col=max_column, values_only=True):
+        traversed_rows += 1
+        if traversed_rows > traversed_row_limit:
+            raise ValueError(
+                f"Cost database workbook exceeds the {COST_DATABASE_MAX_TRAVERSED_ROWS}-row traversal safety limit"
+            )
+        record = {}
+        for idx, value in enumerate(row):
+            if idx < len(headers):
+                record[headers[idx]] = value
+        if any(value is not None and value != "" for value in row):
+            if len(records) >= imported_row_limit:
+                raise ValueError(
+                    f"Cost database workbook exceeds the {COST_DATABASE_MAX_IMPORTED_ROWS}-imported-row limit"
+                )
+            records.append(record)
+    return records, traversed_rows
+
+
+def _canonical_column(value):
+    """Map a column header to its canonical form using aliases.
+
+    Exact canonical names take precedence over aliases to avoid ambiguous
+    mappings (e.g. 'description_en' should map to 'description_en', not 'name_en').
+    """
+    if value is None:
+        return ""
+    raw = str(value).strip().lower()
+
+    # First: exact canonical match
+    for canonical in COLUMN_ALIASES:
+        if raw == canonical.lower():
+            return canonical
+
+    # Second: alias match
+    for canonical, aliases in COLUMN_ALIASES.items():
+        for alias in aliases:
+            if raw == alias.lower().strip():
+                return canonical
+
+    # Fallback: clean the original string
+    return raw.replace(" ", "_")
+
+
+def _clean_string(value):
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _parse_date(value):
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value.strftime("%Y-%m-%d")
+    try:
+        return getdate(value).strftime("%Y-%m-%d")
+    except Exception:
+        return None
+
+
+def _build_result(
+    success, dry_run, records_created, errors, warnings, records_updated=None, records_skipped=None
+):
+    errors = _bounded_result_messages(errors)
+    warnings = _bounded_result_messages(warnings)
+    return {
+        "success": success,
+        "dry_run": dry_run,
+        "records_created": records_created,
+        "records_updated": records_updated or {},
+        "records_skipped": records_skipped or {},
+        "errors": errors,
+        "warnings": warnings,
+    }
+
+
+def _bounded_result_messages(messages):
+    messages = list(messages or [])
+    if len(messages) <= COST_DATABASE_MAX_RESULT_MESSAGES:
+        return messages
+    return [
+        *messages[: COST_DATABASE_MAX_RESULT_MESSAGES - 1],
+        f"{len(messages) - COST_DATABASE_MAX_RESULT_MESSAGES + 1} additional messages omitted",
+    ]

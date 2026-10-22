@@ -1,0 +1,419 @@
+{
+  "batch": "w602-02",
+  "site": "v16.localhost",
+  "generated": "2026-09-23",
+  "scope_rows": 48,
+  "runtime_rows_scanned": 20692,
+  "match_count": 52,
+  "exact_case_matches": 49,
+  "missing_count": 0,
+  "missing_keys": [],
+  "matched_nonempty_values": 2,
+  "site_override_origin_rows": 1,
+  "site_overrides": [
+    {
+      "source_text": "Address",
+      "translated_text": "العنوان",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    }
+  ],
+  "preserved": [
+    {
+      "source_text": "Address",
+      "translated_text": "العنوان"
+    }
+  ],
+  "nonempty_matches": [
+    {
+      "source_text": "Sales Partner Target Variance based on Item Group",
+      "translated_text": "الفرق المستهدف لشركاء المبيعات استنادًا إلى مجموعة العناصر",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Address",
+      "translated_text": "العنوان",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    }
+  ],
+  "matches": [
+    {
+      "source_text": "Successfully linked to Supplier",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "DocType",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "doc_type",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please contact any of the following users to extend the credit limits for {0}: {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "doctype",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Week {0} {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "You have unsaved changes. Do you want to save the invoice?",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Serial numbers unavailable for Item {0} under warehouse {1}. Please try changing warehouse.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please enter at least one delivery date and quantity",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row #{0}: Quantity cannot be a non-positive number. Please increase the quantity or remove the Item {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please select atleast one item to continue",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Supplier is required for all selected Items",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please select a frequency for delivery schedule",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please enter a valid number of deliveries",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "discount applied",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please save the Sales Order before adding a delivery schedule.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "quotation_item",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Doctype",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Payment of {0} received successfully. Waiting for other requests to complete...",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Opportunities by Medium",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Restrict Items Based On",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "The current POS opening entry is outdated. Please close it and create a new one.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Supplier numbers assigned by the customer",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "POS has been closed at {0}. Please refresh the page.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Select an item from each set to be used in the Sales Order.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Parent Item {0} must not be a Fixed Asset",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Percentage you are allowed to sell beyond the Blanket Order quantity.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Order {0} already exists against Customer's Purchase Order {1}. To allow multiple Sales Orders, Enable {2} in {3}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Partner Target Variance based on Item Group",
+      "translated_text": "الفرق المستهدف لشركاء المبيعات استنادًا إلى مجموعة العناصر",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "{}  To Deliver",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please contact your administrator to extend the credit limits for {0}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total quantity in delivery schedule cannot be greater than the item quantity",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Opportunities by Campaign",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Stock quantity not enough for Item Code: {0} under warehouse {1}. Available quantity {2} {3}.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "POS invoice {0} created successfully",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Show Aggregate Value from Subsidiary Companies",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Opportunities by Source",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Row #{0}: BOM not found for FG Item {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Use Legacy (Client side) Reactivity",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Please enter the first delivery date",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Quarter {0} {1}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Reason for hold:",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total Picked Quantity {0} is more than ordered qty {1}. You can set the Over Picking Allowance in Stock Settings.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "This Sales Order has been fully subcontracted.",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "This item filter has already been applied for the {0}",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Invoice {0} must be deleted before cancelling this Sales Order",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sold by",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Address",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Total Only",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Pipeline by Stage",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Sales Partner Target Variance Based On Item Group",
+      "translated_text": "",
+      "ct_origin": "",
+      "ct_is_catalog_entry": 1,
+      "owner": "Administrator"
+    },
+    {
+      "source_text": "Address",
+      "translated_text": "العنوان",
+      "ct_origin": "Site Override",
+      "ct_is_catalog_entry": 0,
+      "owner": "Administrator"
+    }
+  ],
+  "note": "Authoritative dump 20692 runtime rows. 1 ct_origin='Site Override' preserve (Address); 3 identifier technical tokens (doctype, doc_type, quotation_item); 44 new Released payload rows appended.",
+  "scope_sha256": "9a096273f2f7ef05a403edffbb4b75604b73ce7f854382c8fd570f5c329e44ce",
+  "disposition": {
+    "preserved_site_override": 1,
+    "already_released_catalog": 0,
+    "exception_technical": 3,
+    "quorum_confirmed_payload": 44,
+    "total": 48
+  }
+}

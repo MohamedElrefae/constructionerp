@@ -1,0 +1,230 @@
+import frappe
+from frappe import _
+from frappe.utils import flt
+
+from construction.services.boq_pricing import positive_factor
+from construction.services.revised_boq_queries import validate_report_factors
+
+
+def get_boq_cost_analysis_summary(boq_header):
+    """Report 1: BOQ Cost Analysis Summary.
+
+    Shows approved cost analysis details for all BOQ Items in a header.
+    """
+    rows = frappe.db.sql(
+        """
+        SELECT
+            bca.name as analysis_name,
+            bca.boq_item,
+            bca.analysis_status,
+            bca.total_direct_cost,
+            bca.overhead_pct,
+            bca.profit_pct,
+            bca.tender_tax_pct,
+            bca.pricing_rule_version,
+            bca.total_unit_cost,
+            bca.suggested_sell_rate,
+            bi.structure,
+            bi.item_type,
+            bi.quantity,
+            bi.unit,
+            bi.contract_unit_price
+        FROM `tabBOQ Cost Analysis` bca
+        INNER JOIN `tabBOQ Item` bi ON bi.name = bca.boq_item
+        WHERE bi.boq_header = %(boq_header)s
+          AND bca.docstatus = 1
+        ORDER BY bi.idx
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+    return rows
+
+
+def get_boq_item_cost_vs_contract(boq_header):
+    """Report 2: BOQ Item Estimated Cost vs Contract Rate.
+
+    Shows approved unit cost, contract rate, and margin for each item.
+    """
+    rows = frappe.db.sql(
+        """
+        SELECT
+            bi.name as boq_item,
+            bi.structure,
+            bi.item_type,
+            bi.quantity,
+            bi.unit,
+            bi.contract_unit_price,
+            bi.est_unit_cost,
+            bi.est_unit_price,
+            bi.calculated_sell_price,
+            bi.overhead_pct,
+            bi.profit_pct,
+            bi.tender_tax_pct,
+            bi.tender_tax_amount,
+            bi.cost_basis,
+            bi.active_cost_analysis,
+            (bi.contract_unit_price - bi.est_unit_cost) as margin_amount,
+            CASE
+                WHEN bi.est_unit_cost > 0
+                THEN (bi.contract_unit_price - bi.est_unit_cost) / bi.est_unit_cost * 100
+                ELSE 0
+            END as margin_pct,
+            bca.name as analysis_name,
+            bca.analysis_status
+        FROM `tabBOQ Item` bi
+        LEFT JOIN `tabBOQ Cost Analysis` bca
+            ON bca.boq_item = bi.name
+            AND bca.analysis_status = 'Approved'
+            AND bca.docstatus = 1
+        WHERE bi.boq_header = %(boq_header)s
+        ORDER BY bi.idx
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+    return rows
+
+
+def get_resource_requirement_summary(boq_header, authorized_items=None):
+    """Report 3: Resource Requirement Summary by resource stream.
+
+    Contract-quantity resource plan, including factor and wastage. Batch
+    analyses are normalized by analysis_qty for both quantities and costs.
+
+    ``authorized_items`` (optional) is the collection of BOQ Item names the
+    caller is permitted to read. When supplied, only contributions from those
+    items are aggregated; an empty collection yields no rows. When ``None``
+    (trusted internal callers), no item restriction is applied, preserving the
+    legacy behaviour. Authorization is resolved by the adapter BEFORE
+    aggregation so that grouped totals never include hidden contributions.
+    """
+    if authorized_items is None:
+        validate_report_factors(boq_header)
+    else:
+        if not authorized_items:
+            return []
+        for row in frappe.get_all(
+            "BOQ Item",
+            filters={"name": ("in", list(authorized_items))},
+            fields=["name", "factor"],
+        ):
+            positive_factor(row.factor)
+    values = {"boq_header": boq_header}
+    item_filter = ""
+    if authorized_items is not None:
+        item_filter = "AND item.name IN %(authorized_items)s"
+        values["authorized_items"] = tuple(authorized_items)
+    invalid_sql = (
+        "SELECT analysis.name FROM `tabBOQ Cost Analysis` analysis "
+        "JOIN `tabBOQ Item` item ON item.name = analysis.boq_item "
+        "WHERE item.boq_header = %(boq_header)s AND analysis.docstatus = 1 "
+        "AND analysis.analysis_status = 'Approved' "
+        "AND (analysis.analysis_qty IS NULL OR analysis.analysis_qty <= 0) " + item_filter + " LIMIT 1"
+    )
+    invalid = frappe.db.sql(invalid_sql, values)
+    if invalid:
+        frappe.throw(_("Legacy analysis quantity requires review before resource planning."))
+    agg_filter = ""
+    agg_values = {"boq_header": boq_header}
+    if authorized_items is not None:
+        agg_filter = "AND bi.name IN %(authorized_items)s"
+        agg_values["authorized_items"] = tuple(authorized_items)
+    agg_sql = (
+        "SELECT "
+        "bcd.cost_stream, bcd.item_code, bcd.item_name, bcd.resource_uom, "
+        "SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_qty, "
+        "SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) / "
+        "NULLIF(SUM(bcd.qty_per_boq_unit * (1 + COALESCE(bcd.wastage_pct, 0) / 100) * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty), 0) as avg_cost_rate, "
+        "SUM(bcd.amount * bi.quantity * COALESCE(bi.factor, 1) / bca.analysis_qty) as total_resource_cost "
+        "FROM `tabBOQ Cost Analysis Detail` bcd "
+        "INNER JOIN `tabBOQ Cost Analysis` bca ON bca.name = bcd.parent AND bca.docstatus = 1 AND bca.analysis_status = 'Approved' "
+        "INNER JOIN `tabBOQ Item` bi ON bi.name = bca.boq_item "
+        "WHERE bi.boq_header = %(boq_header)s " + agg_filter + " "
+        "GROUP BY bcd.cost_stream, bcd.item_code, bcd.item_name, bcd.resource_uom "
+        "ORDER BY bcd.cost_stream, total_resource_cost DESC"
+    )
+    rows = frappe.db.sql(agg_sql, agg_values, as_dict=True)
+    return rows
+
+
+def get_resource_price_history(item_code=None, supplier=None, region=None, from_date=None, to_date=None):
+    """Report 4: Resource Price History / Rate Movement.
+
+    Shows price changes over time for selected items.
+    All filtering is done in-database via parameterized SQL.
+    """
+    RPH = frappe.qb.DocType("Resource Price History")
+    query = (
+        frappe.qb.from_(RPH)
+        .select(
+            # `name` is not decoration: F19's report_view filters every row through
+            # `_readable_rph`, which needs the document identity to check permission. A row
+            # without it passes unchecked, so price history reached personas with no
+            # Resource Price History rights (buyer/store/accounts) -- F21-D002.
+            RPH.name,
+            RPH.item_code,
+            RPH.item_name,
+            RPH.resource_type,
+            RPH.price_date,
+            RPH.rate,
+            RPH.currency,
+            RPH.exchange_rate,
+            RPH.uom,
+            RPH.supplier,
+            RPH.source_doctype,
+            RPH.source_name,
+            RPH.project,
+            RPH.region,
+            RPH.company,
+        )
+        .where(RPH.status == "Active")
+        .orderby(RPH.item_code, RPH.price_date, order=frappe.qb.desc)
+    )
+
+    if item_code:
+        query = query.where(RPH.item_code == item_code)
+    if supplier:
+        query = query.where(RPH.supplier == supplier)
+    if region:
+        query = query.where(RPH.region == region)
+    if from_date:
+        query = query.where(RPH.price_date >= from_date)
+    if to_date:
+        query = query.where(RPH.price_date <= to_date)
+
+    return query.run(as_dict=True)
+
+
+def get_boq_items_missing_analysis(boq_header):
+    """Report 5: BOQ Items Missing Approved Cost Analysis.
+
+    Lists BOQ Items without an approved cost analysis.
+    """
+    rows = frappe.db.sql(
+        """
+        SELECT
+            bi.name as boq_item,
+            bi.structure,
+            bi.item_type,
+            bi.quantity,
+            bi.unit,
+            bi.contract_unit_price,
+            bi.est_unit_cost,
+            bi.cost_item
+        FROM `tabBOQ Item` bi
+        WHERE bi.boq_header = %(boq_header)s
+          AND bi.docstatus < 2
+          AND NOT EXISTS (
+              SELECT 1
+              FROM `tabBOQ Cost Analysis` bca
+              WHERE bca.boq_item = bi.name
+                AND bca.analysis_status = 'Approved'
+                AND bca.docstatus = 1
+          )
+        ORDER BY bi.idx
+    """,
+        {"boq_header": boq_header},
+        as_dict=True,
+    )
+    return rows

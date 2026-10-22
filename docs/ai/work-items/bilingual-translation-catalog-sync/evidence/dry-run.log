@@ -1,0 +1,16 @@
+==============================================================================
+DRY RUN bilingual-translation-catalog-sync
+==============================================================================
+proposal sha256         : a23a7dceb6cf4b794af47155317be63267fbab46a7334618bf05dfbceec9b9a0
+APPROVED_SHA matched    : yes
+glossary sha256 (live)  : aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4
+glossary sha256 expected: aefbbf633d432fb93ac63996960bb58d0bd005e973e0e461f4480d7ae46b51b4
+planned glossary patches: 1
+planned payload edits   : 0 (payload must stay byte-identical)
+PLANNED_GLOSSARY_EDIT 'Add Child' approved_ar 46dadab0f9e2eacf -> f548ae03f4cdbef0 version 2.0 -> 2.1
+                      usage_notes -> a512254a69200243 references -> 0f76655c55120046
+predicted glossary sha256 after: 7afbef1ab892f466eb14471c99a9e76dde65b4f2e9d4a40a1405e34addc6894d
+private dry-run.json sha256    : 61e281cb762d96c6b0bc92687e78c884bae56d4b577739eac9984ab270c1e45f
+DB_WRITES_PERFORMED: 0
+FILE_EDITS_PERFORMED: 0
+DRY-RUN RESULT: PASS (proposal sha matched; before-state bound; zero writes)

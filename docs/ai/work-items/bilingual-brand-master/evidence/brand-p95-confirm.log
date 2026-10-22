@@ -1,0 +1,95 @@
+===== CONFIRMATION RUN 1 =====
+MEASUREMENT: {"Brand": 1.4354}
+P95_MS: {"baseline": 0.441, "bilingual": 0.633}
+TIER: {"bilingual_p95_ms": 0.633, "ceiling_pass": true, "ratio": 1.4354, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0
+===== CONFIRMATION RUN 2 =====
+MEASUREMENT: {"Brand": 1.3297}
+P95_MS: {"baseline": 0.464, "bilingual": 0.617}
+TIER: {"bilingual_p95_ms": 0.617, "ceiling_pass": true, "ratio": 1.3297, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0
+===== CONFIRMATION RUN 3 =====
+MEASUREMENT: {"Brand": 1.4528}
+P95_MS: {"baseline": 0.424, "bilingual": 0.616}
+TIER: {"bilingual_p95_ms": 0.616, "ceiling_pass": true, "ratio": 1.4528, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0
+===== CONFIRMATION RUN 4 =====
+MEASUREMENT: {"Brand": 1.4758}
+P95_MS: {"baseline": 0.454, "bilingual": 0.67}
+TIER: {"bilingual_p95_ms": 0.67, "ceiling_pass": true, "ratio": 1.4758, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0
+===== CONFIRMATION RUN 5 =====
+Traceback (most recent call last):
+  File "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/bilingual-brand-master/evidence/scripts/measure_brand_p95.py", line 290, in <module>
+    out = run()
+  File "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/bilingual-brand-master/evidence/scripts/measure_brand_p95.py", line 251, in run
+    _delete_fixtures()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/mohamed/frappe-bench/apps/construction/docs/ai/work-items/bilingual-brand-master/evidence/scripts/measure_brand_p95.py", line 113, in _delete_fixtures
+    frappe.delete_doc("Brand", r["name"], force=True, ignore_permissions=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/__init__.py", line 740, in delete_doc
+    return frappe.model.delete_doc.delete_doc(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    	doctype,
+     ^^^^^^^^
+    ...<8 lines>...
+    	delete_permanently,
+     ^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/model/delete_doc.py", line 193, in delete_doc
+    frappe.enqueue(
+    ~~~~~~~~~~~~~~^
+    	"frappe.model.delete_doc.delete_dynamic_links",
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    	enqueue_after_commit=True,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/background_jobs.py", line 166, in enqueue
+    _check_queue_size(q)
+    ~~~~~~~~~~~~~~~~~^^^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/background_jobs.py", line 735, in _check_queue_size
+    frappe.throw(
+    ~~~~~~~~~~~~^
+    	_("Too many queued background jobs ({0}). Please retry after some time.").format(max_jobs),
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    	primary_action=primary_action if frappe.has_permission("System Health Report") else None,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+    	msg,
+     ^^^^
+    ...<7 lines>...
+    	allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/mohamed/frappe-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.QueueOverloaded: Too many queued background jobs (600). Please retry after some time.
+exit=1
+===== CONFIRMATION RUN 5 (retry; queue flushed after QueueOverloaded on first attempt) =====
+MEASUREMENT: {"Brand": 1.452}
+P95_MS: {"baseline": 0.458, "bilingual": 0.665}
+TIER: {"bilingual_p95_ms": 0.665, "ceiling_pass": true, "ratio": 1.452, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0

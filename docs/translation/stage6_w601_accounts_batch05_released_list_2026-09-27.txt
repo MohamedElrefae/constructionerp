@@ -1,0 +1,40 @@
+Value as on
+Voucher {0} is over-allocated by {1}
+Warning!
+Wrong Company
+Wrong Template
+You can add the original invoice {} manually to proceed.
+You can't redeem Loyalty Points having more value than the Total Amount.
+You cannot create a {0} within the closed Accounting Period {1}
+You cannot enable both the settings '{0}' and '{1}'.
+You cannot {0} this document because another Period Closing Entry {1} exists after {2}
+You need to cancel POS Closing Entry {} to be able to cancel this document.
+dated {0}
+subscription is already cancelled.
+to unallocate the amount of this Return Invoice before cancelling it.
+variance
+{0} Budget for Account {1} against {2} {3} is {4}. It is already exceeded by {5}.
+{0} Budget for Account {1} against {2} {3} is {4}. It will be exceeded by {5}.
+{0} Transaction(s) Reconciled
+{0} account is not of company {1}
+{0} account is not of type {1}
+{0} cannot be changed with opened Opening Entries.
+{0} cannot be used as a Main Cost Center because it has been used as child in Cost Center Allocation {1}
+{0} cannot be zero
+{0} has been modified after you pulled it. Please pull it again.
+{0} is added multiple times on rows: {1}
+{0} is open. Close the POS or cancel the existing POS Opening Entry to create a new POS Opening Entry.
+{0} view is currently unsupported in Custom Financial Report.
+{0} will be given as discount.
+{0} {1} Partially Reconciled
+{0} {1} is allocated twice in this Bank Transaction
+{0} {1} is not in any active Fiscal Year
+{0} {1} not allowed to be reposted. Modify {2} to enable reposting.
+{0} {1}: Account {2} is a Group Account and group accounts cannot be used in transactions
+{0} {1}: Cost Center is required for 'Profit and Loss' account {2}.
+{0} {1}: Cost Center {2} is a group cost center and group cost centers cannot be used in transactions
+{0}% of total invoice value will be given as discount.
+{} is a child company.
+{} {} is already linked with another {}
+{} {} is already linked with {} {}
+{} {} is not affecting bank account {}

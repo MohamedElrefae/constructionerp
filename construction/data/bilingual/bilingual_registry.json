@@ -1,0 +1,554 @@
+{
+ "schema": "construction-bilingual-registry/v1",
+ "recorded_utc": "2026-09-21T00:00:00Z",
+ "notes": "Staged registry. States: planned (field may be absent — Arabic field/adapter/UAT pending; identity_section and tree stay disabled until each DocType clears UAT; Project does not inherit Account-style tree behavior), schema_installed (field exists, values not populated), active (display/search enabled). A missing later-wave field must not prevent app startup. Physical-field adapters resolve the arabic_field against live metadata; unresolved fields degrade silently.",
+ "display": {
+  "ar_fallback": [
+   "arabic",
+   "english",
+   "identity"
+  ],
+  "en_fallback": [
+   "english",
+   "arabic",
+   "identity"
+  ]
+ },
+ "unicode_policy": {
+  "identity_rejected": [
+   "C0",
+   "C1",
+   "DEL",
+   "BIDI_EMBEDDING_OVERRIDE_ISOLATE_U+202A-U+202E_U+2066-U+2069",
+   "LRM_U+200E",
+   "RLM_U+200F",
+   "ALM_U+061C"
+  ],
+  "narrative_rejected": [
+   "C0",
+   "DEL",
+   "BIDI_EMBEDDING_OVERRIDE_ISOLATE_U+202A-U+202E_U+2066-U+2069"
+  ],
+  "narrative_allowed_direction_marks": [
+   {
+    "name": "LRM",
+    "escape": "\\u200e",
+    "codepoint": "U+200E"
+   },
+   {
+    "name": "RLM",
+    "escape": "\\u200f",
+    "codepoint": "U+200F"
+   },
+   {
+    "name": "ALM",
+    "escape": "\\u061c",
+    "codepoint": "U+061C"
+   }
+  ],
+  "canonical_reference": "C1: bidi controls (U+202A-U+202E, U+2066-U+2069, U+200E, U+200F, U+061C) are forbidden in stored Arabic values. Section 8.6 of the handoff permits legitimate direction marks only in unrestricted narrative fields (documented here); embeddings/overrides/isolates are forbidden everywhere.",
+  "rationale": "Identity/name fields (stored Arabic values) reject every bidi control. Narrative fields (rename reasons) reject NUL/C0/DEL/C1 and the embedding/override/isolate controls, while allowing the documented direction marks."
+ },
+ "governance": {
+  "reference": "Plan §3.2 (ERP_ARABIC_AND_BILINGUAL_DATA_END_TO_END_PLAN.md)",
+  "adr": "docs/translation/BILINGUAL_GOVERNANCE_PRINT_IMPORT_PERMISSION.md",
+  "status_summary": {
+   "display": "verified",
+   "search": "verified_bounded_sla",
+   "permission": "verified_confined",
+   "rename": "verified_tested",
+   "import": "verified_tested",
+   "print": "unverified_out_of_band"
+  }
+ },
+ "doctypes": {
+  "Account": {
+   "state": "active",
+   "english_field": "account_name",
+   "arabic_field": "account_name_ar",
+   "code_field": "account_number",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "account_number",
+     "account_name",
+     "account_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": true
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "account_name_ar_norm"
+  },
+  "Item": {
+   "state": "active",
+   "english_field": "item_name",
+   "arabic_field": "item_name_ar",
+   "code_field": "item_code",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "item_code",
+     "item_name",
+     "item_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "item_name_ar_norm"
+  },
+  "Customer": {
+   "state": "active",
+   "english_field": "customer_name",
+   "arabic_field": "customer_name_in_arabic",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "customer_name",
+     "customer_name_in_arabic"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "customer_name_in_arabic_norm"
+  },
+  "Supplier": {
+   "state": "active",
+   "english_field": "supplier_name",
+   "arabic_field": "supplier_name_in_arabic",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "supplier_name",
+     "supplier_name_in_arabic"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "supplier_name_in_arabic_norm"
+  },
+  "Cost Center": {
+   "state": "active",
+   "english_field": "cost_center_name",
+   "arabic_field": "cost_center_name_ar",
+   "code_field": "cost_center_number",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "cost_center_number",
+     "cost_center_name",
+     "cost_center_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "cost_center_name_ar_norm"
+  },
+  "Warehouse": {
+   "state": "active",
+   "english_field": "warehouse_name",
+   "arabic_field": "warehouse_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "warehouse_name",
+     "warehouse_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "warehouse_name_ar_norm"
+  },
+  "Project": {
+   "state": "active",
+   "english_field": "project_name",
+   "arabic_field": "project_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "project_name",
+     "project_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "project_name_ar_norm"
+  },
+  "Item Group": {
+   "state": "active",
+   "english_field": "item_group_name",
+   "arabic_field": "item_group_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "item_group_name",
+     "item_group_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "item_group_name_ar_norm"
+  },
+  "Customer Group": {
+   "state": "active",
+   "english_field": "customer_group_name",
+   "arabic_field": "customer_group_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "customer_group_name",
+     "customer_group_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "customer_group_name_ar_norm"
+  },
+  "Supplier Group": {
+   "state": "active",
+   "english_field": "supplier_group_name",
+   "arabic_field": "supplier_group_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "supplier_group_name",
+     "supplier_group_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "supplier_group_name_ar_norm"
+  },
+  "Territory": {
+   "state": "active",
+   "english_field": "territory_name",
+   "arabic_field": "territory_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "territory_name",
+     "territory_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "territory_name_ar_norm"
+  },
+  "UOM": {
+   "state": "active",
+   "english_field": "uom_name",
+   "arabic_field": "uom_name_ar",
+   "code_field": "common_code",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "common_code",
+     "uom_name",
+     "uom_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "uom_name_ar_norm"
+  },
+  "Employee": {
+   "state": "active",
+   "english_field": "employee_name",
+   "arabic_field": "employee_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "employee_name",
+     "employee_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "employee_name_ar_norm"
+  },
+  "Department": {
+   "state": "active",
+   "english_field": "department_name",
+   "arabic_field": "department_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "department_name",
+     "department_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "department_name_ar_norm"
+  },
+  "BOQ Structure": {
+   "state": "active",
+   "english_field": "title",
+   "arabic_field": "title_ar",
+   "code_field": "wbs_code",
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "wbs_code",
+     "title",
+     "title_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "title_ar_norm"
+  },
+  "BOQ Header": {
+   "state": "active",
+   "english_field": "title",
+   "arabic_field": "title_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "title",
+     "title_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "title_ar_norm"
+  },
+  "Task": {
+   "state": "active",
+   "english_field": "subject",
+   "arabic_field": "subject_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "subject",
+     "subject_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": true
+   },
+   "norm_field": "subject_ar_norm"
+  },
+  "Asset Category": {
+   "state": "active",
+   "english_field": "asset_category_name",
+   "arabic_field": "asset_category_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "asset_category_name",
+     "asset_category_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "asset_category_name_ar_norm"
+  },
+  "Payment Terms Template": {
+   "state": "active",
+   "english_field": "template_name",
+   "arabic_field": "template_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "template_name",
+     "template_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "template_name_ar_norm"
+  },
+  "Brand": {
+   "state": "active",
+   "english_field": "brand",
+   "arabic_field": "brand_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "brand",
+     "brand_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "brand_ar_norm"
+  },
+  "Terms and Conditions": {
+   "state": "active",
+   "english_field": "title",
+   "arabic_field": "title_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "title",
+     "title_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "title_ar_norm"
+  },
+  "Asset": {
+   "state": "active",
+   "english_field": "asset_name",
+   "arabic_field": "asset_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "asset_name",
+     "asset_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "asset_name_ar_norm"
+  },
+  "Company": {
+   "state": "active",
+   "english_field": "company_name",
+   "arabic_field": "company_name_ar",
+   "code_field": null,
+   "identity_field": "name",
+   "search": {
+    "enabled": true,
+    "fields": [
+     "company_name",
+     "company_name_ar"
+    ]
+   },
+   "form": {
+    "identity_section": false
+   },
+   "tree": {
+    "enabled": false
+   },
+   "norm_field": "company_name_ar_norm"
+  }
+ }
+}

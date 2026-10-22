@@ -1,0 +1,120 @@
+Long-term Provisions
+Loyalty Points will be calculated from the spent done (via the Sales Invoice), based on collection factor mentioned.
+Main Cost Center {0} cannot be entered in the child table
+Maintain Same Rate Throughout Internal Transaction
+Max discount allowed for item: {0} is {1}%
+Merging {0} of {1}
+Min Qty (As Per Stock UOM)
+Min Qty should be greater than Recurse Over Qty
+Missing required filter: {0}
+More/Less than 12 months.
+Moving up in tree ...
+Multiple POS Opening Entry
+New Journal Entry will be posted for the difference amount. The Posting Date can be modified.
+New fiscal year created :-
+New revised budget created successfully
+No Customers found with selected options.
+No POS Profile found. Please create a New POS Profile first
+No Records for these settings.
+No Tax Withholding data found for the current posting date.
+No Unreconciled Invoices and Payments found for this party and account
+No Unreconciled Payments found for this party
+No billing email found for customer: {0}
+No matches occurred via auto reconciliation
+No more children on Left
+No more children on Right
+No of Docs
+No open POS Opening Entry found for POS Profile {0}.
+No primary email found for customer: {0}
+No records found in Allocation table
+No records found in the Invoices table
+No records found in the Payments table
+No {0} Accounts found for this company.
+Not able to find the earliest Fiscal Year for the given company.
+On save, the Excluded Fee will be converted to an Included Fee.
+One customer can be part of only single Loyalty Program.
+Only 'Payment Entries' made against this advance account are supported.
+Only CSV and Excel files can be used to for importing data. Please check the file format you are trying to upload
+Only Parent can be of type {0}
+Only applies for Normal Payments
+Only one of Deposit or Withdrawal should be non-zero when applying an Excluded Fee.
+Only payment entries with apply tax withholding unchecked will be considered for checking cumulative threshold breach
+Only {0} are supported
+Opening Balance = Start of period, Closing Balance = End of period, Period Movement = Net change during period
+Opening Purchase Invoices have been created.
+Opening Sales Invoices have been created.
+Optional. Used with Financial Report Template
+Outdated POS Opening Entry
+PCV
+PCV Paused
+PCV Resumed
+POS Closing failed while running in a background process. You can resolve the {0} and retry the process again.
+POS Invoice is already consolidated
+POS Invoice is not submitted
+POS Invoice should have the field {0} checked.
+POS Invoices can't be added when Sales Invoice is enabled
+POS Invoices will be consolidated in a background process
+POS Invoices will be unconsolidated in a background process
+POS Opening Entry - {0} is outdated. Please close the POS and create a new POS Opening Entry.
+POS Opening Entry Cancellation Error
+POS Opening Entry cannot be cancelled as unconsolidated Invoices exists.
+POS Profile - {0} has multiple open POS Opening Entries. Please close or cancel the existing entries before proceeding.
+POS Profile doesn't match {}
+POS Profile is mandatory to mark this invoice as POS Transaction.
+POS Profile {0} cannot be disabled as there are ongoing POS sessions.
+POS Profile {} contains Mode of Payment {}. Please remove them to disable this mode.
+POS Profile {} does not belong to company {}
+POS Profile {} does not exist.
+POS Profile {} is disabled.
+Parsed file is not in valid MT940 format or contains no transactions.
+Party Type and Party is required for Receivable / Payable account {0}
+Payment Reconciliation Job: {0} is running for this party. Can't reconcile now.
+Payment Request is already created
+Payment Request took too long to respond. Please try requesting for payment again.
+Payment Requests cannot be created against: {0}
+Payment Terms from orders will be fetched into the invoices as is
+Payment of {0} received successfully.
+Percentage Allocation should be equal to 100%
+Period Closing Voucher {0} GL Entry Cancellation Failed
+Period Closing Voucher {0} GL Entry Processing Failed
+Period End Date cannot be greater than Fiscal Year End Date
+Period Start Date cannot be greater than Period End Date
+Period Start Date must be {0}
+Plaid Link Updated
+Please Set Priority
+Please add Root Account for - {0}
+Please add the Bank Account column
+Please add the account to root level Company - {0}
+Please cancel and amend the Payment Entry
+Please cancel payment entry manually first
+Please cancel related transaction.
+Please check Process Deferred Accounting {0} and submit manually after resolving errors.
+Please create a new Accounting Dimension if required.
+Please enable only if the understand the effects of enabling this.
+Please ensure {} account is a Balance Sheet account.
+Please ensure {} account {} is a Receivable account.
+Please enter Root Type for account- {0}
+Please enter mobile number first.
+Please import accounts against parent company or enable {} in company master.
+Please make sure the file you are using has 'Parent Account' column present in the header.
+Please save before proceeding.
+Please select a customer for fetching payments.
+Please select a supplier for fetching payments.
+Please set Accounting Dimension {} in {}
+Please set Fixed Asset Account in {} against {}.
+Please set the cost center field in {0} or setup a default Cost Center for the Company.
+Previous Year is not closed, please close it first
+Pricing Rule is first selected based on 'Apply On' field, which can be Item, Item Group or Brand.
+Pricing Rule is made to overwrite Price List / define discount percentage, based on some criteria.
+Pricing Rules are further filtered based on quantity.
+Print Format Type should be Jinja.
+Print Format must be an enabled Report Print Format matching the selected Report.
+Procedures dropped
+Product Price ID
+Qty for which recursion isn't applicable.
+Rebuilding BTree for period ...
+Receivable/Payable Account: {0} doesn't belong to company {1}
+Recurse Over Qty cannot be less than 0
+Recursive Discounts with Mixed condition is not supported by the system
+Reference number of the invoice from the previous system
+Removing rows without exchange gain or loss

@@ -1,0 +1,38 @@
+Add Items in the Purpose Table	إضافة أصناف إلى جدول الأغراض
+Allow Lead Duplication based on Emails	السماح بتكرار العملاء المحتملين استنادًا إلى البريد الإلكتروني
+Appointment was created. But no lead was found. Please check the email to confirm	تم إنشاء الموعد. ولكن لم يتم العثور على عميل محتمل. يرجى التحقق من البريد الإلكتروني للتأكيد
+Auto close Opportunity Replied after the no. of days mentioned above	إغلاق تلقائي للفرصة التي تم الرد عليها بعد عدد الأيام المذكور أعلاه
+Date must be between {0} and {1}	يجب أن يكون التاريخ بين {0} و {1}
+Default Service Level Agreement for {0} already exists.	اتفاقية مستوى الخدمة الافتراضية لـ {0} موجودة بالفعل.
+Email Address must be unique, it is already used in {0}	يجب أن يكون عنوان البريد الإلكتروني فريدًا، فهو مستخدم بالفعل في {0}
+Email verification failed.	فشل التحقق من البريد الإلكتروني.
+Enable to apply SLA on every {0}	تفعيل تطبيق اتفاقية مستوى الخدمة على كل {0}
+First Response SLA Failed by {}	فشلت اتفاقية مستوى الخدمة للاستجابة الأولى من قِبل {}
+In row {0} of Appointment Booking Slots: "To Time" must be later than "From Time".	في الصف {0} من فترات حجز المواعيد: يجب أن يكون "إلى وقت" بعد "من وقت".
+Lead Owner cannot be same as the Lead Email Address	لا يمكن أن يكون مالك العميل المحتمل هو نفسه عنوان البريد الإلكتروني للعميل المحتمل
+Lost Reasons are required in case opportunity is Lost.	أسباب الخسارة مطلوبة في حال كانت الفرصة خاسرة.
+No of Employees	عدد الموظفين
+Opp/Lead %	نسبة الفرص/العملاء المحتملين %
+Order/Quot %	نسبة الطلبات/عروض الأسعار %
+Please check your email to confirm the appointment	يرجى مراجعة بريدك الإلكتروني لتأكيد الموعد
+Please enter Maintenance Details first	يرجى إدخال تفاصيل الصيانة أولاً
+Please select valid document type.	يرجى تحديد نوع مستند صالح.
+Post Route Key List	قائمة مفاتيح مسار المنشور
+Purposes Required	الأغراض مطلوبة
+Quot/Lead %	نسبة عروض الأسعار/العملاء المحتملين %
+Resolution Date	تاريخ الحل
+Resolution Details	تفاصيل الحل
+Resolved By	تم الحل بواسطة
+Response and Resolution	الاستجابة والحل
+Row {0}: To set {1} periodicity, difference between from and to date must be greater than or equal to {2}	الصف {0}: لتعيين دورية {1}، يجب أن يكون الفرق بين تاريخ البدء وتاريخ الانتهاء أكبر من أو يساوي {2}
+SLA will be applied if {1} is set as {2}{3}	سيتم تطبيق اتفاقية مستوى الخدمة إذا تم تعيين {1} كـ {2}{3}
+SLA will be applied on every {0}	سيتم تطبيق اتفاقية مستوى الخدمة على كل {0}
+Service Level Agreement for {0} {1} already exists.	اتفاقية مستوى الخدمة لـ {0} {1} موجودة بالفعل.
+Simple Python Expression, Example: doc.status == 'Open' and doc.issue_type == 'Bug'	تعبير بايثون بسيط، مثال: doc.status == 'Open' and doc.issue_type == 'Bug'
+Stage	المرحلة
+Start Time can't be greater than or equal to End Time for {0}.	لا يمكن أن يكون وقت البدء أكبر من أو مساويًا لوقت الانتهاء لـ {0}.
+The Document Type {0} must have a Status field to configure Service Level Agreement	يجب أن يحتوي نوع المستند {0} على حقل الحالة لتهيئة اتفاقية مستوى الخدمة
+Update the modified timestamp on new communications received in Lead & Opportunity.	تحديث الطابع الزمني للتعديل عند تلقي اتصالات جديدة في العميل المحتمل والفرصة.
+Visits	الزيارات
+or its descendants	أو توابعه
+{} Open	{} مفتوح

@@ -1,0 +1,346 @@
+{
+  "amendment": {
+    "authority": "Owner Authorization: Builder Attestation & Parser Amendment (P3-F002), 2026-09-12",
+    "finding": "P3-F002",
+    "previous_source_manifest_sha256": "2753ff07fbe93f84a8e4bfb6e687a966cf52e27476d3c9140a4fa9eed2e6c5c9",
+    "modified_frozen_files": [
+      "orchestrator/adapters.py",
+      "orchestrator/engine.py",
+      "orchestrator/tests/test_adapter_results.py",
+      "orchestrator/tests/test_engine.py"
+    ],
+    "project_commit_created": false
+  },
+  "source_manifest_sha256": "f2e60c309c81a8e40ddf013bd2f49b8a405eafd1be30ee7b6b3061cd2535d250",
+  "tests_passed": 116,
+  "status": "AMENDMENT_VERIFIED_PILOT_ESCALATED",
+  "reconciliation_evidence": "phase-3-builder-reconciliation.json",
+  "reconciled_job": "job-0b3f130e287b123d9b20a0b8",
+  "builder_job": "job-3c71e7eaa530afb5b7990033",
+  "builder_session": "ses_f6d8d590cffeZ3hClyK1gvQubS",
+  "builder_verdict": "PASS",
+  "builder_explanation": "## Result\n\nImplemented the approved contract for SCP-R1 through SCP-R7.\n\n- Refactored `scripts/ai_context_check.py` for derived roots, import safety, argparse CLI, JSON output, recorded failures, and portable Check 8B subprocess execution.\n- Added offline tests covering import safety, CLI exits, malformed JSON, scope metadata violations, drift subprocess behavior, changed CWD, relocation, and fixture-vs-real-gate distinction.\n- Applied only the authorized `SCHEMA_FACTS.md` reconciliation for `submitted_by`, `submitted_at`, `engineer_approved_by`, and `client_approved_by`; Variation Order counts changed from 18 to 22 and verification date is `2026-09-10`.\n- The owner scope amendment resolves prior SCP-001 scope objections; no owner-decision finding was emitted.\n\n## Validation Evidence\n\nRunner-captured native tool events reference:\n\n- Offline suite: `pytest tests_offline/ -q -p no:cacheprovider` passed 10 tests.\n- Context checker: `scripts/ai_context_check.py --json` passed all 11 checks.\n- Scope linter: `scripts/lint_scope_metadata.py` passed.\n- Real fresh-copy gate passed all three required commands with self-contained Git metadata.\n- Absolute-path checker and linter executions from an unrelated working directory passed.\n\nNo ERP data, commits, pushes, merges, deployments, MCP calls, or workflow/control files were modified.",
+  "validation": {
+    "candidate_id": "d22bd403281fb675c07c641d8a9037307ed628d3ad15f3769b05f94a59c25b56",
+    "complete": true,
+    "passed": true,
+    "records": [
+      {
+        "argv": [
+          "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+          "-m",
+          "pytest",
+          "tests_offline/",
+          "-q",
+          "-p",
+          "no:cacheprovider"
+        ],
+        "cwd": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+        "exit_code": 0,
+        "finished_utc": "2026-09-11T21:52:14.069750Z",
+        "started_utc": "2026-09-11T21:52:13.398948Z",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e173149ae4a7d07bf2a0a59558af27878c827af0bd7e82bda6c485ccd7a63e9f"
+      },
+      {
+        "argv": [
+          "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+          "scripts/ai_context_check.py",
+          "--json"
+        ],
+        "cwd": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+        "exit_code": 0,
+        "finished_utc": "2026-09-11T21:52:14.199414Z",
+        "started_utc": "2026-09-11T21:52:14.075703Z",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "c15b80ca998613cba893a6c835ed0d2f58ff630b725b5cf3aaede285ace5507a"
+      },
+      {
+        "argv": [
+          "/home/mohamed/frappe-bench/worktrees/scope-context-portability/orchestrator/var/pilot-test-venv/bin/python",
+          "scripts/lint_scope_metadata.py"
+        ],
+        "cwd": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+        "exit_code": 0,
+        "finished_utc": "2026-09-11T21:52:14.246671Z",
+        "started_utc": "2026-09-11T21:52:14.207023Z",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "c724e60e722d5bf4e77e67f8aa0e8d5ec91f0a578b69b57fd241f1cb179f07d7"
+      }
+    ]
+  },
+  "candidate": {
+    "archive_sha256": "cf3d735ea0d967099a1206978aacb0d72fdea4f289c16fa662c95f2ec8a0c66c",
+    "candidate_id": "d22bd403281fb675c07c641d8a9037307ed628d3ad15f3769b05f94a59c25b56",
+    "manifest": {
+      "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+      "branch": "feature/scope-context-portability",
+      "entries": [
+        {
+          "content_sha256": "331e42e98c6ca053564c6a3a41167b7c5be816b454e05f9ff34057443a7c326e",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/SCHEMA_FACTS.md"
+        },
+        {
+          "content_sha256": "dc3ddf50de6537cea457887982285638ddea3247252c6f7e639e2d43d49ef083",
+          "kind": "file",
+          "mode": "100644",
+          "path": "scripts/ai_context_check.py"
+        },
+        {
+          "content_sha256": "c95bc2149a222583bbc8546ab8e77fdb577bb5f75a4e8cb2a78f3ba83dc0b933",
+          "kind": "file",
+          "mode": "100644",
+          "path": "tests_offline/conftest.py"
+        },
+        {
+          "content_sha256": "fb5b2deea8ec4ad5ff8d2a266bc8a066bc17378378b6e264dac3006f4168e6bf",
+          "kind": "file",
+          "mode": "100644",
+          "path": "tests_offline/test_checkers.py"
+        }
+      ],
+      "kind": "code"
+    },
+    "manifest_hash": "d22bd403281fb675c07c641d8a9037307ed628d3ad15f3769b05f94a59c25b56",
+    "tree_oid": "c4cc95a3f92c5de53c1107838857405184901a99"
+  },
+  "verification_jobs": [
+    "job-2a8db6e046327a58413177ed"
+  ],
+  "accepted_result_history": [
+    {
+      "job_id": "job-65f2dc51850d479768d6760a",
+      "role": "architect",
+      "verdict": "BLOCKED"
+    },
+    {
+      "job_id": "job-e0ad43a48a20acd89a5eb939",
+      "role": "architect",
+      "verdict": "FAILED"
+    },
+    {
+      "job_id": "job-8e3944c2b9cf5637a53cac50",
+      "role": "architect",
+      "verdict": "PROPOSED"
+    },
+    {
+      "job_id": "job-0c6a7cc3df086796fa2d7353",
+      "role": "reviewer",
+      "verdict": "FAILED"
+    },
+    {
+      "job_id": "job-eb36e5f169894f960d989f64",
+      "role": "reviewer",
+      "verdict": "PASS"
+    },
+    {
+      "job_id": "job-3c71e7eaa530afb5b7990033",
+      "role": "builder",
+      "verdict": "PASS"
+    },
+    {
+      "job_id": "job-2a8db6e046327a58413177ed",
+      "role": "verifier",
+      "verdict": "BLOCKED"
+    },
+    {
+      "job_id": "job-54cc536f7cfbaf59553b46fe",
+      "role": "builder",
+      "verdict": "PASS"
+    },
+    {
+      "job_id": "job-76240f387e35a58cf37c6430",
+      "role": "verifier",
+      "verdict": "BLOCKED"
+    },
+    {
+      "job_id": "job-83c42acc9d50346ac7c54635",
+      "role": "builder",
+      "verdict": "PASS"
+    },
+    {
+      "job_id": "job-e48329b23ee1a16e352baf7f",
+      "role": "verifier",
+      "verdict": "BLOCKED"
+    }
+  ],
+  "latest_state": {
+    "work_item": "scope-context-portability",
+    "stage": "1",
+    "status": "PAUSED",
+    "next_roles": [],
+    "active_jobs": [],
+    "candidate": {
+      "archive_sha256": "395ab2d4f44ba9a56ca0daeb0bcb4fc1a85b31efec04f8fd9f4fd41e7d9e924c",
+      "candidate_id": "e49ab5027d062f931ef9153ad5771388dd51ec1d8415929098fe5715e34c2ce8",
+      "manifest": {
+        "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+        "branch": "feature/scope-context-portability",
+        "entries": [
+          {
+            "content_sha256": "331e42e98c6ca053564c6a3a41167b7c5be816b454e05f9ff34057443a7c326e",
+            "kind": "file",
+            "mode": "100644",
+            "path": "docs/ai/SCHEMA_FACTS.md"
+          },
+          {
+            "content_sha256": "dc83593b3ac302b5a42aa567ce81f5f4f62eef74a79d80e593c157bc26036d64",
+            "kind": "file",
+            "mode": "100644",
+            "path": "scripts/ai_context_check.py"
+          },
+          {
+            "content_sha256": "9d86d07a58efdc74dab3a5b557df0c059cde5f592984803b28b400e1e070ce7f",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/conftest.py"
+          },
+          {
+            "content_sha256": "34811f573b6ae709192d42de9ff9597650402c7846df51b03d1e9e71ac96bc65",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/sitecustomize.py"
+          },
+          {
+            "content_sha256": "ae2b05d63bf9e17b7dce7c804c9ccc1ed3f850ab985be5b3ed1f6d5f38942ae6",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/test_checkers.py"
+          }
+        ],
+        "kind": "code"
+      },
+      "manifest_hash": "e49ab5027d062f931ef9153ad5771388dd51ec1d8415929098fe5715e34c2ce8",
+      "tree_oid": "a9cdfa93d031c149862682b2152dd6fec7a9c13a"
+    },
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "round": 4,
+    "attempt": 11,
+    "cursor": 21,
+    "revision": 21,
+    "findings": [
+      {
+        "affected_requirements": [
+          "SCP-R6"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-54cc536f7cfbaf59553b46fe-native-events",
+            "sha256": "57e5a272f64569acdee276528f9f5df811c452961abdae50e0aa2b38cd4b2fee",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-002",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-76240f387e35a58cf37c6430-normalization-0",
+            "sha256": "d81b864eecacaf4690f0284dc6bd8bff24413a410939688fedc8b6f090065efe",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "feb69a2cefb6fd8c6a4fd1d69434e1f086782b51497ab27fa8145c534e602a23",
+          "reproduction_digest": "1510f18200511c606edb9732e5edfded1a2085056d9710448ad13114dd60be69"
+        },
+        "summary": "Partial repair: scripts/ai_context_check.py:22 now rejects non-object JSON and the former exception escape is repaired. The remaining regression requirement is unmet: tests_offline/test_checkers.py:66-72 and :113-118 exercise only _read_json through _check; no committed negative test asserts main/CLI exit 1, parseable JSON with the relevant FAIL, and absence of an uncaught traceback. Normalized reproduction: inspect and execute the frozen suite's negative JSON cases; they never traverse the CLI/reporting boundary. Add retained end-to-end malformed/structurally-invalid and missing-input failure cases, including drift-child error/launch failure assertions required by the approved plan. Route the remaining test implementation to builder."
+      },
+      {
+        "affected_requirements": [
+          "SCP-R6"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-83c42acc9d50346ac7c54635-native-events",
+            "sha256": "9c7c7f94dc83e712f44211bcfbb3a25c15cfb4439420ce7107488015800fb06a",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-003",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-e48329b23ee1a16e352baf7f-normalization-0",
+            "sha256": "de37b4916a442b3444da194aa6d72ae32ce339fbc2668b942c91d1619340a124",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "00fd2ffea02fac7eb4b364274ba154664c7c40154706532e95cc146d55bb2803",
+          "reproduction_digest": "a861c8ad1aac9a3940dcec66eabaf165bc8a1db7e519f537e3e9a044d4f13eba"
+        },
+        "summary": "Partial repair: offline_subprocess_env installs tests_offline/sitecustomize.py for the successful context CLI and malformed/missing-input CLI cases. However, tests_offline/test_checkers.py:62-63 and :217 still launch help, invalid-option and relocated-linter subprocesses without that environment or equivalent import observation. The clean environment captured at builder stdout.jsonl:51 supplies no inherited PYTHONPATH guard, so these children do not inherit the parent conftest MetaPathFinder. Normalized reproduction: inspect these subprocess.run calls and the captured fresh-suite environment; all three lack child import isolation. Apply and regression-test the child guard or equivalent observation across every CLI subprocess, including the relocated linter. Route to builder."
+      },
+      {
+        "affected_requirements": [
+          "SCP-R7"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-83c42acc9d50346ac7c54635-native-events",
+            "sha256": "9c7c7f94dc83e712f44211bcfbb3a25c15cfb4439420ce7107488015800fb06a",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-004",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-e48329b23ee1a16e352baf7f-normalization-1",
+            "sha256": "ab8e48590926cd2256906cf1ea600c6dad24e0768c070590a8b82839955a88a5",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "00fd2ffea02fac7eb4b364274ba154664c7c40154706532e95cc146d55bb2803",
+          "reproduction_digest": "4cc7434a5753849504ee38cd1eace416e7e2903417d7b3c02cbde780751574ea"
+        },
+        "summary": "Partial repair: builder stdout.jsonl:49-51 captures all three prescribed commands passing with copied-root cwd and sanitized environment; :54 and :56 capture copied checkers passing by absolute path from another cwd. Lines :46 and :55 now provide matching pre/post hashes, but only for the five overlaid candidate files. No complete source inventory/comparison against the frozen base plus candidate manifest establishes equality of unchanged checker inputs before and after testing. The supplied current gate evidence also lacks the approved environment's no-installed-app/Frappe-package confirmation. Normalized reproduction: inspect the materialization and validation records through cleanup; hash operands enumerate only five changed files, leaving unchanged source inputs outside the equality assertion. Have the authorized execution channel capture complete frozen-source equality before and after the real gate and package-absence evidence. Preserve the existing successful command evidence; fixtures cannot replace these remaining gate conditions. Route to builder/execution channel."
+      }
+    ],
+    "backlog": [],
+    "next_finding": 5,
+    "unsuccessful_cycles": 3,
+    "unchanged_rounds": 2,
+    "previous_snapshots": [
+      "080565b5dba75e0a4ab863c22e8bdf120a83b0b6c770305a87c937159f898351",
+      "beae7a395c398dfb23ba99526aa2ff455fb86e6f8f7be074b59f3fe769bcd700",
+      "bf25d4b8b6fa88c0708c419590b1ce02b2c8401f8b0a3b1815bdc7aa820693b0"
+    ],
+    "gate": {
+      "scope": "DECISION",
+      "gate_id": "decision-20"
+    },
+    "pause_reason": "ESCALATED",
+    "resume_to": "BUILD_COMPLETE",
+    "prior": {
+      "status": "BUILD_COMPLETE",
+      "next_roles": [],
+      "gate": null
+    },
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64",
+      "job-3c71e7eaa530afb5b7990033",
+      "job-2a8db6e046327a58413177ed",
+      "job-54cc536f7cfbaf59553b46fe",
+      "job-76240f387e35a58cf37c6430",
+      "job-83c42acc9d50346ac7c54635",
+      "job-e48329b23ee1a16e352baf7f"
+    ],
+    "approval_refs": [
+      "owner-plan-grant-phase3-pilot"
+    ],
+    "review_results": {},
+    "stages": {},
+    "plan_granted": true,
+    "committed": false
+  },
+  "escalation_evidence": "phase-3-escalation.json"
+}

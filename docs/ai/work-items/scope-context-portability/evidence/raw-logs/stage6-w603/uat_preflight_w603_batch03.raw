@@ -1,0 +1,11 @@
+UAT_PREFLIGHT_EXIT 0
+PASS redis-cache: port 13000 PING ok
+PASS redis-queue: port 11000 PING ok
+PASS site-http: /ping 200
+PASS desk-boot: boot lang=ar
+PASS desk-boot: __messages entries=12953
+PASS desk-boot-key: 'Row #{0}: Status is mandatory' present in boot
+PASS desk-boot: UAT session logged out
+UAT PREFLIGHT: PASS
+
+TEARDOWN_OK language=en; temporary credential rotated

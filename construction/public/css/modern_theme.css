@@ -1,0 +1,4650 @@
+/* ════════════════════════════════════════════════════════════
+   CONSTRUCTION ERP THEME v2.4 — Unified Hover · Text Motion
+   Strategy: Cooperate with Frappe, never fight layout
+   Only visual properties: colors, backgrounds, borders, shadows
+   NO layout: position, display, flex, width, height, margin, padding, transform, order
+   Version: 2.5.3 | 2026-05-24
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── ROOT FALLBACKS (prevent FOUC before JS loads) ─── */
+
+:root {
+  --ct-primary: #2563eb;
+  --ct-accent: #f59e0b;
+  --ct-bg: #0b1020;
+  --ct-surface: #1e293b;
+  --ct-text: #f8fafc;
+  --ct-border: rgba(148,163,184,0.18);
+  --ct-border-radius: 10px;
+}
+
+/* ─── DARK THEME TOKENS ───
+   EXACT values from index.html reference */
+
+html.ct-enterprise[data-theme="dark"] {
+  --ct-primary: #2563eb;
+  --ct-primary-hover: #1d4ed8;
+  --ct-primary-light: rgba(37, 99, 235, 0.15);
+  --ct-accent: #f59e0b;
+  --ct-accent-hover: #d97706;
+  --ct-accent-light: rgba(245, 158, 11, 0.15);
+  --ct-selected-bg: rgba(245, 158, 11, 0.20);
+  --ct-selected-border: rgba(245, 158, 11, 0.55);
+  --ct-success: #16a34a;
+  --ct-success-hover: #15803d;
+  --ct-success-light: rgba(22, 163, 74, 0.15);
+  --ct-card-hover-border: #16a34a;
+  --ct-danger: #dc2626;
+  --ct-danger-hover: #b91c1c;
+  --ct-danger-light: rgba(220, 38, 38, 0.15);
+  --ct-warning: #d97706;
+  --ct-warning-light: rgba(245, 158, 11, 0.15);
+  --ct-info: #2563eb;
+  --ct-info-light: rgba(37, 99, 235, 0.15);
+  --ct-bg: #0b1020;
+  --ct-bg-elevated: #111827;
+  --ct-bg-3: #1a2332;
+  --ct-surface: #1e293b;
+  --ct-surface-hover: #334155;
+  --ct-surface-active: #475569;
+  --ct-surface-elevated: #243447;
+  --ct-text: #f8fafc;
+  --ct-text-secondary: #94a3b8;
+  --ct-text-muted: #64748b;
+  --ct-text-disabled: #475569;
+  --ct-border: rgba(148, 163, 184, 0.18);
+  --ct-border-hover: rgba(148, 163, 184, 0.28);
+  --ct-divider: rgba(148, 163, 184, 0.10);
+  --ct-border-light: rgba(148, 163, 184, 0.10);
+  --ct-border-radius: 10px;
+  --ct-border-radius-sm: 6px;
+  --ct-border-radius-lg: 16px;
+  --ct-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.40);
+  --ct-shadow: 0 8px 24px rgba(0, 0, 0, 0.48);
+  --ct-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.48);
+  --ct-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.56);
+  --ct-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --ct-motion: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─── Frappe native CSS custom properties ─── */
+  --bg-color: var(--ct-bg);
+  --fg-color: var(--ct-bg);
+  --bg: var(--ct-bg);
+  --subtle-accent: var(--ct-bg-3);
+  --subtle-fg: var(--ct-surface);
+  --navbar-bg: var(--ct-surface);
+  --surface-menu-bar: var(--ct-surface);
+  --fg-hover-color: var(--ct-surface-hover);
+  --card-bg: var(--ct-surface);
+  --disabled-text-color: var(--ct-text-disabled);
+  --disabled-control-bg: var(--ct-bg-3);
+  --control-bg: var(--ct-bg-3);
+  --control-bg-on-gray: var(--ct-surface-hover);
+  --awesomebar-focus-bg: var(--ct-surface);
+  --awesomplete-hover-bg: var(--ct-surface-hover);
+  --modal-bg: var(--ct-surface-elevated);
+  --toast-bg: var(--ct-surface-elevated);
+  --popover-bg: var(--ct-surface-elevated);
+  --text-neutral: var(--ct-text);
+  --text-dark: var(--ct-bg);
+  --text-muted: var(--ct-text-secondary);
+  --text-light: var(--ct-text-muted);
+  --text-color: var(--ct-text);
+  --heading-color: var(--ct-text);
+  --primary-color: var(--ct-primary);
+  --border-color: var(--ct-border);
+  --dark-border-color: var(--ct-border-hover);
+  --table-border-color: var(--ct-border);
+  --highlight-color: var(--ct-surface-hover);
+  --sidebar-select-color: var(--ct-surface-hover);
+  --btn-primary: var(--ct-primary);
+  --btn-default-bg: var(--ct-bg-3);
+  --btn-default-hover-bg: var(--ct-surface-hover);
+  --btn-ghost-hover-bg: var(--ct-surface-hover);
+  --icon-stroke: var(--ct-text);
+  --icon-fill: transparent;
+  --skeleton-bg: var(--ct-bg-3);
+  --input-disabled-bg: var(--ct-bg-3);
+  --scrollbar-thumb-color: var(--ct-surface-hover);
+  --scrollbar-track-color: var(--ct-surface);
+  --shadow-inset: var(--ct-surface);
+  --sidebar-hover-color: var(--ct-surface-hover);
+  --sidebar-active-color: var(--ct-surface-active);
+  --sidebar-border-color: var(--ct-border);
+  --divider-color: var(--ct-border);
+  --placeholder-color: var(--ct-bg-3);
+  --btn-group-border-color: var(--ct-border);
+  --alert-text-danger: var(--ct-danger);
+  --alert-text-warning: var(--ct-warning);
+  --alert-text-info: var(--ct-info);
+  --alert-text-success: var(--ct-success);
+  --alert-bg-danger: var(--ct-danger-light);
+  --alert-bg-warning: var(--ct-warning-light);
+  --alert-bg-info: var(--ct-info-light);
+  --alert-bg-success: var(--ct-success-light);
+  --timeline-badge-color: var(--ct-text-muted);
+  --timeline-badge-bg: var(--ct-surface);
+  --check-icon-color: var(--ct-text);
+
+  /* ─── Frappe Charts CSS variables (prevent BaseChart empty-color crash) ─── */
+  --charts-label-color: var(--ct-text-secondary);
+  --charts-axis-line-color: var(--ct-border);
+  --charts-tooltip-title: var(--ct-text);
+  --charts-tooltip-label: var(--ct-text-secondary);
+  --charts-tooltip-value: var(--ct-text);
+  --charts-tooltip-bg: var(--ct-surface-elevated);
+  --charts-stroke-width: 2px;
+  --charts-dataset-circle-stroke: var(--ct-bg);
+  --charts-legend-label: var(--ct-text-secondary);
+  --charts-legend-value: var(--ct-text-secondary);
+
+  color-scheme: dark;
+}
+
+/* ─── LIGHT THEME TOKENS ─── */
+
+html.ct-enterprise[data-theme="light"] {
+  --ct-primary: #2563eb;
+  --ct-primary-hover: #1d4ed8;
+  --ct-primary-light: rgba(37, 99, 235, 0.15);
+  --ct-accent: #f59e0b;
+  --ct-accent-hover: #d97706;
+  --ct-accent-light: rgba(245, 158, 11, 0.15);
+  --ct-selected-bg: rgba(245, 158, 11, 0.18);
+  --ct-selected-border: rgba(245, 158, 11, 0.55);
+  --ct-success: #16a34a;
+  --ct-success-hover: #15803d;
+  --ct-success-light: rgba(22, 163, 74, 0.15);
+  --ct-card-hover-border: #16a34a;
+  --ct-danger: #dc2626;
+  --ct-danger-hover: #b91c1c;
+  --ct-danger-light: rgba(220, 38, 38, 0.15);
+  --ct-warning: #d97706;
+  --ct-warning-light: rgba(245, 158, 11, 0.15);
+  --ct-info: #2563eb;
+  --ct-info-light: rgba(37, 99, 235, 0.15);
+  --ct-bg: #f8fafc;
+  --ct-bg-elevated: #f1f5f9;
+  --ct-bg-3: #e2e8f0;
+  --ct-surface: #ffffff;
+  --ct-surface-hover: #f1f5f9;
+  --ct-surface-active: #e2e8f0;
+  --ct-surface-elevated: #ffffff;
+  --ct-text: #0f172a;
+  --ct-text-secondary: #475569;
+  --ct-text-muted: #94a3b8;
+  --ct-text-disabled: #cbd5e1;
+  --ct-border: rgba(15, 23, 42, 0.10);
+  --ct-border-hover: rgba(15, 23, 42, 0.18);
+  --ct-divider: rgba(15, 23, 42, 0.08);
+  --ct-border-radius: 10px;
+  --ct-border-radius-sm: 6px;
+  --ct-border-radius-lg: 16px;
+  --ct-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --ct-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --ct-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --ct-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --ct-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --ct-motion: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─── Frappe native CSS custom properties (light) ─── */
+  --bg-color: var(--ct-bg);
+  --fg-color: var(--ct-bg);
+  --bg: var(--ct-bg);
+  --subtle-accent: var(--ct-bg-elevated);
+  --subtle-fg: var(--ct-surface-hover);
+  --navbar-bg: var(--ct-surface);
+  --surface-menu-bar: var(--ct-surface);
+  --fg-hover-color: var(--ct-surface-hover);
+  --card-bg: var(--ct-surface);
+  --disabled-text-color: var(--ct-text-disabled);
+  --disabled-control-bg: var(--ct-bg-3);
+  --control-bg: var(--ct-bg-elevated);
+  --control-bg-on-gray: var(--ct-bg-3);
+  --awesomebar-focus-bg: var(--ct-surface);
+  --awesomplete-hover-bg: var(--ct-surface-hover);
+  --modal-bg: var(--ct-surface);
+  --toast-bg: var(--ct-surface);
+  --popover-bg: var(--ct-surface);
+  --text-neutral: var(--ct-text);
+  --text-dark: var(--ct-bg);
+  --text-muted: var(--ct-text-secondary);
+  --text-light: var(--ct-text-muted);
+  --text-color: var(--ct-text);
+  --heading-color: var(--ct-text);
+  --primary-color: var(--ct-primary);
+  --border-color: var(--ct-border);
+  --dark-border-color: var(--ct-border-hover);
+  --table-border-color: var(--ct-border);
+  --highlight-color: var(--ct-surface-hover);
+  --sidebar-select-color: var(--ct-surface-hover);
+  --btn-primary: var(--ct-primary);
+  --btn-default-bg: var(--ct-surface);
+  --btn-default-hover-bg: var(--ct-surface-hover);
+  --btn-ghost-hover-bg: var(--ct-surface-hover);
+  --icon-stroke: var(--ct-text);
+  --icon-fill: transparent;
+  --skeleton-bg: var(--ct-bg-elevated);
+  --input-disabled-bg: var(--ct-bg-elevated);
+  --scrollbar-thumb-color: var(--ct-text-muted);
+  --scrollbar-track-color: var(--ct-bg-elevated);
+  --shadow-inset: var(--ct-surface-hover);
+  --sidebar-hover-color: var(--ct-surface-hover);
+  --sidebar-active-color: var(--ct-surface-active);
+  --sidebar-border-color: var(--ct-border);
+  --divider-color: var(--ct-border);
+  --placeholder-color: var(--ct-bg-elevated);
+  --btn-group-border-color: var(--ct-border);
+  --alert-text-danger: var(--ct-danger);
+  --alert-text-warning: var(--ct-warning);
+  --alert-text-info: var(--ct-info);
+  --alert-text-success: var(--ct-success);
+  --alert-bg-danger: var(--ct-danger-light);
+  --alert-bg-warning: var(--ct-warning-light);
+  --alert-bg-info: var(--ct-info-light);
+  --alert-bg-success: var(--ct-success-light);
+  --timeline-badge-color: var(--ct-text-muted);
+  --timeline-badge-bg: var(--ct-surface);
+  --check-icon-color: var(--ct-text);
+
+  /* ─── Frappe Charts CSS variables ─── */
+  --charts-label-color: var(--ct-text-secondary);
+  --charts-axis-line-color: var(--ct-border);
+  --charts-tooltip-title: var(--ct-text);
+  --charts-tooltip-label: var(--ct-text-secondary);
+  --charts-tooltip-value: var(--ct-text);
+  --charts-tooltip-bg: var(--ct-surface-elevated);
+  --charts-stroke-width: 2px;
+  --charts-dataset-circle-stroke: var(--ct-bg);
+  --charts-legend-label: var(--ct-text-secondary);
+  --charts-legend-value: var(--ct-text-secondary);
+
+  color-scheme: light;
+}
+
+/* ─── BODY-LEVEL VARIABLE OVERRIDES ───
+   Frappe v16 defines --bg-color, --text-color etc. on body.
+   Since awesomplete dropdowns are body children, they inherit
+   Frappe's body values unless we override them here.
+   These must be AFTER Frappe's desk.bundle.css in cascade.
+   Selector specificity: html.ct-enterprise body > body alone */
+
+html.ct-enterprise[data-theme="dark"] body {
+  --bg-color: var(--ct-bg);
+  --fg-color: var(--ct-bg);
+  --bg: var(--ct-bg);
+  --subtle-accent: var(--ct-bg-3);
+  --subtle-fg: var(--ct-surface);
+  --navbar-bg: var(--ct-surface);
+  --surface-menu-bar: var(--ct-surface);
+  --fg-hover-color: var(--ct-surface-hover);
+  --card-bg: var(--ct-surface);
+  --disabled-text-color: var(--ct-text-disabled);
+  --disabled-control-bg: var(--ct-bg-3);
+  --control-bg: var(--ct-bg-3);
+  --control-bg-on-gray: var(--ct-surface-hover);
+  --awesomebar-focus-bg: var(--ct-surface);
+  --awesomplete-hover-bg: var(--ct-surface-hover);
+  --modal-bg: var(--ct-surface-elevated);
+  --toast-bg: var(--ct-surface-elevated);
+  --popover-bg: var(--ct-surface-elevated);
+  --text-neutral: var(--ct-text);
+  --text-dark: var(--ct-bg);
+  --text-muted: var(--ct-text-secondary);
+  --text-light: var(--ct-text-muted);
+  --text-color: var(--ct-text);
+  --heading-color: var(--ct-text);
+  --primary-color: var(--ct-primary);
+  --border-color: var(--ct-border);
+  --dark-border-color: var(--ct-border-hover);
+  --table-border-color: var(--ct-border);
+  --highlight-color: var(--ct-surface-hover);
+  --sidebar-select-color: var(--ct-surface-hover);
+  --btn-primary: var(--ct-primary);
+  --btn-default-bg: var(--ct-bg-3);
+  --btn-default-hover-bg: var(--ct-surface-hover);
+  --btn-ghost-hover-bg: var(--ct-surface-hover);
+  --icon-stroke: var(--ct-text);
+  --icon-fill: transparent;
+  --skeleton-bg: var(--ct-bg-3);
+  --input-disabled-bg: var(--ct-bg-3);
+  --scrollbar-thumb-color: var(--ct-surface-hover);
+  --scrollbar-track-color: var(--ct-surface);
+  --shadow-inset: var(--ct-surface);
+  --sidebar-hover-color: var(--ct-surface-hover);
+  --sidebar-active-color: var(--ct-surface-active);
+  --sidebar-border-color: var(--ct-border);
+  --divider-color: var(--ct-border);
+  --placeholder-color: var(--ct-bg-3);
+  --btn-group-border-color: var(--ct-border);
+  --alert-text-danger: var(--ct-danger);
+  --alert-text-warning: var(--ct-warning);
+  --alert-text-info: var(--ct-info);
+  --alert-text-success: var(--ct-success);
+  --alert-bg-danger: var(--ct-danger-light);
+  --alert-bg-warning: var(--ct-warning-light);
+  --alert-bg-info: var(--ct-info-light);
+  --alert-bg-success: var(--ct-success-light);
+  --timeline-badge-color: var(--ct-text-muted);
+  --timeline-badge-bg: var(--ct-surface);
+  --check-icon-color: var(--ct-text);
+
+  /* ─── Frappe Charts CSS variables (body override) ─── */
+  --charts-label-color: var(--ct-text-secondary);
+  --charts-axis-line-color: var(--ct-border);
+  --charts-tooltip-title: var(--ct-text);
+  --charts-tooltip-label: var(--ct-text-secondary);
+  --charts-tooltip-value: var(--ct-text);
+  --charts-tooltip-bg: var(--ct-surface-elevated);
+  --charts-stroke-width: 2px;
+  --charts-dataset-circle-stroke: var(--ct-bg);
+  --charts-legend-label: var(--ct-text-secondary);
+  --charts-legend-value: var(--ct-text-secondary);
+}
+
+html.ct-enterprise[data-theme="light"] body {
+  --bg-color: var(--ct-bg);
+  --fg-color: var(--ct-bg);
+  --bg: var(--ct-bg);
+  --subtle-accent: var(--ct-bg-elevated);
+  --subtle-fg: var(--ct-surface-hover);
+  --navbar-bg: var(--ct-surface);
+  --surface-menu-bar: var(--ct-surface);
+  --fg-hover-color: var(--ct-surface-hover);
+  --card-bg: var(--ct-surface);
+  --disabled-text-color: var(--ct-text-disabled);
+  --disabled-control-bg: var(--ct-bg-3);
+  --control-bg: var(--ct-bg-elevated);
+  --control-bg-on-gray: var(--ct-bg-3);
+  --awesomebar-focus-bg: var(--ct-surface);
+  --awesomplete-hover-bg: var(--ct-surface-hover);
+  --modal-bg: var(--ct-surface);
+  --toast-bg: var(--ct-surface);
+  --popover-bg: var(--ct-surface);
+  --text-neutral: var(--ct-text);
+  --text-dark: var(--ct-bg);
+  --text-muted: var(--ct-text-secondary);
+  --text-light: var(--ct-text-muted);
+  --text-color: var(--ct-text);
+  --heading-color: var(--ct-text);
+  --primary-color: var(--ct-primary);
+  --border-color: var(--ct-border);
+  --dark-border-color: var(--ct-border-hover);
+  --table-border-color: var(--ct-border);
+  --highlight-color: var(--ct-surface-hover);
+  --sidebar-select-color: var(--ct-surface-hover);
+  --btn-primary: var(--ct-primary);
+  --btn-default-bg: var(--ct-bg-3);
+  --btn-default-hover-bg: var(--ct-surface-hover);
+  --btn-ghost-hover-bg: var(--ct-surface-hover);
+  --icon-stroke: var(--ct-text);
+  --icon-fill: transparent;
+  --skeleton-bg: var(--ct-bg-3);
+  --input-disabled-bg: var(--ct-bg-3);
+  --scrollbar-thumb-color: var(--ct-surface-hover);
+  --scrollbar-track-color: var(--ct-surface);
+  --shadow-inset: var(--ct-surface);
+  --sidebar-hover-color: var(--ct-surface-hover);
+  --sidebar-active-color: var(--ct-surface-active);
+  --sidebar-border-color: var(--ct-border);
+  --divider-color: var(--ct-border);
+  --placeholder-color: var(--ct-bg-3);
+  --btn-group-border-color: var(--ct-border);
+  --alert-text-danger: var(--ct-danger);
+  --alert-text-warning: var(--ct-warning);
+  --alert-text-info: var(--ct-info);
+  --alert-text-success: var(--ct-success);
+  --alert-bg-danger: var(--ct-danger-light);
+  --alert-bg-warning: var(--ct-warning-light);
+  --alert-bg-info: var(--ct-info-light);
+  --alert-bg-success: var(--ct-success-light);
+  --timeline-badge-color: var(--ct-text-muted);
+  --timeline-badge-bg: var(--ct-surface);
+  --check-icon-color: var(--ct-text);
+
+  /* ─── Frappe Charts CSS variables (body override) ─── */
+  --charts-label-color: var(--ct-text-secondary);
+  --charts-axis-line-color: var(--ct-border);
+  --charts-tooltip-title: var(--ct-text);
+  --charts-tooltip-label: var(--ct-text-secondary);
+  --charts-tooltip-value: var(--ct-text);
+  --charts-tooltip-bg: var(--ct-surface-elevated);
+  --charts-stroke-width: 2px;
+  --charts-dataset-circle-stroke: var(--ct-bg);
+  --charts-legend-label: var(--ct-text-secondary);
+  --charts-legend-value: var(--ct-text-secondary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   UNIFIED HOVER PATTERN — applied to every interactive element
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .body-sidebar-container {
+  background: var(--ct-surface);
+  border-right-color: var(--ct-border);
+}
+
+html.ct-enterprise .body-sidebar {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .body-sidebar-top {
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .body-sidebar-bottom {
+  border-top-color: var(--ct-border);
+}
+
+html.ct-enterprise .body-sidebar-cards {
+  background: var(--ct-bg-elevated);
+}
+
+html.ct-enterprise .body-sidebar-placeholder {
+  background: var(--ct-surface);
+  border-right-color: var(--ct-border);
+}
+
+html.ct-enterprise .sidebar-items {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .sidebar-item-container {
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) {
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-label {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-icon {
+  transform: scale(1.15);
+}
+
+/* Unified hover: sidebar items */
+html.ct-enterprise .standard-sidebar-item {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+  border-radius: var(--ct-border-radius-sm);
+  border-left: 3px solid transparent !important;
+  border-style: solid !important;
+  border-width: 0 0 0 3px !important;
+}
+
+html.ct-enterprise .standard-sidebar-item:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .standard-sidebar-item:hover .sidebar-item-label {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .standard-sidebar-item:hover .sidebar-item-icon {
+  transform: scale(1.15);
+}
+
+html.ct-enterprise .standard-sidebar-item.active,
+html.ct-enterprise .standard-sidebar-item.active-sidebar,
+html.ct-enterprise .standard-sidebar-item.selected {
+  background: var(--ct-primary);
+  color: #ffffff;
+  border-left-color: var(--ct-accent);
+  font-weight: 600;
+}
+
+html.ct-enterprise .standard-sidebar-item.active:hover,
+html.ct-enterprise .standard-sidebar-item.active-sidebar:hover,
+html.ct-enterprise .standard-sidebar-item.selected:hover {
+  background: var(--ct-primary-hover);
+  color: #ffffff;
+  border-left-color: var(--ct-accent);
+}
+
+html.ct-enterprise .standard-sidebar-item.active .sidebar-item-label,
+html.ct-enterprise .standard-sidebar-item.active-sidebar .sidebar-item-label,
+html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+html.ct-enterprise .standard-sidebar-item.active .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-icon {
+  color: #ffffff;
+}
+
+html.ct-enterprise .sidebar-item-label {
+  color: var(--ct-text);
+  font-size: 0.875rem;
+  display: inline-block;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .sidebar-item-icon {
+  color: var(--ct-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--ct-transition);
+}
+
+html.ct-enterprise .item-anchor,
+html.ct-enterprise .standard-sidebar-item a,
+html.ct-enterprise .standard-sidebar-item .sidebar-item-label,
+html.ct-enterprise .standard-sidebar-item .sidebar-item-icon {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .item-anchor {
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .standard-sidebar-item:hover .sidebar-item-suffix {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-suffix {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .sidebar-toggle-btn {
+  background: transparent;
+  color: var(--ct-text-muted);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .sidebar-toggle-btn:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .sidebar-toggle-icon {
+  color: var(--ct-text-muted);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .sidebar-toggle-btn:hover .sidebar-toggle-icon {
+  color: var(--ct-primary);
+}
+
+/* ─── Sidebar Header (workspace switcher trigger) — unified hover ─── */
+html.ct-enterprise .sidebar-header {
+  background: transparent !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-motion);
+  cursor: pointer;
+  border-left: 3px solid transparent !important;
+  border-style: solid !important;
+  border-width: 0 0 0 3px !important;
+  letter-spacing: 0.02em;
+}
+
+html.ct-enterprise .sidebar-header:hover {
+  background: var(--ct-surface-hover) !important;
+  border-left-color: var(--ct-primary) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .sidebar-header:hover .header-title {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .sidebar-header:hover .sidebar-item-icon {
+  transform: scale(1.15);
+}
+
+html.ct-enterprise .sidebar-header:hover .header-subtitle {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .header-title {
+  color: var(--ct-text);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: var(--ct-motion);
+  display: inline-block;
+}
+
+html.ct-enterprise .header-subtitle {
+  color: var(--ct-text-muted);
+  font-size: 0.6875rem;
+  display: inline-block;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .header-logo-container {
+  border-radius: var(--ct-border-radius-sm);
+  background: var(--ct-bg-3);
+}
+
+html.ct-enterprise .header-logo-container:has(img) {
+  background: transparent;
+}
+
+/* ─── Frappe Menu (workspace switcher dropdown) ─── */
+html.ct-enterprise .frappe-menu {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .dropdown-menu-item {
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent !important;
+  border-style: solid !important;
+  border-width: 0 0 0 3px !important;
+  letter-spacing: 0.02em;
+}
+
+html.ct-enterprise .dropdown-menu-item:hover {
+  background: var(--ct-surface-hover) !important;
+  border-left-color: var(--ct-primary) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .dropdown-menu-item:hover .menu-item-title {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .dropdown-menu-item:hover .menu-item-icon {
+  transform: scale(1.15);
+}
+
+html.ct-enterprise .dropdown-menu-item a {
+  color: var(--ct-text);
+  text-decoration: none;
+}
+
+html.ct-enterprise .dropdown-menu-item:hover a {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .menu-item-title {
+  color: var(--ct-text);
+  font-size: 0.875rem;
+  transition: var(--ct-motion);
+  display: inline-block;
+}
+
+html.ct-enterprise .menu-item-icon {
+  color: var(--ct-text-secondary);
+  transition: var(--ct-transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html.ct-enterprise .active-sidebar {
+  background: var(--ct-primary-light);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+/* Unified hover: sidebar nav items */
+html.ct-enterprise .nav-item {
+  transition: var(--ct-motion);
+  cursor: pointer;
+}
+
+html.ct-enterprise .nav-item:hover {
+  color: var(--ct-text);
+}
+
+/* ─── Navbar ─── */
+html.ct-enterprise .navbar {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .desktop-navbar {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .navbar-nav .nav-link {
+  color: var(--ct-text-secondary);
+  transition: var(--ct-motion);
+  cursor: pointer;
+}
+
+html.ct-enterprise .navbar-nav .nav-link:hover {
+  color: var(--ct-primary);
+}
+
+/* TopbarManager: .ct-topbar-item, .ct-theme-wrapper, .ct-topbar-zone
+   now defined in the v5.15 section at end of file */
+
+html.ct-enterprise .ct-theme-wrapper .ct-theme-btn:hover {
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .page-head .ct-theme-wrapper .ct-theme-btn {
+  height: 28px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ─── Layout ─── */
+html.ct-enterprise #body {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .page-head {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .page-body {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .page-content {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .page-wrapper {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .main-section {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .layout-main-section {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .layout-main-section-wrapper {
+  background: var(--ct-bg);
+}
+
+html.ct-enterprise .layout-side-section {
+  background: var(--ct-bg-elevated);
+  border-right-color: var(--ct-border);
+}
+
+html.ct-enterprise .page-form {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .page-container {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .page-head-content {
+  color: var(--ct-text);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P2: LIST VIEW + DATATABLE + TABLE ROWS
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .list-view {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .frappe-list {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+  margin: 0;
+}
+
+/* Unified hover: list rows matches index.html data table */
+html.ct-enterprise .list-row-container {
+  border-bottom-color: var(--ct-border-light);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+  padding-inline: 0;
+}
+
+html.ct-enterprise .list-row-container:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .list-row-container.selected {
+  background: var(--ct-primary-light);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .list-row {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+  letter-spacing: 0.02em;
+}
+
+html.ct-enterprise .list-row:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .list-row-head {
+  background: linear-gradient(135deg, var(--ct-primary), var(--ct-primary-hover));
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+html.ct-enterprise .list-row-col {
+  color: var(--ct-text);
+  position: relative;
+}
+
+html.ct-enterprise .list-row-col:hover {
+  outline: 2px solid rgba(37, 99, 235, 0.25);
+  outline-offset: -2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  z-index: 2;
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise .list-header-subject {
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+html.ct-enterprise .list-paging-area {
+  background: var(--ct-surface);
+  border-top-color: var(--ct-border);
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .filter-section {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  color: var(--ct-text);
+}
+
+/* Unified hover: filter buttons */
+html.ct-enterprise .filter-button {
+  background: var(--ct-surface);
+  color: var(--ct-text-secondary);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+}
+
+html.ct-enterprise .filter-button:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary);
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .standard-actions {
+  background: var(--ct-surface);
+}
+
+html.ct-enterprise .page-actions {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+}
+
+/* ─── Datatable — Cell-Only Hover ─── */
+html.ct-enterprise .datatable {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  color: var(--ct-text);
+}
+
+/* Row: unified hover pattern — border-left accent on row hover, blue tint on selected */
+html.ct-enterprise .dt-row {
+  border-bottom-color: var(--ct-border-light);
+  border-left: 3px solid transparent;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .dt-row:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .dt-row.selected {
+  background: var(--ct-primary-light);
+  border-left-color: var(--ct-primary);
+}
+
+/* Cell hover: outline + shadow accent (per index.html reference) */
+html.ct-enterprise .dt-cell {
+  color: var(--ct-text);
+  border-color: var(--ct-border-light);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .dt-cell:hover {
+  box-shadow: inset 0 0 0 2px rgba(37, 99, 235, 0.25), 0 4px 16px rgba(0, 0, 0, 0.18);
+  background: transparent !important;
+}
+
+html.ct-enterprise .datatable .dt-row:hover .dt-cell {
+  background: transparent !important;
+}
+
+/* Frappe-datatable JS adds dt-cell--highlight class on hover — no background flash */
+html.ct-enterprise .dt-cell--highlight {
+  background: transparent !important;
+}
+
+html.ct-enterprise .dt-cell--header {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  font-weight: 600;
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .dt-scrollable {
+  background: var(--ct-bg);
+}
+
+/* Report table: remove extra padding to match list view spacing */
+html.ct-enterprise .report-wrapper {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ─── Native <table> rows — unified hover ─── */
+html.ct-enterprise table {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise table th {
+  background: linear-gradient(135deg, var(--ct-primary), var(--ct-primary-hover));
+  color: #ffffff;
+  font-weight: 700;
+  border-bottom-color: var(--ct-border);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+html.ct-enterprise table td {
+  border-top-color: var(--ct-border);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+  position: relative;
+}
+
+html.ct-enterprise table td:hover {
+  outline: 2px solid rgba(37, 99, 235, 0.25);
+  outline-offset: -2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  z-index: 2;
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise table tbody tr:hover td {
+  background: transparent;
+}
+
+html.ct-enterprise table tbody tr.selected td {
+  background: var(--ct-primary-light);
+}
+
+html.ct-enterprise table tbody tr {
+  border-left: 3px solid transparent;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise table tbody tr:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise table tbody tr.selected {
+  background: var(--ct-primary-light);
+  border-left-color: var(--ct-primary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   P3: FORM VIEW + COMMENTS + TIMELINE + MODALS
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .form-page {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-layout {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-section {
+  background: var(--ct-bg-elevated);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-group {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-control {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-transition);
+}
+
+html.ct-enterprise .form-control:focus {
+  border-color: var(--ct-primary);
+  box-shadow: 0 0 0 4px var(--ct-primary-light);
+  outline: none;
+}
+
+html.ct-enterprise .form-control::placeholder {
+  color: var(--ct-text-muted);
+}
+
+html.ct-enterprise .control-input {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+}
+
+html.ct-enterprise .control-input-wrapper {
+  background: var(--ct-bg-elevated);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+html.ct-enterprise .control-label {
+  color: var(--ct-text-secondary);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+html.ct-enterprise .section-head {
+  color: var(--ct-text);
+  font-weight: 600;
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .section-body {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-tabs {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .form-tabs-list {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .form-tabs-list .nav-link {
+  color: var(--ct-text-secondary);
+  transition: var(--ct-motion);
+  cursor: pointer;
+}
+
+html.ct-enterprise .form-tabs-list .nav-link:hover {
+  color: var(--ct-primary);
+  border-bottom-color: var(--ct-primary);
+}
+
+html.ct-enterprise .form-tabs-list .nav-link.active {
+  color: var(--ct-accent);
+  border-bottom-color: var(--ct-accent);
+  font-weight: 600;
+}
+
+html.ct-enterprise .form-sidebar {
+  background: var(--ct-surface);
+  border-left-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-sidebar .sidebar-item {
+  border-left: 3px solid transparent;
+  transition: var(--ct-motion);
+  cursor: pointer;
+}
+
+html.ct-enterprise .form-sidebar .sidebar-item:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .form-dashboard {
+  background: var(--ct-bg-elevated);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius);
+}
+
+html.ct-enterprise .form-dashboard-section {
+  border-bottom-color: var(--ct-border-light);
+}
+
+html.ct-enterprise .comment-box {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius);
+}
+
+html.ct-enterprise .comment-input {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+html.ct-enterprise .comment-input-header {
+  color: var(--ct-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+html.ct-enterprise .comment-input-container .ql-editor {
+  background: var(--ct-bg-elevated) !important;
+  border-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+/* ─── Timeline ─── */
+html.ct-enterprise .timeline {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .new-timeline {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .new-timeline:before {
+  border-left-color: var(--ct-border);
+}
+
+html.ct-enterprise .timeline-item {
+  border-left-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .timeline-item .timeline-content.frappe-card {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .timeline-content {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .timeline-dot {
+  background: var(--ct-primary);
+  border-color: var(--ct-primary);
+}
+
+/* ─── Modals ─── */
+html.ct-enterprise .modal-dialog {
+  border-radius: var(--ct-border-radius-lg);
+  border-color: var(--ct-border);
+}
+
+html.ct-enterprise .modal-content {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .modal-header {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-bottom-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg) var(--ct-border-radius-lg) 0 0;
+}
+
+html.ct-enterprise .modal-body {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .modal-footer {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-top-color: var(--ct-border);
+  border-radius: 0 0 var(--ct-border-radius-lg) var(--ct-border-radius-lg);
+}
+
+html.ct-enterprise .modal-title {
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+/* ════════════════════════════════════════════════════════════
+   P4: SHARED COMPONENTS — Buttons, Dropdowns, Badges, etc.
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Buttons ─── */
+html.ct-enterprise .btn {
+  border-radius: var(--ct-border-radius-sm);
+  font-weight: 500;
+  transition: var(--ct-motion);
+  border-color: transparent;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+html.ct-enterprise .btn:hover {
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .btn-primary {
+  background: var(--ct-primary);
+  color: #ffffff;
+  border-color: var(--ct-primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.30);
+}
+
+html.ct-enterprise .btn-primary:hover {
+  background: var(--ct-primary-hover);
+  border-color: var(--ct-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.40);
+}
+
+html.ct-enterprise .btn-secondary {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+}
+
+html.ct-enterprise .btn-secondary:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-color: var(--ct-border-hover);
+}
+
+html.ct-enterprise .btn-ghost {
+  background: transparent;
+  color: var(--ct-text-secondary);
+  border-color: var(--ct-border);
+}
+
+html.ct-enterprise .btn-ghost:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-color: var(--ct-border-hover);
+}
+
+html.ct-enterprise .btn-accent {
+  background: var(--ct-accent);
+  color: #ffffff;
+  border-color: var(--ct-accent);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.30);
+}
+
+html.ct-enterprise .btn-accent:hover {
+  background: var(--ct-accent-hover);
+  border-color: var(--ct-accent-hover);
+  transform: translateY(-1px);
+}
+
+html.ct-enterprise .btn-default {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+}
+
+html.ct-enterprise .btn-default:hover {
+  background: var(--ct-surface-hover);
+  border-color: var(--ct-border-hover);
+}
+
+html.ct-enterprise .btn-danger {
+  background: var(--ct-danger);
+  color: #ffffff;
+  border-color: var(--ct-danger);
+}
+
+html.ct-enterprise .btn-danger:hover {
+  background: var(--ct-danger-hover);
+  transform: translateY(-1px);
+}
+
+html.ct-enterprise .btn-success {
+  background: var(--ct-success);
+  color: #ffffff;
+  border-color: var(--ct-success);
+}
+
+html.ct-enterprise .btn-success:hover {
+  background: var(--ct-success-hover);
+  transform: translateY(-1px);
+}
+
+html.ct-enterprise .btn-warning {
+  background: var(--ct-warning);
+  color: #ffffff;
+  border-color: var(--ct-warning);
+}
+
+html.ct-enterprise .btn-info {
+  background: var(--ct-info);
+  color: #ffffff;
+  border-color: var(--ct-info);
+}
+
+html.ct-enterprise .btn-link {
+  color: var(--ct-primary);
+  background: transparent;
+  border-color: transparent;
+}
+
+html.ct-enterprise .btn-link:hover {
+  color: var(--ct-primary-hover);
+  text-decoration: underline;
+}
+
+html.ct-enterprise .btn-sm,
+html.ct-enterprise .btn-xs {
+  font-size: 0.8125rem;
+}
+
+html.ct-enterprise .btn:disabled,
+html.ct-enterprise .btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+html.ct-enterprise .btn-group {
+  border-radius: var(--ct-border-radius-sm);
+}
+
+/* Unified hover: icon buttons */
+html.ct-enterprise .icon-btn {
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .icon-btn:hover {
+  transform: scale(1.15);
+}
+
+/* ─── Dropdowns — unified hover ─── */
+html.ct-enterprise .dropdown-menu,
+body > .dropdown-menu,
+.dropdown.open > .dropdown-menu {
+  background: var(--ct-surface) !important;
+  color: var(--ct-text) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: var(--ct-border-radius) !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  padding: 6px !important;
+}
+
+/* Unified hover: dropdown items */
+html.ct-enterprise .dropdown-item,
+body > .dropdown-menu > .dropdown-item,
+.dropdown.open > .dropdown-menu > .dropdown-item {
+  color: var(--ct-text) !important;
+  background: var(--ct-surface) !important;
+  transition: var(--ct-motion) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  border-left: 3px solid transparent !important;
+  letter-spacing: 0.02em !important;
+  cursor: pointer !important;
+  font-size: 0.875rem !important;
+}
+
+html.ct-enterprise .dropdown-item:hover,
+html.ct-enterprise .dropdown-item:focus,
+body > .dropdown-menu > .dropdown-item:hover {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+  border-left-color: var(--ct-primary) !important;
+  transform: translateX(4px);
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .dropdown-item.active {
+  background: var(--ct-selected-bg) !important;
+  color: var(--ct-accent) !important;
+  border-left-color: var(--ct-accent) !important;
+}
+
+html.ct-enterprise .dropdown-item.danger {
+  color: var(--ct-danger) !important;
+}
+
+html.ct-enterprise .dropdown-item.danger:hover {
+  background: var(--ct-danger) !important;
+  color: #ffffff !important;
+  border-left-color: var(--ct-danger) !important;
+}
+
+html.ct-enterprise .dropdown-divider {
+  border-top-color: var(--ct-border) !important;
+}
+
+/* ─── Module dropdown — unified hover ─── */
+html.ct-enterprise .module-link-popover,
+html.ct-enterprise .module-dropdown-menu {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  box-shadow: var(--ct-shadow-lg);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .module-link-popover .popover-header,
+html.ct-enterprise .module-dropdown-menu .dropdown-header {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+html.ct-enterprise .module-link-popover .link-item,
+html.ct-enterprise .module-dropdown-menu .dropdown-item {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+html.ct-enterprise .module-link-popover .link-item:hover,
+html.ct-enterprise .module-dropdown-menu .dropdown-item:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary);
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .module-link-popover .popover-footer,
+html.ct-enterprise .module-dropdown-menu .dropdown-footer {
+  background: var(--ct-surface);
+  border-top-color: var(--ct-border);
+}
+
+/* ─── Indicators & Badges ─── */
+html.ct-enterprise .indicator {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .indicator.active {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .indicator-pill {
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 10px;
+}
+
+html.ct-enterprise .indicator-pill.green {
+  background: var(--ct-success-light);
+  color: var(--ct-success);
+}
+
+html.ct-enterprise .indicator-pill.red {
+  background: var(--ct-danger-light);
+  color: var(--ct-danger);
+}
+
+html.ct-enterprise .indicator-pill.blue {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .indicator-pill.orange {
+  background: var(--ct-warning-light);
+  color: var(--ct-warning);
+}
+
+html.ct-enterprise .badge {
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+html.ct-enterprise .badge-primary {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .badge-secondary {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .badge-success {
+  background: var(--ct-success-light);
+  color: var(--ct-success);
+}
+
+html.ct-enterprise .badge-danger {
+  background: var(--ct-danger-light);
+  color: var(--ct-danger);
+}
+
+/* ─── Alerts ─── */
+html.ct-enterprise .alert {
+  border-radius: var(--ct-border-radius);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .alert-success {
+  background: var(--ct-success-light);
+  color: var(--ct-success);
+  border-color: rgba(22, 163, 74, 0.30);
+}
+
+html.ct-enterprise .alert-danger {
+  background: var(--ct-danger-light);
+  color: var(--ct-danger);
+  border-color: rgba(220, 38, 38, 0.30);
+}
+
+html.ct-enterprise .alert-warning {
+  background: var(--ct-warning-light);
+  color: var(--ct-warning);
+  border-color: rgba(245, 158, 11, 0.30);
+}
+
+html.ct-enterprise .alert-info {
+  background: var(--ct-info-light);
+  color: var(--ct-info);
+  border-color: rgba(37, 99, 235, 0.30);
+}
+
+html.ct-enterprise .form-message {
+  border-radius: var(--ct-border-radius-sm);
+}
+
+html.ct-enterprise .help-box {
+  color: var(--ct-text-muted);
+}
+
+/* ─── Input group ─── */
+html.ct-enterprise .input-group {
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+/* ─── Progress ─── */
+html.ct-enterprise .progress {
+  background: var(--ct-surface-hover);
+  border-radius: 10px;
+}
+
+html.ct-enterprise .progress-bar {
+  background: var(--ct-primary);
+  border-radius: 10px;
+}
+
+/* ─── Avatar ─── */
+html.ct-enterprise .avatar {
+  border-radius: 50%;
+  border-color: var(--ct-border);
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise .avatar-placeholder {
+  background: var(--ct-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ─── Widgets ─── */
+html.ct-enterprise .widget {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  border-width: 1px;
+  border-style: solid;
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .widget:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .widget-head {
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+html.ct-enterprise .widget-body {
+  color: var(--ct-text-secondary);
+}
+
+
+
+html.ct-enterprise .widget-group {
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .widget-title {
+  color: var(--ct-text);
+  font-weight: 600;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .widget-label {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .widget-control {
+  color: var(--ct-text-muted);
+}
+
+/* Unified hover: shortcut widget */
+html.ct-enterprise .shortcut-widget-box {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  transition: var(--ct-motion);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+html.ct-enterprise .shortcut-widget-box:hover {
+  border-left-color: var(--ct-primary);
+  background: var(--ct-surface-hover);
+}
+
+html.ct-enterprise .number-widget-box {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .number-widget-box:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .links-widget-box {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+html.ct-enterprise .links-widget-box:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .links-widget-box .link-item {
+  border-left: 3px solid transparent;
+  transition: var(--ct-motion);
+  cursor: pointer;
+}
+
+html.ct-enterprise .links-widget-box .link-item:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .links-widget-box .link-item:hover .link-content {
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .quick-list-widget-box {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .quick-list-widget-box:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .onboarding-widget-box {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--ct-border-radius-lg);
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .onboarding-widget-box:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+/* ─── Charts ─── */
+html.ct-enterprise .chart-container {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  border-width: 1px;
+  border-style: solid;
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .chart-container:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .chart-container {
+  /* Prevent height oscillations that trigger ResizeObserver loop */
+  overflow: hidden;
+}
+
+html.ct-enterprise .dashboard-widget-box {
+  /* Stabilize widget height for ResizeObserver */
+  overflow: hidden;
+}
+
+html.ct-enterprise .frappe-chart {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .heatmap-chart {
+  color: var(--ct-text-secondary);
+}
+
+/* ─── Tree — unified hover ─── */
+html.ct-enterprise .tree,
+html.ct-enterprise .tree-link,
+html.ct-enterprise .tree-node {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .tree-children {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .tree-label {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .tree-node {
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+html.ct-enterprise .tree-node:hover:not(:has(.tree-node:hover)),
+html.ct-enterprise .tree-link:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .tree-node:hover:not(:has(.tree-node:hover)) .tree-label {
+  transform: translateX(4px);
+}
+
+html.ct-enterprise .tree-node.active:not(:has(.tree-node.active)),
+html.ct-enterprise .tree-link.active {
+  background: var(--ct-selected-bg);
+  border-left-color: var(--ct-accent);
+  box-shadow: inset 3px 0 0 var(--ct-accent);
+  color: var(--ct-accent);
+  font-weight: 600;
+}
+
+html.ct-enterprise .tree-node.active:not(:has(.tree-node.active)):hover,
+html.ct-enterprise .tree-link.active:hover {
+  background: var(--ct-selected-bg);
+  border-left-color: var(--ct-accent);
+  box-shadow: inset 3px 0 0 var(--ct-accent);
+}
+
+html.ct-enterprise .tree-node.selected:not(:has(.tree-node.selected)) {
+  background: var(--ct-selected-bg);
+  border-left-color: var(--ct-accent);
+  box-shadow: inset 3px 0 0 var(--ct-accent);
+  color: var(--ct-accent);
+  font-weight: 600;
+}
+
+html.ct-enterprise .tree-node.selected:not(:has(.tree-node.selected)):hover {
+  background: var(--ct-selected-bg);
+  border-left-color: var(--ct-accent);
+  box-shadow: inset 3px 0 0 var(--ct-accent);
+}
+
+/* ─── Tree Toolbar Container ─── */
+html.ct-enterprise .tree-node-toolbar {
+  gap: 6px;
+  margin-left: 8px;
+}
+
+/* ─── Tree Toolbar Buttons — Base ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--ct-border-radius-sm);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  gap: 4px;
+  cursor: pointer;
+  transition: var(--ct-motion), transform var(--ct-motion);
+  color: #fff;
+  outline: none;
+  background: var(--ct-primary);
+}
+
+/* ─── Edit Button ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-edit {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+}
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-edit:hover {
+  background: var(--ct-primary-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── Add Button ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-add {
+  background: var(--ct-success) !important;
+  color: #fff !important;
+}
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-add:hover {
+  background: var(--ct-success-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── Toggle Button ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-toggle {
+  background: var(--ct-warning) !important;
+  color: #fff !important;
+}
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* ─── Delete Button ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-delete {
+  background: var(--ct-danger) !important;
+  color: #fff !important;
+}
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-delete:hover {
+  background: var(--ct-danger-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── View / Ledger Button — grey at rest, primary on hover ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-view,
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button:not(.btn-edit):not(.btn-add):not(.btn-toggle):not(.btn-delete):not(.btn-view) {
+  background: var(--ct-surface) !important;
+  color: var(--ct-text-secondary) !important;
+  border-color: var(--ct-border) !important;
+}
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-view:hover,
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button:not(.btn-edit):not(.btn-add):not(.btn-toggle):not(.btn-delete):not(.btn-view):hover {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+  border-color: var(--ct-primary) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── Disabled tree toolbar button (index.html pattern) ─── */
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-disabled,
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button:disabled {
+  background: var(--ct-text-disabled) !important;
+  color: var(--ct-text-muted) !important;
+  border-color: transparent !important;
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none !important;
+  box-shadow: none !important;
+}
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button.btn-disabled:hover,
+html.ct-enterprise .tree-node-toolbar .tree-toolbar-button:disabled:hover {
+  background: var(--ct-text-disabled) !important;
+  color: var(--ct-text-muted) !important;
+  transform: none !important;
+}
+
+/* ─── Disabled tooltip wrapper (index.html .dtw / .dtip pattern) ─── */
+html.ct-enterprise .tree-node-toolbar .dtw {
+  position: relative;
+  display: inline-block;
+}
+html.ct-enterprise .tree-node-toolbar .dtw .dtip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.92);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: var(--ct-motion);
+  z-index: 100;
+  pointer-events: none;
+}
+html.ct-enterprise .tree-node-toolbar .dtw:hover .dtip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ─── Kanban ─── */
+html.ct-enterprise .kanban-column {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .kanban-column-header {
+  color: var(--ct-text);
+  font-weight: 600;
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .kanban-card {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  border-width: 1px;
+  border-style: solid;
+  transition: var(--ct-motion);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+html.ct-enterprise .kanban-card:hover {
+  border-color: var(--ct-primary);
+  border-left-color: var(--ct-primary);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .kanban-card.active {
+  border-color: var(--ct-accent);
+  border-left-color: var(--ct-accent);
+  background: var(--ct-selected-bg);
+}
+
+/* ─── Gantt ─── */
+html.ct-enterprise .gantt-container {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .gantt-chart {
+  color: var(--ct-text-secondary);
+  font-size: 0.75rem;
+}
+
+html.ct-enterprise .gantt-container .bar {
+  background: var(--ct-primary);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+html.ct-enterprise .gantt-container .bar-success {
+  background: var(--ct-success);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+html.ct-enterprise .gantt-container .bar-danger {
+  background: var(--ct-danger);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+/* ─── Page header elements ─── */
+html.ct-enterprise .page-title {
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+html.ct-enterprise .title-area {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .sub-heading {
+  color: var(--ct-text-secondary);
+  font-size: 0.875rem;
+}
+
+/* ─── Icons ─── */
+html.ct-enterprise .icon {
+  color: var(--ct-text-muted);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .icon-primary {
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .level {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .level-item {
+  color: var(--ct-text);
+  font-weight: 500;
+}
+
+/* ─── List item (legacy) ─── */
+html.ct-enterprise .list-item {
+  color: var(--ct-text);
+  border-bottom-color: var(--ct-border-light);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+}
+
+html.ct-enterprise .list-item:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .list-item--head {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+html.ct-enterprise .list-item-container {
+  border-bottom-color: var(--ct-border-light);
+}
+
+html.ct-enterprise .level-left,
+html.ct-enterprise .level-right {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .list-subject a {
+  color: var(--ct-text);
+}
+
+/* List view: unify column colors — all columns use primary text, not greyed out */
+html.ct-enterprise .list-row-col a,
+html.ct-enterprise .list-row .level-right.text-muted {
+  color: var(--ct-text);
+}
+html.ct-enterprise .list-row .level-left {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .list-row .level-right {
+  background: var(--ct-bg);
+  border-left-color: var(--ct-border-light);
+}
+
+html.ct-enterprise .frappe-control {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .form-column {
+  color: var(--ct-text);
+}
+
+/* ─── Cards ─── */
+html.ct-enterprise .card {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  border-width: 1px;
+  border-style: solid;
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .card:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+html.ct-enterprise .frappe-card {
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.ct-enterprise .frappe-card:hover {
+  border-color: var(--ct-card-hover-border);
+  box-shadow: var(--ct-shadow);
+}
+
+/* ─── Table ─── */
+html.ct-enterprise .table {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .table th,
+html.ct-enterprise .table td {
+  border-top-color: var(--ct-border);
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .table thead th {
+  border-bottom-color: var(--ct-border);
+  background: linear-gradient(135deg, var(--ct-primary), var(--ct-primary-hover));
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+html.ct-enterprise .table tbody tr {
+  border-left: 3px solid transparent;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .table tbody tr:hover {
+  background: var(--ct-surface-hover);
+  border-left-color: var(--ct-primary);
+}
+
+/* ─── Tooltip & Popover ─── */
+html.ct-enterprise .tooltip-inner {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  box-shadow: var(--ct-shadow-md);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .popover,
+html.ct-enterprise .popover-content {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  box-shadow: var(--ct-shadow-lg);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .popover-title {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+/* ─── Nav tabs ─── */
+html.ct-enterprise .nav-tabs {
+  border-bottom-color: var(--ct-border);
+  background: var(--ct-surface);
+}
+
+html.ct-enterprise .nav-tabs .nav-link {
+  color: var(--ct-text-secondary);
+  border-color: transparent;
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+}
+
+html.ct-enterprise .nav-tabs .nav-link.active {
+  color: var(--ct-accent);
+  border-bottom-color: var(--ct-accent);
+  background: var(--ct-bg);
+  font-weight: 600;
+}
+
+html.ct-enterprise .nav-tabs .nav-link:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary);
+}
+
+/* ─── Toast & Msgprint ─── */
+html.ct-enterprise .toast,
+html.ct-enterprise .msgprint {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  box-shadow: var(--ct-shadow-lg);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .toast-success {
+  background: var(--ct-success-light);
+  color: var(--ct-success);
+  border-color: rgba(22, 163, 74, 0.30);
+}
+
+html.ct-enterprise .toast-error {
+  background: var(--ct-danger-light);
+  color: var(--ct-danger);
+  border-color: rgba(220, 38, 38, 0.30);
+}
+
+/* ─── Scrollbar ─── */
+html.ct-enterprise ::-webkit-scrollbar-thumb {
+  background: var(--ct-surface-hover);
+  border-radius: 4px;
+}
+
+html.ct-enterprise ::-webkit-scrollbar {
+  background: var(--ct-surface);
+  width: 8px;
+}
+
+/* ─── Empty / No result ─── */
+html.ct-enterprise .no-result,
+html.ct-enterprise .empty-state {
+  color: var(--ct-text-muted);
+  text-align: center;
+}
+
+html.ct-enterprise .no-result-message,
+html.ct-enterprise .empty-state-message {
+  color: var(--ct-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SEARCH / AWESOMEBAR
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .search-bar,
+html.ct-enterprise .awesomebar-modal {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .awesomebar-modal .modal-header {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .awesomebar-modal .modal-body {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .awesomebar-modal .modal-footer,
+html.ct-enterprise .awesomebar-modal-footer {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-top-color: var(--ct-border);
+}
+
+html.ct-enterprise .search-result-item {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+html.ct-enterprise .search-result-item:hover,
+html.ct-enterprise .search-result-item.active,
+html.ct-enterprise .search-result-item.selected {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary);
+}
+
+html.ct-enterprise .search-results {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .search-suggestion {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+html.ct-enterprise .search-suggestion:hover,
+html.ct-enterprise .search-suggestion.active {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+  border-left-color: var(--ct-primary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   FILTER POPOVER / FILTER AREA
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .filter-popover {
+  background: var(--ct-surface);
+  border-color: var(--ct-border);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .filter-area .filter-box {
+  color: var(--ct-text-secondary);
+}
+
+html.ct-enterprise .filter-area .empty-filters {
+  color: var(--ct-text-muted);
+}
+
+html.ct-enterprise .filter-icon.active {
+  --icon-stroke: var(--ct-primary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   NOTIFICATIONS PANEL
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .panel-notifications {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+  border-color: var(--ct-border);
+  border-radius: var(--ct-border-radius-lg);
+  box-shadow: var(--ct-shadow-lg);
+  border-width: 1px;
+  border-style: solid;
+}
+
+html.ct-enterprise .notification-item-tabs {
+  color: var(--ct-text-secondary);
+  border-bottom-color: var(--ct-border);
+}
+
+html.ct-enterprise .notification-item-tabs .active {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+}
+
+html.ct-enterprise .open-notification {
+  color: var(--ct-text);
+  background: var(--ct-surface);
+}
+
+html.ct-enterprise .notification-null-state {
+  color: var(--ct-text-muted);
+}
+
+html.ct-enterprise .notification-settings {
+  color: var(--ct-text);
+  border-top-color: var(--ct-border);
+}
+
+html.ct-enterprise .mark-all-read:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .notifications-category {
+  color: var(--ct-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGIN / AUTH PAGE — Glassmorphism v2.5.4
+   Premium modern styling with backdrop-filter, gradients,
+   and smooth animations. Complements inline critical CSS
+   in construction/www/login.html.
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .login-content,
+html.ct-enterprise .page-card,
+html.ct-enterprise .web-form-page,
+html.ct-enterprise .login-page {
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+/* ─── Glassmorphism card ─── */
+html.ct-enterprise .page-card {
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(148, 163, 184, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+}
+
+html.ct-enterprise .page-card:hover {
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+/* ─── Card head — gradient accent ─── */
+html.ct-enterprise .page-card-head {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08) !important;
+  padding: 2rem 1.5rem 1.25rem !important;
+  position: relative !important;
+}
+
+html.ct-enterprise .page-card-head::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 20% !important;
+  right: 20% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--ct-primary), var(--ct-accent), transparent) !important;
+  border-radius: 0 0 2px 2px !important;
+  opacity: 0.7 !important;
+}
+
+html.ct-enterprise .page-card-head h4 {
+  color: var(--ct-text) !important;
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  letter-spacing: -0.01em !important;
+  margin-top: 0.75rem !important;
+}
+
+html.ct-enterprise .page-card-head .app-logo {
+  width: 48px !important;
+  height: 48px !important;
+  filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.3)) !important;
+  transition: transform 0.3s ease !important;
+}
+
+html.ct-enterprise .page-card-head .app-logo:hover {
+  transform: scale(1.05) !important;
+}
+
+html.ct-enterprise .page-card-body {
+  background: transparent !important;
+  border: none !important;
+  padding: 1.5rem !important;
+}
+
+html.ct-enterprise .page-card-body .text-muted {
+  color: var(--ct-text-secondary);
+  font-size: 0.875rem;
+}
+
+html.ct-enterprise .page-card-body a {
+  color: var(--ct-primary);
+  text-decoration: none;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .page-card-body a:hover {
+  color: var(--ct-primary-hover);
+  text-decoration: underline;
+}
+
+/* ─── Input fields — modern floating style ─── */
+html.ct-enterprise .login-content .form-control,
+html.ct-enterprise .page-card-body .form-control {
+  background: rgba(30, 41, 59, 0.6) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+  font-size: 0.9375rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.ct-enterprise .login-content .form-control:focus,
+html.ct-enterprise .page-card-body .form-control:focus {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border-color: var(--ct-primary) !important;
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.15),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  outline: none !important;
+}
+
+html.ct-enterprise .login-content .form-control::placeholder,
+html.ct-enterprise .page-card-body .form-control::placeholder {
+  color: rgba(148, 163, 184, 0.5) !important;
+}
+
+/* ─── Field icons ─── */
+html.ct-enterprise .field-icon {
+  color: rgba(148, 163, 184, 0.5) !important;
+  transition: color 0.25s ease !important;
+}
+
+html.ct-enterprise .email-field:focus-within .email-icon,
+html.ct-enterprise .password-field:focus-within .password-icon {
+  color: var(--ct-primary) !important;
+}
+
+/* ─── Toggle password ─── */
+html.ct-enterprise .toggle-password {
+  color: rgba(148, 163, 184, 0.6) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 100px !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+  transition: all 0.2s ease !important;
+}
+
+html.ct-enterprise .toggle-password:hover {
+  color: #f1f5f9 !important;
+  background: rgba(37, 99, 235, 0.15) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGIN BUTTON — Premium gradient with shimmer
+   Uses !important to beat Frappe login.bundle.css cascade.
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .login-content .btn-primary,
+html.ct-enterprise .page-card-body .btn-login,
+html.ct-enterprise .page-card-body .btn-primary,
+html.ct-enterprise .page-card-actions .btn-primary {
+  background: linear-gradient(135deg, var(--ct-primary) 0%, #1d4ed8 50%, #1e40af 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  letter-spacing: 0.01em !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow:
+    0 4px 16px rgba(37, 99, 235, 0.3),
+    0 0 0 1px rgba(37, 99, 235, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Shimmer effect */
+html.ct-enterprise .login-content .btn-primary::after,
+html.ct-enterprise .page-card-body .btn-login::after,
+html.ct-enterprise .page-card-actions .btn-primary::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent) !important;
+  transition: left 0.5s ease !important;
+}
+
+html.ct-enterprise .login-content .btn-primary:hover::after,
+html.ct-enterprise .page-card-body .btn-login:hover::after,
+html.ct-enterprise .page-card-actions .btn-primary:hover::after {
+  left: 100% !important;
+}
+
+html.ct-enterprise .login-content .btn-primary:hover,
+html.ct-enterprise .page-card-body .btn-login:hover,
+html.ct-enterprise .page-card-actions .btn-primary:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, var(--ct-primary) 50%, #1d4ed8 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 8px 24px rgba(37, 99, 235, 0.4),
+    0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+html.ct-enterprise .login-content .btn-primary:active,
+html.ct-enterprise .page-card-body .btn-login:active,
+html.ct-enterprise .page-card-actions .btn-primary:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* ─── Secondary buttons ─── */
+html.ct-enterprise .btn-login-option,
+html.ct-enterprise .btn-default.btn-login-option {
+  background: rgba(30, 41, 59, 0.5) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  border-radius: 10px !important;
+  transition: all 0.25s ease !important;
+}
+
+html.ct-enterprise .btn-login-option:hover,
+html.ct-enterprise .btn-default.btn-login-option:hover {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+  color: #f1f5f9 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ─── Forgot password link ─── */
+html.ct-enterprise .forgot-password-message a {
+  color: #94a3b8 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+html.ct-enterprise .forgot-password-message a:hover {
+  color: var(--ct-primary) !important;
+  text-decoration: underline !important;
+}
+
+/* ─── Divider "or" ─── */
+html.ct-enterprise .login-divider {
+  color: rgba(148, 163, 184, 0.4) !important;
+  font-size: 0.8125rem !important;
+  position: relative !important;
+}
+
+html.ct-enterprise .login-divider::before,
+html.ct-enterprise .login-divider::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  width: 30% !important;
+  height: 1px !important;
+  background: rgba(148, 163, 184, 0.1) !important;
+}
+
+html.ct-enterprise .login-divider::before { left: 5% !important; }
+html.ct-enterprise .login-divider::after { right: 5% !important; }
+
+/* ─── Sign up message ─── */
+html.ct-enterprise .sign-up-message {
+  color: #64748b !important;
+  font-size: 0.875rem !important;
+}
+
+html.ct-enterprise .sign-up-message a {
+  color: var(--ct-primary) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+html.ct-enterprise .sign-up-message a:hover {
+  color: #3b82f6 !important;
+  text-decoration: underline !important;
+}
+
+/* ─── Disabled state ─── */
+html.ct-enterprise .btn-login:disabled,
+html.ct-enterprise .btn-primary:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* ─── Wider login card ─── */
+html.ct-enterprise .page-card {
+  max-width: 720px !important;
+  width: 92vw !important;
+}
+
+/* ─── Input fields — generous typing space ─── */
+html.ct-enterprise .page-card-body .form-control,
+html.ct-enterprise .login-content .form-control {
+  min-height: 52px !important;
+  font-size: 1rem !important;
+  padding: 0.875rem 1rem 0.875rem 2.75rem !important;
+}
+
+/* Password field: compact "Show" button so text has room */
+html.ct-enterprise .password-field {
+  position: relative !important;
+}
+
+html.ct-enterprise .password-field .form-control {
+  padding-right: 4rem !important;
+}
+
+html.ct-enterprise .password-field .toggle-password {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.5rem !important;
+  white-space: nowrap !important;
+}
+
+html.ct-enterprise .page-card-actions .btn-login,
+html.ct-enterprise .page-card-actions .btn-primary {
+  min-height: 52px !important;
+  font-size: 1rem !important;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 780px) {
+  html.ct-enterprise .page-card {
+    border-radius: 12px !important;
+    margin: 0 1rem !important;
+    max-width: 100% !important;
+    width: calc(100vw - 2rem) !important;
+  }
+  html.ct-enterprise .page-card-body .form-control,
+  html.ct-enterprise .login-content .form-control {
+    padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+    min-height: 48px !important;
+  }
+  html.ct-enterprise .password-field .form-control {
+    padding-right: 3.5rem !important;
+  }
+  html.ct-enterprise .page-card-head {
+    padding: 1.5rem 1rem 1rem !important;
+  }
+  html.ct-enterprise .page-card-body {
+    padding: 1rem !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   RTL SUPPORT
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise[dir="rtl"] .body-sidebar-container {
+  border-right: none;
+  border-left: 1px solid var(--ct-border);
+}
+
+html.ct-enterprise[dir="rtl"] .standard-sidebar-item {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .standard-sidebar-item:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .standard-sidebar-item.active,
+html.ct-enterprise[dir="rtl"] .standard-sidebar-item.active-sidebar,
+html.ct-enterprise[dir="rtl"] .standard-sidebar-item.selected {
+  border-right-color: var(--ct-accent);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .standard-sidebar-item:hover .sidebar-item-label {
+  transform: translateX(-4px);
+}
+
+html.ct-enterprise[dir="rtl"] .dropdown-item:hover {
+  transform: translateX(-4px);
+}
+
+html.ct-enterprise[dir="rtl"] .dropdown-menu {
+  right: auto;
+  left: 0;
+}
+
+html.ct-enterprise[dir="rtl"] .dt-row {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .dt-row:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .dt-row.selected {
+  border-left: none;
+  border-right-color: var(--ct-primary);
+}
+
+html.ct-enterprise[dir="rtl"] .dt-cell:hover {
+  box-shadow: inset 0 0 0 2px rgba(37, 99, 235, 0.25), 0 4px 16px rgba(0, 0, 0, 0.18);
+  background: transparent !important;
+}
+
+html.ct-enterprise[dir="rtl"] .tree-node.active:not(:has(.tree-node.active)),
+html.ct-enterprise[dir="rtl"] .tree-link.active,
+html.ct-enterprise[dir="rtl"] .tree-node.selected:not(:has(.tree-node.selected)) {
+  border-left: none;
+  border-right: 3px solid var(--ct-accent);
+  box-shadow: inset -3px 0 0 var(--ct-accent);
+}
+
+html.ct-enterprise[dir="rtl"] .tree-node {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .tree-node:hover:not(:has(.tree-node:hover)) {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .tree-node:hover:not(:has(.tree-node:hover)) .tree-label {
+  transform: translateX(-4px);
+}
+
+html.ct-enterprise[dir="rtl"] .list-row-container {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .list-row-container:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .list-row-container.selected {
+  border-right-color: var(--ct-primary);
+}
+
+html.ct-enterprise[dir="rtl"] .form-sidebar {
+  border-left: none;
+  border-right: 1px solid var(--ct-border);
+}
+
+html.ct-enterprise[dir="rtl"] .timeline-item {
+  border-left: none;
+  border-right: 1px solid var(--ct-border);
+}
+
+html.ct-enterprise[dir="rtl"] .filter-button:hover {
+  transform: none;
+}
+
+html.ct-enterprise[dir="rtl"] .search-result-item {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .search-result-item:hover,
+html.ct-enterprise[dir="rtl"] .search-result-item.active,
+html.ct-enterprise[dir="rtl"] .search-result-item.selected {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .search-suggestion {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .search-suggestion:hover,
+html.ct-enterprise[dir="rtl"] .search-suggestion.active {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .sidebar-header:hover .header-title,
+html.ct-enterprise[dir="rtl"] .sidebar-header:hover .header-subtitle {
+  transform: translateX(-4px);
+}
+
+html.ct-enterprise[dir="rtl"] .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-suffix {
+  transform: translateX(-4px);
+}
+
+html.ct-enterprise[dir="rtl"] .dropdown-menu-item {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .dropdown-menu-item:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .dropdown-menu-item:hover .menu-item-title {
+  transform: translateX(-4px);
+}
+
+html.ct-enterprise[dir="rtl"] .shortcut-widget-box {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .shortcut-widget-box:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .nav-tabs .nav-link {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .nav-tabs .nav-link:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] table tbody tr {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] table tbody tr:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+html.ct-enterprise[dir="rtl"] table tbody tr.selected {
+  border-right-color: var(--ct-primary);
+}
+
+html.ct-enterprise[dir="rtl"] .list-item {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+html.ct-enterprise[dir="rtl"] .list-item:hover {
+  border-right-color: var(--ct-primary);
+  border-left-color: transparent;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FILTER SELECTORS / DROPDOWNS / DROPDOWN MENUS
+   Frappe v16 — Adaptive with CSS variables for light/dark
+   ALL rules !important for guaranteed override
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Page form bar ─── */
+html.ct-enterprise .page-form {
+  background: var(--ct-surface) !important;
+  border-bottom: 1px solid var(--ct-border) !important;
+}
+
+/* ─── Frappe v16 Select control wrapper ─── */
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .control-input {
+  background: transparent !important;
+  border: none !important;
+  position: relative !important;
+}
+
+/* ─── Hide Frappe's default select icon SVG ─── */
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .select-icon,
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .select-icon svg,
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .select-icon use {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* ─── Hide placeholder overlay ─── */
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .placeholder {
+  display: none !important;
+}
+
+/* ─── ALL <select> elements — adaptive themed ─── */
+html.ct-enterprise select,
+html.ct-enterprise select.form-control,
+html.ct-enterprise select.input-with-feedback,
+html.ct-enterprise select.input-xs,
+html.ct-enterprise .form-select,
+html.ct-enterprise .page-form select,
+html.ct-enterprise .filter-area select,
+html.ct-enterprise .report-filter select,
+html.ct-enterprise .filter-field select,
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] select {
+  background-color: var(--ct-bg-3) !important;
+  color: var(--ct-text) !important;
+  border-top: 1px solid var(--ct-border) !important;
+  border-right: 1px solid var(--ct-border) !important;
+  border-bottom: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 6px !important;
+  padding: 5px 26px 5px 10px !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 1l4 5 4-5' fill='none' stroke='%232563eb' stroke-width='1.5'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 10px !important;
+}
+
+html.ct-enterprise select:hover,
+html.ct-enterprise select.form-control:hover,
+html.ct-enterprise .page-form select:hover {
+  background-color: var(--ct-surface-hover) !important;
+  border-top-color: var(--ct-primary) !important;
+  border-right-color: var(--ct-primary) !important;
+  border-bottom-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 1px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise select:focus,
+html.ct-enterprise select.form-control:focus {
+  background-color: var(--ct-surface-hover) !important;
+  border-color: var(--ct-primary) !important;
+  border-left-color: var(--ct-accent) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+  outline: none !important;
+}
+
+html.ct-enterprise select option {
+  background: var(--ct-surface) !important;
+  color: var(--ct-text) !important;
+  padding: 6px !important;
+}
+
+html.ct-enterprise select option:checked {
+  background: linear-gradient(var(--ct-primary),var(--ct-primary)),var(--ct-surface) !important;
+  color: #fff !important;
+}
+
+/* ─── ALL text/date inputs in filter bar — adaptive themed ─── */
+html.ct-enterprise input.form-control,
+html.ct-enterprise input.input-with-feedback,
+html.ct-enterprise input.input-xs,
+html.ct-enterprise textarea.form-control {
+  background-color: var(--ct-bg-3) !important;
+  color: var(--ct-text) !important;
+  border-top: 1px solid var(--ct-border) !important;
+  border-right: 1px solid var(--ct-border) !important;
+  border-bottom: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.ct-enterprise input.form-control:hover,
+html.ct-enterprise input.input-with-feedback:hover {
+  background-color: var(--ct-surface-hover) !important;
+  border-top-color: var(--ct-primary) !important;
+  border-right-color: var(--ct-primary) !important;
+  border-bottom-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 1px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise input.form-control:focus,
+html.ct-enterprise input.input-with-feedback:focus {
+  background-color: var(--ct-surface-hover) !important;
+  border-color: var(--ct-primary) !important;
+  border-left-color: var(--ct-accent) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+  outline: none !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise input.form-control::placeholder,
+html.ct-enterprise input.input-with-feedback::placeholder {
+  color: var(--ct-text-muted) !important;
+}
+
+/* ─── Link field wrappers (Company, Finance Book, etc.) — adaptive themed ─── */
+html.ct-enterprise .link-field,
+html.ct-enterprise .link-field.ui-front {
+  background: var(--ct-bg-3) !important;
+  border-top: 1px solid var(--ct-border) !important;
+  border-right: 1px solid var(--ct-border) !important;
+  border-bottom: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+html.ct-enterprise .link-field:hover {
+  background: var(--ct-surface-hover) !important;
+  border-top-color: var(--ct-primary) !important;
+  border-right-color: var(--ct-primary) !important;
+  border-bottom-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 1px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise .link-field .form-control,
+html.ct-enterprise .link-field input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .link-field:focus-within {
+  background: var(--ct-surface-hover) !important;
+  border-color: var(--ct-primary) !important;
+  border-left-color: var(--ct-accent) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   DROPDOWN MENUS — Awesomplete / Dropdown / Dropdown-List
+   These are the MENUS that open when clicking filters
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Awesomplete dropdown (Link field autocomplete)
+    In Frappe v16, the dropdown IS ul.awesomplete (not inside it)
+    Use background-color (not background shorthand) to match Frappe's property ─── */
+html.ct-enterprise .awesomplete,
+html.ct-enterprise ul.awesomplete,
+html.ct-enterprise ul.awesomplete[role="listbox"],
+html.ct-enterprise .link-field ul.awesomplete,
+html.ct-enterprise .frappe-control ul.awesomplete,
+html.ct-enterprise body ul.awesomplete {
+  background-color: var(--ct-surface) !important;
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  padding: 4px !important;
+  margin-top: 4px !important;
+  z-index: 9999 !important;
+  min-width: 250px !important;
+  color: var(--ct-text) !important;
+}
+
+/* Each item in the awesomplete dropdown */
+html.ct-enterprise .awesomplete > li,
+html.ct-enterprise ul.awesomplete > li,
+html.ct-enterprise ul.awesomplete[role="listbox"] > li,
+html.ct-enterprise .awesomplete > [role="option"],
+html.ct-enterprise ul.awesomplete > [role="option"],
+html.ct-enterprise body ul.awesomplete > li {
+  color: var(--ct-text) !important;
+  background-color: var(--ct-surface) !important;
+  background: var(--ct-surface) !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+  padding: 8px 12px !important;
+  font-size: 0.8125rem !important;
+  cursor: pointer !important;
+}
+
+/* Hover / selected item in awesomplete */
+html.ct-enterprise .awesomplete > li:hover,
+html.ct-enterprise ul.awesomplete > li:hover,
+html.ct-enterprise .awesomplete > li[aria-selected="true"],
+html.ct-enterprise ul.awesomplete > li[aria-selected="true"],
+html.ct-enterprise body ul.awesomplete > li:hover {
+  background-color: var(--ct-surface-hover) !important;
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+/* Highlighted text in awesomplete */
+html.ct-enterprise .awesomplete > li mark,
+html.ct-enterprise ul.awesomplete > li mark {
+  background: var(--ct-accent-light) !important;
+  color: var(--ct-accent) !important;
+  border-radius: 2px !important;
+  padding: 0 2px !important;
+}
+
+/* ─── Bootstrap Dropdown menus ─── */
+html.ct-enterprise .dropdown-menu,
+html.ct-enterprise .dropdown-list,
+html.ct-enterprise .page-form .dropdown-menu,
+html.ct-enterprise .filter-area .dropdown-menu,
+html.ct-enterprise .tree-toolbar .dropdown-menu {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  padding: 4px !important;
+  z-index: 9999 !important;
+}
+
+/* Dropdown items */
+html.ct-enterprise .dropdown-menu .dropdown-item,
+html.ct-enterprise .dropdown-list .dropdown-item,
+html.ct-enterprise .dropdown-menu > li > a,
+html.ct-enterprise .dropdown-list > li > a {
+  color: var(--ct-text) !important;
+  background: var(--ct-surface) !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+  padding: 8px 12px !important;
+  font-size: 0.8125rem !important;
+}
+
+/* Dropdown item hover */
+html.ct-enterprise .dropdown-menu .dropdown-item:hover,
+html.ct-enterprise .dropdown-list .dropdown-item:hover,
+html.ct-enterprise .dropdown-menu > li > a:hover,
+html.ct-enterprise .dropdown-list > li > a:hover,
+html.ct-enterprise .dropdown-menu .dropdown-item:focus,
+html.ct-enterprise .dropdown-list .dropdown-item:focus {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   DROPDOWN FALLBACKS — Maximum compatibility selectors
+   Catches body-appended and dynamically-created dropdowns
+   ════════════════════════════════════════════════════════════ */
+
+/* Any awesomplete anywhere */
+html.ct-enterprise ul.awesomplete,
+html.ct-enterprise ul[class*="awesomplete"],
+html.ct-enterprise [class*="awesomplete"][role="listbox"],
+html.ct-enterprise body ul.awesomplete,
+html.ct-enterprise body ul[class*="awesomplete"] {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  padding: 4px !important;
+  z-index: 9999 !important;
+}
+
+html.ct-enterprise ul.awesomplete > li,
+html.ct-enterprise ul[class*="awesomplete"] > li,
+html.ct-enterprise [class*="awesomplete"] > [role="option"] {
+  color: var(--ct-text) !important;
+  background: var(--ct-surface) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+}
+
+html.ct-enterprise ul.awesomplete > li:hover,
+html.ct-enterprise ul[class*="awesomplete"] > li:hover,
+html.ct-enterprise ul.awesomplete > li[aria-selected="true"] {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+/* Any dropdown-menu anywhere (including body-appended) */
+html.ct-enterprise body > .dropdown-menu,
+html.ct-enterprise body > .dropdown-menu.show,
+html.ct-enterprise .dropdown.open > .dropdown-menu,
+html.ct-enterprise .dropup.open > .dropdown-menu,
+html.ct-enterprise .btn-group.open > .dropdown-menu,
+html.ct-enterprise [class*="dropdown-menu"] {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  padding: 4px !important;
+  z-index: 9999 !important;
+}
+
+html.ct-enterprise body > .dropdown-menu > .dropdown-item,
+html.ct-enterprise body > .dropdown-menu > li > a,
+html.ct-enterprise .dropdown.open > .dropdown-menu > .dropdown-item,
+html.ct-enterprise [class*="dropdown-menu"] > .dropdown-item,
+html.ct-enterprise [class*="dropdown-menu"] > li > a {
+  color: var(--ct-text) !important;
+  background: var(--ct-surface) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+}
+
+html.ct-enterprise body > .dropdown-menu > .dropdown-item:hover,
+html.ct-enterprise body > .dropdown-menu > li > a:hover,
+html.ct-enterprise [class*="dropdown-menu"] > .dropdown-item:hover {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+/* Any element with role=listbox */
+html.ct-enterprise [role="listbox"] {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+}
+
+html.ct-enterprise [role="listbox"] > [role="option"],
+html.ct-enterprise [role="listbox"] > li {
+  color: var(--ct-text) !important;
+  background: var(--ct-surface) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+}
+
+html.ct-enterprise [role="listbox"] > [role="option"]:hover,
+html.ct-enterprise [role="listbox"] > li:hover,
+html.ct-enterprise [role="listbox"] > [role="option"][aria-selected="true"] {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+/* Active/selected dropdown item */
+html.ct-enterprise .dropdown-menu .dropdown-item.active,
+html.ct-enterprise .dropdown-list .dropdown-item.active,
+html.ct-enterprise .dropdown-menu .dropdown-item:active,
+html.ct-enterprise .dropdown-list .dropdown-item:active {
+  background: var(--ct-primary-light) !important;
+  color: var(--ct-primary) !important;
+}
+
+/* ─── MultiSelectList dropdown ─── */
+html.ct-enterprise .multiselect-list,
+html.ct-enterprise .multiselect-list.dropdown {
+  background: var(--ct-bg-3) !important;
+  border-top: 1px solid var(--ct-border) !important;
+  border-right: 1px solid var(--ct-border) !important;
+  border-bottom: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+html.ct-enterprise .multiselect-list:hover {
+  background: var(--ct-surface-hover) !important;
+  border-top-color: var(--ct-primary) !important;
+  border-right-color: var(--ct-primary) !important;
+  border-bottom-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 1px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise .multiselect-list .form-control {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .multiselect-list:focus-within {
+  background: var(--ct-surface-hover) !important;
+  border-color: var(--ct-primary) !important;
+  border-left-color: var(--ct-accent) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise .multiselect-list .selected-value {
+  background: var(--ct-primary-light) !important;
+  color: var(--ct-primary) !important;
+  border: 1px solid var(--ct-primary) !important;
+  border-radius: 100px !important;
+  font-size: 0.7rem !important;
+  padding: 1px 6px !important;
+  margin: 2px !important;
+}
+
+html.ct-enterprise .multiselect-list .selected-value .remove {
+  color: var(--ct-primary) !important;
+  cursor: pointer !important;
+  margin-left: 4px !important;
+}
+
+html.ct-enterprise .multiselect-list .selected-value .remove:hover {
+  color: var(--ct-danger) !important;
+}
+
+/* ─── MultiSelectList internal dropdown menu ─── */
+html.ct-enterprise .multiselect-list .dropdown-menu {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+}
+
+html.ct-enterprise .multiselect-list .dropdown-menu .selectable-item {
+  color: var(--ct-text) !important;
+  background: var(--ct-surface) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+}
+
+html.ct-enterprise .multiselect-list .dropdown-menu .selectable-item:hover,
+html.ct-enterprise .multiselect-list .dropdown-menu .selectable-item.selected {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+/* ─── Date picker — adaptive themed ─── */
+html.ct-enterprise .datepicker {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  color: var(--ct-text) !important;
+  z-index: 9999 !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--nav {
+  background: var(--ct-surface) !important;
+  border-bottom-color: var(--ct-border) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--nav-title {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--day-name {
+  color: var(--ct-text-muted) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell:hover {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-selected- {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-today- {
+  color: var(--ct-accent) !important;
+  border-color: var(--ct-accent) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-current- {
+  color: var(--ct-accent) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--time {
+  border-top-color: var(--ct-border) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--time-current {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--time-row {
+  background: var(--ct-bg-3) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--time-row:before,
+html.ct-enterprise .datepicker .datepicker--time-row:after {
+  background: var(--ct-border) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--time-row .datepicker--slider {
+  background: var(--ct-primary) !important;
+}
+
+/* ─── Checkbox filters ─── */
+html.ct-enterprise .checkbox label {
+  color: var(--ct-text-secondary) !important;
+  font-size: 0.8125rem !important;
+}
+
+html.ct-enterprise .checkbox input[type="checkbox"] {
+  accent-color: var(--ct-primary) !important;
+}
+
+/* ─── Filter selector / filter button — adaptive themed ─── */
+html.ct-enterprise .filter-selector,
+html.ct-enterprise .filter-selector .btn,
+html.ct-enterprise .filter-button {
+  background: var(--ct-bg-3) !important;
+  color: var(--ct-text-secondary) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+html.ct-enterprise .filter-selector:hover,
+html.ct-enterprise .filter-selector .btn:hover,
+html.ct-enterprise .filter-button:hover {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-primary) !important;
+  border-color: var(--ct-primary) !important;
+}
+
+/* ─── Filter pills / active filters — adaptive themed ─── */
+html.ct-enterprise .filter-pill,
+html.ct-enterprise .filter-x-button {
+  background: var(--ct-primary-light) !important;
+  color: var(--ct-primary) !important;
+  border: 1px solid var(--ct-primary) !important;
+  border-radius: 100px !important;
+  font-size: 0.75rem !important;
+}
+
+html.ct-enterprise .filter-x-button:hover {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+}
+
+/* ─── Filter popover — adaptive themed ─── */
+html.ct-enterprise .filter-popover,
+html.ct-enterprise .popover {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+}
+
+html.ct-enterprise .popover-title {
+  background: var(--ct-surface) !important;
+  border-bottom-color: var(--ct-border) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .popover-content {
+  background: var(--ct-surface) !important;
+  color: var(--ct-text) !important;
+}
+
+/* ─── Frappe control wrappers ─── */
+html.ct-enterprise .frappe-control {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .control-input,
+html.ct-enterprise .control-input-wrapper {
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text) !important;
+  border-color: var(--ct-border) !important;
+}
+
+html.ct-enterprise .control-label {
+  color: var(--ct-text-secondary) !important;
+}
+
+/* ─── Frappe control wrappers ─── */
+html.ct-enterprise .frappe-control {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .control-label {
+  color: var(--ct-text-secondary) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+/* ─── Input groups ─── */
+html.ct-enterprise .input-group {
+  border-color: var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+}
+
+/* ─── Like disabled input ─── */
+html.ct-enterprise .like-disabled-input {
+  background: var(--ct-bg-3) !important;
+  color: var(--ct-text) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+}
+
+/* ─── Searchable dropdown ─── */
+html.ct-enterprise .searchable-dropdown {
+  background: var(--ct-bg-3) !important;
+  color: var(--ct-text) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-transition) !important;
+}
+
+html.ct-enterprise .searchable-dropdown:hover {
+  background: var(--ct-surface-hover) !important;
+  border-color: var(--ct-border-hover) !important;
+}
+
+html.ct-enterprise .searchable-dropdown:focus {
+  background: var(--ct-surface) !important;
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 2px var(--ct-primary-light) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Filter selector button (the "Filter" pill) ─── */
+html.ct-enterprise .filter-selector .filter-button,
+html.ct-enterprise .filter-button.filter-selector {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text-secondary);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+  font-size: 0.8125rem;
+}
+
+html.ct-enterprise .filter-selector .filter-button:hover,
+html.ct-enterprise .filter-button.filter-selector:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-primary);
+  border-color: var(--ct-primary);
+}
+
+/* ─── Filter pill / active filter tag ─── */
+html.ct-enterprise .filter-x-button,
+html.ct-enterprise .filter-pill {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+  border: 1px solid var(--ct-primary);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .filter-x-button:hover {
+  background: var(--ct-primary);
+  color: #fff;
+}
+
+/* ─── Filter field containers - prevent duplicate appearance ─── */
+html.ct-enterprise .filter-field {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Style the actual input/select inside filter-field instead */
+html.ct-enterprise .filter-field .form-control,
+html.ct-enterprise .filter-field input,
+html.ct-enterprise .filter-field select,
+html.ct-enterprise .filter-field .link-field {
+  background: var(--ct-bg-elevated) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-transition) !important;
+}
+
+html.ct-enterprise .filter-field .form-control:hover,
+html.ct-enterprise .filter-field input:hover,
+html.ct-enterprise .filter-field select:hover,
+html.ct-enterprise .filter-field .link-field:hover {
+  border-color: var(--ct-border-hover) !important;
+}
+
+html.ct-enterprise .filter-field .form-control:focus,
+html.ct-enterprise .filter-field input:focus,
+html.ct-enterprise .filter-field select:focus,
+html.ct-enterprise .filter-field .link-field:focus-within {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise .filter-field:hover {
+  border-color: transparent !important;
+}
+
+html.ct-enterprise .filter-field:focus-within {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ─── Filter box inside popover ─── */
+html.ct-enterprise .filter-popover .filter-box {
+  background: var(--ct-surface);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .filter-popover {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .filter-popover .filter-field {
+  background: var(--ct-bg-elevated);
+  border-color: var(--ct-border);
+}
+
+html.ct-enterprise .filter-popover .btn-apply-filter {
+  background: var(--ct-primary);
+  color: #fff;
+  border-color: var(--ct-primary);
+}
+
+html.ct-enterprise .filter-popover .btn-apply-filter:hover {
+  background: var(--ct-primary-hover);
+}
+
+/* ─── Awesomplete (Frappe autocomplete dropdown) ─── */
+html.ct-enterprise .awesomplete > ul {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+  padding: 4px;
+}
+
+html.ct-enterprise .awesomplete > ul > li {
+  color: var(--ct-text);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+  padding: 6px 10px;
+  font-size: 0.8125rem;
+}
+
+html.ct-enterprise .awesomplete > ul > li[aria-selected="true"],
+html.ct-enterprise .awesomplete > ul > li:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .awesomplete > ul > li mark {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* ─── Link field / autocomplete dropdown ─── */
+html.ct-enterprise .link-field .awesomplete > ul,
+html.ct-enterprise .autocomplete-results {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .link-field .awesomplete > ul > li,
+html.ct-enterprise .autocomplete-item {
+  color: var(--ct-text);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+  padding: 6px 10px;
+}
+
+html.ct-enterprise .link-field .awesomplete > ul > li:hover,
+html.ct-enterprise .autocomplete-item:hover {
+  background: var(--ct-surface-hover);
+}
+
+/* ─── Dropdown list (generic Frappe dropdown) ─── */
+html.ct-enterprise .dropdown-list {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+  padding: 4px;
+}
+
+html.ct-enterprise .dropdown-list .dropdown-item {
+  color: var(--ct-text);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-motion);
+  padding: 6px 10px;
+}
+
+html.ct-enterprise .dropdown-list .dropdown-item:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+/* ─── Dropdown container (wrapper for custom selects) ─── */
+html.ct-enterprise .dropdown-container {
+  background: var(--ct-bg-elevated);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-transition);
+}
+
+html.ct-enterprise .dropdown-container:hover {
+  border-color: var(--ct-border-hover);
+}
+
+html.ct-enterprise .dropdown-container:focus-within {
+  border-color: var(--ct-primary);
+  box-shadow: 0 0 0 3px var(--ct-primary-light);
+}
+
+/* ─── Like disabled input (read-only looking fields) ─── */
+html.ct-enterprise .like-disabled-input {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+/* ─── Control input wrapper (used in filters) ─── */
+html.ct-enterprise .control-input-wrapper .control-input {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-transition);
+}
+
+html.ct-enterprise .control-input-wrapper .control-input:focus {
+  border-color: var(--ct-primary);
+  box-shadow: 0 0 0 3px var(--ct-primary-light);
+}
+
+/* ─── Frappe control with label in filter area ─── */
+html.ct-enterprise .filter-area .frappe-control {
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .filter-area .control-label {
+  color: var(--ct-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ─── Page form filter row ─── */
+html.ct-enterprise .page-form .filter-section {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+}
+
+/* ─── Searchable dropdown (custom component) ─── */
+html.ct-enterprise .searchable-dropdown {
+  background: var(--ct-bg-elevated);
+  color: var(--ct-text);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-transition);
+}
+
+html.ct-enterprise .searchable-dropdown:hover {
+  border-color: var(--ct-border-hover);
+}
+
+html.ct-enterprise .searchable-dropdown:focus {
+  border-color: var(--ct-primary);
+  box-shadow: 0 0 0 3px var(--ct-primary-light);
+}
+
+html.ct-enterprise .searchable-dropdown .dropdown-list {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+html.ct-enterprise .searchable-dropdown .dropdown-item {
+  color: var(--ct-text);
+  transition: var(--ct-motion);
+}
+
+html.ct-enterprise .searchable-dropdown .dropdown-item:hover {
+  background: var(--ct-surface-hover);
+}
+
+/* ─── Date/Time picker inputs in filters ─── */
+html.ct-enterprise .datepicker {
+  background: var(--ct-surface);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius);
+  box-shadow: var(--ct-shadow-lg);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .datepicker .datepicker--nav {
+  background: var(--ct-surface);
+  border-bottom-color: var(--ct-border);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .datepicker .datepicker--cell:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-selected- {
+  background: var(--ct-primary);
+  color: #fff;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-today- {
+  color: var(--ct-primary);
+}
+
+/* ─── Input with icon (search inputs in filters) ─── */
+html.ct-enterprise .input-with-icon {
+  background: var(--ct-bg-elevated);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-border-radius-sm);
+  transition: var(--ct-transition);
+}
+
+html.ct-enterprise .input-with-icon:focus-within {
+  border-color: var(--ct-primary);
+  box-shadow: 0 0 0 3px var(--ct-primary-light);
+}
+
+html.ct-enterprise .input-with-icon input {
+  background: transparent;
+  color: var(--ct-text);
+  border: none;
+}
+
+html.ct-enterprise .input-with-icon input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ─── Multi-select / tag input ─── */
+html.ct-enterprise .multiselect .selected-value {
+  background: var(--ct-primary-light);
+  color: var(--ct-primary);
+  border: 1px solid var(--ct-primary);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+}
+
+html.ct-enterprise .multiselect .selected-value .remove {
+  color: var(--ct-primary);
+  cursor: pointer;
+}
+
+html.ct-enterprise .multiselect .selected-value .remove:hover {
+  color: var(--ct-danger);
+}
+
+/* ════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Page form filter area background ─── */
+html.ct-enterprise .page-form {
+  background: var(--ct-surface) !important;
+  border-bottom-color: var(--ct-border) !important;
+}
+
+/* ─── Standard filter section ─── */
+html.ct-enterprise .standard-filter-section {
+  background: transparent;
+}
+
+/* ─── Filter selector button ─── */
+html.ct-enterprise .filter-selector,
+html.ct-enterprise .filter-selector .btn,
+html.ct-enterprise .filter-button {
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text-secondary) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-motion) !important;
+}
+
+html.ct-enterprise .filter-selector:hover,
+html.ct-enterprise .filter-selector .btn:hover,
+html.ct-enterprise .filter-button:hover {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-primary) !important;
+  border-color: var(--ct-primary) !important;
+}
+
+/* ─── Filter pills / active filters ─── */
+html.ct-enterprise .filter-pill,
+html.ct-enterprise .filter-x-button {
+  background: var(--ct-primary-light) !important;
+  color: var(--ct-primary) !important;
+  border: 1px solid var(--ct-primary) !important;
+  border-radius: 100px !important;
+  font-size: 0.75rem !important;
+}
+
+html.ct-enterprise .filter-x-button:hover {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FRAPPE V16 SELECT CONTROLS — Construction ERP Themed
+   Targets exact DOM structure from ControlSelect implementation
+   ALL rules !important for guaranteed override
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Frappe v16 Select control wrapper ─── */
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .control-input {
+  background: transparent !important;
+  border: none !important;
+  position: relative !important;
+}
+
+/* ─── Hide Frappe's default select icon SVG ─── */
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .select-icon,
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .select-icon svg,
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .select-icon use {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* ─── Hide placeholder overlay ─── */
+html.ct-enterprise .frappe-control[data-fieldtype="Select"] .placeholder {
+  display: none !important;
+}
+
+html.ct-enterprise select option {
+  background: var(--ct-surface) !important;
+  color: var(--ct-text) !important;
+  padding: 6px !important;
+}
+
+html.ct-enterprise select option:checked {
+  background: linear-gradient(var(--ct-primary),var(--ct-primary)),var(--ct-surface) !important;
+  color: #fff !important;
+}
+
+/* ─── Frappe control input wrapper ─── */
+html.ct-enterprise .frappe-control {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .control-input,
+html.ct-enterprise .control-input-wrapper {
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text) !important;
+  border-color: var(--ct-border) !important;
+}
+
+html.ct-enterprise .control-label {
+  color: var(--ct-text-secondary) !important;
+}
+
+/* ─── Form control inputs ─── */
+html.ct-enterprise .form-control,
+html.ct-enterprise input.form-control,
+html.ct-enterprise textarea.form-control {
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-transition) !important;
+}
+
+html.ct-enterprise .form-control:hover {
+  border-color: var(--ct-border-hover) !important;
+}
+
+html.ct-enterprise .form-control:focus {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+  outline: none !important;
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .form-control::placeholder {
+  color: var(--ct-text-muted) !important;
+}
+
+/* ─── Link field wrapper ─── */
+html.ct-enterprise .link-field {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ─── Date picker ─── */
+html.ct-enterprise .datepicker {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius) !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--nav {
+  background: var(--ct-surface) !important;
+  border-bottom-color: var(--ct-border) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell:hover {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-selected- {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+}
+
+html.ct-enterprise .datepicker .datepicker--cell.-today- {
+  color: var(--ct-primary) !important;
+}
+
+/* ─── Filter popover ─── */
+html.ct-enterprise .filter-popover,
+html.ct-enterprise .popover {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius) !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+}
+
+/* ─── Input group ─── */
+html.ct-enterprise .input-group {
+  border-color: var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+}
+
+html.ct-enterprise .input-group .form-control {
+  border-radius: var(--ct-border-radius-sm) 0 0 var(--ct-border-radius-sm) !important;
+}
+
+html.ct-enterprise .input-group .btn {
+  border-radius: 0 var(--ct-border-radius-sm) var(--ct-border-radius-sm) 0 !important;
+}
+
+/* ─── Multi-select tags ─── */
+html.ct-enterprise .multiselect .selected-value {
+  background: var(--ct-primary-light) !important;
+  color: var(--ct-primary) !important;
+  border: 1px solid var(--ct-primary) !important;
+  border-radius: 100px !important;
+}
+
+html.ct-enterprise .multiselect .selected-value .remove {
+  color: var(--ct-primary) !important;
+}
+
+html.ct-enterprise .multiselect .selected-value .remove:hover {
+  color: var(--ct-danger) !important;
+}
+
+/* ─── Like disabled input ─── */
+html.ct-enterprise .like-disabled-input {
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+}
+
+/* ─── Searchable dropdown ─── */
+html.ct-enterprise .searchable-dropdown {
+  background: var(--ct-bg-elevated) !important;
+  color: var(--ct-text) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+}
+
+html.ct-enterprise .searchable-dropdown:hover {
+  border-color: var(--ct-border-hover) !important;
+}
+
+html.ct-enterprise .searchable-dropdown:focus {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+}
+
+/* ─── Dropdown container ─── */
+html.ct-enterprise .dropdown-container {
+  background: var(--ct-bg-elevated) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  transition: var(--ct-transition) !important;
+}
+
+html.ct-enterprise .dropdown-container:hover {
+  border-color: var(--ct-border-hover) !important;
+}
+
+html.ct-enterprise .dropdown-container:focus-within {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+}
+
+/* ─── Filter box inside popover ─── */
+html.ct-enterprise .filter-popover .filter-box {
+  background: var(--ct-surface) !important;
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .filter-popover .btn-apply-filter {
+  background: var(--ct-primary) !important;
+  color: #fff !important;
+  border-color: var(--ct-primary) !important;
+}
+
+html.ct-enterprise .filter-popover .btn-apply-filter:hover {
+  background: var(--ct-primary-hover) !important;
+}
+
+/* ─── Input with icon ─── */
+html.ct-enterprise .input-with-icon {
+  background: var(--ct-bg-elevated) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+}
+
+html.ct-enterprise .input-with-icon:focus-within {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+}
+
+html.ct-enterprise .input-with-icon input {
+  background: transparent !important;
+  color: var(--ct-text) !important;
+  border: none !important;
+}
+
+html.ct-enterprise .input-with-icon input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ════════════════════════════════════════════════════════════ */
+
+@media print {
+  html.ct-enterprise {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  html.ct-enterprise * {
+    color: #000000 !important;
+    background: #ffffff !important;
+    border-color: #cccccc !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   END OF CONSTRUCTION ERP THEME v2.4-r5
+   ════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════
+   FILTER SYSTEM — handled by filter_fix.js (JS-injected)
+   All filter styling is now injected via JavaScript after
+   Frappe's desk.bundle.css to win the cascade.
+   See construction/public/js/filter_fix.js
+   ════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════
+   v5.15 — Theme Toggle (Isolated Zones — no Frappe container injection)
+   Zones persist across navigations:
+   - Desk: <ul.ct-topbar-zone.ct-zone--desk> at end of .desktop-navbar
+   - Standard: <div.ct-topbar-zone.ct-topbar-zone--standard> at end of .page-head
+   Both use flex + margin-left:auto for natural right-edge alignment
+   ════════════════════════════════════════════════════════════ */
+
+/* ─── Desk Zone (last flex child of .desktop-navbar) ─── */
+html.ct-enterprise .ct-topbar-zone.ct-zone--desk {
+  display: flex !important;
+  align-items: center;
+  height: 100%;
+  list-style: none;
+  margin: 0 0 0 auto !important;
+  padding: 0 4px 0 12px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--ct-border);
+}
+
+html.ct-enterprise .ct-topbar-zone.ct-zone--desk .ct-topbar-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ─── Standard Zone (last flex child of .page-head) ─── */
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--standard {
+  display: flex !important;
+  align-items: center;
+  margin: 0 0 0 auto !important;
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--standard .ct-topbar-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Keep customer actions reachable when the custom controls fill the header.
+   Frappe's flex-nowrap utility otherwise forces them outside its container. */
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-head-content {
+  flex-wrap: wrap !important;
+  height: auto;
+  min-height: var(--page-head-height);
+}
+
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-title {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-actions {
+  flex: 1 1 320px;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .custom-actions,
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .standard-actions {
+  flex-wrap: wrap;
+}
+
+/* ─── Actions Zone (fallback, prepended to .page-actions) ─── */
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--actions {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  gap: 4px;
+}
+
+html.ct-enterprise .ct-topbar-zone.ct-topbar-zone--actions .ct-topbar-item {
+  display: flex;
+  align-items: center;
+}
+
+/* ─── Base Wrapper ─── */
+html.ct-enterprise .ct-theme-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+html.ct-enterprise .ct-theme-wrapper .ct-theme-btn {
+  color: var(--ct-text-secondary);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--ct-motion);
+  padding: 0 8px;
+  line-height: 1;
+}
+
+html.ct-enterprise .ct-theme-wrapper .ct-theme-btn:hover {
+  color: var(--ct-primary);
+}
+
+/* ─── Dropdown menu ─── */
+html.ct-enterprise .ct-theme-wrapper .dropdown-menu {
+  position: fixed;
+  z-index: 11000;
+  min-width: 200px;
+  padding: 0.375rem 0;
+  border-radius: 8px;
+  box-shadow: var(--ct-shadow-lg);
+  border: 1px solid var(--ct-border);
+  background: var(--ct-surface);
+}
+
+html.ct-enterprise .ct-theme-wrapper .dropdown-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--ct-text);
+  background: transparent;
+}
+
+html.ct-enterprise .ct-theme-wrapper .dropdown-item:hover {
+  background: var(--ct-surface-hover);
+  color: var(--ct-text);
+}
+
+/* ════════════════════════════════════════════════════════════
+   v2.5.3 — Sidebar/Menu Hover Parity
+   Mirrors the topbar option menu interaction on workspace sidebars.
+   ════════════════════════════════════════════════════════════ */
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item,
+html.ct-enterprise .sidebar-container .sidebar-item,
+html.ct-enterprise .body-sidebar .sidebar-item-container {
+  background: transparent !important;
+  border-radius: 6px !important;
+  color: var(--ct-text) !important;
+  font-family: inherit !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  transition: var(--ct-motion) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item > a.item-anchor,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item > a.item-anchor,
+html.ct-enterprise .sidebar-container .sidebar-link,
+html.ct-enterprise .body-sidebar .sidebar-item-container a {
+  color: var(--ct-text) !important;
+  font-family: inherit !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.35 !important;
+  text-decoration: none !important;
+}
+
+html.ct-enterprise .desk-sidebar .sidebar-item-label,
+html.ct-enterprise .standard-sidebar .sidebar-item-label,
+html.ct-enterprise .sidebar-container .sidebar-item-label,
+html.ct-enterprise .body-sidebar .sidebar-item-label {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: 0.8125rem !important;
+  font-weight: inherit !important;
+  letter-spacing: 0 !important;
+  transition: var(--ct-motion) !important;
+  transform: translateX(0);
+}
+
+html.ct-enterprise .desk-sidebar .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item-icon,
+html.ct-enterprise .body-sidebar .sidebar-item-icon {
+  color: var(--ct-text-secondary) !important;
+  transition: var(--ct-motion) !important;
+  transform: scale(1);
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise .sidebar-container .sidebar-item:hover,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  letter-spacing: 0 !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover > a.item-anchor,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover > a.item-anchor,
+html.ct-enterprise .sidebar-container .sidebar-item:hover .sidebar-link,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) a {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise .sidebar-container .sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-label {
+  transform: translateX(4px) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item:hover .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item:hover .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item:hover .sidebar-item-icon,
+html.ct-enterprise .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-icon {
+  color: var(--ct-text) !important;
+  transform: scale(1.12) !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.selected,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active-sidebar,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.selected,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active-sidebar,
+html.ct-enterprise .sidebar-container .sidebar-item.selected,
+html.ct-enterprise .sidebar-container .sidebar-item.active {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+  border-color: transparent transparent transparent var(--ct-primary) !important;
+  font-weight: 600 !important;
+}
+
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.selected .sidebar-item-icon,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active .sidebar-item-icon,
+html.ct-enterprise .desk-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.selected .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item.selected .sidebar-item-icon,
+html.ct-enterprise .sidebar-container .sidebar-item.active .sidebar-item-icon {
+  color: var(--ct-text) !important;
+}
+
+html.ct-enterprise[dir="rtl"] .desk-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .standard-sidebar .standard-sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .sidebar-container .sidebar-item:hover .sidebar-item-label,
+html.ct-enterprise[dir="rtl"] .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) .sidebar-item-label {
+  transform: translateX(-4px) !important;
+}
+
+html.ct-enterprise[dir="rtl"] .desk-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise[dir="rtl"] .standard-sidebar .standard-sidebar-item:hover,
+html.ct-enterprise[dir="rtl"] .sidebar-container .sidebar-item:hover,
+html.ct-enterprise[dir="rtl"] .body-sidebar .sidebar-item-container:hover:not(:has(.sidebar-item-container:hover)) {
+  border-color: transparent var(--ct-primary) transparent transparent !important;
+}
+
+/* Construction Light: keep selected sidebar items readable over the blue background. */
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) a,
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-label,
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon,
+html.ct-enterprise[data-theme="light"] .body-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon svg,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) a,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-label,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon,
+html.ct-enterprise[data-theme="light"] .desk-sidebar .standard-sidebar-item:is(.active-sidebar, .active, .selected) .sidebar-item-icon svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* ─── BOQ workflow guidance — field-level accent states ─── */
+html.ct-enterprise .frappe-control.ct-boq-step-accent .control-input-wrapper,
+html.ct-enterprise .frappe-control.ct-boq-step-accent .link-field,
+html.ct-enterprise .frappe-control.ct-boq-step-accent .link-field.ui-front {
+  border-color: var(--ct-primary) !important;
+  box-shadow: 0 0 0 3px var(--ct-primary-light) !important;
+  background: var(--ct-surface-hover) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-accent .control-label {
+  color: var(--ct-primary) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .control-input-wrapper,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .link-field,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .link-field.ui-front {
+  border-color: var(--ct-warning) !important;
+  box-shadow: 0 0 0 3px var(--ct-warning-light) !important;
+  background: var(--ct-surface-hover) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .control-label {
+  color: var(--ct-warning) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-has-inline-hint .control-label {
+  white-space: normal !important;
+}
+
+html.ct-enterprise .frappe-control .help {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: 8px;
+  vertical-align: middle;
+}
+
+html.ct-enterprise .frappe-control .ct-boq-inline-hint {
+  display: inline-block;
+  min-width: 1.35rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ct-primary-light, rgba(37, 99, 235, 0.15));
+  border: 1px solid var(--ct-primary);
+  color: #ffffff !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-inline-hint-blocked .ct-boq-inline-hint {
+  color: #ffffff !important;
+  border-color: var(--ct-warning) !important;
+  background: var(--ct-warning-light, rgba(245, 158, 11, 0.15)) !important;
+}
+
+html.ct-enterprise .frappe-control .control-description,
+html.ct-enterprise .frappe-control .help-box,
+html.ct-enterprise .frappe-control .help-block {
+  color: var(--ct-text-secondary) !important;
+}
+
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .control-description,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .help-box,
+html.ct-enterprise .frappe-control.ct-boq-step-blocked .help-block {
+  color: var(--ct-warning) !important;
+}
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  html.ct-enterprise .ct-topbar-zone.ct-zone--desk {
+    padding-left: 6px;
+  }
+
+  html.ct-enterprise .ct-theme-wrapper .ct-theme-btn {
+    font-size: 0;
+    padding: 0 6px;
+    width: auto;
+  }
+}
+
+/* ─── SIDEBAR TOGGLE BUTTON (visible on desktop toolbar) ─── */
+.page-title .sidebar-toggle-btn {
+  display: flex !important;
+}

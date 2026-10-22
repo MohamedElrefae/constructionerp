@@ -1,0 +1,13 @@
+{
+ "Ledger": "دفتر الأستاذ",
+ "On Payment Failed": "عند فشل الدفع",
+ "On Payment Paid": "عند الدفع",
+ "Posting Timestamp": "طابع زمني للترحيل",
+ "Select Currency": "تحديد العملة",
+ "Default display currency": "عملة العرض الافتراضية",
+ "On Payment Authorization": "عند تفويض الدفع",
+ "On Payment Charge Processed": "عند معالجة الرسوم",
+ "On Payment Mandate Acquisition Processed": "عند معالجة اكتساب التفويض",
+ "On Payment Mandate Charge Processed": "عند معالجة رسوم التفويض",
+ "No currency fields in {0}": "لا توجد حقول عملة في {0}"
+}

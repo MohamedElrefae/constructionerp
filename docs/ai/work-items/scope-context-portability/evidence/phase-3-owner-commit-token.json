@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "token_id": "owner-commit-grant-phase3-pilot",
+  "work_item": "scope-context-portability",
+  "gate_id": "commit-703536a0492e00f385d3f844",
+  "issuer": "Project Owner",
+  "issued_utc": "2026-09-12T06:45:00Z",
+  "status": "ISSUED",
+  "scope": "COMMIT",
+  "candidate_id": "89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1",
+  "manifest_hash": "89f613f94d35c34619d1436ea8556d4fe1412232e6463baca6cefc73897010c1",
+  "repository_id": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+  "branch": "feature/scope-context-portability",
+  "expected_parent_sha": "4b77803af418cea8459c4cb7d9a0248674845da3",
+  "expected_tree_oid": "5b5f87ff01b16e9d739380e8523eca0698bbfd65",
+  "job_id": "op-commit-phase3-pilot"
+}

@@ -1,0 +1,476 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:BOQI-{boq_header}-{####}",
+  "creation": "2026-04-09 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "sb_identity",
+    "structure",
+    "boq_header",
+    "item_type",
+    "cost_item",
+    "cb_identity",
+    "owner_page",
+    "owner_ref_no",
+    "owner_file_ref",
+    "is_variation_item",
+    "variation_order",
+    "sb_import_traceability",
+    "import_batch",
+    "import_batch_id",
+    "import_mode",
+    "source_sheet_name",
+    "source_row_no",
+    "source_item_ref",
+    "sb_quantity",
+    "quantity",
+    "unit",
+    "factor",
+    "has_stages",
+    "cb_quantity",
+    "est_unit_cost",
+    "est_unit_price",
+    "contract_unit_price",
+    "line_total",
+    "sb_quantity_revisions",
+    "original_qty",
+    "current_revised_qty",
+    "current_revised_unit_price",
+    "last_quantity_revision",
+    "cb_quantity_revisions",
+    "sb_cost_estimation",
+    "overhead_pct",
+    "profit_pct",
+    "tender_tax_pct",
+    "cb_cost_estimation",
+    "overhead_amount",
+    "profit_amount",
+    "calculated_sell_price",
+    "est_line_total",
+    "tender_tax_amount",
+    "cost_basis",
+    "active_cost_analysis",
+    "manual_cost_snapshot"
+  ],
+  "fields": [
+    {
+      "fieldname": "sb_identity",
+      "fieldtype": "Section Break",
+      "label": "Identity and Linkage"
+    },
+    {
+      "fieldname": "structure",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Structure",
+      "options": "BOQ Structure",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "boq_header",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "BOQ Header",
+      "options": "BOQ Header",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "default": "TBD",
+      "fieldname": "item_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Item Type",
+      "options": "Measured Work\nProvisional Sum\nPrime Cost\nDaywork\nContingency\nTBD"
+    },
+    {
+      "fieldname": "cost_item",
+      "fieldtype": "Data",
+      "label": "Cost Item (Placeholder)",
+      "description": "Will be converted to Link field when CostItem DocType is deployed"
+    },
+    {
+      "fieldname": "cb_identity",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "owner_page",
+      "fieldtype": "Data",
+      "label": "Owner Page"
+    },
+    {
+      "fieldname": "owner_ref_no",
+      "fieldtype": "Data",
+      "label": "Owner Ref No"
+    },
+    {
+      "fieldname": "owner_file_ref",
+      "fieldtype": "Data",
+      "label": "Owner File Ref"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_variation_item",
+      "fieldtype": "Check",
+      "label": "Is Variation Item",
+      "read_only": 1
+    },
+    {
+      "fieldname": "variation_order",
+      "fieldtype": "Link",
+      "label": "Variation Order",
+      "options": "Variation Order",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_import_traceability",
+      "fieldtype": "Section Break",
+      "label": "Import Traceability",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "import_batch",
+      "fieldtype": "Link",
+      "label": "Import Batch",
+      "options": "BOQ Import Batch",
+      "read_only": 1
+    },
+    {
+      "fieldname": "import_batch_id",
+      "fieldtype": "Data",
+      "label": "Import Batch ID",
+      "read_only": 1
+    },
+    {
+      "fieldname": "import_mode",
+      "fieldtype": "Select",
+      "label": "Import Mode",
+      "options": "\nManual\nStructured\nSemi-Structured\nFlat\nVariation",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_sheet_name",
+      "fieldtype": "Data",
+      "label": "Source Sheet Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_row_no",
+      "fieldtype": "Int",
+      "label": "Source Row No",
+      "read_only": 1
+    },
+    {
+      "fieldname": "source_item_ref",
+      "fieldtype": "Data",
+      "label": "Source Item Ref",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_quantity",
+      "fieldtype": "Section Break",
+      "label": "Quantity and Pricing"
+    },
+    {
+      "fieldname": "quantity",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Quantity",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "unit",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Unit",
+      "options": "UOM"
+    },
+    {
+      "default": "1.0",
+      "fieldname": "factor",
+      "fieldtype": "Float",
+      "label": "Factor",
+      "non_negative": 1,
+      "reqd": 1,
+      "description": "Must be greater than zero. Missing factors default to 1."
+    },
+    {
+      "default": "0",
+      "fieldname": "has_stages",
+      "fieldtype": "Check",
+      "label": "Has Stages"
+    },
+    {
+      "fieldname": "cb_quantity",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "est_unit_cost",
+      "fieldtype": "Currency",
+      "label": "Estimated Unit Cost",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
+    },
+    {
+      "fieldname": "est_unit_price",
+      "fieldtype": "Currency",
+      "label": "Estimated Unit Price"
+    },
+    {
+      "fieldname": "contract_unit_price",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Contract Unit Price"
+    },
+    {
+      "fieldname": "line_total",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Line Total",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sb_quantity_revisions",
+      "fieldtype": "Section Break",
+      "label": "Quantity Revisions",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "original_qty",
+      "fieldtype": "Float",
+      "label": "Original Quantity",
+      "read_only": 1,
+      "description": "Contract baseline quantity captured at BOQ lock"
+    },
+    {
+      "fieldname": "current_revised_qty",
+      "fieldtype": "Float",
+      "label": "Current Revised Quantity",
+      "read_only": 1,
+      "description": "Latest approved revised quantity"
+    },
+    {
+      "fieldname": "current_revised_unit_price",
+      "fieldtype": "Currency",
+      "label": "Current Revised Unit Price",
+      "read_only": 1,
+      "description": "Latest approved unit price"
+    },
+    {
+      "fieldname": "last_quantity_revision",
+      "fieldtype": "Link",
+      "label": "Last Quantity Revision",
+      "options": "BOQ Quantity Revision",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cb_quantity_revisions",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "sb_cost_estimation",
+      "fieldtype": "Section Break",
+      "label": "Cost Estimation",
+      "collapsible": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "overhead_pct",
+      "fieldtype": "Percent",
+      "label": "Overhead %",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
+    },
+    {
+      "default": "0",
+      "fieldname": "profit_pct",
+      "fieldtype": "Percent",
+      "label": "Profit %",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
+    },
+    {
+      "fieldname": "cb_cost_estimation",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "overhead_amount",
+      "fieldtype": "Currency",
+      "label": "Overhead Amount",
+      "read_only": 1
+    },
+    {
+      "fieldname": "profit_amount",
+      "fieldtype": "Currency",
+      "label": "Profit Amount",
+      "read_only": 1
+    },
+    {
+      "fieldname": "calculated_sell_price",
+      "fieldtype": "Currency",
+      "label": "Calculated Sell Price",
+      "read_only": 1
+    },
+    {
+      "fieldname": "est_line_total",
+      "fieldtype": "Currency",
+      "label": "Estimated Line Total",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "quantity_executed",
+      "fieldtype": "Float",
+      "label": "Quantity Executed",
+      "read_only": 1,
+      "hidden": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "quantity_certified",
+      "fieldtype": "Float",
+      "label": "Quantity Certified",
+      "read_only": 1,
+      "hidden": 1
+    },
+    {
+      "fieldname": "sb_future_bidding",
+      "fieldtype": "Section Break",
+      "label": "[Future] Bidding and Tender",
+      "hidden": 1
+    },
+    {
+      "fieldname": "sb_future_cost_control",
+      "fieldtype": "Section Break",
+      "label": "[Future] Cost Control",
+      "hidden": 1
+    },
+    {
+      "fieldname": "sb_future_progress",
+      "fieldtype": "Section Break",
+      "label": "[Future] Progress Measurement",
+      "hidden": 1
+    },
+    {
+      "fieldname": "sb_future_payment",
+      "fieldtype": "Section Break",
+      "label": "[Future] Payment Certification",
+      "hidden": 1
+    },
+    {
+      "fieldname": "tender_tax_pct",
+      "fieldtype": "Percent",
+      "label": "Tender Tax Allowance %",
+      "default": "0",
+      "description": "Pricing allowance on direct cost; invoice taxes remain governed by their tax templates.",
+      "read_only_depends_on": "eval:!!doc.active_cost_analysis"
+    },
+    {
+      "fieldname": "tender_tax_amount",
+      "fieldtype": "Currency",
+      "label": "Tender Tax Allowance Amount",
+      "read_only": 1
+    },
+    {
+      "fieldname": "cost_basis",
+      "fieldtype": "Select",
+      "label": "Cost Basis",
+      "options": "Manual\nApproved Analysis\nLegacy Review",
+      "default": "Manual",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "active_cost_analysis",
+      "fieldtype": "Link",
+      "options": "BOQ Cost Analysis",
+      "label": "Active Cost Analysis",
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "manual_cost_snapshot",
+      "fieldtype": "Long Text",
+      "label": "Prior Manual Estimate Evidence",
+      "read_only": 1,
+      "no_copy": 1,
+      "hidden": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [
+    {
+      "link_doctype": "BOQ Item Stage",
+      "link_fieldname": "boq_item"
+    }
+  ],
+  "modified": "2026-04-20 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "construction",
+  "name": "BOQ Item",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Construction Owner",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Project Manager",
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Site Engineer",
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Accountant"
+    },
+    {
+      "read": 1,
+      "role": "Read-Only"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

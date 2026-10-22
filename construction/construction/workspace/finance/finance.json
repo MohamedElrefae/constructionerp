@@ -1,0 +1,130 @@
+{
+ "charts": [],
+ "content": "[]",
+ "custom_blocks": [],
+ "doctype": "Workspace",
+ "external_link": null,
+ "hide_custom": 0,
+ "icon": null,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Finance",
+ "link_to": null,
+ "link_type": "DocType",
+ "links": [
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Payables and receivables",
+   "link_count": 0,
+   "link_to": null,
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Purchase Invoice",
+   "link_count": 0,
+   "link_to": "Purchase Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Journal Entry",
+   "link_count": 0,
+   "link_to": "Journal Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Views",
+   "link_count": 0,
+   "link_to": null,
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Construction Report Viewer",
+   "link_count": 0,
+   "link_to": "construction-report-viewer",
+   "link_type": "Page",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
+  }
+ ],
+ "module": "construction",
+ "module_onboarding": null,
+ "name": "Finance",
+ "number_cards": [],
+ "parent_page": null,
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": null,
+ "roles": [
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Auditor"
+  }
+ ],
+ "sequence_id": 0.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Finance",
+ "type": "Workspace"
+}

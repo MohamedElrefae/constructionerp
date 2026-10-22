@@ -1,0 +1,21 @@
+===== CONFIRMATION RUN 1 =====
+MEASUREMENT: {"Asset": 1.4859}
+P95_MS: {"baseline": 0.568, "bilingual": 0.844}
+TIER: {"bilingual_p95_ms": 0.844, "ceiling_pass": true, "ratio": 1.4859, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0
+===== CONFIRMATION RUN 2 =====
+MEASUREMENT: {"Asset": 1.3571}
+P95_MS: {"baseline": 0.518, "bilingual": 0.703}
+TIER: {"bilingual_p95_ms": 0.703, "ceiling_pass": true, "ratio": 1.3571, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0
+===== CONFIRMATION RUN 3 =====
+MEASUREMENT: {"Asset": 1.3788}
+P95_MS: {"baseline": 0.499, "bilingual": 0.688}
+TIER: {"bilingual_p95_ms": 0.688, "ceiling_pass": true, "ratio": 1.3788, "ratio_pass": true, "tier": "2B", "tier_ratio_ceiling": 1.5, "tier_rule": "baseline P95 >= 1.0 ms => Tier 2A <= 1.15x; baseline P95 < 1.0 ms => Tier 2B <= 1.50x", "universal_ceiling_ms": 1.5, "verdict": "COMPLIANT_WITH_TWO_TIER_SLA"}
+MATCH_SETS_EQUAL: True
+CLEANUP_LEFTOVER: 0
+exit=0

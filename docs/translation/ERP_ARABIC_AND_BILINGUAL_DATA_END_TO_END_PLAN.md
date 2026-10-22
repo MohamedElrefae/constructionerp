@@ -1,0 +1,1119 @@
+# ERP Arabic UI and Bilingual Business Data — End-to-End Plan
+
+**Document status:** Revised v4 — owner-approved AI review governance; codebase-evidence corrections applied; ready for continued implementation.
+**Prepared:** 2026-09-04 (Africa/Cairo)
+**Revised:** 2026-09-04 — v4 replaces four named-human review/signature requirements with an independent AI review panel while retaining explicit owner authorization for production mutations
+**Target:** Frappe 16.18.1, ERPNext 16.18.3, Construction `develop`, site `v16.localhost`
+**Primary outcome:** Arabic users see an operationally complete Arabic ERP, while Arabic and English users can create, find, display, print, and safely maintain the same business records in their own language.
+
+---
+
+## Owner-Confirmed Decisions
+
+The following decisions are confirmed and locked before engineering begins:
+
+| # | Decision |
+|---|---|
+| D1 | `account_name_ar` is a **Construction-owned custom field on the ERPNext `Account` DocType** — no upstream modification. |
+| D2 | Account form override uses the **`doctype_js` hook** — `construction/construction/doctype/account/account.js` with `frappe.ui.form.on` — not a database `Form Custom Script`. |
+| D3 | Bilingual registry is a **checked-in JSON file** (`construction/data/bilingual/bilingual_registry.json`) — not a Frappe DocType. |
+| D4 | Pilot migration scope is the **81 active accounts for company `Elrefae`** — test/demo company accounts are explicitly excluded from the filter. |
+| D5 | Stage 4 data review uses an **AI proposal plus independent AI review-panel process**. AI-A1, AI-A2, and AI-A3 must independently approve or record an exception for every applicable row; AI-R verifies the exact evidence bundle. No named-human reviewer/signature is required. See §D4 and §7.4. |
+| D6 | Actual production mutation, deployment, commit, push, or merge still requires the owner's explicit operational authorization. This is permission to act, not a linguistic/domain reviewer signature. |
+
+---
+
+## 0. Consultant Verdict
+
+The screenshot does not show one translation defect. It shows three independent localization gaps that must be solved together:
+
+1. **Static software UI:** labels such as `Desktop`, `Workspaces`, `Edit Sidebar`, `Toggle Theme`, and `Toggle Full Width` are translatable software strings, but their current Arabic Frappe catalog entries are empty and no released runtime override covers them.
+2. **Business/master data:** account titles such as `Current Assets`, `Cash In Hand`, and `Stock Assets` are database values, not `.po` messages. Translating the software catalog cannot translate these records.
+3. **Presentation and usability:** the tree combines English record names, codes, company abbreviation, currency, and debit/credit markers. Account name/number maintenance is hidden in the Actions menu instead of presented as a controlled identity section on the form.
+
+The correct programme therefore has two coordinated products:
+
+- a governed Arabic UI localization pipeline; and
+- a reusable bilingual-data framework, piloted on the Chart of Accounts and then applied to selected master data.
+
+It is **not** correct to add Arabic and English copies of every database field. Codes, dates, numbers, statuses, links, and system identifiers are language-neutral. Dual-language fields are required for user-visible names and selected narrative text where the business, legal, search, or print use case needs both languages.
+
+### 0.1 Verified current baseline
+
+The following was verified against the current checkout and live site on 2026-09-04. All evidence must be regenerated against the exact candidate commit before any stage gate:
+
+| Evidence | Current result | Consequence |
+|---|---:|---|
+| Frappe Arabic catalog | 5,902 total; 2,905 translated; **2,997 empty** | Framework UI will still leak English. |
+| ERPNext Arabic catalog | 8,997 total; 4,655 translated; **4,342 empty** | ERPNext modules will still leak English. |
+| Construction Arabic catalog | 207 total; 207 translated; 0 empty | Construction-owned extracted strings are covered, subject to browser and linguistic QA. |
+| Combined current catalogs | 15,106 total; 7,767 translated; **7,339 empty** | Historical 100% coverage is not the current state. |
+| Exact screenshot strings in compiled `.mo` files | Missing for the five Frappe strings above and `Typography Settings` | Cache clearing cannot create translations absent from runtime catalogs/overrides. |
+| Translation subsystem health | Loader/constraint/duplicate/drift checks pass | Technical integrity passes, but health does not measure linguistic coverage or `.mo` freshness. |
+| Elrefae Chart of Accounts | **81 active accounts; 0 names containing Arabic** | A data migration and bilingual schema are required. |
+| `tabAccount` schema | `account_name`, `account_number`; **no `account_name_ar`** | Arabic account names have nowhere to be stored. Searchable-dropdown JS already references this absent column. |
+| Saved Account form | Core JS hides `account_name`; rename is in Actions | The form usability change is valid. |
+| Existing bilingual fields | `item_name_ar` on Item (custom field, patch v8_0); `customer_name_in_arabic` and `supplier_name_in_arabic` on Customer/Supplier | Reuse through registry adapters; do not create duplicate columns. |
+| BOQ bilingual print | Feature-flagged via `enable_bilingual_boq_print` in Construction Settings | Gate exists; wiring to print output is partial; finalize in Wave 1/Pilot. |
+| Translation stabilization infrastructure | Catalog workbench, digest uniqueness, quorum enforcement, drift detection, health API, translation tests implemented | **Reuse — do not rebuild.** See §0.3 for scope and re-validation requirement. |
+
+The May 2026 catalog statistics and production report are historical snapshots. They must not be used as current release evidence. The stabilization record correctly preserved clean vendor catalogs and released only a small approved runtime set; it did **not** linguistically complete all 15,106 current strings.
+
+### 0.2 Disposition of the independent engineering review
+
+An independent engineering review was evaluated against the current repository. Its useful discoveries are incorporated below, with these corrections:
+
+| Review proposal/claim | Consultant disposition | Reason |
+|---|---|---|
+| Translation stabilization is "production-ready" | **Corrected — revalidate before relying on it** | Its technical controls are sound and reusable, but its sign-off evidence predates later commits. Re-run tests and evidence against the current candidate commit; do not inherit a historical test count. |
+| Preserve the existing translation identity/service architecture | **Accepted** | Digest uniqueness, catalog/runtime separation, quorum, provenance, drift, and fail-closed behavior are sound foundations. Modify only through a separately reviewed change when needed. |
+| Promote `account_name_ar` to an immediate production hotfix | **Qualified — confirmed as early schema priority** | The field is missing and is the first schema foundation (Stage 1B). It becomes a hotfix only if Stage 0 regression testing reproduces an active user workflow failure. The migration must be idempotent, indexed only if query evidence requires it, and followed by metadata/cache refresh and a direct schema test. |
+| Existing searchable-dropdown references to absent field make search silently fail | **Partly accepted — add defensive projection first** | A generic search API may catch the SQL error and return `[]`; the cited Account config may not always reach that path under current asset loading. Fix the defensive field projection (Stage 1A) and add a regression test before treating this as a confirmed active outage. |
+| Checked-in JSON bilingual registry | **Confirmed by owner (D3)** | Versionable and testable. Registry entries must include `status` (`planned`/`schema_installed`/`active`) so later-wave missing fields appear in health/CI reports without crashing startup. |
+| Account extension through Construction `doctype_js` | **Confirmed by owner (D2)** | The hook exists and avoids vendor edits. Exact event ordering with ERPNext's `refresh` handler must be browser-tested. |
+| AI agents replace the four named-human review roles | **Owner-approved in v4 (D5/D6)** | The Builder/proposer cannot self-approve. Separate AI-A1, AI-A2, and AI-A3 review passes decide every applicable row, and independent AI-R verifies the exact release evidence. Every decision must identify agent/model/session, timestamp, inputs, evidence, confidence, and rationale. Unverified references and unresolved high-risk ambiguity remain blockers. |
+| AI release verifier replaces the release-authority signature | **Owner-approved for evidence sign-off** | AI-R may verify evidence and issue `AI_VERIFIED_FOR_OWNER_AUTHORIZATION`; it cannot grant credentials or authorize an actual production mutation. The owner must explicitly authorize operational actions under D6. |
+| Commit the rollback baseline CSV | **Rejected by default** | Site master data belongs in private, access-controlled backup storage. Commit only a non-sensitive manifest/hash unless the owner explicitly classifies the data as safe to publish. |
+| New custom audit DocType is mandatory | **Deferred to design gate** | First assess native Version/rename audit coverage. Add a dedicated immutable log only for gaps such as required reason and cross-document rename result. |
+| Role grants write access to `*_ar` fields only | **Corrected — role alone is not field-level security** | Assign Arabic fields to an appropriate `permlevel` with matching Custom DocPerm, or keep the form read-only and mutate only through a permission-checked API. Verify both REST and form-save paths. |
+| Conditionally add a leak detector in `hooks.py` when developer mode is on | **Corrected — use static guarded asset or browser-test instrumentation** | Static asset hooks are not a safe request-time conditional. Ship a guarded no-op asset or use browser-test instrumentation; it must immediately no-op outside authorized dev/test sessions and must never log user-entered values or document content. |
+| Override financial-report files immediately | **Deferred to extension-point spike** | Trial Balance, GL, Balance Sheet, and P&L do not share one simple override surface. Complete an extension-point spike before estimating or editing these files. |
+| Wave 1 acceptance at 80% completeness | **Rejected** | In-scope records require 100% approved names or documented exceptions. An 80% threshold silently institutionalizes fallback debt. |
+
+### 0.3 Translation stabilization infrastructure — what to reuse
+
+The following components are implemented and should be **reused not rebuilt**. Before relying on any item for a release gate, re-run its tests against the current candidate commit:
+
+| Component | Location | What it provides |
+|---|---|---|
+| Runtime upsert/quorum/drift/health service | `construction/translation_service.py` | Upsert, delete/revert, quorum enforcement, drift detection, health and diagnose APIs |
+| Translation tools API | `construction/api/translation_tools.py` | Catalog sync, glossary apply, review queue import, search |
+| Custom fields on Translation DocType | `construction/setup/translation_catalog_fields.py` | 13 custom fields; `ensure_translation_identity()` migration hook |
+| Catalog-exclusion monkey-patch | `construction/__init__.py` | Excludes catalog rows from the runtime translation cache |
+| Released override dataset | `construction/data/translations/approved_ar_overrides.csv` | Released rows with AI review provenance and version provenance |
+| Egyptian accounting/construction glossary | `construction/data/glossary/egyptian_construction_glossary.json` | First-reference terminology for AI proposal and independent AI review |
+| Translation patches | Patches v8_5 → v8_7 | Catalog seed, identity/dedup, key trim |
+| Translation tests | `construction/tests/test_translation_catalog.py`, `test_translation_stabilization_gates.py` | Translation-specific tests; must re-pass against current HEAD |
+
+Do not modify the above files unless a specific, separately reviewed change is required. Any modification to the translation service restarts the sign-off cycle for that component.
+
+---
+
+## 1. Goals, Boundaries, and Locked Design Principles
+
+### 1.1 Goals
+
+1. Remove unexplained English from all agreed Arabic-user journeys in Frappe, ERPNext, and Construction.
+2. Review terminology for Egyptian accounting and construction practice, not merely produce literal Arabic.
+3. Store English and Arabic names visibly on selected business master forms.
+4. Show the correct name according to the user/report language without changing link identity.
+5. Search master records by code, English name, or Arabic name from either UI language.
+6. Make controlled name/code maintenance available inside the form, with permissions and audit history.
+7. Ensure new features and upstream upgrades cannot silently reintroduce untranslated UI.
+8. Preserve English-user behavior and ERPNext upgradeability.
+
+### 1.2 Non-goals
+
+- Do not translate primary keys, naming series, account numbers, item codes, project codes, tax IDs, URLs, emails, file names, or other technical identifiers.
+- Do not duplicate numeric, date, currency, checkbox, link, or system-status fields by language.
+- Do not automatically translate legal names, contractual descriptions, or accounting titles directly into released production data.
+- Do not modify vendor Frappe/ERPNext `.po`, Python, or JavaScript files as the long-term solution.
+- Do not rename every document from its Arabic display value. Display title and database identity are separate concerns.
+- Do not call a catalog complete because every `msgstr` is non-empty; source-text fallbacks and unreviewed machine drafts are not approved Arabic.
+
+### 1.3 Design principles (locked)
+
+1. **English remains the canonical existing ERPNext name field.** Add or reuse a separate Arabic field; relabel both clearly as "Name (English)" and "Name (Arabic)" in the form.
+2. **Codes remain language-neutral and stable.** Code changes are allowed only on master types whose verified ERPNext rename path supports them, by an authorized role, with a required reason.
+3. **Arabic display policy:** Arabic name → English fallback → internal identifier. A visible "Arabic missing" indicator is shown to authorized data stewards when fallback occurs.
+4. **English display policy:** English name → Arabic fallback → internal identifier.
+5. **Links remain stable:** trees, Link fields, and APIs use the existing document `name` as identity and a separate localized title for display. Localized titles are presentation fields, never foreign keys.
+6. **Pilot scope:** 81 active accounts for company `Elrefae`; test-company records excluded (confirmed, D4).
+7. **Mandatory bilingual fields apply to selected master data, not every transaction/free-text field.** Transaction narratives are paired only where bilingual documents or operations require them.
+8. **Reuse before create:** where a safe bilingual field already exists on a DocType (e.g. `item_name_ar`, `customer_name_in_arabic`), bring it under the registry adapter rather than creating a duplicate column.
+
+---
+
+## 2. Target Architecture
+
+```mermaid
+flowchart TD
+    A[Source code and upstream app version] --> B[Extracted static UI catalog]
+    B --> C[Arabic proposal and review workflow]
+    C --> D[Released packaged overrides]
+    D --> E[Arabic UI dictionary]
+
+    F[Business master form] --> G[Stable code / document identity]
+    F --> H[English name]
+    F --> I[Arabic name]
+    G --> J[Language-aware display resolver]
+    H --> J
+    I --> J
+
+    E --> K[Desk, forms, dialogs, sidebar]
+    J --> L[Trees, Link search, lists, reports, print]
+    M[User/report language] --> J
+
+    N[CI and upgrade gate] --> B
+    N --> C
+    O[Runtime English-leak audit] --> C
+
+    P[bilingual_registry.json] --> J
+    P --> N
+```
+
+### 2.1 Static UI translation source of truth
+
+- Vendor Frappe/ERPNext catalogs remain clean upstream baselines.
+- Reviewed corrections and missing translations are versioned in Construction's existing released-override dataset.
+- Construction-owned strings remain in `construction/locale/ar.po`.
+- A catalog row is inventory/provenance; only a quorum-approved Released row becomes a runtime override.
+- Machine translation may create a proposal, never a Released value.
+- Reuse the existing translation service implementation (§0.3); do not create a competing loader, catalog, review state machine, or runtime writer.
+- Before relying on existing evidence for a release gate, re-run all translation tests against the current candidate commit and current Frappe/ERPNext catalogs.
+
+### 2.2 Bilingual business-data source of truth
+
+A checked-in JSON bilingual master registry (`construction/data/bilingual/bilingual_registry.json`) is the confirmed implementation (D3). It defines each supported DocType:
+
+```text
+doctype
+status                  (planned | schema_installed | active)
+wave                    (pilot | 1 | 2 | 3)
+code_field
+english_field
+arabic_field
+display_pattern_ar
+display_pattern_en
+search_fields
+rename_policy
+arabic_required_policy
+print_behavior
+```
+
+The `status` field is mandatory. Entries with `status: planned` appear in health/CI coverage reports but must not crash app startup or prevent Desk load when their fields are not yet installed.
+
+The registry prevents one-off field naming and display logic from spreading across forms. It acts as the test matrix and onboarding requirement for new master DocTypes. No Wave 2 or 3 field is installed until its registry entry is complete and its display, search, print, import, permission, and rename behavior is specified.
+
+### 2.3 Why the Translation DocType is not the master-data store
+
+The Translation DocType remains suitable for static UI messages and selected translatable document values, but it is not the primary bilingual master-data design because:
+
+- users asked to see and edit English and Arabic together on the form;
+- translation keys become fragile when a source name changes;
+- completeness, uniqueness, import, permissions, and reporting are easier with explicit fields;
+- the same source word can belong to many different business records;
+- Arabic and English values may both be legally meaningful data, not interchangeable UI labels.
+
+---
+
+## 3. Scope Model for Business Data
+
+### 3.1 Field classification rule
+
+| Class | Examples | Treatment |
+|---|---|---|
+| Stable identity/code | Account Number, Item Code, Project Code, naming series | One language-neutral field; controlled change only. |
+| Business master name | Account, Item, Customer, Supplier, Warehouse, Cost Center | Explicit English and Arabic fields. |
+| Legal/official name | Company, Customer, Supplier, Employee | Official Arabic and English fields where available; reviewer/authority required. |
+| Transaction narrative | BOQ description, invoice item description, terms, remarks | Pair only when bilingual output/workflow requires it. |
+| Static UI label | Save, Desktop, Journal Entry, field labels | Translation catalog/released override, never master fields. |
+| Enumerated state | Draft, Submitted, Asset, Liability | Store canonical code/value; translate at display time. |
+| Numeric/technical | Amount, quantity, date, UUID, URL, tax ID | Never duplicate by language. |
+
+### 3.2 Master-data rollout registry
+
+Field names are target logical names. Existing safe fields are reused through registry adapters even if their physical names differ.
+
+| Wave | DocType | English source | Arabic field | Code/identity | Notes |
+|---|---|---|---|---|---|
+| Pilot | Account | `account_name` | `account_name_ar` (new custom field — D1) | `account_number`; document `name` remains internal | First implementation and acceptance gate. |
+| 1 | Item | `item_name` | reuse existing `item_name_ar` (patch v8_0) | `item_code` | Bring under registry adapter and validation. |
+| 1 | Customer | `customer_name` | reuse `customer_name_in_arabic` | naming-series/customer ID | Adapter avoids duplicate column. |
+| 1 | Supplier | `supplier_name` | reuse `supplier_name_in_arabic` | naming-series/supplier ID | Adapter avoids duplicate column. |
+| 1 | Cost Center | `cost_center_name` | `cost_center_name_ar` | stable document identity | Apply same bilingual tree pattern. |
+| 1 | Warehouse | `warehouse_name` | `warehouse_name_ar` | stable document identity | Tree, stock links, reports. |
+| 1 | Project | `project_name` | `project_name_ar` | project ID/code policy | Required for Construction workflows. |
+| 2 | Item Group | `item_group_name` | `item_group_name_ar` | document identity | Bilingual tree. |
+| 2 | Department | `department_name` | `department_name_ar` | document identity | HR and costing links. |
+| 2 | Task | `subject` | `subject_ar` | document ID | Treat as operational name, not every comment. |
+| 2 | Asset / Asset Category | existing name fields | matching Arabic name fields | asset ID/item link | Validate fixed-asset reports. |
+| 2 | Company | canonical company name | official Arabic name | company abbreviation stays stable | Legal/tax/print review required. |
+| 3 | Employee | official English/full name | official Arabic name | Employee ID | Privacy and HR/legal validation required. |
+| 3 | Territory, UOM, Payment Terms | existing name | matching Arabic field or controlled value translation | stable canonical value | Decide per DocType after use-case audit. |
+| 3 | Construction masters/BOQ | existing English fields | reuse existing `*_ar` fields or add from registry | WBS/resource codes | Consolidate current mixed conventions; align with `enable_bilingual_boq_print` flag. |
+
+No Wave 2 or 3 field is created until its display, search, print, import, permission, and rename behavior is specified in the registry.
+
+---
+
+## 4. Workstream A — Current-State Audit and Evidence Reset
+
+### A0.1 Freeze an authoritative baseline
+
+Before any implementation:
+
+1. Record exact Frappe, ERPNext, Construction commits and installed-app versions.
+2. Export current Arabic Translation rows, released payload, glossary, review state, and checksums.
+3. Export a current PO/MO coverage report for all three apps.
+4. Record `.po` and compiled `.mo` timestamps and content hashes; fail if an `.mo` is older than its source/release input.
+5. Export master-data counts and bilingual completeness by company and DocType.
+6. Capture the screenshot's page in a clean Arabic session with network/console logs and DOM ownership for every English label.
+7. Mark historical May 2026 "100% catalog" evidence as superseded, while retaining it for audit history.
+8. Re-run the Construction translation tests and full relevant suite against current HEAD; record the new count. Do not carry forward any historical test count.
+9. Map which of the duplicate searchable-dropdown source trees is built and loaded; mark dead/demo paths and remove or consolidate them only in a separately reviewed implementation change.
+10. Reproduce the missing-field search case. Add a regression test proving that nonexistent requested fields are removed from both search conditions **and selected fields**, instead of being caught as a generic error and returned as an empty result set.
+
+**Gate A0:** a dated, reproducible baseline reports catalog coverage, reviewed coverage, runtime coverage, observed UI leakage, master-data completeness, and exact source commits. Counts from an old CSV cannot pass this gate.
+
+### A0.2 Extend translation health semantics
+
+Keep the current loader/constraint/drift health and add a separate non-sensitive coverage report containing:
+
+- catalog totals, translated, empty, fuzzy, source-equal fallback, proposed, reviewed, Released;
+- critical-key coverage by workflow/module;
+- `.mo` source hash and freshness;
+- released-payload hash versus live packaged hash;
+- date, app commit, catalog commit, and review-batch version;
+- browser smoke result and unresolved observed-English count.
+
+Technical health and linguistic coverage must remain separate statuses so a healthy loader cannot be mistaken for complete Arabic.
+
+---
+
+## 5. Workstream B — Complete and Sustain the Arabic Software UI
+
+### B1. Build the full inventory
+
+1. Re-sync catalog rows from the current vendor and Construction sources.
+2. Extract every user-visible Python, JavaScript, JSON, workspace, report, print, email, and client-template string.
+3. Flag hardcoded visible strings not wrapped by `_()`/`__()`.
+4. Classify each key by owner app, module, context, workflow frequency, and risk.
+5. Separate legitimate English/technical tokens from untranslated natural-language text.
+6. Reconcile duplicate msgids and context-sensitive meanings before translation.
+
+Priority order:
+
+1. Desk/navigation/common actions and the six screenshot labels.
+2. Accounting and financial reports.
+3. Buying, Selling, Stock, Assets, Projects, and Construction.
+4. HR/Payroll and Manufacturing only to the extent installed and used.
+5. Administration, setup, diagnostics, help, email, and long-tail errors.
+
+### B2. Review all current Arabic, not only empty rows
+
+The review population is all 15,106 current strings:
+
+- 7,339 empty strings need translation;
+- 7,767 populated strings need quality/context review because a non-empty value may still be wrong;
+- any source-equal fallback is treated as untranslated unless explicitly approved as a code/proper noun;
+- deterministic or machine-generated history is treated as a proposal, not proof of linguistic approval.
+
+Required independent AI review roles:
+
+- **AI-A1 Arabic localization:** Modern Standard Arabic, UI brevity, grammar, consistency.
+- **AI-A2 domain:** Egyptian accounting, QS, and construction-operations review by module, grounded in verified glossary/regulatory sources.
+- **AI-A3 structural QA:** placeholders, HTML, plurals, punctuation, directionality, forbidden terms.
+- **AI-R release verifier:** independent verification of the exact candidate, decisions, hashes, tests, drift, rollback evidence, and unresolved-risk register.
+
+The Builder/proposal agent cannot fill any reviewer role for its own output. Roles may be separate agent runs, but each must have a distinct recorded review session and must inspect the proposal and evidence independently. Prefer a different model for AI-R. A decision record must contain role, agent/model, session or run ID, UTC timestamp, reviewed artifact hash, decision, confidence, rationale, verified references, and exceptions. A role returns `BLOCKED` when evidence is missing, a reference cannot be verified, or accounting meaning remains materially ambiguous.
+
+Context-sensitive terms such as Submit, Post, Voucher, Item, Retention, Advance, WIP, Handover, Certificate, and Child must be reviewed at actual screens and reports. A global translation is released only when it is truthful across every use; otherwise add context or use a domain-specific label.
+
+### B3. Release strategy
+
+1. Review batches create proposals only.
+2. Proposal edits invalidate prior approvals.
+3. AI-A1 + AI-A2 (or reasoned N/A) + AI-A3 quorum is required for Released; AI-R must verify the exact release bundle before owner operational authorization.
+4. Released vendor gaps are imported idempotently from the Construction-owned versioned payload.
+5. Site overrides are preserved and reported as conflicts; packaged releases never silently overwrite them.
+6. High-quality generic corrections should also be proposed upstream, but production does not wait for upstream acceptance.
+7. Compile/rebuild/clear caches only after the release payload and source hashes are fixed.
+8. Verify in a new Arabic session; a hard refresh is not accepted as the only evidence.
+
+### B4. Runtime English-leak detection
+
+Add development/test-only detection for Arabic sessions that records when a translatable natural-language source is returned unchanged. Prefer browser-test instrumentation plus DOM observation. If a client-side wrapper is used, it must:
+
+- preserve the original `frappe._` and `window.__` signatures;
+- load early enough to observe all calls;
+- be idempotent (multiple loads are safe);
+- immediately no-op outside an explicitly authorized dev/test mode — never conditional on a runtime hook value;
+- log only the key, context, owner route/component, and app — never user-entered values or confidential document content.
+
+Do not depend on dynamically changing `app_include_js` at request time for security gating.
+
+Use this detector with a scripted UI journey matrix. Every finding is classified as:
+
+- missing catalog/release;
+- hardcoded source string;
+- dynamic database value;
+- intentional technical/proper noun;
+- stale asset/cache;
+- wrong context or source key.
+
+### B5. Static UI acceptance criteria
+
+- Zero unapproved English natural-language labels in agreed P0/P1 Arabic workflows.
+- 100% of Construction-owned new UI strings extracted and independently reviewed by AI-A1/AI-A3 before merge.
+- Every vendor-version delta is inventoried and triaged before deployment.
+- No placeholder, plural, HTML, or JavaScript formatting regression.
+- No material RTL overflow or truncation at desktop and supported mobile widths.
+- English sessions show no Arabic UI leakage.
+- Screenshot strings render in approved Arabic and have source-to-runtime evidence.
+
+---
+
+## 6. Workstream C — Bilingual Data Framework
+
+### C1. Schema and validation service
+
+Create one Construction-owned Python service driven by the bilingual registry. It must provide:
+
+- field mapping and metadata validation (validates each registry entry against actual DB schema on load; raises on mismatch for `active` entries; logs a warning for `planned` entries);
+- language-aware display resolution (`get_display(doctype, doc_or_name, language)` returning identity, localized title, and `translation_missing` flag);
+- normalization for search only — Alef variants, Tatweel, optional diacritics — never destructive storage normalization;
+- required-field policy enforcement by lifecycle/wave;
+- duplicate/conflict checks;
+- safe Unicode validation, including rejection of hidden bidirectional control characters (U+202A–U+202E, U+2066–U+2069, U+200F, U+200E, U+061C) in any stored Arabic value;
+- completeness reporting by DocType/company;
+- import/export templates;
+- permission and audit enforcement;
+- cache invalidation after a localized name changes, only where performance evidence justifies a localized-title cache.
+
+Start without a per-document display cache where a single permission-aware query can fetch both names. Add caching only after measuring tree/search performance, then define bounded keys, invalidation, language separation, and permission safety.
+
+Do not create a second translation database for master names. The named fields on the master record are the source of truth.
+
+### C2. Language-aware display resolver
+
+One server/client contract must serve trees, Links, lists, search, reports, and print:
+
+```text
+Arabic UI:  code — Arabic name     (fallback: English name)
+English UI: code — English name    (fallback: Arabic name)
+Identity:   existing document name, never the localized title
+```
+
+The response must carry identity and display separately, for example:
+
+```json
+{
+  "value": "1000 - Application of Funds (Assets) - E",
+  "title": "1000 — استخدامات الأموال (الأصول)",
+  "title_en": "1000 — Application of Funds (Assets)",
+  "title_ar": "1000 — استخدامات الأموال (الأصول)",
+  "translation_missing": false
+}
+```
+
+API consumers that require canonical data continue to receive stable identifiers. Localized titles are presentation fields, not foreign keys.
+
+### C3. Search behavior
+
+- Search both language fields plus code regardless of the active UI language.
+- Arabic search normalizes Alef variants, Tatweel, and optional diacritics in a derived search key only.
+- Preserve the exact stored official spelling.
+- Return code + active-language name, with the other language available as secondary text where space permits.
+- Enforce the same permissions and scope filters as standard ERPNext queries.
+- Avoid N+1 queries; fetch both titles in the tree/search query.
+- Build search with allowlisted registry fields and Frappe Query Builder/parameterized filters. A service must not return a raw SQL fragment assembled from client-supplied field names.
+- Normalize on the server as the authority. Client normalization may improve responsiveness but cannot define security or matching semantics.
+
+### C4. Lists, reports, exports, and print
+
+- Lists use the current user language by default and may expose both name columns.
+- Reports receive a `Display Language` filter: Arabic, English, or Both.
+- Financial reports keep account identity/code as the stable grouping key and localize only the title.
+- CSV/Excel exports can include Code, English Name, and Arabic Name as separate columns.
+- Print formats use an explicit print language, not silently the session language; bilingual forms can select Both.
+- Arabic PDF tests must verify font embedding, RTL order, numbers, currency, page breaks, and mixed Arabic/Latin codes.
+- Before modifying financial reports, complete an **extension-point spike** for Trial Balance, General Ledger, Balance Sheet, and Profit and Loss. Choose among supported formatter hooks, Construction-owned report variants, or narrowly scoped overrides. Do not patch vendor report files or assume one override fits all four.
+
+---
+
+## 7. Workstream D — Chart of Accounts Pilot
+
+The Chart of Accounts is the pilot because it exposes all required problems: tree identity, accounting terminology, code/name rename, reports, Link fields, permissions, and bilingual print.
+
+### D1. Data model
+
+1. Add `account_name_ar` as a visible Data field through a Construction migration/patch (confirmed custom field on `Account`, D1).
+2. Keep `account_name` as the canonical English accounting name.
+3. Relabel form fields as `Account Name (English)` and `Account Name (Arabic)`.
+4. Keep `account_number` language-neutral.
+5. Do not include Arabic in the document primary key.
+6. Adding/editing only `account_name_ar` must never rename the Account document or alter ledger links.
+7. The field migration must be idempotent, indexed only if query evidence requires it, and followed by metadata/cache refresh and a direct schema test.
+
+### D2. Tree behavior
+
+ERPNext currently returns Account `name` as the tree node value. The implementation must preserve that value and add a localized node title:
+
+- Arabic session: `1000 — استخدامات الأموال (الأصول)`.
+- English session: `1000 — Application of Funds (Assets)`.
+- Optional administrator view: both names on two lines.
+- Parent/child operations, balances, expansion, drag/move behavior, and route identity continue to use the stable document name.
+- `Dr`/`Cr`, separators, company currency, secondary account currency, and number direction receive explicit RTL/mixed-content tests.
+
+Frappe's generic tree renderer displays `title` plus the stable `label` in parentheses whenever they differ. Supplying an Arabic `title` alone would therefore continue to expose the English Account document name. The Construction tree extension must provide and test a custom label renderer that shows only the chosen localized display while leaving the node's internal label/value untouched.
+
+Implement the localized endpoint/client extension in Construction rather than editing ERPNext vendor files. Confirmed route: a Construction `doctype_js` extension (D2) plus a Construction-owned endpoint. Event ordering with ERPNext's `refresh` handler must be verified in browser regression tests before release.
+
+### D3. Form identity experience
+
+For a saved non-root Account, add a top-level **Account Identity / هوية الحساب** section, injected via `frappe.ui.form.on` in `construction/construction/doctype/account/account.js` (confirmed D2), containing:
+
+- Account Number;
+- Account Name (English);
+- Account Name (Arabic);
+- localized preview in Arabic and English;
+- translation completeness/status;
+- an in-form **Edit identity** control for authorized users;
+- required change reason and audit history.
+
+The standard ERPNext server path `update_account_number` already performs validation, child-company synchronization, and safe document rename for English name/number changes. The Construction form extension must call a controlled wrapper that preserves those rules while atomically updating the Arabic name. It must not duplicate or bypass ERPNext's accounting safeguards.
+
+Root accounts remain protected according to ERPNext rules. The new interface may explain why a field is locked; it must not make protected root records directly editable.
+
+Field-level security for Arabic identity fields must be implemented via `permlevel` and matching Custom DocPerm, or by keeping the field read-only on the form and writing only through a permission-checked API. A role name alone does not grant field-level write access; both REST and form-save paths must be validated.
+
+### D4. Egyptian accounting translation migration — AI-proposed, independently AI-reviewed
+
+#### AI-assisted proposal step (D5)
+
+An AI proposal agent prepares proposals for all 81 accounts before independent review begins. The agent:
+
+1. Exports the 81 Elrefae accounts with document ID, number, English name, parent, root type, account type, and group flag (company filter `Elrefae` exactly, D4).
+2. Cross-references each account against the Egyptian Construction Glossary (`egyptian_construction_glossary.json`) — first priority; uses the exact glossary term where available.
+3. Cross-references accounts not in the glossary against the Egyptian Ministry of Finance Unified Accounting System where the account type maps.
+4. Validates that the proposed Arabic name is semantically correct for the account class (Asset / Liability / Income / Expense / Equity) and flags departures.
+5. Checks that no two siblings within the same parent have an identical proposed Arabic name.
+6. Flags high-risk accounts (Tax Payable, Fixed Asset groups, Depreciation, Provisions, Intercompany, WIP, retention, subcontractor advances, mobilization, performance bonds, progress billing) for heightened AI-A2 scrutiny.
+
+The agent produces a structured review file with columns: `account_id`, `account_number`, `account_name_en`, `proposed_account_name_ar`, `glossary_match`, `mof_standard_reference`, `confidence` (`high` / `medium` / `low`), `flag`, `flag_detail`.
+
+**The proposal agent may not approve its own row, invent an authority reference, or set the independent review decisions.**
+
+#### Independent AI review and approval
+
+The AI-A2 domain reviewer must independently:
+
+1. Approve every account name and hierarchy in context, including high-confidence AI proposals.
+2. Validate terminology across Balance Sheet, Profit and Loss, Trial Balance, General Ledger, tax accounts, advances, retention, WIP, subcontractors, fixed assets, depreciation, and bank/cash accounts.
+3. Reject duplicate Arabic titles within the same parent when they create ambiguity; code remains mandatory in displays.
+4. Fill `reviewer_override` (if changing the proposed name), `reviewer_accepted` (`yes` or `exception:<reason>`), `reviewed_by_agent`, `review_model`, `review_session`, and `reviewed_at` for every row.
+5. Record verified source links/references and a concise accounting rationale; never invent MOF/EAS/ETA support.
+6. No row may have a blank `reviewer_accepted` at release. Low-confidence or materially ambiguous rows remain blocked until a later independent AI-A2 pass resolves them with evidence or records an explicit exception accepted by AI-R.
+
+AI-A1 reviews Arabic correctness and consistency, AI-A3 validates structure and data integrity, and AI-R confirms that all three decisions apply to the exact hashed artifact. The same agent session must not serve as proposer and reviewer, and AI-R must not be the Builder.
+
+#### Migration execution
+
+1. Dry-run import and report: missing parents, duplicate codes, blank names, unexpected current values, stale rows, and approval gaps.
+2. Import Arabic fields idempotently without changing English names, account numbers, parents, or document IDs.
+3. Record counts, SHA-256 hash of imported `account_name_ar` values, and rollback export.
+4. The rollback export remains in private backup storage; commit only its non-sensitive manifest/hash.
+5. Reconcile record counts and hashes before releasing the migration.
+
+No account translation is released solely from its proposal. Egyptian chart terminology requires independent AI-A2 approval or a documented exception for every row, AI-A1/AI-A3 quorum, and AI-R verification of the exact bundle.
+
+### D5. Account pilot acceptance criteria
+
+- All 81 in-scope accounts have an approved Arabic name or an explicit documented exception with complete AI-A2 provenance and AI-R verification.
+- Arabic and English account trees display their respective names with identical hierarchy and balances.
+- Search by Arabic, English, and account number returns the same account.
+- Arabic-name-only editing does not rename documents or change GL links.
+- English name/number changes use ERPNext's validated rename path, require permission/reason, and remain fully linked.
+- Root and parent/child-company protections still pass.
+- Trial Balance, General Ledger, Balance Sheet, and Profit and Loss can display Arabic, English, or Both without changing totals.
+- Existing integrations continue to use stable account IDs/codes.
+
+---
+
+## 8. Workstream E — Form and Rename Usability Across Masters
+
+### E1. Standard form identity pattern
+
+Each registered master form receives an early **Identity / الهوية** section with:
+
+- Code/ID (read-only or controlled according to policy);
+- Name (English);
+- Name (Arabic);
+- active-language display preview;
+- bilingual completeness indicator;
+- in-form edit action where rename is safe;
+- change reason and recent identity-change history.
+
+Do not expose raw `name` as an ordinary editable field. In Frappe it is often the primary key, and casual editing can break expectations or require link migration. "Easy to edit" means an obvious, form-based, validated workflow—not an unsafe text box.
+
+### E2. Rename policy classes
+
+| Policy | Behavior | Examples |
+|---|---|---|
+| `localized_only` | Arabic/English display value changes without primary-key rename. | Arabic Account name. |
+| `validated_rename` | Use the DocType's verified standard rename service and update linked records transactionally. | Account English name/number. |
+| `stable_code` | Code is immutable after dependent transactions; new code requires controlled migration. | High-risk integration keys. |
+| `display_only` | Derived name cannot be directly edited; edit its source components. | Employee full name. |
+| `forbidden` | Submitted transaction/document identity cannot be renamed through this UI. | Posted vouchers. |
+
+Every DocType must be assigned a policy after source-code and integration review. No generic `frappe.rename_doc` button is applied to all forms.
+
+### E3. Permissions and audit
+
+- Create a narrowly scoped bilingual master-data role; do not grant broad System Manager rights.
+- A role name alone does not grant field-level write access. Assign Arabic identity fields to an appropriate `permlevel` with matching Custom DocPerm, or keep the form read-only and write only through a permission-checked API. Verify both REST and form-save paths.
+- Enforce permission and rename policy server-side.
+- Require a reason for code/English identity changes; optional reason for spelling corrections to Arabic.
+- Record old/new values, user, timestamp, DocType, document ID, reason, and linked rename result.
+- First assess whether native Frappe Version/rename audit coverage is sufficient. Add a dedicated immutable audit log only where native coverage has gaps, such as required reason and cross-document rename result.
+- Support four-eyes approval for legal names and high-risk accounting masters if enabled.
+- Provide a report for missing Arabic, missing English, fallback displays, recent renames, and rejected imports.
+- In-scope records require 100% approved names or documented exceptions before each wave goes to production. A partial-completeness threshold is not acceptable.
+
+---
+
+## 9. Workstream F — Continuous Localization for New Work and Upgrades
+
+### F1. Definition of done for every new feature
+
+A feature is not localization-complete until:
+
+1. every visible source string is wrapped and extracted;
+2. context is supplied for ambiguous text;
+3. Arabic is proposed and reviewed to the feature's required level;
+4. new master data is classified against the bilingual registry;
+5. forms, Links, lists, reports, print, email, errors, empty states, and mobile/RTL are covered;
+6. English and Arabic regression tests pass;
+7. no sensitive user data is sent to translation tooling;
+8. the release evidence records the app commit and catalog/payload hash.
+
+### F2. CI gates
+
+Add gates for:
+
+- hardcoded visible JS/Python strings not wrapped by `_()`/`__()`;
+- Construction msgids added without Arabic and without a filed proposal;
+- missing context for a maintained ambiguity list;
+- placeholder/plural/HTML/whitespace mismatch;
+- source-equal Arabic fallback unless allowlisted;
+- bidi-control and malformed Unicode issues in `.po`, CSV, and bilingual JSON files;
+- stale `.mo` relative to its declared source hash;
+- payload/live drift and duplicate identity;
+- bilingual registry entries with `status: active` whose declared fields are absent from the DB schema;
+- registered master forms missing language/search tests;
+- upgrade catalog delta not reviewed or explicitly deferred.
+
+### F3. Upstream upgrade procedure
+
+For every Frappe/ERPNext upgrade:
+
+1. extract old versus new Arabic catalog delta;
+2. identify added, changed, removed, and context-shifted msgids;
+3. deprecate removed packaged overrides and flag orphan site overrides;
+4. queue added/changed keys by business priority;
+5. run the Arabic workflow browser matrix on staging;
+6. run bilingual schema, search, tree, report, rename, and English regression tests;
+7. deploy only with a current coverage snapshot and explicit deferral list.
+
+This prevents another situation where a clean, technically healthy upgrade silently restores thousands of empty upstream translations.
+
+---
+
+## 10. Verification and Test Plan
+
+### 10.1 Automated tests
+
+**Translation subsystem** (reuse and re-run existing; extend as needed)
+
+- exact key/context/app precedence;
+- packaged versus site override behavior;
+- release quorum and proposal invalidation;
+- zero-mutation dry run;
+- PO/MO freshness and critical-key coverage;
+- vendor upgrade add/change/remove delta;
+- cache invalidation and new-session boot dictionary;
+- current integrity tests continue to pass against current HEAD.
+
+**Bilingual schema/service** (new)
+
+- registry loads without error for `planned`, `schema_installed`, and `active` entries;
+- every `active` registry mapping exists as correct type with correct permissions;
+- language fallback order;
+- exact value preservation and search normalization separation;
+- Arabic/English/code search parity;
+- permission and scope-filter parity;
+- bidi/control-character rejection;
+- batch import idempotency and optimistic current-value checks;
+- AI review report validation: no blank `reviewer_accepted` rows, all required fields populated.
+
+**Account pilot** (new)
+
+- `account_name_ar` field exists in DB schema;
+- stable node identity with localized title; custom label renderer hides the English document name in tree display;
+- no hierarchy/balance changes by language;
+- no N+1 tree queries and acceptable large-tree response time;
+- Arabic-only edit leaves Account `name`, links, and GL unchanged;
+- English name/number rename follows standard validation and child-company sync;
+- duplicate number, protected root, busy-ledger, and permission failures;
+- Arabic/English/Both financial-report title modes with equal totals.
+
+**Searchable dropdown** (extend existing)
+
+- absent fields are removed from both the WHERE clause and SELECT list before the query executes;
+- no silent empty result when a valid account exists but a requested field is missing from the DB;
+- Arabic normalization (Alef variants, Tatweel) matches the same record as the canonical spelling.
+
+**Regression**
+
+- English UI and master displays;
+- imports, integrations, REST responses, background jobs, and scheduled reports;
+- print/PDF/Excel/CSV;
+- desktop and mobile RTL layouts;
+- v15 best-effort compatibility where the app still promises it.
+
+### 10.2 Human UI workflow matrix
+
+Test in genuinely separate Arabic and English sessions:
+
+| Area | Required journey |
+|---|---|
+| Desk | Login, Desktop, Workspaces, sidebar edit, theme, full width, typography, search. |
+| Accounting | Chart of Accounts, Journal Entry, Payment Entry, invoices, GL, Trial Balance, Balance Sheet, P&L. |
+| Stock | Item, Warehouse, Stock Entry, reconciliation, stock reports. |
+| Buying/Selling | Supplier/Customer creation through invoice/receipt/delivery. |
+| Projects/Construction | Project, BOQ, cost analysis, subcontract, retention, progress certificate, handover. |
+| Assets | Asset master, depreciation, disposal, reports. |
+| Administration | Users, roles, workflow, print, export, notifications, errors. |
+
+For every English observation in Arabic mode, capture screenshot, route, source owner, exact key/data ID, classification, expected Arabic, reviewer, and disposition.
+
+### 10.3 Performance and safety gates
+
+- No material increase in tree/List/Link query count.
+- P95 localized tree/search response no more than 10% slower than the approved baseline unless explicitly accepted.
+- No unauthorized records exposed by bilingual search.
+- No translation value rendered as unsafe HTML.
+- Backup and restore rehearsal passes before production migration.
+
+---
+
+## 11. Delivery Sequence and Release Gates
+
+| Stage | Deliverable | Release gate |
+|---|---|---|
+| 0 | Authoritative baseline, current test evidence against actual HEAD, asset/source map, and superseded-evidence notice | Counts/hashes reproducible; browser evidence captured; all evidence re-generated against current commit. |
+| 1A | Defensive searchable-dropdown field projection | Regression test proves absent fields cannot turn a valid search into a silent empty result. |
+| 1B | `account_name_ar` schema foundation (custom field on Account, D1) | Idempotent field migration and live schema test pass. Emergency hotfix only if Stage 0 reproduces an active user workflow failure. |
+| 1C | Screenshot/common UI containment (six Frappe labels + Typography Settings) | Exact visible English labels corrected and tested in a new Arabic session. |
+| 2 | Catalog delta/review pipeline + CI localization gates operational | Current 15,106-row inventory; CI gate blocks hardcoded-string and missing-translation merges. |
+| 3 | Bilingual registry JSON (D3), service, account form section (D2), localized tree, search/tree adapters | Security, fallback, bidi, audit, tree-label, and English regression tests pass. **This stage provides the user-visible Arabic account name; until it ships, `account_name_ar` is stored but not displayed outside the raw tree field.** |
+| 4 | AI-proposed and independently AI-reviewed 81-account migration (D4/D5) + financial-report extension-point spike | D5 criteria; complete AI-A1/AI-A2/AI-A3 decisions on every applicable row; AI-R verifies the exact bundle; report extension point confirmed. **Data-only: populates `account_name_ar` and produces an independently verified proposal/bundle/payload. It adds no visible bilingual UI (Stage 3 D2/D3 + C2/E1, and Stage 7 for reports/print). Do not treat Stage 4 acceptance as visible bilingual acceptance.** |
+| 5 | Wave 1 masters (Item, Customer, Supplier, Cost Center, Warehouse, Project) | Per-DocType UAT passes; 100% approved names or documented exceptions; bilingual search works. |
+| 6 | Remaining approved UI review batches | No unapproved English in the agreed production workflow matrix. |
+| 7 | Wave 2/3 masters and bilingual output | Each DocType passes its registry-specific acceptance tests. |
+| 8 | Production rollout | Backup/restore rehearsal, AI-R evidence verification, explicit owner operational authorization, monitoring, and rollback ready. |
+
+Do not deploy all 7,339 missing strings and all bilingual fields in one big-bang release. Ship reviewed modules and master-data waves behind explicit gates.
+
+### 11.1 Data storage versus visible bilingual display
+
+Two independently gated concerns are sometimes conflated. They must not be:
+
+- **Storage (Stage 1B + Stage 4).** `account_name_ar` exists as a Construction-owned
+  custom field (Stage 1B) and is populated for the 81 in-scope accounts with an
+  independently verified bundle (Stage 4). After Stage 4, the Arabic value is in the
+  database, but the application does not yet render it in the Chart of Accounts tree, list
+  views, Link fields, searches, forms, reports, or print.
+- **Visible display (Stage 3 D2/D3 + C2/E1; reports in Stage 7).** The `doctype_js`
+  account form identity section, the localized tree label renderer, and the shared
+  language-aware display resolver are what make the stored Arabic name visible. None of
+  these are part of Stage 4.
+
+Confirmation that a value is stored is **not** confirmation that it is displayed. A Stage 4
+acceptance record must state explicitly that it covers storage and evidence only, and that
+the visible bilingual experience remains pending Stage 3 (and Stage 7 for output).
+
+A live site can therefore legitimately show an Arabic account name in the account tree
+via the raw stored field while the rest of the app shows English, because the resolver and
+form extension have not shipped. That state is expected under this sequence, not a defect
+in the Stage 4 data migration.
+
+---
+
+## 12. Rollback and Operational Controls
+
+Before each data/schema release:
+
+1. full database backup plus targeted exports of Translation rows and affected masters;
+2. checksums and exact app commits;
+3. dry-run output preserved unchanged;
+4. migration idempotency proven on a restored staging copy;
+5. rollback runbook tested, not merely written.
+
+Rollback rules:
+
+- Removing a packaged UI override falls back to the vendor `.mo`; site overrides are preserved and flagged.
+- Hiding/disabling bilingual display falls back to canonical English without changing stored links.
+- Arabic master-field migration can be reverted from the targeted export without renaming documents.
+- Any English/code rename uses ERPNext's rename history and targeted backup; it is never rolled back by raw SQL.
+- Stop deployment if record counts, hierarchy, report totals, payload hash, or permission results differ from the pre-release baseline.
+
+Targeted site master-data exports remain in private backup storage unless explicitly classified as non-sensitive. The repository stores the schema/template and a manifest with counts/hashes, not the live rollback dataset by default.
+
+Post-release monitoring must report translation loader failure, payload drift, critical English leakage, bilingual fallback counts, failed rename operations, and import rejections without logging confidential text.
+
+---
+
+## 13. Required Deliverables
+
+1. Current-state localization and bilingual-data baseline (re-run against actual HEAD).
+2. Superseded-evidence notice for historical catalog-complete reports.
+3. Versioned full catalog/review batches and coverage dashboard.
+4. Updated Egyptian construction/accounting glossary with context and references.
+5. Runtime English-leak audit and workflow evidence pack.
+6. Checked-in bilingual master registry (`bilingual_registry.json`) and architecture decision record.
+7. Shared bilingual display/search/form/audit service.
+8. `account_name_ar` custom field, localized tree with custom label renderer, in-form identity editor, and tests.
+9. AI-generated proposal file and independently AI-reviewed 81-account migration package with full agent/model/session provenance; rollback manifest.
+10. Wave 1–3 master-data packages with 100%-or-exception completeness reports.
+11. Language-selectable reports, exports, and print verification (after extension-point spike).
+12. CI/upgrade localization gates and new-feature checklist.
+13. Arabic and English UAT records, performance baseline, restore rehearsal, and production sign-off.
+
+---
+
+## 14. Final Go/No-Go Criteria
+
+Production rollout is **GO** only when all criteria for the target stage pass:
+
+- technical translation health is green against current HEAD;
+- current coverage evidence matches current app commits and runtime assets;
+- target UI workflows have zero unapproved English natural-language leakage;
+- Arabic terminology has independent AI-A1 linguistic and AI-A2 Egyptian-domain approval, with verified references and recorded provenance;
+- bilingual records have 100% approved names or documented exceptions — no partial-completeness threshold;
+- trees, search, Links, lists, reports, print, and exports use the same resolver;
+- English-user regression passes;
+- form-based rename behavior preserves links and accounting controls;
+- permission, audit, Unicode safety, and performance gates pass;
+- backup restore and rollback rehearsal pass;
+- AI review report has no blank `reviewer_accepted` rows; every row has complete AI-A2 decision provenance and is included in the AI-R-verified artifact hash;
+- `account_name_ar` DB column confirmed present before Stage 1C and later;
+- bilingual registry validates all `active` entries against the live DB schema;
+- the custom Account tree label renderer hides the English document name correctly in browser regression;
+- AI-R verifies the exact commit, migration set, data hashes, tests, rollback evidence, and evidence bundle; the owner then explicitly authorizes any production mutation/deployment.
+
+If any criterion fails, the affected module/data wave remains behind its prior stable behavior. Other independently approved stages may proceed only if their dependencies and shared services are unchanged.
+
+**Stage-6 evidence-lag caveat (recorded 2026-09-25).** The first two criteria are
+**not** currently green: the ten Stage-2 envelopes bind the pre-commit candidate
+HEAD `ea553f2` (index `CANDIDATE_HEAD`) while the working HEAD is later, so the
+evidence-inclusive gate reports exactly one error, `evidence-index-head`, by
+design. This is the established convention after every closure commit and is
+cleared only by the next owner-approved catalog event (the single authorized
+re-pin), not by re-running the gate or editing the index by hand. Do not read
+the lag as a defect; equally, do not claim the evidence-inclusive gate is green
+at a post-commit HEAD.
+
+---
+
+## 15. Owner Confirmations — Status
+
+| Confirmation | Decision | Status |
+|---|---|---|
+| Canonical model: ERPNext name field = English; separate Arabic field; codes language-neutral | Custom field on `Account` DocType (D1) | Confirmed |
+| Account form extension point | `doctype_js` hook, `account.js` (D2) | Confirmed |
+| Bilingual registry format | Checked-in JSON file (D3) | Confirmed |
+| Pilot scope: 81 active Elrefae accounts, test companies excluded | Company filter `Elrefae` exactly (D4) | Confirmed |
+| Stage 4 review model | AI proposal + independent AI-A1/AI-A2/AI-A3 review on every applicable row, followed by AI-R bundle verification (D5) | Confirmed |
+| Named human A1/A2/A3 reviewers | Removed by owner instruction; replaced by recorded independent AI review roles | Confirmed |
+| Human release-authority signature | Removed as a review requirement; replaced by AI-R verification. Owner operational authorization remains mandatory under D6. | Confirmed |
+
+---
+
+## 16. Stage Progress Log
+
+| Stage | Item | Status | Date | Evidence |
+|---|---|---|---|---|
+| 1C | Six generic Frappe UI label proposals prepared (Desktop, Workspaces, Edit Sidebar, Toggle Theme, Toggle Full Width, Typography Settings) | ✅ Proposals staged | 2026-09-04 | `evidence/stage-1c-review-package.md` |
+| 1C | `ct_proposed_translation` populated on **test site only** | ✅ Done | 2026-09-04 | Test site — runtime untouched |
+| 1C | `translated_text` (runtime) modified | ⛔ Not done — correct | — | Production runtime unchanged |
+| 1C | AI-A3 structural pre-assessment (mechanical) | ✅ Complete — one length flag on item 3 | 2026-09-04 | `evidence/stage-1c-review-package.md §A3` |
+| 1C | AI-A1 linguistic pre-assessment | ✅ Complete — all six pass | 2026-09-04 | `evidence/stage-1c-review-package.md §A1` |
+| 1C | AI-A2 domain pre-assessment (dual-meaning flags raised for items 5, 6) | ✅ Complete — final independent decisions still required | 2026-09-04 | `evidence/stage-1c-review-package.md §A2` |
+| 1C | Independent AI-A1/AI-A2/AI-A3 quorum + AI-R verification | ✅ **VERIFIED** — quorum and full AI-R chain (verification, rerun, final, durability-final) all PASS; 35 targeted tests, build, both lints, clean diff check, zero-change/zero-drift governed dry run (payload SHA `7ba7902c…`) | 2026-09-20 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-r-durability-final.md` (+ A1/A2/A3, verification, rerun, final) |
+| 1C | Promotion to Released + runtime import | ✅ **Executed on the test site; payload fully Released** — 34/34 rows in runtime `tabTranslation` (ar): 31 exact, 3 documented legacy domain-approvals (`Subcontracting`, `Subcontract`, `Submit`) present under governed skip semantics with no drift; CI source gate operational in `linter.yml` | 2026-09-20 | `construction/data/translations/approved_ar_overrides.csv`; live readback probe 2026-09-20 |
+| 0 | Reproducible baseline and active-path audit | ✅ Complete — pre-existing schema-facts drift recorded, not concealed | 2026-09-04 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-0-baseline.md` |
+| 1A | Defensive searchable-dropdown field projection | ✅ Complete — suspected live silent-`[]` failure disproved; hardening retained | 2026-09-04 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1abc.md`; search suites 13/13 + 6/6 pass |
+| 1B | `Account.account_name_ar` schema foundation | ✅ Complete on authorized test site — no account values populated | 2026-09-04 | `docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1abc.md`; schema/idempotency/no-rename tests 5/5 pass |
+| 3 | Bilingual registry, display service, account form section, localized tree, search/tree adapters | ✅ **Implemented** (Stage 3 pilot) — registry + service, localized Account tree label, Account Identity form section, governed Arabic-only edit, bilingual search; 96 tests pass on the test site | 2026-09-20 | `construction/services/bilingual_service.py`, `construction/public/js/bilingual/`, `construction/tests/test_bilingual_*.py` |
+| 4 | 81-account Arabic data migration (D4/D5): proposal, panel, bundle/payload, DRY_RUN, IMPORT, post-import verification | ✅ **Data-only complete** — `STAGE_4_VERIFIED` on the non-production test site; 81/81 accounts populated; owner-mandated translations applied | 2026-09-20 | `docs/ai/work-items/scope-context-portability/evidence/stage4-complete-2026-09-20.md` |
+| 4 | Visible bilingual display of the migrated Arabic names | ✅ **Verified headless, ar + en, form and tree** — identity/form/search and the live CoA tree all verified (0 failures; `ar` session renders the migrated Arabic in the ID section and across the Elrefae CoA tree, e.g. `ضريبة السلع والخدمات`, `استخدامات الأموال (الأصول)`, `الأصول المتداولة`); registry promoted to `active` (`550feca`); the prior tree blocker was root-caused to one stale `Workspace Sidebar Item` row (deleted as a data-only site repair) | 2026-09-20 | `docs/ai/work-items/scope-context-portability/evidence/stage4-tree-browser-closed-2026-09-20.md` (+ `stage4-browser-regression-2026-09-20.md`) |
+| 5 | Wave 1 masters (Item, Customer, Supplier, …) | 🟡 **Readiness recorded; data migration deferred by owner decision** — deferral to Stage 8 with real production masters (2026-09-20); Arabic fields installed (`item_name_ar`, `customer_name_in_arabic`, `supplier_name_in_arabic`), 0 values populated; bilingual search verified live on all three `schema_installed` doctypes; vendor `_Test*` fixtures excluded by governance; Cost Center/Warehouse/Project added as **`planned` registry entries only** (2026-09-21 — `state: planned`, identity sections + trees disabled until per-DocType Arabic field + adapter + UAT; Project does not inherit Account-style tree keys) | 2026-09-21 | `docs/ai/work-items/scope-context-portability/evidence/stage5-wave1-readiness-2026-09-20.md`; `construction/data/bilingual/bilingual_registry.json` |
+| 2, 6–8 | Remaining later stages | ✅ **Stage 2 fully closed** — operationally verified 2026-09-20 (gates + 91/91 tests + CI source gate) and durable evidence bundle **re-pinned once** by owner authorization 2026-09-21 (commit `baa1057`: ten envelopes regenerated as one atomic set on current HEAD, CHECKER/TESTS/TRANSLATIONLINT tool pins + HEAD binding repinned, gate contract 89→91, evidence-inclusive gate exit-0). Next re-pin rides the first approved Stage-6/7 catalog change. 🟡 **Stage 6 advancing**: W6-0a approved-then-executed (2026-09-21): reclassified 349 candidates + 3 real exceptions + 10 deferred-unresolved-location; governed cycle executed on the test site (347 released rows appended, version 1.2; zero-drift DRY/IMPORT; 450-decision release record; 450 managed packaged rows; PO catalog 807; evidence re-pin exit-0 pre-commit; browser wiring diagnosis + live DOM verification CLOSED 2026-09-21 (root cause: bench redis dead → boot __messages empty/500; restored managed redis, cleared caches; live ar session renders the batch — 10,752 boot entries, representative __() resolutions + rendered DOM Arabic confirmed); W6-1 (report-supporting 147-row subset) **operationally complete for the test site** (owner status 2026-09-21): 69 new Arabic overrides released; 78 equivalent site overrides preserved (147 = 69 + 78; managed release rows 103 = 69 new + 34 pre-existing managed skips); AP Aging and remaining W6 batches deferred. Prior chain: owner approved the subset; governed cycle executed on the test site — complete 147-row dispositions, AI-proposal quorum recorded in release_decisions.json, zero-drift DRY-RUN (103/0/103/0 after site-override preservation; IMPORT 103/69/0/34/0), ar-session browser evidence live, freshness + manifest re-recorded, evidence re-pinned (evidence-inclusive gate exit-0 on the pre-commit HEAD). AP Aging + WL6 remainder deferred. 🟡 Stage 7 pilot scope in principle: one Trial Balance + one General Ledger + one aging report + one BOQ print/export, AR/AP aging treated as separate reports. 🟢 Stage 7 pilot COMPLETE (2026-09-21, owner approval): viewer page `/app/bilingual-report-viewer` renders the Arabic pilot reports live in an ar Desk session (preflight-gated), BOQ print/export bilingual (ar PDF via the governed vendor service, 0 vendor edits). Earlier: P1/P2 endpoint fixes applied (9/9 tests). Pending: populated financial rows — NOW RENDERED LITERALLY in the viewer on real local transactions (2026-09-21: 4 GL rows, TB Cash/Debtors/Sales movement, AR Prestiga-Biz EGP 6,000 outstanding via both posted CBJs) on the test site. Production remains gated. Prior state: governed bilingual-report API + 4 site tests shipped (fail-closed allowlist GL/TB/AR-Aging); live ledger rendering awaits Stage-8 transaction data (test site has no GL entries — deferral consistent with master-data gate); BOQ print/export + viewer UI pending owner go. Stage 8: 🟢 **restore rehearsal CLOSED** (2026-09-22). Stage 2 evidence **re-pinned again** 2026-09-22 pre-commit on `80787af` (freshness payload was stale against live CSV `4b3f0c9f…` since `ad94266`; re-collected on authorized `v16.localhost`, manifest re-recorded, all ten envelopes + index regenerated as one atomic set, evidence-inclusive gate exit-0; assembler standalone assert 89→91; commits `0433497` + preflight cleanup fix `0c8057f`). Production still gated — sequence: **AI-R on `0c8057f` ✅ PASS**, **production data ⛔**, **production site + rollout window ⛔** (`v16.localhost:8000` = non-production test only). | 2026-09-22 | `stage2-closure-verification-2026-09-20.md`; `docs/translation/stage6_workflow_matrix_proposal_2026-09-21.md`; re-pin commit `baa1057` (prior); Stage-2 envelopes on `80787af`; AI-R target `0c8057f` PASS |
+| 6 | **W6-0b batches 1–7 — short-UI cut CLOSED on the test site** (supersedes earlier “W6-0b deferred” notes in §16/§17): exact 1,894-row batch plan (`stage6_w60b_batch_plan_2026-09-22.csv` sha256 `12625007de564d363fc88842c5af3ef8cc7325bc0aec56bc513acecc9a65a97d`), batches 01–07 = 271/271/271/271/270/270/270. Batch 7 **corrected** governed cycle **owner-ACCEPTED/closed at `a0f01cb`** (scope CSV sha256 `1716d01c20129b86d629034d2c826a17a3029feb44b7006e1e19b7faa9bc76d4`, 270 rows = 241 quorum-confirmed released + 29 EXCEPTION-technical + 0 preserved-site-override; catalog 2,190 all Released; dry-run 2190/241/0/1949/0 drift=0; post-DRY idempotent 2190/0/0/2190/0; browser evidence 21/21 PASS on `v16.localhost`; full gate errors=0). Rejected attempt `8bfc23a` retained in history only (0 released / empty translations). W6-0b short-UI cut exhausted; next Stage 6 scope = new matrix-batch proposal → owner approval before any run | 2026-09-22 | `stage6-w60b-batch7-cycle-executed-2026-09-22.md`; commits `dfbced4` → `8bfc23a` (rejected) → `a0f01cb` (accepted cycle commit) |
+| 6 | **W6-2 batch-01 — Buying+Selling governed cycle CLOSED on the test site** (owner-approved exact 270-row scope CSV sha `b017df4787ff8754be0bf43425151b748ba0aa019348fa29187f660130408fae` only): dispositions 184 preserved-site-override (incl. Address strip-collision amendment 2276→2275) + 1 already-released + 0 exception + 85 quorum-confirmed payload; catalog **2,275** Released; DRY pre-import 2275/0/3/2272/0 → IMPORT same → post-DRY **IDEMPOTENT_OK** 2275/0/0/2275/0 drift=0; decisions 2275 (sha `2d373028…`); freshness critical_pass / has_drift=false; inventory 20692 rows; full gate **errors=0** with evidence; module tests **270/270**; browser evidence **21/21 PASS**; UAT teardown done. Three CSV placeholder/affix fixes + same-version import gate fix in `translation_service.py` applied this cycle. Production Stage 8 still gated | 2026-09-23 | `stage6-w602-batch01-cycle-executed-2026-09-23.md`; scope CSV sha `b017df47…`; evidence `raw-logs/stage2/` + `stage6-w602/browser_evidence_w602_batch01.json` |
+| 6 | **W6-2 batch-02 — Buying+Selling remainder governed cycle CLOSED on the test site** (owner-approved exact 48-row scope CSV sha `9a096273f2f7ef05a403edffbb4b75604b73ce7f854382c8fd570f5c329e44ce` only): dispositions 1 preserved-site-override (`Address`→`العنوان`) + 3 EXCEPTION-technical (`doctype`, `doc_type`, `quotation_item`) + 0 already-released + 44 quorum-confirmed payload; catalog **2,319** Released; DRY pre-import 2319/44/0/2275/0 → IMPORT same → post-DRY **IDEMPOTENT_OK** 2319/0/0/2319/0 drift=0; decisions 2319 (sha `1a9475d9…`); freshness critical_pass / packaged=2319 / has_drift=false; inventory 20736 rows (merkle `bb438f9f…`); full gate **errors=0** with evidence at base HEAD `90bc65e`; module tests **270/270**; standalone 91 OK; browser evidence **21/21 PASS**; UAT teardown done. Raw accounting **337 = 268 + 48 + 21** (never `270+48+20`). Production Stage 8 still gated | 2026-09-23 | `stage6-w602-batch02-cycle-executed-2026-09-23.md`; scope CSV sha `9a096273…`; evidence `raw-logs/stage2/` + `stage6-w602/browser_evidence_w602_batch02.json`; commit `b3b0681` |
+| 6 | **W6-3 batch-01 — Stock governed cycle CLOSED on the test site** (owner-approved exact 250-row scope CSV sha `5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380` only): final dispositions 115 preserved-site-override + 17 EXCEPTION-technical + 0 already-released + 118 quorum-confirmed payload; catalog **2,437** Released; pre-DRY/IMPORT `2437/0/1/2436/0` after `%` placeholder repair → post-DRY **IDEMPOTENT_OK** `2437/0/0/2437/0` drift=0; sync `0/0`; decisions 2,437; freshness critical_pass/has_drift=false; inventory 20,854 rows; full gate **errors=0** with evidence; module tests **270/270**; standalone 91 OK; Arabic browser evidence **21/21 PASS**; UAT teardown done. Batches 02/03 and production remain gated. | 2026-09-23 | `stage6-w603-batch01-cycle-executed-2026-09-23.md`; evidence `raw-logs/stage2/` + `stage6-w603/browser_evidence_w603_batch01.json`; cycle commit `0bfc062` |
+| 6 | **W6-3 batch-02 — Stock governed cycle CLOSED on the test site** (scope CSV SHA `701ad13e6b4cc530ebd7dbd95705979b70055c46f39da37d4532a26ba60439ef`): 250 rows = 103 quorum-approved payload + 143 preserved Site Overrides + 2 technical exceptions + 2 deferred source defects; catalog **2,540** Released; current live DRY `2540/0/0/2540/0`, drift=0; independent site readback confirms all 103 releases and 143 preserves; freshness critical_pass; inventory 20,957 rows / Merkle `7ff7884d…`; evidence-inclusive gate **errors=0** at base HEAD `e8d4846`; module tests 270/270, standalone 91/91; Arabic browser checks 8/8. Batch-03 subsequently closed under separate approval; production untouched. | 2026-09-24 | `stage6-w603-batch02-cycle-executed-2026-09-24.md`; AI-R closure record; commit recorded in git |
+| 6 | **W6-3 batch-03 — Stock governed cycle CLOSED on the test site** (owner-approved exact 234-row scope SHA `a5f0e9f604ea52d89072d2c744864fdcbc733bc8307fd427a5c2658f4855dbc9`): 111 payload + 121 preserved Site Overrides + 2 technical exceptions (`UPC`, `UPC-A`); catalog **2,651** Released; import created 111, updated 0, skipped 2,540, drift=0; post-DRY `2651/0/0/2651/0`; sync 0/0; freshness critical_pass; inventory 21,068 / Merkle `57951175…`; evidence-inclusive gate **errors=0** at pre-commit HEAD `fb3e056`; module suite 270/270, standalone 91/91; Arabic browser 8/8 (232/232 exact matches); UAT teardown complete. Production/Stage 8 untouched. | 2026-09-24 | `stage6-w603-batch03-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-4 Projects + Subcontracting batch-01 — governed cycle CLOSED on the test site** (owner-approved exact 147-row scope SHA `93fbf16b14940ce2d477f346c1777865bf008b22df943625e7de84f27e8f4abe`): final partition 48 releases + 96 preserved Site Overrides + 3 deferred; catalog **2,699**; final live DRY `2699/0/0/2699/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 144/144 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `eaadb014`; inventory 21,116 / Merkle `c62fb539…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w604-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-5 Setup batch — governed cycle CLOSED on the test site** (owner-approved exact 469-row scope SHA `e2d672c4a1b479f9cd52c017f76a3c8a8b1b24dced24ed4b5f5c6d8113900a09`): final partition 349 releases + 107 preserved Site Overrides + 13 technical UOM exceptions; catalog **3,048**; final live DRY `3048/0/0/3048/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 456/456 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `51b8b7391704`; inventory 21,465 / Merkle `8d8301d1…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w605-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-6 Assets batch — governed cycle CLOSED on the test site** (owner-approved exact 211-row scope SHA `6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40`): final partition 113 releases + 98 preserved Site Overrides + 0 technical exceptions; catalog **3,161**; final live DRY `3161/0/0/3161/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 211/211 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `64abce7a1b4b`; inventory 21,578 / Merkle `69fc0eb1…`. Stage 8, production, and other scopes remain untouched. | 2026-09-24 | `stage6-w606-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-6 Manufacturing batch-01 — governed cycle CLOSED on the test site** (owner-approved exact 250-row scope SHA `0d5098f61e2f97d26fa40e4e8b5d3b90ab1ec22e9dafd543564cb07ec8d39286`): final partition 83 releases + 167 preserved Site Overrides + 0 technical exceptions; catalog **3,244**; final live DRY `3244/0/0/3244/0`, drift=0; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and 250/250 translations; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `30c6277a6b12`; inventory 21,661 / Merkle `a8615211…`. Remaining 200 Manufacturing rows, Stage 8, and production remain untouched. | 2026-09-24 | `stage6-w606-manufacturing-batch01-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser JSON; evidence index |
+| 6 | **W6-6 Manufacturing batch-02 — governed cycle CLOSED on the test site** (owner-approved exact 202-row scope SHA `195c789945cf2b069a1620e855b22ad38aa9cb0adf03b9b2342166c47b6e88ff`): final partition 82 releases + 119 preserved Site Overrides + 1 technical exception (`material_request_item`); catalog **3,326**; final live DRY `3326/0/0/3326/0`, drift=0; catalog sync 0/0; A1/A2/A3/AI-R PASS; UAT preflight PASS; Arabic browser evidence with 82/82 exact matches; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 with `csv_rows=3326` at candidate HEAD `69b999e`; inventory 21,743 / Merkle `ed69ebe5…`. Manufacturing eligible scope exhausted | 2026-09-24 | `stage6-w606-manufacturing-batch02-cycle-executed-2026-09-24.md`; AI-A1/A2/A3/AI-R records; browser/UAT evidence; Stage-2 index |
+| 6 | **W6-6 CRM, Support & Maintenance — corrected governed cycle CLOSED on the test site** (owner-authorized exact 119-row scope SHA `a77b43a908859c0aea3e2c58525ec3765772c09af8617f1f17fb8c8bf12833f9`; corrected proposal SHA `d8a2a8df2c040434b82d4d813f96e510e454b0f11114a31cf709db62bf60f266`, reviewed CRLF form `3d80277b516663b00f2240ed2d9476eef7eeb62803df867dbd029d74f0dcd354`): final partition 38 releases + 76 preserved Site Overrides + 4 deferred source defects + 1 technical exception (`fieldname`); catalog **3,364**; import created 38, updated 0; final live DRY `3364/0/0/3364/0`, drift=0; sync 0/0; catalog and release decisions 3,364/3,364; A1/A2/A3 + final AI-R PASS; UAT preflight PASS (13,666 `ar` boot messages); browser evidence **9/9 PASS** with **114/114** exact matches and 5 excluded rows absent; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 with `csv_rows=3364` at pre-commit HEAD `ea553f2`; freshness `critical_pass=true` with no drift; inventory **21,781** / Merkle `f1d00e38582fd5604b11355b744376b408f100a74ba376d59ce276d59ce276d7f1c2e4e1`. The earlier 42-payload / 3,368 expectation is superseded. Cycle commit `3344546`; handoff `docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md` | 2026-09-25 | `stage6-w606-crm-support-maintenance-cycle-executed-2026-09-24.md`; `stage6-w606-ai-r-crm-support-maintenance-final-2026-09-24.md`; browser/UAT evidence; Stage-2 index |
+| 6 | **W6-1 Accounts batch-01 — governed cycle CLOSED on the test site** (owner-authorized exact 250-row scope SHA `4910a9e4a0e5f8dd0105d484171ac1dc68e173220a0bed27520fbfc5e8c090fd`; proposal SHA `226ff8b158a4a17bca77209d2e452fff9eff75fd6479324f3e020e6b24ab2b4e`): final partition 96 releases + 147 preserved Site Overrides + 6 strip-collision preserved Site Overrides (Plan §12) + 1 already-released row; catalog **3,460**; import created 96, updated 3 (whitespace normalization); final live DRY `3460/0/0/3460/0`, drift=0; sync 0/0; catalog and release decisions 3,460/3,460; A1/A2/A3 + final AI-R PASS; UAT preflight PASS (13,762 `ar` boot messages); browser evidence **8/8 PASS** with **96/96** released matches and 250/250 batch keys matched; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 with `csv_rows=3460` at pre-commit HEAD `1a494eb71cdb2b7cafe81ca98e9c33bccf7059e4`; freshness `critical_pass=true` with no drift; inventory **21,877** / Merkle `38e7217d69f2913e1bbaf25964f40f269a84594c9bb98b82fe7f79a0ebf356eb`. Remaining Accounts rows, Stage 8, and production remain untouched | 2026-09-26 | `stage6-w601-accounts-batch01-cycle-executed-2026-09-26.md`; `stage6-w601-ai-r-accounts-batch01-final-2026-09-26.md`; browser/UAT evidence; Stage-2 index |
+| 6 | **W6-1 Accounts batch-02 — governed cycle CLOSED on the test site** (owner-authorized exact 250-row scope SHA `dc9b6c022c01a5cfcad5c6934c58a3ba74cc091f17676b607d50a96ab0d60e4e`; proposal SHA `e0fac4c67787aba3c5ac50b52a9f21625360da0693f7b17e77dbf7a315e7567e`): final partition 89 releases + 160 preserved Site Overrides + 1 technical exception (`Lft`); catalog **3,549**; import created 89, updated 0; final live DRY `3549/0/0/3549/0`, drift=0; sync 0/0; catalog and release decisions 3,549/3,549; A1/A2/A3 + final AI-R PASS; UAT preflight PASS (13,851 `ar` boot messages); browser evidence **8/8 PASS** with **89/89** released matches and 249/249 batch keys matched; module suite 271/271, standalone 92/92; evidence-inclusive gate errors=0 with `csv_rows=3549` at pre-commit HEAD `7b2a81cea0e1bcfd876590e431f6c53e5ee035b2`; freshness `critical_pass=true` with no drift; inventory **21,966** / Merkle `5829b33f481d9ae9ef7c07cc597311128d23edae40e26ed8a0c5dc7d37fbec22`. Accounts Batch 03 and remaining Stage 6 scopes remain proposal-only; Stage 8 and production remain untouched | 2026-09-27 | `stage6-w601-accounts-batch02-cycle-executed-2026-09-27.md`; `stage6-w601-ai-r-accounts-batch02-final-2026-09-27.md`; browser/UAT evidence; Stage-2 index |
+
+## 17. Owner status acknowledgments
+
+| Date | Decision | Scope |
+|---|---|---|
+| 2026-09-20 | Stages 2 and 4 **closed for the test environment**; production rollout **not yet approved**. Next milestone: Stage 6/7 catalog or UI work, with the durable evidence **re-pin performed once** at that milestone | `docs/ai/work-items/scope-context-portability/evidence/stage2-closure-verification-2026-09-20.md`, `stage4-tree-browser-closed-2026-09-20.md`. Production data repairs of the workspace-drift kind require customization screening + before/after record + rehearsed rollback before use |
+| 2026-09-21 | Owner scope corrections for next phase: evidence re-pin **authorized and executed once now**; Stage 6 = **proposal generation only** (matrix decisions pending); Cost Center/Warehouse/Project = **`planned` registry entries** (no active mappings, sections/trees disabled, Project exempt from Account tree semantics); report pilot = Trial Balance + General Ledger + one aging + one BOQ print/export (AR/AP aging separate); real master data + production DB + terminology disputes deferred | Re-pin commit `baa1057`; `docs/translation/stage6_workflow_matrix_proposal_2026-09-21.md`; `bilingual_registry.json` planned entries |
+| 2026-09-21 | W6-1 governed cycle approvals: exact 147-row subset approved (no expansion), AR Aging confirmed as the pilot aging report, no terminology overrides; import limited to the test site; gates = complete dispositions + AI-R + zero-drift dry-run + Arabic browser evidence + one re-pin — all met | `stage6-w61-cycle-executed-2026-09-21.md`, `stage6_w61_payload_applied_rows_2026-09-21.csv`, `release_decisions.json` (103 decisions), payload 103 rows (69 new, ver 1.2) |
+| 2026-09-21 | W6-0a quorum-cycle approval with final reclassification (workspace guidance row → candidate; unmatched-location exceptions → DEFERRED/unresolved until AI-R source mapping; approved candidate-only cycle) | `stage6-w60a-cycle-executed-2026-09-21.md`; `stage6_w60a_desk_shell_rows_2026-09-21.csv`; `release_decisions.json` (450 decisions); payload 450 rows (347 new ver 1.2 desk-shell) |
+| 2026-09-21 | W6-0a browser wiring investigation green-lit (W6-0b deferred **at that time** — later executed batches 1–7, see 2026-09-22 batch-7 rows); root cause = bench redis instances dead (no boot __messages delivery → silent English, later desk 500); managed redis restored, caches cleared; live Desk ar session verified: boot dictionary 10,752 entries, representative W6-0a resolutions Arabic, rendered DOM Arabic present. No code/catalog change; no extra re-pin needed | `stage6-w60a-browser-wiring-closed-2026-09-21.md` |
+| 2026-09-21 | Stage 7 BOQ print/export + pilot viewer UI approved; managed Redis health made a hard UAT preflight (13000/11000 PING, desk 200, fresh ar boot payload populated before browser evidence); W6-0b remains deferred **at that time** (superseded 2026-09-22); no production rollout | `stage7-viewer-boq-pilot-2026-09-21.md`; `scripts/uat_preflight.py`; PO catalog 810; evidence re-pin exit-0 pre-commit |
+| 2026-09-22 | Owner correction: **`http://v16.localhost:8000` is not production** — classification **non-production test**, `production_mutation_authorized: false` (test fixtures; rehearsal/UAT only). Therefore sequence **steps 2 and 3a are NOT satisfied** and **no rollout window is named**. Hold kept: no production mutation, catalog/DB changes outside approved test-site Stage-6 batches, or production rollout. (The interim “no W6-0b” clause was later superseded the same day by explicit batch-7 authorization on the test site only.) Real production site identifier + confirmed production master/ledger data + explicit rollout window will arrive **together** when available | Plan §18; supersedes the partial site/data note earlier the same day |
+| 2026-09-22 | Owner partial authorization **withdrawn/corrected**: data source and site named as `http://v16.localhost:8000` — **invalid for production** (see correction row). Pre-correction note retained only for audit trail | Superseded by non-production classification row |
+| 2026-09-22 | Stage 8 isolated backup/restore rehearsal drill executed and **CLOSED** on authorized test backup set → `v16rehearsal.localhost` (never over `v16.localhost`, never production): restore completeness (GL=4, posted JVs, AR 6,000, draft invoice untouched, 30/15 files, encryption key injected, `ar`/Egypt, `REHEARSAL-SITE-MARKER`); routing isolation root-caused (`dns_multitenant: true` + pinned `bench --site … serve --port 8002`); hardened UAT preflight **PASS**; Playwright ar-Desk browser drill **PASS** (AR 5 rows / GL 14 rows bilingual). Stage-2 evidence re-pinned same day on pre-commit HEAD `80787af` (freshness re-collected to live CSV `4b3f0c9f…`, manifest re-recorded, ten envelopes + index atomic set, evidence-inclusive gate exit-0); committed as `0433497`. Owner then repaired a real Stage-8 preflight blocker on that commit (`UnboundLocalError` on connection-failure cleanup path) — fixed as `0c8057f` with offline coverage (cleanup sentinel, `--port=8002` routing, POST login; preflight 5/5, report 9/9, lint clean, bootstrap gate pass). **Production rollout NOT approved** (`v16.localhost:8000` is non-production test only). Only valid next sequence: (1) **AI-R verifies exact commit `0c8057f`** (not `0433497`) — **✅ PASS 2026-09-22** (`stage8-production-ai-r-verify-0c8057f.md`), (2) real production master/ledger data — **⛔ not provided** (`v16.localhost:8000` is non-production test / `production_mutation_authorized: false`), (3) explicit authorization of the named production site + **rollout window** — **⛔ not named**. Owner will supply real production site + data + window **together** when available. Until then: production untouched; test-site Stage-6 batches only under prior batch approvals; no production catalog/DB rollout | `stage8-restore-rehearsal-drill-2026-09-22.md`; `stage8-production-ai-r-verify-0c8057f.md`; `scripts/uat_preflight.py` POST/`--port` fixes + `0c8057f` cleanup sentinel; Stage-2 `raw-logs/stage2/` on `80787af`; assembler 89→91; commits `0433497`, `0c8057f` |
+| 2026-09-22 | **W6-0b batch 7 proposal approved** for exact 270-row scope CSV only (sha256 `1716d01c…`), `v16.localhost` test site only; no production work | `stage6_w60b_batch07_proposal_2026-09-22.md`; `stage6_w60b_batch07_rows_2026-09-22.csv`; commit `dfbced4` |
+| 2026-09-22 | **W6-0b batch 7 attempt 1 REJECTED** — commit `8bfc23a` (0 released / empty translations); retained in history only; not an accepted cycle | `git show 8bfc23a`; superseded by `a0f01cb` |
+| 2026-09-22 | **W6-0b batch 7 corrected cycle ACCEPTED / CLOSED** — commit **`a0f01cb`** (accepted cycle commit, not current HEAD): 270 dispositions (241 released + 29 EXCEPTION-technical), catalog 2,190 Released, zero-drift DRY/IMPORT/idempotent, browser evidence 21/21, full gate errors=0, cycle report sha `e6395d79…`. W6-0b short-UI cut **exhausted** (batches 01–07 complete). Next test-site milestone = **propose** next bounded Stage 6 workflow-matrix scope → **owner approval** → only then run. Production Stage 8 still gated on real production data + named site + rollout window + AI-R on exact release commit | `stage6-w60b-batch7-cycle-executed-2026-09-22.md`; `a0f01cb` |
+| 2026-09-23 | **W6-2 Buying+Selling batch 1 approved and cycle EXECUTED/CLOSED** — exact 270-row scope CSV only (sha `b017df4787ff8754be0bf43425151b748ba0aa019348fa29187f660130408fae`), quorum for 85 AI-proposal rows, required import + evidence gates; all other scopes and production work excluded. Cycle result: catalog 2275, idempotent DRY, full gate errors=0 (with evidence), browser 21/21, UAT torn down. Production Stage 8 still gated on real production data + named site + rollout window + AI-R on exact release commit | `stage6-w602-batch01-cycle-executed-2026-09-23.md` |
+| 2026-09-23 | **W6-2 batch-02 approved and cycle EXECUTED/CLOSED** — exact 48-row scope CSV only (sha `9a096273f2f7ef05a403edffbb4b75604b73ce7f854382c8fd570f5c329e44ce`), quorum for 44 AI-proposal payload rows, required import + evidence gates; all other scopes and production work excluded. Cycle result: catalog 2319, idempotent DRY, full gate errors=0 (with evidence), browser 21/21, UAT torn down. Raw accounting **337 = 268 + 48 + 21**. Production Stage 8 still gated on real production data + named site + rollout window + AI-R on exact release commit | `stage6-w602-batch02-cycle-executed-2026-09-23.md`; commit `b3b0681` |
+| 2026-09-23 | **W6-3 batch-01 approved and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `5eb34bc2dbaf3cf201efc5d856085e32375a68fca959082b3afd8111f7b08380`), test site `v16.localhost` only. Seven formula/letter source-equal rows were reclassified technical during the governed gate; final result is 115 preserved + 17 technical + 118 payload, catalog 2,437, idempotent post-DRY, full gate errors=0, browser 21/21, UAT torn down. Batches 02/03 and production remain gated. | `stage6-w603-batch01-cycle-executed-2026-09-23.md`; base evidence HEAD `9a3f44f`; cycle commit `0bfc062` |
+| 2026-09-24 | **W6-3 batch-02 approved and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `701ad13e…`), test site `v16.localhost` only. Final disposition 103 payload + 143 preserved + 2 technical + 2 deferred source defects; catalog 2,540; fresh live DRY zero drift; independent AI-R PASS and evidence-inclusive gate errors=0; batch-03 and production remain gated | `stage6-w603-batch02-cycle-executed-2026-09-24.md`; exact scope CSV and AI-R evidence record |
+| 2026-09-24 | **W6-3 batch-03 approved and cycle EXECUTED/CLOSED** — exact 234-row scope SHA `a5f0e9f6…`, `v16.localhost` only; 111 payload + 121 preserve + 2 technical; catalog 2,651; post-DRY drift=0; A1/A2/A3 + AI-R PASS; UAT + browser 8/8 with 232 exact translations; evidence-inclusive gate errors=0 at `fb3e056`. Stage 8/production remain gated | `stage6-w603-batch03-cycle-executed-2026-09-24.md`; AI-R record; evidence index |
+| 2026-09-24 | **W6-4 Projects + Subcontracting batch-01 approved and cycle EXECUTED/CLOSED** — exact 147-row scope SHA `93fbf16b…`; 48 releases + 96 preserved Site Overrides + 3 deferred; catalog 2,699; zero-drift live DRY; AI-A1/A2/A3/AI-R PASS; UAT PASS; browser 144/144 matches; standalone 92/92; module suite 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `eaadb014`. Stage 8/production remain gated; other scope untouched | `stage6-w604-cycle-executed-2026-09-24.md`; A1/A2/A3/AI-R records; browser evidence; Stage-2 index |
+| 2026-09-24 | **W6-5 Setup batch approved and cycle EXECUTED/CLOSED** — exact 469-row scope SHA `e2d672c4…`; 349 releases + 107 preserved Site Overrides + 13 technical UOM exceptions; catalog 3,048; zero-drift live DRY `3048/0/0/3048/0`; A1/A2/A3/AI-R PASS; UAT PASS; browser 8/8 with 456/456 matches; standalone 92/92; module suite 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `51b8b7391704`; inventory 21,465 / Merkle `8d8301d1…`. Stage 8/production remain gated; other scope untouched | `stage6-w605-cycle-executed-2026-09-24.md`; A1/A2/A3/AI-R records; browser evidence; Stage-2 index |
+| 2026-09-24 | **W6-6 Assets batch approved and cycle EXECUTED/CLOSED** — exact 211-row scope SHA `6f142646…`; 113 releases + 98 preserved Site Overrides + 0 technical exceptions; catalog 3,161; zero-drift live DRY `3161/0/0/3161/0`; A1/A2/A3/AI-R PASS; UAT PASS; browser 8/8 with 211/211 matches; standalone 92/92; module suite 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `64abce7a1b4b`; inventory 21,578 / Merkle `69fc0eb1…`. Stage 8/production remain gated; other scope untouched | `stage6-w606-cycle-executed-2026-09-24.md`; A1/A2/A3/AI-R records; browser evidence; Stage-2 index |
+| 2026-09-24 | **W6-6 Manufacturing batch-01 approved and cycle EXECUTED/CLOSED** — exact 250-row scope SHA `0d5098f6…`; 83 releases + 167 preserved Site Overrides + 0 technical exceptions; catalog 3,244; zero-drift live DRY `3244/0/0/3244/0`; A1/A2/A3/AI-R PASS; UAT PASS; browser 8/8 with 250/250 matches; standalone 92/92; module suite 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `30c6277a6b12`; inventory 21,661 / Merkle `a8615211…`. The remaining 200 Manufacturing rows were closed by batch-02 the same day | `stage6-w606-manufacturing-batch01-cycle-executed-2026-09-24.md`; A1/A2/A3/AI-R records; browser evidence; Stage-2 index |
+| 2026-09-24 | **W6-6 Manufacturing Batch-02 approved and cycle EXECUTED/CLOSED** — exact 202-row scope SHA `195c7899…`; 82 released + 119 preserved Site Overrides + 1 technical; catalog 3,326; post-DRY `3326/0/0/3326/0`; A1/A2/A3/AI-R PASS; UAT PASS; Arabic browser 82/82 exact; standalone 92/92; modules 271/271; evidence-inclusive gate errors=0 at candidate HEAD `69b999e`; inventory 21,743 / Merkle `ed69ebe5…`. Manufacturing eligible scope is now exhausted. Stage 8/production remain untouched and gated | `stage6-w606-manufacturing-batch02-cycle-executed-2026-09-24.md`; A1/A2/A3/AI-R records; browser/UAT evidence; Stage-2 index |
+| 2026-09-25 | **W6-6 CRM, Support & Maintenance corrected scope authorized and cycle EXECUTED/CLOSED** — exact 119-row scope CSV only (sha `a77b43a9…`; corrected proposal sha `d8a2a8df…`, reviewed CRLF form `3d80277b…`), `v16.localhost` test site only. Final disposition 38 releases + 76 preserved Site Overrides + 4 deferred source defects + 1 technical exception (`fieldname`); catalog 3,364; import created 38 / updated 0; post-DRY `3364/0/0/3364/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 9/9 with 114/114 exact matches and five excluded rows absent; standalone 92/92; modules 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `ea553f2`; inventory 21,781 / Merkle `f1d00e38…`. The prior 42-row / 3,368 expectation is superseded. W6-6 EDI remainder, W6-1 Accounts batches, and W6-7 remain proposal-only; Stage 8 and production remain gated | `stage6-w606-crm-support-maintenance-cycle-executed-2026-09-24.md`; commit `3344546`; `stage6-w606-ai-r-crm-support-maintenance-final-2026-09-24.md`; handoff `docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md` |
+| 2026-09-26 | **W6-1 Accounts batch-01 authorized and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `4910a9e4…`; proposal sha `226ff8b1…`), `v16.localhost` test site only. Final disposition 96 releases + 147 preserved Site Overrides + 6 strip-collision preserved Site Overrides + 1 already-released row; catalog 3,460; import created 96 / updated 3; post-DRY `3460/0/0/3460/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 96/96 exact matches; standalone 92/92; modules 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `1a494eb`; inventory 21,877 / Merkle `38e7217d…`. Accounts Batch 02 and remaining Stage 6 scopes remain proposal-only; Stage 8 and production remain gated | `stage6-w601-accounts-batch01-cycle-executed-2026-09-26.md`; `stage6-w601-ai-r-accounts-batch01-final-2026-09-26.md`; Stage-2 index |
+| 2026-09-27 | **W6-1 Accounts batch-02 authorized and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `dc9b6c02…`; proposal sha `e0fac4c6…`), `v16.localhost` test site only. Final disposition 89 releases + 160 preserved Site Overrides + 1 technical exception (`Lft`); catalog 3,549; import created 89 / updated 0; post-DRY `3549/0/0/3549/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 89/89 exact matches; standalone 92/92; modules 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `7b2a81c`; inventory 21,966 / Merkle `5829b33f…`. Accounts Batch 03 and remaining Stage 6 scopes remain proposal-only; Stage 8 and production remain gated | `stage6-w601-accounts-batch02-cycle-executed-2026-09-27.md`; `stage6-w601-ai-r-accounts-batch02-final-2026-09-27.md`; Stage-2 index |
+| 2026-09-27 | **W6-1 Accounts batch-03 authorized and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `dfa6de55…`; proposal sha `3b0a3ee8…`), `v16.localhost` test site only. Final disposition 120 releases + 128 preserved Site Overrides + 1 strip-collision preserved Site Override + 1 technical exception (`Period_from_date`); catalog 3,669; import created 120 / updated 0; post-DRY `3669/0/0/3669/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 120/120 exact matches; standalone 92/92; modules 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `7ff9290`; inventory 22,086 / Merkle `b8889b90…`. Remaining Stage 6 scopes remain proposal-only; Stage 8 and production remain gated | `stage6-w601-accounts-batch03-cycle-executed-2026-09-27.md`; `stage6-w601-ai-r-accounts-batch03-final-2026-09-27.md`; Stage-2 index |
+| 2026-09-27 | **W6-1 Accounts batch-04 authorized and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `02867419…`; proposal sha `4c72e83b…`), `v16.localhost` test site only. Final disposition 121 releases + 125 preserved Site Overrides + 3 strip-collision preserved Site Overrides + 1 technical exception (`Rgt`); catalog 3,790; import created 121 / updated 0; post-DRY `3790/0/0/3790/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 121/121 exact matches; standalone 92/92; modules 271/271; evidence-inclusive gate errors=0 at pre-commit HEAD `84919dd`; inventory 22,207 / Merkle `a6432de6…`. Remaining Stage 6 scopes remain proposal-only; Stage 8 and production remain gated | `stage6-w601-accounts-batch04-cycle-executed-2026-09-27.md`; `stage6-w601-ai-r-accounts-batch04-final-2026-09-27.md`; Stage-2 index |
+| 2026-09-27 | **W6-1 Accounts batch-05 authorized and cycle EXECUTED/CLOSED (W6-1 Accounts Complete)** — exact 56-row scope CSV only (sha `10c2f94f…`; proposal sha `74fedcf4…`), `v16.localhost` test site only. Final disposition 40 releases + 14 preserved Site Overrides + 2 technical exceptions (`exchangerate.host`, `frankfurter.dev`); catalog 3,830; import created 40 / updated 0; post-DRY `3830/0/0/3830/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 40/40 released and 54/54 batch key matches; standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `359a1ad`; inventory 22,247 / Merkle `47920b40…`. All 1,056 rows of W6-1 Accounts are now completely closed. Remaining Stage 6 scopes remain proposal-only; Stage 8 and production remain gated | `stage6-w601-accounts-batch05-cycle-executed-2026-09-27.md`; `stage6-w601-ai-r-accounts-batch05-final-2026-09-27.md`; Stage-2 index |
+| 2026-09-27 | **W6-6 EDI Remainder authorized and cycle EXECUTED/CLOSED (W6-6 Complete; Stage 6 Remains Open Pending W6-7)** — exact 26-row scope CSV only (sha `2b0cc9b4…`; proposal sha `ea744757…`), `v16.localhost` test site only. Final disposition 17 releases + 9 preserved Site Overrides; catalog 3,847; import created 17 / updated 0; post-DRY `3847/0/0/3847/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 17/17 released and 26/26 batch key matches; evidence-inclusive gate errors=0 at pre-commit HEAD `2ab9e86`; inventory 22,264 / Merkle `fdc2edd0…`. All components of W6-6 are now completely closed. Stage 6 overall remains open pending future reconciliation of remaining scopes (such as W6-7). Stage 8 and production remain gated | `stage6-w606-edi-cycle-executed-2026-09-27.md`; `stage6-w606-ai-r-edi-final-2026-09-27.md`; Stage-2 index |
+| 2026-09-27 | **W6-7 Frappe Framework Remainder Batch 01 ratified and cycle EXECUTED/CLOSED** — exact 250-row scope CSV only (sha `43abe1b4…`; proposal sha `f7de77ef…`), `v16.localhost` test site only. Final disposition 247 releases + 1 preserved Site Override + 2 technical exceptions; catalog 4,094; import created 247 / updated 0; post-DRY `4094/0/0/4094/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 247/247 released and 248/248 batch key matches; standalone 92/92; evidence-inclusive gate errors=0 at pre-commit HEAD `60f7a82`; inventory 22,511 / Merkle `5307b16d…`. W6-7 Batch 01 committed locally (`75ff61f`). Formally ratified per owner instruction on 2026-09-27 (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"`) based on verified audit package. Governed and closed on test site. Stage 8 and production remain gated | `stage6-w607-frappe-batch01-cycle-executed-2026-09-27.md`; `stage6-w607-ai-r-frappe-batch01-final-2026-09-27.md`; Stage-2 index |
+| 2026-09-27 | **W6-7 Frappe Framework Remainder Batch 02 ratified and cycle EXECUTED/CLOSED (Stage 6 Governed / Closed Complete on Test Site)** — exact 244-row scope CSV only (sha `cd6536bc…`; proposal sha `ec58c9c4…`), `v16.localhost` test site only. Final disposition 243 releases + 0 preserved Site Overrides + 1 technical exception (`{0} ${skip_list ? "" : type}`); catalog 4,337; import created 243 / updated 0; post-DRY `4337/0/0/4337/0` drift=0; sync 0/0; A1/A2/A3 + final AI-R PASS; UAT preflight PASS; browser 8/8 with 243/243 released and 243/243 batch key matches; evidence-inclusive gate errors=0 at pre-commit HEAD `42c6f27`; inventory 22,754 / Merkle `290cf2ee…`. Batch 02 committed locally (`eead580`). Formally ratified per owner instruction on 2026-09-27 (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"`) based on verified audit package. With Batches 01 and 02 ratified, Stage 6 is declared GOVERNED / CLOSED COMPLETE on the test site (all 1,507 workflow-matrix rows across W6-1 through W6-7 complete). All 13 local commits remain unpushed; Stage 8 and production remain gated | `stage6-w607-frappe-batch02-cycle-executed-2026-09-27.md`; `stage6-w607-ai-r-frappe-batch02-final-2026-09-27.md`; Stage-2 index |
+
+## 18. Hold state (owner directive, 2026-09-21; corrected 2026-09-22; W6-0b batch-7 update 2026-09-22; W6-2 batches 01–02 updates 2026-09-23; W6-3 batches 01–03, W6-4 batch-01, W6-5 Setup, W6-6 Assets, and W6-6 Manufacturing batches 01–02 cycles 2026-09-24; W6-6 CRM, Support & Maintenance corrected cycle 2026-09-25; W6-1 Accounts Batch 01 cycle 2026-09-26; W6-1 Accounts Batches 02–05 cycles 2026-09-27; W6-6 EDI Remainder cycle 2026-09-27; W6-7 Frappe Batches 01 & 02 ratified — Stage 6 Governed / Closed Complete on Test Site)
+
+**Stage-8 restore rehearsal: CLOSED.** **Production rollout: NOT approved.**
+**W6-0b batches 1–7: CLOSED on the test site (batch-7 corrected cycle accepted at `a0f01cb`; rejected attempt `8bfc23a` kept in history).**
+**W6-3 Stock batches 01–03: CLOSED on the test site only.** Batch-03 completed the exact owner-approved 234-row CSV; no additional W6-3 scope is implied.
+**W6-4 Projects + Subcontracting batch-01: CLOSED on the test site only** for the exact owner-approved 147-row scope (48 released, 96 preserved, 3 deferred). Other Stage-6 scopes remain proposal/approval-gated; Stage 8 and production remain on hold.
+**W6-6 Manufacturing batches 01–02: CLOSED on the test site only.** Batch-02 exhausted the remaining eligible Manufacturing scope (82 released, 119 preserved, 1 technical exception). Any further Stage-6 work requires a separate bounded proposal and owner approval. Stage 8 and production remain on hold.
+**W6-6 CRM, Support & Maintenance corrected cycle: CLOSED on the test site only** (38 released, 76 preserved, 4 deferred source defects, 1 technical exception; catalog 3,364). The earlier 42-payload / 3,368 expectation is superseded. Any further Stage-6 work — W6-1 Accounts batches, the W6-6 EDI remainder, or W6-7 — requires a separate bounded proposal and owner approval. Stage 8 and production remain on hold.
+**W6-1 Accounts Batch 01: CLOSED on the test site only** (96 released, 147 preserved Site Overrides, 6 strip-collision preserved Site Overrides, 1 already-released row; catalog 3,460). Any further Stage-6 work — W6-1 Accounts Batch 02 or remaining scopes — requires a separate bounded proposal and owner approval. Stage 8 and production remain on hold.
+**W6-1 Accounts Batch 02: CLOSED on the test site only** (89 released, 160 preserved Site Overrides, 1 technical exception; catalog 3,549). Any further Stage-6 work — W6-1 Accounts Batch 03 or remaining scopes — requires a separate bounded proposal and owner approval. Stage 8 and production remain on hold.
+**W6-1 Accounts Batch 03: CLOSED on the test site only** (120 released, 128 preserved Site Overrides, 1 strip-collision preserved Site Override, 1 technical exception; catalog 3,669). Any further Stage-6 work — remaining Accounts batches or remaining scopes — requires a separate bounded proposal and owner approval. Stage 8 and production remain on hold.
+**W6-1 Accounts Batch 04: CLOSED on the test site only** (121 released, 125 preserved Site Overrides, 3 strip-collision preserved Site Overrides, 1 technical exception; catalog 3,790). Stage 8 and production remain on hold.
+**W6-1 Accounts Batch 05: CLOSED on the test site only** (40 released, 14 preserved Site Overrides, 2 technical exceptions; catalog 3,830). All 1,056 rows of W6-1 Accounts are now fully closed. Stage 8 and production remain on hold.
+**W6-6 EDI Remainder: CLOSED on the test site only** (17 released, 9 preserved Site Overrides; catalog 3,847). All components of W6-6 are now fully closed. Stage 6 overall remains open pending future reconciliation of remaining scopes (such as W6-7). Stage 8 and production remain on hold.
+**W6-7 Frappe Framework Remainder Batch 01: CLOSED on test site (4,094 rows; commit 75ff61f).** Formally ratified per owner instruction on 2026-09-27 (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"`) based on verified audit package (247 releases + 1 preserved Site Override + 2 technical exceptions). Governed and closed on test site. Stage 8 and production remain on hold.
+**W6-7 Frappe Framework Remainder Batch 02: CLOSED on test site (4,337 rows; commit eead580; Stage 6 Governed / Closed Complete on Test Site).** Formally ratified per owner instruction on 2026-09-27 (`"@[Path 1: Owner Review & Ratification of Stage 6 (Recommended)] go on"`) based on verified audit package (243 releases + 0 preserved + 1 technical exception; catalog 4,337; live DRY `4337/0/0/4337/0`; UAT PASS; browser 8/8; AI-R PASS). With Batches 01 and 02 ratified, all seven Stage-6 sub-scopes (W6-1 Accounts, W6-2 Selling, W6-3 Stock, W6-4 Projects/Subcontracting, W6-5 Setup, W6-6 Assets/Manufacturing/CRM/Support/Maintenance/EDI, and W6-7 Frappe Framework) are now 100% complete and verified on the test site. Stage 6 is declared GOVERNED / CLOSED COMPLETE on the test site. Stage 8 and production remain on hold.
+
+**`http://v16.localhost:8000` is NOT production.** Governed classification:
+**non-production test**, `production_mutation_authorized: false`. It contains
+test fixtures and is valid only for rehearsal/UAT. Do **not** treat it as the
+production site or as production master/ledger data.
+
+**Do not start production mutation, production catalog/DB rollout, or a
+new Stage 6 workflow-matrix batch without an explicit owner-approved
+scope proposal.** (The earlier blanket “do not start W6-0b” clause is
+**retired**: batches 1–7 are complete and accepted; any further Stage 6
+work requires a **new** proposal + owner approval first.) Keep `develop`
+clean and synced. Production stays untouched until **all three** of the
+following, in order:
+
+1. ~~**AI-R verifies exact commit `0c8057f`**~~ ✅ **PASS 2026-09-22** —
+   `stage8-production-ai-r-verify-0c8057f.md` (exact tree + governed bundle
+   hashes + gates/tests + preflight fix + rollback drill; evidence sign-off
+   only, not production authorization). Supersedes `0433497` (that revision
+   could crash with `UnboundLocalError` on preflight connection-failure
+   cleanup; repaired in `0c8057f`: fail-closed cleanup sentinel, offline
+   coverage for cleanup + `--port=8002` routing + POST login).
+2. **Real production master/ledger data provided** — ⛔ **NOT satisfied.**
+   `http://v16.localhost:8000` does not count (test fixtures /
+   `production_mutation_authorized: false`).
+3. **Explicit authorization** naming the production site **and the rollout
+   window.**
+   - Production site — ⛔ **NOT satisfied** (owner is not naming
+     `v16.localhost:8000` as production).
+   - Rollout window — ⛔ **NOT named** (intentionally withheld until real
+     production site + data are available).
+
+The owner will provide the **real production site identifier**, **confirmed
+production master/ledger data**, and an **explicit rollout window** **together**
+when they are actually available. Until then: hold stands.
+
+Completed under prior hold / authorized test-site scope (no production mutation):
+- 2026-09-21: Local-test transactions read for Stage-8 path (owner-posted EGP
+  10,000/4,000 JVs, invoice draft untouched): viewer GL date controls fixed
+  (owner-reported), bilingual GL/TB and AR aging rendered live in the governed
+  viewer with real rows; preflight run before evidence
+  (`stage7-local-data-readiness-2026-09-21.md`).
+- 2026-09-22: Isolated backup/restore **rehearsal drill CLOSED**
+  (`stage8-restore-rehearsal-drill-2026-09-22.md`): restore + isolation +
+  preflight PASS + ar-Desk browser PASS on `v16rehearsal.localhost:8002`.
+  Stage-2 evidence re-pinned on pre-commit HEAD `80787af`; commits `0433497`
+  then preflight cleanup fix `0c8057f`. Local dev listener restored on
+  `:8000` (Redis + `/ping` healthy).
+- 2026-09-22: **W6-0b batch 7 corrected governed cycle ACCEPTED/CLOSED**
+  at **`a0f01cb`** (241 released + 29 EXCEPTION-technical; full evidence;
+  test site `v16.localhost` only). Rejected attempt `8bfc23a` retained as
+  history only. W6-0b short-UI cut (1,894-row plan, batches 01–07) is
+  **exhausted**. Next: propose the next bounded Stage 6 matrix batch →
+  owner approval → only then run.
+
+- 2026-09-23: **W6-2 Buying+Selling batch 01 governed cycle CLOSED** on
+  `v16.localhost` (exact 270-row scope CSV sha `b017df47…`; 184 preserved +
+  1 already-released + 85 payload; catalog 2,275; idempotent import; full
+  gate errors=0 with evidence; browser 21/21; UAT torn down to
+  `ct-w60b-rotated-off` / language `en`). Next Stage 6 work still requires a
+  **new** owner-approved scope proposal. Production still gated as above.
+
+- 2026-09-23: **W6-2 batch-02 governed cycle CLOSED** on `v16.localhost`
+  (exact 48-row scope CSV sha `9a096273…`; 1 preserved-site-override
+  `Address` + 3 EXCEPTION-technical + 0 already-released + 44 payload;
+  catalog 2,319; idempotent import; full gate errors=0 with evidence at
+  base HEAD `90bc65e` / cycle commit `b3b0681`; browser 21/21; UAT torn
+  down to `ct-w60b-rotated-off` / language `en`). Raw accounting
+  **337 = 268 + 48 + 21**. Next Stage 6 work still requires a **new**
+  owner-approved scope proposal. Production still gated as above.
+
+- 2026-09-23: **W6-3 batch-01 governed cycle CLOSED** on `v16.localhost`
+  (exact 250-row scope CSV sha `5eb34bc2…`; 115 preserved + 17 technical +
+  0 already-released + 118 payload; catalog 2,437; idempotent post-DRY; full
+  gate errors=0 with evidence; browser 21/21; UAT torn down to
+  `ct-w60b-rotated-off` / language `en`). Batches 02/03 remain unapproved;
+  production remains gated as above.
+
+- 2026-09-24: **W6-3 batch-02 governed cycle CLOSED** on `v16.localhost`
+  for the exact owner-approved 250-row CSV (sha `701ad13e…`): 103 released,
+  143 preserved Site Overrides, 2 technical exceptions, 2 deferred source
+  defects. Final live DRY `2540/0/0/2540/0`, drift=0; independent AI-R PASS;
+  evidence-inclusive gate errors=0 on base HEAD `e8d4846`; Arabic browser
+  checks 8/8; Administrator and System Settings language restored to `en`.
+  Batch-03 was subsequently approved and closed as recorded below; production and Stage 8 rollout remain gated.
+
+- 2026-09-24: **W6-3 batch-03 governed cycle CLOSED** on `v16.localhost`
+  for the exact owner-approved 234-row CSV (sha `a5f0e9f6…`): 111 releases,
+  121 preserved Site Overrides, 2 technical exceptions; catalog 2,651;
+  post-DRY `2651/0/0/2651/0`, drift=0; sync 0/0; AI-A1/A2/A3 + AI-R PASS;
+  UAT preflight PASS; browser 8/8 with 232/232 exact translations; module
+  270/270 and standalone 91/91; evidence-inclusive gate errors=0 at pre-commit
+  HEAD `fb3e056`; inventory 21,068 rows / Merkle `57951175…`. Administrator
+  language restored to `en`, credentials rotated. A one-time test-site-only
+  password setup mishap and immediate recovery are disclosed in the cycle
+  report. Stage 8 / production remain gated; no production mutation.
+
+- 2026-09-24: **W6-4 Projects + Subcontracting batch-01 governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 147-row scope SHA
+  `93fbf16b…`: 48 payload releases, 96 preserved Site Overrides, and 3
+  deferred runtime/format edge cases. Final live DRY `2699/0/0/2699/0`,
+  drift=0; catalog 2,699; inventory 21,116 / Merkle `c62fb539…`; A1/A2/A3
+  PASS; UAT preflight PASS; browser 8/8 and 144/144 exact translations;
+  module tests 271/271, standalone 92/92; evidence-inclusive gate errors=0
+  at pre-commit HEAD `eaadb014`. Temporary credentials rotated, language
+  restored to `en`, secret removed. Stage 8 and production remain gated as
+  above; no other batch or production work occurred. Details:
+  `stage6-w604-cycle-executed-2026-09-24.md`.
+
+- 2026-09-24: **W6-5 Setup batch governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 469-row scope SHA
+  `e2d672c4a1b479f9cd52c017f76a3c8a8b1b24dced24ed4b5f5c6d8113900a09`: 349 payload
+  releases, 107 preserved Site Overrides, and 13 technical UOM exceptions.
+  Final live DRY `3048/0/0/3048/0`, drift=0; catalog 3,048; inventory 21,465 /
+  Merkle `8d8301d1…`; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and
+  456/456 exact translations; module tests 271/271, standalone 92/92;
+  evidence-inclusive gate errors=0 at pre-commit HEAD `51b8b7391704`. Temporary
+  credentials rotated, language restored to `en`, secret removed. Stage 8 and
+  production remain gated as above; no other batch or production work occurred.
+  Details: `stage6-w605-cycle-executed-2026-09-24.md`.
+
+- 2026-09-24: **W6-6 Assets batch governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 211-row scope SHA
+  `6f142646ae55cf147751e8d751f10638c79420dfa184855985ecd6068ee63a40`: 113 payload
+  releases, 98 preserved Site Overrides, and 0 technical exceptions.
+  Final live DRY `3161/0/0/3161/0`, drift=0; catalog 3,161; inventory 21,578 /
+  Merkle `69fc0eb1…`; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and
+  211/211 exact translations; module tests 271/271, standalone 92/92;
+  evidence-inclusive gate errors=0 at pre-commit HEAD `64abce7a1b4b`. Temporary
+  credentials rotated, language restored to `en`, secret removed. Stage 8 and
+  production remain gated as above; no other batch or production work occurred.
+  Details: `stage6-w606-cycle-executed-2026-09-24.md`.
+
+- 2026-09-24: **W6-6 Manufacturing batch-01 governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 250-row scope SHA
+  `0d5098f61e2f97d26fa40e4e8b5d3b90ab1ec22e9dafd543564cb07ec8d39286`: 83 payload
+  releases, 167 preserved Site Overrides, and 0 technical exceptions.
+  Final live DRY `3244/0/0/3244/0`, drift=0; catalog 3,244; inventory 21,661 /
+  Merkle `a8615211…`; A1/A2/A3/AI-R PASS; UAT preflight PASS; browser 8/8 and
+  250/250 exact translations; module tests 271/271, standalone 92/92;
+  evidence-inclusive gate errors=0 at pre-commit HEAD `30c6277a6b12`. Temporary
+  credentials rotated, language restored to `en`, secret removed. Remaining 200
+  Manufacturing rows, Stage 8, and production remain gated as above; no other batch or production work occurred.
+  Details: `stage6-w606-manufacturing-batch01-cycle-executed-2026-09-24.md`.
+
+- 2026-09-24: **W6-6 Manufacturing batch-02 governed cycle CLOSED**
+  on `v16.localhost` for the exact approved 202-row scope SHA
+  `195c789945cf2b069a1620e855b22ad38aa9cb0adf03b9b2342166c47b6e88ff`: 82 payload
+  releases, 119 preserved Site Overrides, 1 technical exception
+  (`material_request_item`). Final live DRY `3326/0/0/3326/0`, drift=0; catalog
+  3,326; inventory 21,743 / Merkle `ed69ebe5…`; A1/A2/A3/AI-R PASS; UAT preflight
+  PASS; Arabic browser evidence with 82/82 exact matches; standalone 92/92,
+  modules 271/271; evidence-inclusive gate errors=0 at candidate HEAD `69b999e`.
+  Manufacturing eligible scope is now **exhausted**. Stage 8 and production remain
+  gated as above.
+  Details: `stage6-w606-manufacturing-batch02-cycle-executed-2026-09-24.md`.
+
+- 2026-09-25: **W6-6 CRM, Support & Maintenance corrected governed cycle CLOSED**
+  on `v16.localhost` for the exact owner-authorized 119-row scope SHA
+  `a77b43a908859c0aea3e2c58525ec3765772c09af8617f1f17fb8c8bf12833f9` (corrected
+  proposal SHA `d8a2a8df…`; reviewed CRLF form `3d80277b…`): 38 payload releases,
+  76 preserved Site Overrides, 4 deferred source defects, 1 technical exception
+  (`fieldname`). Import created 38, updated 0; final live DRY `3364/0/0/3364/0`,
+  drift=0; catalog sync 0/0; catalog and release decisions 3,364/3,364; A1/A2/A3 +
+  final AI-R PASS; UAT preflight PASS (13,666 `ar` boot messages); browser evidence
+  9/9 with 114/114 exact matches and five excluded rows absent; standalone 92/92,
+  modules 271/271; evidence-inclusive gate errors=0 with `csv_rows=3364` at
+  pre-commit HEAD `ea553f2`; freshness `critical_pass=true` with no drift;
+  inventory 21,781 rows / Merkle `f1d00e38…c2e4e1`. UAT Administrator language
+  restored to `en`, credential rotated, no browser run after teardown. The
+  superseded 42-payload / 3,368 expectation must not be resurrected. Stage 8 and
+  production remain gated as above; no other batch or production work occurred.
+  Cycle commit `3344546`; handoff `docs/handover/STAGE6_W606_CRM_HANDOFF_2026-09-25.md`.
+  Details: `stage6-w606-crm-support-maintenance-cycle-executed-2026-09-24.md`.
+
+- 2026-09-26: **W6-1 Accounts batch-01 governed cycle CLOSED**
+  on `v16.localhost` for the exact owner-authorized 250-row scope SHA
+  `4910a9e4a0e5f8dd0105d484171ac1dc68e173220a0bed27520fbfc5e8c090fd` (proposal
+  SHA `226ff8b158a4a17bca77209d2e452fff9eff75fd6479324f3e020e6b24ab2b4e`): 96
+  payload releases, 147 preserved Site Overrides, 6 strip-collision preserved Site
+  Overrides (Plan §12), 1 already-released row (catalog line 52 v1.2), 0 technical
+  exceptions. Import created 96, updated 3 (whitespace-normalized edge strings);
+  final live DRY `3460/0/0/3460/0`, drift=0; catalog sync 0/0; catalog and release
+  decisions 3,460/3,460; A1/A2/A3 + final AI-R PASS; UAT preflight PASS (13,762
+  `ar` boot messages); browser evidence 8/8 with 96/96 released matches and
+  250/250 batch keys matched; standalone 92/92, modules 271/271;
+  evidence-inclusive gate errors=0 with `csv_rows=3460` at pre-commit HEAD
+  `1a494eb71cdb2b7cafe81ca98e9c33bccf7059e4`; freshness `critical_pass=true` with
+  no drift; inventory 21,877 rows / Merkle
+  `38e7217d69f2913e1bbaf25964f40f269a84594c9bb98b82fe7f79a0ebf356eb`. UAT
+  Administrator language restored to `en`, credentials rotated, session cleared.
+  Accounts Batch 02 and remaining Stage 6 scopes remain proposal-only; Stage 8 and
+  production remain gated as above; no other batch or production work occurred.
+  Details: `stage6-w601-accounts-batch01-cycle-executed-2026-09-26.md`.
+
+Hard requirement before any Phase-8 validation: run the hardened UAT
+preflight (`scripts/uat_preflight.py` — redis 13000/11000 PING, site 200,
+fresh `ar` Desk boot with ≥1,000 `__messages` + representative key; secrets
+never on argv; sessions logged out on both outcomes; connection failures
+recorded as clean `connection:` failures) before any browser/UAT step.

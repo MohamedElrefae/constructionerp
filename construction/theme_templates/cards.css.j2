@@ -1,0 +1,156 @@
+/* ===== CARDS / DASHBOARD: {{ theme_name }} ===== */
+
+/* Card base */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .gb-card,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .panel {
+    background: {{ surface_bg }};
+    border: 1px solid {{ border_color }};
+    border-radius: var(--radius);
+    transition: all var(--t-fast);
+{% if is_dark_mode %}
+    box-shadow: var(--shadow-sm);
+{% else %}
+    box-shadow: var(--shadow-sm);
+{% endif %}
+}
+
+/* Card hover */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card:hover,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .gb-card:hover {
+    border-color: var(--card-hover-border);
+{% if is_dark_mode %}
+    box-shadow: var(--shadow);
+{% else %}
+    box-shadow: var(--shadow);
+{% endif %}
+    transform: translateY(-1px);
+}
+
+/* Card title */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card-title,
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card-header {
+    color: {{ text_primary }};
+    font-weight: 600;
+    border-bottom: 1px solid {{ border_color }};
+}
+
+/* Card body */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card-body {
+    color: {{ text_secondary }};
+}
+
+/* Card footer */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card-footer {
+    border-top: 1px solid {{ border_color }};
+}
+
+/* Card with colored accent border */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card.card-accent {
+    border-left: 4px solid {{ accent_primary }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card.card-success {
+    border-left: 4px solid {{ success_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card.card-warning {
+    border-left: 4px solid {{ warning_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .card.card-error {
+    border-left: 4px solid {{ error_color }};
+}
+
+/* Dashboard card grid */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+/* Stat card */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card {
+    background: {{ surface_bg }};
+    border: 1px solid {{ border_color }};
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all var(--t-fast);
+{% if is_dark_mode %}
+    box-shadow: var(--shadow-sm);
+{% else %}
+    box-shadow: var(--shadow-sm);
+{% endif %}
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card:hover {
+    border-color: {{ accent_primary }}40;
+{% if is_dark_mode %}
+    box-shadow: var(--shadow), 0 0 0 1px {{ accent_primary }}40;
+{% else %}
+    box-shadow: var(--shadow), 0 0 0 1px {{ accent_primary }}40;
+{% endif %}
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card .stat-value {
+    color: {{ accent_primary }};
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card .stat-label {
+    color: {{ text_secondary }};
+    font-size: .85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card .stat-change {
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card .stat-change.positive {
+    color: {{ success_color }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .stat-card .stat-change.negative {
+    color: {{ error_color }};
+}
+
+/* Number card (Frappe dashboard) */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .number-card {
+    background: {{ surface_bg }};
+    border: 1px solid {{ border_color }};
+    border-radius: var(--radius);
+    transition: all var(--t-fast);
+{% if is_dark_mode %}
+    box-shadow: var(--shadow-sm);
+{% else %}
+    box-shadow: var(--shadow-sm);
+{% endif %}
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .number-card:hover {
+    border-color: {{ accent_primary }}40;
+    transform: translateY(-1px);
+{% if is_dark_mode %}
+    box-shadow: var(--shadow);
+{% else %}
+    box-shadow: var(--shadow);
+{% endif %}
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .number-card .title {
+    color: {{ text_secondary }};
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .number-card .number {
+    color: {{ text_primary }};
+    font-size: 1.5rem;
+    font-weight: 700;
+}

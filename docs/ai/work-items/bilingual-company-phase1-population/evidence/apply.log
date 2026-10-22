@@ -1,0 +1,8 @@
+QUEUE_GATE reachable at 127.0.0.1:11000 snapshot={}
+PREVALIDATE_OK rows=1 plain=1 site_arabic=0 total=21 excluded=20
+WRITE Company 'Elrefae' value=63f48828f9f20a78 norm=63f48828f9f20a78 identity=unchanged frozen=unchanged fields_changed=['company_name_ar', 'company_name_ar_norm'] PLAIN
+QUEUE_ENQUEUED {}
+QUEUE_NOTE no new queue entries observed (job may have run inline or been consumed); P1/P2 remain the empirical evidence for F-5H-2
+SUMMARY written=1 skipped=0 failed=0
+PRIVATE apply.json sha256=9f04a1a6cf382b5816f6f406e5740709996d56858439a41283f380875fba7f8e
+APPLY RESULT: PASS

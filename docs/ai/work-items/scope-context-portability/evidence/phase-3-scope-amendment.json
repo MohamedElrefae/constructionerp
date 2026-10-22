@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-11T20:57:02.625085+00:00",
+  "authority": "Owner Authorization: Pilot Scope Revision (SCHEMA_FACTS.md Inclusion), followed by explicit go on after provider limit",
+  "execution_root": "/home/mohamed/frappe-bench/worktrees/scope-context-portability-pilot",
+  "scope_hash": "8841d92d00a3dbe2142237f0263f4978e119625cd80a44fc51c407377a147731",
+  "approved_allowed_paths": [
+    "scripts/ai_context_check.py",
+    "scripts/lint_scope_metadata.py",
+    "tests_offline/",
+    "docs/ai/SCHEMA_FACTS.md"
+  ],
+  "documentation_patch_sha256": "1304761847b019d7adb454ba9a25905d4e06a9539554c4538f1f31fcce4294e2",
+  "fixed_verification_date": "2026-09-10",
+  "source_patch_applied": false,
+  "owner_plan_granted": false,
+  "events": [
+    {
+      "kind": "scope_revised",
+      "payload": {
+        "candidate": {
+          "archive_sha256": "8ac1b135035b57928106e6e93567202a456a4d47d9c73cb6ff05485b5081b5ae",
+          "candidate_id": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+          "manifest": {
+            "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+            "branch": "feature/scope-context-portability",
+            "entries": [],
+            "kind": "code"
+          },
+          "manifest_hash": "38e04df7b6feeef3acd5a726d98c663da05152ef356eb79195bd45c6858e6db2",
+          "tree_oid": "b72f470db46869199fd9eca2d81fb207ae3515b7"
+        },
+        "reason": "Reconcile baseline Variation Order field count in SCHEMA_FACTS.md under the owner-approved four-field and 2026-09-10 date restriction",
+        "scope_hash": "8841d92d00a3dbe2142237f0263f4978e119625cd80a44fc51c407377a147731"
+      }
+    },
+    {
+      "kind": "resume",
+      "payload": {
+        "reason": "Reconcile baseline Variation Order field count in SCHEMA_FACTS.md under the owner-approved four-field and 2026-09-10 date restriction",
+        "reset_budget": false
+      }
+    },
+    {
+      "kind": "resume",
+      "payload": {
+        "reason": "Owner explicitly requested continuation after the provider usage-limit failure; retry the preserved approved scope once",
+        "reset_budget": false
+      }
+    }
+  ],
+  "note": "The effective scope preserves the proposed allowlist and adds the owner\u2019s exact field/date restrictions. Provider-limit failure remains recorded; owner explicitly authorized continuation."
+}

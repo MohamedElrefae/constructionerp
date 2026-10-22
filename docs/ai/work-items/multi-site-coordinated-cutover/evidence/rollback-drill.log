@@ -1,0 +1,32 @@
+$ python3 .../orchestrate_cutover.py --dry-run --phase cutover --fail-step drill
+orchestrate_cutover.py phase=cutover dry_run=True
+
+===== PHASE cutover =====
+[PASS] backup-verify[localhost]: 20261006_040258-v16_localhost-database.sql.gz size=71468821B age=44484s sha256=3d3b643ee343c1a9... gzip_ok=True restore_timing=8.64s dry_run=True
+[PASS] census[localhost]: 4/5 commercial doctypes countable (read-only)
+[PASS] backup-verify[v16.localhost]: 20261006_040258-v16_localhost-database.sql.gz size=71468821B age=44501s sha256=3d3b643ee343c1a9... gzip_ok=True restore_timing=8.63s dry_run=True
+[PASS] census[v16.localhost]: 4/5 commercial doctypes countable (read-only)
+[WARN] backup-verify[v16rehearsal.localhost]: no backup present (dry-run advisory)
+[PASS] census[v16rehearsal.localhost]: 4/5 commercial doctypes countable (read-only)
+[DRY_RUN] maintenance[localhost]: would set maintenance_mode=1 (original 0) in /home/mohamed/frappe-bench/sites/localhost/site_config.json
+[DRY_RUN] maintenance-restore[localhost]: would restore maintenance_mode=0
+[ABORTED] cutover: simulated failure -> fail-closed chain stop
+
+SUMMARY: 9 steps, 0 failures
+rc=1
+
+$ python3 .../orchestrate_cutover.py --dry-run --phase rollback
+orchestrate_cutover.py phase=rollback dry_run=True
+
+===== PHASE rollback =====
+[TRIGGERED] simulated-failure: injected mid-drill fault: maintenance toggled on, no data written
+[DRY_RUN] rollback-maintenance[localhost]: would restore maintenance_mode=0 (currently 0)
+[DRY_RUN] rollback-maintenance[v16.localhost]: would restore maintenance_mode=0 (currently 0)
+[DRY_RUN] rollback-maintenance[v16rehearsal.localhost]: would restore maintenance_mode=0 (currently 0)
+[PASS] backup-restorable[localhost]: 20261006_040258-v16_localhost-database.sql.gz validated (gzip -t ok=True)
+[PASS] backup-restorable[v16.localhost]: 20261006_040258-v16_localhost-database.sql.gz validated (gzip -t ok=True)
+[WARN] backup-restorable[v16rehearsal.localhost]: no local backup to validate
+[PASS] final-state: maintenance_mode states ['localhost:0', 'v16.localhost:0', 'v16rehearsal.localhost:0']
+
+SUMMARY: 8 steps, 0 failures
+rc=0

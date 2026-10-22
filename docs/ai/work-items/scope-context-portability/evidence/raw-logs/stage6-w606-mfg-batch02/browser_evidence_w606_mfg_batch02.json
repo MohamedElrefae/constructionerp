@@ -1,0 +1,20 @@
+{
+  "site": "v16.localhost",
+  "date": "2026-09-24",
+  "surface": "Arabic Desk boot payload and rendered desktop",
+  "boot_language": "ar",
+  "document_language": "ar",
+  "direction": "rtl",
+  "boot_message_count": 13628,
+  "approved_payload_rows_checked": 82,
+  "approved_payload_exact_matches": 82,
+  "mismatches": 0,
+  "arabic_dom_visible": true,
+  "representative_keys": {
+    "Parent Row No not found for {0}": "لم يتم العثور على رقم الصف الأب لـ {0}",
+    "Please uncheck 'Show in Bucket View' to create Orders": "يرجى إلغاء تحديد \"إظهار العرض حسب الفترات الزمنية\" لإنشاء الأوامر",
+    "Work Order {0} created": "تم إنشاء أمر العمل {0}"
+  },
+  "technical_exception_material_request_item_present": false,
+  "transport_note": "The Desk rendered Arabic and all 82 boot keys matched. Browser console emitted Socket.IO xhr polling errors because the test browser did not establish the realtime transport; the batch check itself is read-only and unaffected. A temporary documented Socket.IO worker was started and stopped during diagnosis; the warning persisted in the browser. No database or production state was changed by this diagnosis."
+}

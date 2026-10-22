@@ -1,0 +1,35 @@
+/* ===== NAVBAR: {{ theme_name }} ===== */
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .navbar {
+    background: {{ navbar_bg }};
+    border-bottom: 2px solid {{ accent_primary }};
+{% if is_dark_mode %}
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+{% else %}
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+{% endif %}
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .navbar .nav-link {
+    color: {{ text_primary }};
+    transition: all .25s ease;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .navbar .nav-link:hover {
+    color: {{ accent_primary }};
+    background: {{ accent_primary }}19;
+    border-radius: 8px;
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .navbar input[type="text"] {
+    background: {{ navbar_bg }};
+    border-color: {{ border_color }};
+    color: {{ text_primary }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .navbar .navbar-home {
+    color: {{ text_primary }};
+}
+
+html[data-theme="{{ 'dark' if is_dark_mode else 'light' }}"] .navbar .navbar-home:hover {
+    color: {{ accent_primary }};
+}

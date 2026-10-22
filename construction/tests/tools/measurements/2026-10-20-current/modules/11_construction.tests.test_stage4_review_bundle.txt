@@ -1,0 +1,56 @@
+Starting test run with parameters: site=v16-protocol.localhost, app=construction, module=construction.tests.test_stage4_review_bundle, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /tmp/opencode/f44-bench/logs/frappe.testing.log
+
+Running 36 unspecified-category tests for construction
+
+construction.tests.test_stage4_review_bundle.TestGovernedManifestBoundary
+   [32m ✔ [0m test_extra_and_missing_mapping_keys_rejected
+   [32m ✔ [0m test_forged_identity_cannot_reach_payload
+   [32m ✔ [0m test_governed_manifest_path_is_internal_and_fixed
+   [32m ✔ [0m test_manifest_missing_export_path_rejected
+   [32m ✔ [0m test_manifest_sha_mismatch_rejected
+   [32m ✔ [0m test_missing_manifest_rejected
+   [32m ✔ [0m test_non_path_manifest_rejected
+   [32m ✔ [0m test_production_entry_uses_governed_manifest
+   [32m ✔ [0m test_public_entry_takes_no_manifest_path
+   [32m ✔ [0m test_tampered_export_rejected
+   [32m ✔ [0m test_valid_flow_emits_payload_bound_to_manifest
+   [32m ✔ [0m test_wrong_manifest_schema_rejected
+
+construction.tests.test_stage4_review_bundle.TestIdentityBindingAndTimeBounds
+   [32m ✔ [0m test_english_value_must_match_candidate
+   [32m ✔ [0m test_future_timestamps_rejected
+   [32m ✔ [0m test_silently_omitted_exported_identity_rejected
+   [32m ✔ [0m test_unknown_identity_rejected
+
+construction.tests.test_stage4_review_bundle.TestImportPayloadFailClosed
+   [32m ✔ [0m test_manifest_records_bundle_hash_and_exceptions
+   [32m ✔ [0m test_payload_refused_on_any_violation
+   [32m ✔ [0m test_rollback_note_documented
+
+construction.tests.test_stage4_review_bundle.TestMalformedNowUtcFailsClosed
+   [32m ✔ [0m test_malformed_now_utc_rejected
+   [32m ✔ [0m test_payload_refused_on_malformed_now_utc
+   [32m ✔ [0m test_valid_now_utc_still_rejects_future
+
+construction.tests.test_stage4_review_bundle.TestReviewBundleValidation
+   [32m ✔ [0m test_absent_reference_requires_explicit_flag
+   [32m ✔ [0m test_duplicate_identity_rejected
+   [32m ✔ [0m test_exceptions_preserved_as_reviewable
+   [32m ✔ [0m test_explicit_absence_is_acceptable
+   [32m ✔ [0m test_invented_or_missing_arabic_rejected
+   [32m ✔ [0m test_missing_confidence_rejected
+   [32m ✔ [0m test_missing_decision_rejected
+   [32m ✔ [0m test_missing_schema_rejected
+   [32m ✔ [0m test_proposal_and_a2_must_be_independent
+   [32m ✔ [0m test_reference_must_be_verified_or_explicit_absence
+   [32m ✔ [0m test_template_is_empty_and_not_prefilled
+   [32m ✔ [0m test_timestamp_order_enforced
+   [32m ✔ [0m test_valid_bundle_passes
+   [32m ✔ [0m test_verified_reference_requires_value_and_source
+
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.008s
+
+OK

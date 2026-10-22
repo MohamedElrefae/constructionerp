@@ -1,0 +1,4 @@
+CMD: verifier --snapshot-out post_state_5J.json (baseline confirm)
+verifier_sha16=76ca731a386f54de
+SNAPSHOT wrote sites/v16.localhost/private/production-migration/post_state_5J.json: 189 populated rows across 15 doctypes sha16=36f96d929629aa3e
+rc=0

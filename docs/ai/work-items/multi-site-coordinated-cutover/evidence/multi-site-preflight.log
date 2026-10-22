@@ -1,0 +1,22 @@
+orchestrate_cutover.py phase=preflight dry_run=True
+
+===== PHASE preflight =====
+[PASS] redis[6379]: system redis untouched (no probe performed)
+[PASS] config[localhost]: db_name=_6d52b48c328b294e maintenance_mode=0
+[PASS] redis[localhost:queue:11000]: reachable
+[PASS] redis[localhost:cache:13000]: reachable
+[PASS] backup[localhost]: latest=20261006_040258-v16_localhost-database.sql.gz age=44443s
+[PASS] disk[localhost]: free=2.26 GiB
+[PASS] config[v16.localhost]: db_name=_6d52b48c328b294e maintenance_mode=0
+[PASS] redis[v16.localhost:queue:11000]: reachable
+[PASS] redis[v16.localhost:cache:13000]: reachable
+[PASS] backup[v16.localhost]: latest=20261006_040258-v16_localhost-database.sql.gz age=44443s
+[PASS] disk[v16.localhost]: free=2.26 GiB
+[PASS] config[v16rehearsal.localhost]: db_name=_8ea0ca5beb7e4d87 maintenance_mode=0
+[PASS] redis[v16rehearsal.localhost:queue:11000]: reachable
+[PASS] redis[v16rehearsal.localhost:cache:13000]: reachable
+[WARN] backup[v16rehearsal.localhost]: no local backup under private/backups
+[PASS] disk[v16rehearsal.localhost]: free=2.26 GiB
+[PASS] pending-jobs: rq queue lengths {'default': 0, 'short': 0, 'long': 0}
+
+SUMMARY: 17 steps, 0 failures

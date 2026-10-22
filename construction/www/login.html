@@ -1,0 +1,414 @@
+{% extends "frappe/www/login.html" %}
+
+{% block head_include %}
+<!-- ════════════════════════════════════════════════════════════
+   Construction ERP — Critical Login CSS (v2.5.4)
+   Inlined BEFORE Frappe bundles to eliminate FOUC.
+   Glassmorphism + modern styling for premium first impression.
+   ════════════════════════════════════════════════════════════ -->
+<style id="ct-login-critical">
+  /* ─── Immediate dark background — prevents white flash ─── */
+  html, body {
+    background: #0b1020 !important;
+  }
+
+  /* ─── Login card — glassmorphism (high specificity to beat Frappe) ─── */
+  .for-login .page-card,
+  .for-forgot .page-card,
+  .for-login-with-email-link .page-card,
+  .for-signup .page-card,
+  .for-email-login .page-card {
+    background: rgba(15, 23, 42, 0.65) !important;
+    backdrop-filter: blur(20px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+    border: 1px solid rgba(148, 163, 184, 0.12) !important;
+    border-radius: 16px !important;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(148, 163, 184, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+
+  .page-card:hover {
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(37, 99, 235, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(37, 99, 235, 0.2) !important;
+  }
+
+  /* ─── Card head — gradient accent top border ─── */
+  .page-card-head {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08) !important;
+    padding: 2rem 1.5rem 1.25rem !important;
+    position: relative !important;
+  }
+
+  /* Gradient top accent line */
+  .page-card-head::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 20% !important;
+    right: 20% !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, #2563eb, #f59e0b, transparent) !important;
+    border-radius: 0 0 2px 2px !important;
+    opacity: 0.7 !important;
+  }
+
+  .page-card-head h4 {
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+    font-size: 1.125rem !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 0.75rem !important;
+  }
+
+  /* ─── Logo styling ─── */
+  .page-card-head .app-logo {
+    width: 48px !important;
+    height: 48px !important;
+    filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.3)) !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  .page-card-head .app-logo:hover {
+    transform: scale(1.05) !important;
+  }
+
+  /* ─── Card body ─── */
+  .page-card-body {
+    background: transparent !important;
+    border: none !important;
+    padding: 2rem 2.5rem !important;
+  }
+
+  /* ─── Input fields — modern floating style ─── */
+  .page-card-body .form-control,
+  .login-content .form-control {
+    background: rgba(30, 41, 59, 0.6) !important;
+    color: #e2e8f0 !important;
+    border: 1px solid rgba(148, 163, 184, 0.12) !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+    font-size: 0.9375rem !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .page-card-body .form-control:focus,
+  .login-content .form-control:focus {
+    background: rgba(30, 41, 59, 0.8) !important;
+    border-color: #2563eb !important;
+    box-shadow:
+      0 0 0 3px rgba(37, 99, 235, 0.15),
+      inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    outline: none !important;
+  }
+
+  .page-card-body .form-control::placeholder {
+    color: rgba(148, 163, 184, 0.5) !important;
+  }
+
+  /* ─── Field icons ─── */
+  .field-icon {
+    color: rgba(148, 163, 184, 0.5) !important;
+    transition: color 0.25s ease !important;
+  }
+
+  .email-field:focus-within .email-icon,
+  .password-field:focus-within .password-icon {
+    color: #2563eb !important;
+  }
+
+  /* ─── Toggle password — modern pill ─── */
+  .toggle-password {
+    color: rgba(148, 163, 184, 0.6) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 100px !important;
+    background: rgba(30, 41, 59, 0.5) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+  }
+
+  .toggle-password:hover {
+    color: #f1f5f9 !important;
+    background: rgba(37, 99, 235, 0.15) !important;
+  }
+
+  /* ─── Login button — premium gradient ─── */
+  .btn-login,
+  .btn-primary.btn-login,
+  .page-card-actions .btn-primary,
+  .login-content .btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.9375rem !important;
+    letter-spacing: 0.01em !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow:
+      0 4px 16px rgba(37, 99, 235, 0.3),
+      0 0 0 1px rgba(37, 99, 235, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  /* Shimmer effect on button */
+  .btn-login::after,
+  .btn-primary.btn-login::after,
+  .page-card-actions .btn-primary::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent) !important;
+    transition: left 0.5s ease !important;
+  }
+
+  .btn-login:hover::after,
+  .btn-primary.btn-login:hover::after,
+  .page-card-actions .btn-primary:hover::after {
+    left: 100% !important;
+  }
+
+  .btn-login:hover,
+  .btn-primary.btn-login:hover,
+  .page-card-actions .btn-primary:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow:
+      0 8px 24px rgba(37, 99, 235, 0.4),
+      0 0 0 1px rgba(37, 99, 235, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .btn-login:active,
+  .btn-primary.btn-login:active,
+  .page-card-actions .btn-primary:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+  }
+
+  /* ─── Secondary buttons ─── */
+  .btn-login-option,
+  .btn-default.btn-login-option {
+    background: rgba(30, 41, 59, 0.5) !important;
+    color: #cbd5e1 !important;
+    border: 1px solid rgba(148, 163, 184, 0.12) !important;
+    border-radius: 10px !important;
+    transition: all 0.25s ease !important;
+  }
+
+  .btn-login-option:hover,
+  .btn-default.btn-login-option:hover {
+    background: rgba(30, 41, 59, 0.7) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #f1f5f9 !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* ─── Forgot password link ─── */
+  .forgot-password-message a {
+    color: #94a3b8 !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    transition: color 0.2s ease !important;
+    text-decoration: none !important;
+  }
+
+  .forgot-password-message a:hover {
+    color: #2563eb !important;
+    text-decoration: underline !important;
+  }
+
+  /* ─── Divider "or" ─── */
+  .login-divider {
+    color: rgba(148, 163, 184, 0.4) !important;
+    font-size: 0.8125rem !important;
+    position: relative !important;
+  }
+
+  .login-divider::before,
+  .login-divider::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    width: 30% !important;
+    height: 1px !important;
+    background: rgba(148, 163, 184, 0.1) !important;
+  }
+
+  .login-divider::before { left: 5% !important; }
+  .login-divider::after { right: 5% !important; }
+
+  /* ─── Sign up message ─── */
+  .sign-up-message {
+    color: #64748b !important;
+    font-size: 0.875rem !important;
+  }
+
+  .sign-up-message a {
+    color: #2563eb !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+  }
+
+  .sign-up-message a:hover {
+    color: #3b82f6 !important;
+    text-decoration: underline !important;
+  }
+
+  /* ─── Loading state ─── */
+  .btn-login:disabled,
+  .btn-primary:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+
+  /* ─── Animated background particles (subtle) ─── */
+  @keyframes ct-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* ─── Wide login card — match Frappe's selector specificity ─── */
+  .for-login .page-card,
+  .for-forgot .page-card,
+  .for-login-with-email-link .page-card,
+  .for-signup .page-card,
+  .for-email-login .page-card {
+    max-width: 900px !important;
+    width: 95vw !important;
+  }
+
+  /* ─── Form fills the card ─── */
+  .for-login .page-card form,
+  .for-forgot .page-card form,
+  .for-login-with-email-link .page-card form,
+  .for-signup .page-card form,
+  .for-email-login .page-card form {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* ─── Input fields — full width, generous typing space ─── */
+  .page-card-body .form-control,
+  .login-content .form-control,
+  .for-login .page-card .page-card-body input[type=text],
+  .for-login .page-card .page-card-body input[type=email],
+  .for-login .page-card .page-card-body input[type=password] {
+    width: 100% !important;
+    min-height: 56px !important;
+    font-size: 1.0625rem !important;
+    padding: 1rem 1.25rem 1rem 3rem !important;
+  }
+
+  /* Password field: compact "Show" button so text has room */
+  .password-field {
+    position: relative !important;
+  }
+
+  .password-field .form-control {
+    padding-right: 4.5rem !important;
+  }
+
+  .password-field .toggle-password {
+    position: absolute !important;
+    right: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 0.8125rem !important;
+    padding: 0.375rem 0.625rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* ─── Email icon positioning ─── */
+  .email-field {
+    position: relative !important;
+  }
+
+  .email-field .email-icon {
+    position: absolute !important;
+    left: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* ─── Actions row: span full card width ─── */
+  .for-login .page-card .page-card-actions,
+  .for-forgot .page-card .page-card-actions,
+  .for-login-with-email-link .page-card .page-card-actions,
+  .for-signup .page-card .page-card-actions,
+  .for-email-login .page-card .page-card-actions {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 2.5rem 2rem !important;
+  }
+
+  /* ─── Full-width buttons ─── */
+  .page-card-actions .btn-login,
+  .page-card-actions .btn-primary,
+  .page-card-actions .btn {
+    width: 100% !important;
+    display: block !important;
+    min-height: 56px !important;
+    font-size: 1.0625rem !important;
+  }
+
+  .social-login-buttons .btn-login-option,
+  .login-button-wrapper .btn {
+    width: 100% !important;
+    display: block !important;
+    min-height: 52px !important;
+    font-size: 1rem !important;
+  }
+
+  /* ─── Responsive tweaks ─── */
+  @media (max-width: 960px) {
+    .for-login .page-card,
+    .for-forgot .page-card,
+    .for-login-with-email-link .page-card,
+    .for-signup .page-card,
+    .for-email-login .page-card {
+      border-radius: 12px !important;
+      margin: 0 1rem !important;
+      max-width: 100% !important;
+      width: calc(100vw - 2rem) !important;
+    }
+    .page-card-body .form-control,
+    .login-content .form-control {
+      padding: 0.875rem 1rem 0.875rem 2.75rem !important;
+      min-height: 52px !important;
+      font-size: 1rem !important;
+    }
+    .password-field .form-control {
+      padding-right: 4rem !important;
+    }
+    .page-card-head {
+      padding: 1.5rem 1rem 1rem !important;
+    }
+    .page-card-body {
+      padding: 1rem !important;
+    }
+  }
+</style>
+
+{{ super() }}
+{% endblock %}

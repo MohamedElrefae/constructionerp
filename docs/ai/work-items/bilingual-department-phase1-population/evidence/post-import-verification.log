@@ -1,0 +1,22 @@
+ROW_OK 'All Departments' value=1e39724d0f697a36 norm=953da4de61d76829 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Accounts - E' value=c447ac426926bfdd norm=c447ac426926bfdd identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Customer Service - E' value=c3bb52b717b9a3dd norm=c3bb52b717b9a3dd identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Dispatch - E' value=1aa66bd3aba79178 norm=1aa66bd3aba79178 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Human Resources - E' value=6c30b5a7d30b2084 norm=6c30b5a7d30b2084 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Legal - E' value=27d92f02de403003 norm=27d92f02de403003 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Management - E' value=a3b53d11ac2037a6 norm=5a711a0479928d95 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Marketing - E' value=3776fdd780cc5fba norm=3776fdd780cc5fba identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Operations - E' value=edf92ea1e76aa075 norm=edf92ea1e76aa075 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Production - E' value=03b47ea3ac24f2b1 norm=6558616b9f7919de identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Purchase - E' value=2a14f93caa3227fc norm=2a14f93caa3227fc identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Quality Management - E' value=c763cdc6e15b187d norm=d8fb5844ee1e6c87 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Research & Development - E' value=5d930a6078e38e92 norm=5d930a6078e38e92 identity=unchanged tree=unchanged old_parent=synced
+ROW_OK 'Sales - E' value=7bf1b13416bcd084 norm=7bf1b13416bcd084 identity=unchanged tree=unchanged old_parent=synced
+COMPLETENESS site_arabic_total=14 approved=14 missing=0 extra=0
+EXCLUSIONS excluded=262 excluded_arabic=0 probe_residue=0 total=276
+USAGE_SURFACE root_arabic=yes scope_ref_intact=True excluded_test_depts_arabic=0
+FROZEN_SURFACES accounts_ar=81 cost_centers_ar=3 customers_ar=1 items_ar=8 projects_ar=5 suppliers_ar=0 warehouses_ar=6 company_ar=empty groups={"Item Group": 6, "Customer Group": 5, "Supplier Group": 8, "Territory": 4} uom_arabic=15 uom_enabled=253 uom_json=unchanged
+PATCH_RESTORATION get_root_of_restored=True
+SUMMARY approved=14 populated=14 norm_consistent=14 identity_unchanged=14 tree_unchanged=14 exclusions=262 intact usage_surface=yes prior_frozen=yes patch_restored=yes
+ROLLBACK_REF dry-run.json (before-values all empty) sha256=e3277e411205ab3c5a48b81fa6f0170325342f05e447118f811dddff820cfaf0
+VERIFICATION RESULT: PASS

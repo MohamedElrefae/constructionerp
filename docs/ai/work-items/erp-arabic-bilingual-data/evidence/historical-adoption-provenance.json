@@ -1,0 +1,54 @@
+{
+  "work_item": "erp-arabic-bilingual-data",
+  "verified_utc": "2026-09-12T12:15:00Z",
+  "authority_reference": "CANONICAL_PLAN.md \u00a711",
+  "status": "PROVENANCE_VERIFIED",
+  "revalidation_method": "direct_filesystem_read_and_sha256_hash_check",
+  "stages": {
+    "stage_0": {
+      "status": "VERIFIED",
+      "historical": true,
+      "evidence_artifact": "stage-0-baseline",
+      "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-0-baseline.md",
+      "evidence_sha256": "5334c6683a4fd51096c2f6e03d01458dff3ca70072c82998036806fe30d27efd"
+    },
+    "stage_1": {
+      "status": "VERIFIED",
+      "historical": true,
+      "evidence_artifact": "stage-1c-ai-r-durability-final",
+      "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-1c-ai-r-durability-final.md",
+      "evidence_sha256": "54ed9554fb2b8f82834598e5213a7aa6c954694497d0c5569754ed1a80dd42d8",
+      "patch_path": "construction/patches/v8_8/add_account_arabic_name_field.py",
+      "patch_sha256": "33c23744bcff248b0884c5b51439ffdb02afdd216a43a2a4f4060371e32f594e"
+    },
+    "stage_2": {
+      "status": "VERIFIED",
+      "historical": true,
+      "evidence_artifact": "stage-2-ai-r-round19",
+      "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-2-ai-r-round19.md",
+      "evidence_sha256": "3e83a3528fff02a206745df235fcfb5cc212d335129847e3144e0ab68347a880"
+    },
+    "stage_3": {
+      "status": "VERIFIED",
+      "historical": true,
+      "evidence_artifact": "stage-3-ai-r-round12",
+      "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-3-ai-r-round12.md",
+      "evidence_sha256": "4a397f7acfd72de31e3cc72796c45d4d917947fc213d808668d5df217292f7ed",
+      "service_path": "construction/services/bilingual_service.py",
+      "service_sha256": "753e3e655ca6c4426d37ebaf8a88b0d3124d2dcd9224a2dccd102833d1cf4207"
+    },
+    "stage_4_foundation": {
+      "status": "FOUNDATION_VERIFIED",
+      "historical": true,
+      "initial_export_manifest": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-initial-export-manifest.json",
+      "initial_export_manifest_sha256": "4d7bfdcea8f0b3fc0f1f862de23ac7d9c31bd014d540f84fd35435f82378ebcb",
+      "export_file": "account_catalog_20260910_121018.json",
+      "export_file_sha256": "206ecfae017b915742abc265016eee094304562e53838a932c7fd56af6db9ed1",
+      "evidence_artifact": "stage-4-export",
+      "evidence_path": "docs/ai/work-items/erp-arabic-bilingual-data/evidence/stage-4-export.md",
+      "evidence_sha256": "a9f4c008ad70cb8646625d853975e5a58099271576660b73a92316b3a482149f",
+      "review_bundle_service": "construction/services/account_review_bundle.py",
+      "review_bundle_service_sha256": "73d15457526170c7537d893cee7f553bcabb1a5afca21d56566b27475a1ad933"
+    }
+  }
+}

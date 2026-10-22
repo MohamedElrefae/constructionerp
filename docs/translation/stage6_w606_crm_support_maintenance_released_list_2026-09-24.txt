@@ -1,0 +1,38 @@
+Add Items in the Purpose Table
+Allow Lead Duplication based on Emails
+Appointment was created. But no lead was found. Please check the email to confirm
+Auto close Opportunity Replied after the no. of days mentioned above
+Date must be between {0} and {1}
+Default Service Level Agreement for {0} already exists.
+Email Address must be unique, it is already used in {0}
+Email verification failed.
+Enable to apply SLA on every {0}
+First Response SLA Failed by {}
+In row {0} of Appointment Booking Slots: "To Time" must be later than "From Time".
+Lead Owner cannot be same as the Lead Email Address
+Lost Reasons are required in case opportunity is Lost.
+No of Employees
+Opp/Lead %
+Order/Quot %
+Please check your email to confirm the appointment
+Please enter Maintenance Details first
+Please select valid document type.
+Post Route Key List
+Purposes Required
+Quot/Lead %
+Resolution Date
+Resolution Details
+Resolved By
+Response and Resolution
+Row {0}: To set {1} periodicity, difference between from and to date must be greater than or equal to {2}
+SLA will be applied if {1} is set as {2}{3}
+SLA will be applied on every {0}
+Service Level Agreement for {0} {1} already exists.
+Simple Python Expression, Example: doc.status == 'Open' and doc.issue_type == 'Bug'
+Stage
+Start Time can't be greater than or equal to End Time for {0}.
+The Document Type {0} must have a Status field to configure Service Level Agreement
+Update the modified timestamp on new communications received in Lead & Opportunity.
+Visits
+or its descendants
+{} Open

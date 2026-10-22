@@ -1,0 +1,38 @@
+/* ===== Construction Theme Components =====
+ * Component styles for feature toggle CSS classes.
+ * These classes are applied to <body> by the theme loader
+ * based on Construction Theme feature toggle fields.
+ *
+ * IMPORTANT: All !important usages are intentional — they must
+ * override Frappe's built-in styles which have high specificity.
+ */
+
+/* Hide Help Button */
+.ct-theme-hide-help {
+  display: none !important; /* Hide the help button in navbar */
+}
+
+/* Hide Search Bar */
+.ct-theme-hide-search {
+  display: none !important; /* Hide the search bar in navbar */
+}
+
+/* Hide Sidebar */
+.ct-theme-hide-sidebar {
+  display: none !important; /* Hide the entire sidebar */
+}
+
+/* Hide Like/Comment buttons */
+.ct-theme-hide-like-comment {
+  display: none !important; /* Hide like/comment action buttons */
+}
+
+/* Mobile Card View — switch list to card layout */
+.ct-theme-mobile-card {
+  /* Uses CSS variable for background to avoid hardcoded colors */
+  background-color: var(--ct-surface-bg);
+  border: 1px solid var(--ct-border-color);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}

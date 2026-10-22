@@ -1,0 +1,500 @@
+{
+  "batch": "w603-03",
+  "site": "v16.localhost",
+  "scope_rows": 234,
+  "scope_sha256": "a5f0e9f604ea52d89072d2c744864fdcbc733bc8307fd427a5c2658f4855dbc9",
+  "runtime_rows_scanned": 20957,
+  "exact_match_rows": 355,
+  "scope_keys_with_exact_match": 234,
+  "missing_keys": [],
+  "site_override_key_count": 121,
+  "site_overrides": [
+    {
+      "source_text": "Scan Mode",
+      "translated_text": "وضع المسح"
+    },
+    {
+      "source_text": "Scheduling",
+      "translated_text": "الجدولة"
+    },
+    {
+      "source_text": "Segregate Serial / Batch Bundle",
+      "translated_text": "فصل مجموعة التسلسل/الدفعة"
+    },
+    {
+      "source_text": "Select an Item Group.",
+      "translated_text": "تحديد مجموعة أصناف."
+    },
+    {
+      "source_text": "Select at least one value from each of the attributes.",
+      "translated_text": "حدد قيمة واحدة على الأقل من كل خاصية."
+    },
+    {
+      "source_text": "Self delivery",
+      "translated_text": "تسليم ذاتي"
+    },
+    {
+      "source_text": "Serial & Batch Item",
+      "translated_text": "صنف تسلسلي ودفعة"
+    },
+    {
+      "source_text": "Serial & Batch Item Settings",
+      "translated_text": "إعدادات الأصناف التسلسلية والدفعات"
+    },
+    {
+      "source_text": "Serial / Batch Bundle",
+      "translated_text": "مجموعة تسلسل/دفعة"
+    },
+    {
+      "source_text": "Serial / Batch No",
+      "translated_text": "رقم تسلسلي/دفعة"
+    },
+    {
+      "source_text": "Serial No (In/Out)",
+      "translated_text": "الرقم التسلسلي (داخل/خارج)"
+    },
+    {
+      "source_text": "Serial No Ledger",
+      "translated_text": "دفتر أستاذ الرقم التسلسلي"
+    },
+    {
+      "source_text": "Serial No Reserved",
+      "translated_text": "الرقم التسلسلي محجوز"
+    },
+    {
+      "source_text": "Serial No Series Overlap",
+      "translated_text": "تداخل سلسلة الرقم التسلسلي"
+    },
+    {
+      "source_text": "Serial No is mandatory",
+      "translated_text": "الرقم التسلسلي إلزامي"
+    },
+    {
+      "source_text": "Serial and Batch",
+      "translated_text": "التسلسل والدفعة"
+    },
+    {
+      "source_text": "Serial and Batch Bundle created",
+      "translated_text": "تم إنشاء مجموعة التسلسل والدفعة"
+    },
+    {
+      "source_text": "Serial and Batch Bundle updated",
+      "translated_text": "تم تحديث مجموعة التسلسل والدفعة"
+    },
+    {
+      "source_text": "Serial and Batch Entry",
+      "translated_text": "قيد التسلسل والدفعة"
+    },
+    {
+      "source_text": "Serial and Batch No",
+      "translated_text": "التسلسل والدفعة"
+    },
+    {
+      "source_text": "Serial and Batch Nos",
+      "translated_text": "الأرقام التسلسلية والدفعات"
+    },
+    {
+      "source_text": "Serial and Batch Reservation",
+      "translated_text": "حجز التسلسل والدفعة"
+    },
+    {
+      "source_text": "Serial and Batch Summary",
+      "translated_text": "ملخص التسلسل والدفعة"
+    },
+    {
+      "source_text": "Set Serial and Batch Bundle Naming Based on Naming Series",
+      "translated_text": "تعيين تسمية مجموعة التسلسل والدفعة بناء على سلسلة التسمية"
+    },
+    {
+      "source_text": "Setting Item Locations...",
+      "translated_text": "جار تعيين مواقع الأصناف..."
+    },
+    {
+      "source_text": "Shelf Life in Days",
+      "translated_text": "مدة الصلاحية بالأيام"
+    },
+    {
+      "source_text": "Shift Time (In Hours)",
+      "translated_text": "وقت الوردية (بالساعات)"
+    },
+    {
+      "source_text": "Shipment",
+      "translated_text": "الشحنة"
+    },
+    {
+      "source_text": "Shipment Amount",
+      "translated_text": "مبلغ الشحنة"
+    },
+    {
+      "source_text": "Shipment Delivery Note",
+      "translated_text": "إذن تسليم الشحنة"
+    },
+    {
+      "source_text": "Shipment ID",
+      "translated_text": "معرف الشحنة"
+    },
+    {
+      "source_text": "Shipment Information",
+      "translated_text": "معلومات الشحنة"
+    },
+    {
+      "source_text": "Shipment Parcel",
+      "translated_text": "طرد الشحنة"
+    },
+    {
+      "source_text": "Shipment Parcel Template",
+      "translated_text": "قالب طرد الشحنة"
+    },
+    {
+      "source_text": "Shipment Type",
+      "translated_text": "نوع الشحنة"
+    },
+    {
+      "source_text": "Shipment details",
+      "translated_text": "تفاصيل الشحنة"
+    },
+    {
+      "source_text": "Shipping Address Template",
+      "translated_text": "قالب عنوان الشحن"
+    },
+    {
+      "source_text": "Show Barcode Field in Stock Transactions",
+      "translated_text": "إظهار حقل الباركود في معاملات المخزون"
+    },
+    {
+      "source_text": "Show Dimension Wise Stock",
+      "translated_text": "إظهار المخزون حسب البُعد"
+    },
+    {
+      "source_text": "Show Disabled Items",
+      "translated_text": "إظهار الأصناف المعطلة"
+    },
+    {
+      "source_text": "Show Disabled Warehouses",
+      "translated_text": "إظهار المستودعات المعطلة"
+    },
+    {
+      "source_text": "Show Item Name",
+      "translated_text": "إظهار اسم الصنف"
+    },
+    {
+      "source_text": "Show pending entries",
+      "translated_text": "إظهار القيود المعلقة"
+    },
+    {
+      "source_text": "Source Document",
+      "translated_text": "المستند المصدر"
+    },
+    {
+      "source_text": "Source Document No",
+      "translated_text": "رقم المستند المصدر"
+    },
+    {
+      "source_text": "Source Fieldname",
+      "translated_text": "اسم حقل المصدر"
+    },
+    {
+      "source_text": "Source Warehouse Address Link",
+      "translated_text": "رابط عنوان المستودع المصدر"
+    },
+    {
+      "source_text": "Start Reposting",
+      "translated_text": "بدء إعادة الترحيل"
+    },
+    {
+      "source_text": "Stock Capacity",
+      "translated_text": "سعة المخزون"
+    },
+    {
+      "source_text": "Stock Closing",
+      "translated_text": "إغلاق المخزون"
+    },
+    {
+      "source_text": "Stock Closing Balance",
+      "translated_text": "رصيد إغلاق المخزون"
+    },
+    {
+      "source_text": "Stock Closing Entry",
+      "translated_text": "قيد إغلاق المخزون"
+    },
+    {
+      "source_text": "Stock Closing Log",
+      "translated_text": "سجل إغلاق المخزون"
+    },
+    {
+      "source_text": "Stock Entry Item",
+      "translated_text": "عنصر قيد المخزون"
+    },
+    {
+      "source_text": "Stock Frozen Up To",
+      "translated_text": "المخزون مجمد حتى"
+    },
+    {
+      "source_text": "Stock Ledger Invariant Check",
+      "translated_text": "فحص ثبات دفتر أستاذ المخزون"
+    },
+    {
+      "source_text": "Stock Ledger Variance",
+      "translated_text": "انحراف دفتر أستاذ المخزون"
+    },
+    {
+      "source_text": "Stock Movement",
+      "translated_text": "حركة المخزون"
+    },
+    {
+      "source_text": "Stock Planning",
+      "translated_text": "تخطيط المخزون"
+    },
+    {
+      "source_text": "Stock Qty vs Batch Qty",
+      "translated_text": "كمية المخزون مقابل كمية الدفعة"
+    },
+    {
+      "source_text": "Stock Reposting Settings",
+      "translated_text": "إعدادات إعادة نشر المخزون"
+    },
+    {
+      "source_text": "Stock Reservation Entries Cancelled",
+      "translated_text": "تم إلغاء قيود حجز المخزون"
+    },
+    {
+      "source_text": "Stock Reservation Warehouse Mismatch",
+      "translated_text": "عدم تطابق مستودع حجز المخزون"
+    },
+    {
+      "source_text": "Stock Transactions Settings",
+      "translated_text": "إعدادات معاملات المخزون"
+    },
+    {
+      "source_text": "Stock UOM Quantity",
+      "translated_text": "كمية وحدة قياس المخزون"
+    },
+    {
+      "source_text": "Stock Validations",
+      "translated_text": "تحققات المخزون"
+    },
+    {
+      "source_text": "Stock Value by Item Group",
+      "translated_text": "قيمة المخزون حسب مجموعة الأصناف"
+    },
+    {
+      "source_text": "Subcontract BOM",
+      "translated_text": "قائمة مواد مقاول الباطن"
+    },
+    {
+      "source_text": "Subcontracted Purchase Order",
+      "translated_text": "أمر شراء مقاول باطن"
+    },
+    {
+      "source_text": "Subcontracting Receipt Item",
+      "translated_text": "بند إيصال مقاولات باطن"
+    },
+    {
+      "source_text": "Supplier Info",
+      "translated_text": "معلومات المورد"
+    },
+    {
+      "source_text": "Target Fieldname (Stock Ledger Entry)",
+      "translated_text": "اسم الحقل الهدف (قيد دفتر أستاذ المخزون)"
+    },
+    {
+      "source_text": "Target Warehouse Address Link",
+      "translated_text": "رابط عنوان المستودع الهدف"
+    },
+    {
+      "source_text": "Template Item Selected",
+      "translated_text": "تم تحديد صنف قالب"
+    },
+    {
+      "source_text": "Total Active Items",
+      "translated_text": "إجمالي الأصناف النشطة"
+    },
+    {
+      "source_text": "Total Incoming Value (Receipt)",
+      "translated_text": "إجمالي القيمة الواردة (استلام)"
+    },
+    {
+      "source_text": "Total Landed Cost",
+      "translated_text": "إجمالي التكلفة الإضافية"
+    },
+    {
+      "source_text": "Total Landed Cost (Company Currency)",
+      "translated_text": "إجمالي التكلفة الإضافية (عملة الشركة)"
+    },
+    {
+      "source_text": "Total Outgoing Value (Consumption)",
+      "translated_text": "إجمالي القيمة الصادرة (استهلاك)"
+    },
+    {
+      "source_text": "Total Reposting Count",
+      "translated_text": "إجمالي عدد إعادة الترحيل"
+    },
+    {
+      "source_text": "Total Stock Value",
+      "translated_text": "إجمالي قيمة المخزون"
+    },
+    {
+      "source_text": "Total Value Difference (Incoming - Outgoing)",
+      "translated_text": "إجمالي فرق القيمة (وارد - صادر)"
+    },
+    {
+      "source_text": "Total Vendor Invoices Cost (Company Currency)",
+      "translated_text": "إجمالي تكلفة فواتير الموردين (عملة الشركة)"
+    },
+    {
+      "source_text": "Total Warehouses",
+      "translated_text": "إجمالي المستودعات"
+    },
+    {
+      "source_text": "Total Weight (kg)",
+      "translated_text": "إجمالي الوزن (كجم)"
+    },
+    {
+      "source_text": "Total Workstation Time (In Hours)",
+      "translated_text": "إجمالي وقت محطة العمل (بالساعات)"
+    },
+    {
+      "source_text": "Tracebility Direction",
+      "translated_text": "اتجاه التتبع"
+    },
+    {
+      "source_text": "Tracking Status",
+      "translated_text": "حالة التتبع"
+    },
+    {
+      "source_text": "Tracking Status Info",
+      "translated_text": "معلومات حالة التتبع"
+    },
+    {
+      "source_text": "Tracking URL",
+      "translated_text": "رابط التتبع"
+    },
+    {
+      "source_text": "Transaction Information",
+      "translated_text": "معلومات المعاملة"
+    },
+    {
+      "source_text": "Transit",
+      "translated_text": "عبور"
+    },
+    {
+      "source_text": "Transit Entry",
+      "translated_text": "قيد عبور"
+    },
+    {
+      "source_text": "Type of Transaction",
+      "translated_text": "نوع المعاملة"
+    },
+    {
+      "source_text": "Unassigned Qty",
+      "translated_text": "كمية غير مسندة"
+    },
+    {
+      "source_text": "Update Batch Qty",
+      "translated_text": "تحديث كمية الدفعة"
+    },
+    {
+      "source_text": "Update Existing Price List Rate",
+      "translated_text": "تحديث سعر قائمة الأسعار الحالي"
+    },
+    {
+      "source_text": "Update Price List Based On",
+      "translated_text": "تحديث قائمة الأسعار بناء على"
+    },
+    {
+      "source_text": "Use Batch-wise Valuation",
+      "translated_text": "استخدام التقييم حسب الدفعة"
+    },
+    {
+      "source_text": "Use Item based reposting",
+      "translated_text": "استخدام إعادة الترحيل حسب الصنف"
+    },
+    {
+      "source_text": "Use Serial / Batch Fields",
+      "translated_text": "استخدام حقول التسلسل/الدفعة"
+    },
+    {
+      "source_text": "Validate Material Transfer Warehouses",
+      "translated_text": "التحقق من مستودعات نقل المواد"
+    },
+    {
+      "source_text": "Validate Negative Stock",
+      "translated_text": "التحقق من المخزون السالب"
+    },
+    {
+      "source_text": "Valuation Field Type",
+      "translated_text": "نوع حقل التقييم"
+    },
+    {
+      "source_text": "Valuation Rate (In / Out)",
+      "translated_text": "سعر التقييم (داخل/خارج)"
+    },
+    {
+      "source_text": "Value Based Inspection",
+      "translated_text": "فحص حسب القيمة"
+    },
+    {
+      "source_text": "Value of Goods",
+      "translated_text": "قيمة البضائع"
+    },
+    {
+      "source_text": "Vendor Invoice",
+      "translated_text": "فاتورة المورد"
+    },
+    {
+      "source_text": "Vendor Invoices",
+      "translated_text": "فواتير الموردين"
+    },
+    {
+      "source_text": "Via Landed Cost Voucher",
+      "translated_text": "عبر سند التكلفة الإضافية"
+    },
+    {
+      "source_text": "View Ledgers",
+      "translated_text": "عرض دفاتر الأستاذ"
+    },
+    {
+      "source_text": "Voucher No is mandatory",
+      "translated_text": "رقم السند إلزامي"
+    },
+    {
+      "source_text": "Voucher Qty",
+      "translated_text": "كمية السند"
+    },
+    {
+      "source_text": "Warehouse Capacity Summary",
+      "translated_text": "ملخص سعة المستودع"
+    },
+    {
+      "source_text": "Warehouse Disabled?",
+      "translated_text": "هل المستودع معطل؟"
+    },
+    {
+      "source_text": "Warehouse Wise Stock Balance",
+      "translated_text": "رصيد المخزون حسب المستودع"
+    },
+    {
+      "source_text": "Warning on Negative Stock",
+      "translated_text": "تحذير عند المخزون السالب"
+    },
+    {
+      "source_text": "Warranty Expiry (Serial)",
+      "translated_text": "انتهاء الضمان (تسلسلي)"
+    },
+    {
+      "source_text": "Weight (kg)",
+      "translated_text": "الوزن (كجم)"
+    },
+    {
+      "source_text": "Width (cm)",
+      "translated_text": "العرض (سم)"
+    },
+    {
+      "source_text": "Zero quantity",
+      "translated_text": "كمية صفرية"
+    }
+  ],
+  "nonempty_non_site_override_keys": [],
+  "catalog_key_count": 234,
+  "note": "Read-only exact-key snapshot from the authorized test site; Site Overrides are preserve-only under plan §12."
+}

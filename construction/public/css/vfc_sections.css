@@ -1,0 +1,256 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   vfc_sections.css — Form Layout Engine Section Styles
+   ─────────────────────────────────────────────────────────────────────
+   Styles for the VFC section cards injected by vfc_layout_engine.js
+   and the Sections tab in the Config panel (vite_layout_controls.js).
+
+   Principles:
+   • Scoped to .vfc-le-* classes — zero bleed into native Frappe
+   • Uses var(--ct-*) variables — inherits dark/light mode automatically
+   • @media print — section headers hidden, fields still render
+   • [dir="rtl"] support — correct RTL flow
+   • @media (pointer: coarse) — mobile-safe (no drag targets styled)
+   Version: 1.3 | 2026-05-28
+════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────
+   VFC Section Card
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-section {
+  margin-bottom: 18px;
+  border: 1px solid var(--ct-border, #e2e8f0);
+  border-radius: var(--ct-border-radius, 10px);
+  overflow: hidden;
+  background: var(--ct-surface, #ffffff);
+  box-shadow: var(--ct-shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+  transition: box-shadow var(--ct-anim-form, 220ms);
+}
+
+.vfc-le-section:hover {
+  box-shadow: var(--ct-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.vfc-le-section[data-vfc-empty="1"] {
+  display: none !important;
+}
+
+/* Unassigned fields section — visually de-emphasised */
+.vfc-le-section.vfc-le-unassigned {
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.vfc-le-section.vfc-le-unassigned .vfc-le-section-head {
+  background: transparent;
+  color: var(--ct-text-muted, #718096);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Section Header
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-section-head {
+  padding: 10px 16px;
+  font-size: var(--ct-label-size, 10px);
+  font-weight: var(--ct-label-weight, 700);
+  text-transform: var(--ct-label-transform, uppercase);
+  letter-spacing: var(--ct-label-spacing, 0.07em);
+  color: var(--ct-text, #000000);
+  background: var(--ct-section-head-bg-dark, #f7fafc);
+  border-left: var(--ct-section-accent-border);
+  border-bottom: 1px solid var(--ct-border, #e2e8f0);
+  user-select: none;
+}
+
+html[data-theme="light"] .vfc-le-section-head {
+  background: var(--ct-section-head-bg-light, #f8fafc);
+}
+
+/* Collapsible header — shows pointer and chevron */
+.vfc-le-section-head.vfc-le-collapsible {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vfc-le-section-head.vfc-le-collapsible::after {
+  content: "▾";
+  margin-left: auto;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.vfc-le-section[data-vfc-collapsed="1"] .vfc-le-section-head.vfc-le-collapsible::after {
+  transform: rotate(-90deg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Field Grid
+   column count is set inline as grid-template-columns: repeat(N, 1fr)
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-grid {
+  display: grid;
+  gap: 0;
+  padding: 6px 10px 10px;
+  align-items: start;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Field Cell
+───────────────────────────────────────────────────────────────────── */
+.vfc-le-cell {
+  padding: 4px 6px;
+  min-width: 0; /* prevent grid overflow */
+}
+
+/* Ensure native Frappe field wrappers fill the cell */
+.vfc-le-cell > .frappe-control,
+.vfc-le-cell > [data-fieldtype] {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   RTL Support
+───────────────────────────────────────────────────────────────────── */
+[dir="rtl"] .vfc-le-section {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .vfc-le-section-head {
+  border-left: 0;
+  border-right: var(--ct-section-accent-border);
+}
+
+[dir="rtl"] .vfc-le-grid {
+  direction: rtl;
+}
+
+[dir="rtl"] .vfc-le-section-head.vfc-le-collapsible::after {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Print Mode — hide section headers, keep fields
+───────────────────────────────────────────────────────────────────── */
+@media print {
+  .vfc-le-section {
+    border: none;
+    box-shadow: none;
+    margin-bottom: 8px;
+  }
+
+  .vfc-le-section-head {
+    display: none;
+  }
+
+  .vfc-le-grid {
+    padding: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Mobile — pointer: coarse (touch devices)
+   Drag handles hidden; arrow controls shown for reordering (Phase 4)
+───────────────────────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .vfc-le-section {
+    border-radius: 6px;
+  }
+
+  .vfc-le-grid {
+    padding: 4px 6px 8px;
+  }
+
+  /* Drag handles hidden on touch — users rely on arrow buttons */
+  .vfc-sort-handle {
+    display: none !important;
+  }
+
+  .vfc-arrow-controls {
+    display: inline-flex !important;
+  }
+}
+
+@media (pointer: fine) {
+  .vfc-arrow-controls {
+    display: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Sections Editor — Unassigned Fields style
+───────────────────────────────────────────────────────────────────── */
+.vfc-sec-item.vfc-sec-item-unassigned {
+  border-style: dashed !important;
+  opacity: 0.85;
+}
+
+.vfc-sec-item.vfc-sec-item-unassigned .vfc-sec-sort-handle,
+.vfc-sec-item.vfc-sec-item-unassigned > div > .btn-default[onclick*="deleteSection"],
+.vfc-sec-item.vfc-sec-item-unassigned input[type="text"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Dark Mode — all colours via CSS variables (automatic)
+   Nothing to override here — var(--ct-*) covers both modes.
+───────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────
+   Native Density For Tabbed Forms
+   Tabbed DocTypes stay on Frappe's native DOM. Density only changes the
+   native form-column layout, so tab visibility and depends_on stay stable.
+───────────────────────────────────────────────────────────────────── */
+.form-layout.vfc-native-density.vfc-density-1 .section-body > .form-column:not(.hide-control),
+.form-layout.vfc-native-density.vfc-density-3 .section-body > .form-column:not(.hide-control) {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  min-width: 0;
+}
+
+.form-layout.vfc-native-density.vfc-density-1 .form-column > form {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+}
+
+.form-layout.vfc-native-density.vfc-density-3 .form-column > form {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 12px;
+  align-items: start;
+}
+
+.form-layout.vfc-native-density .form-column > form > .frappe-control {
+  min-width: 0;
+}
+
+/* Stable VFC mount point inside native Frappe tab panes. */
+.form-layout .tab-pane > .vfc-tab-pane-host {
+  display: block;
+  width: 100%;
+  min-height: 1px;
+  clear: both;
+}
+
+.form-layout .tab-pane.active > .vfc-tab-pane-host,
+.form-layout .tab-pane.show > .vfc-tab-pane-host {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.form-layout .tab-pane:not(.active):not(.show) > .vfc-tab-pane-host {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .form-layout.vfc-native-density.vfc-density-3 .form-column > form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

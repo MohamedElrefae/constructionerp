@@ -1,0 +1,988 @@
+# Translations template for Construction ERP.
+# Copyright (C) 2026 Mohamed Elrefae
+# This file is distributed under the same license as the Construction ERP project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Construction ERP VERSION\n"
+"Report-Msgid-Bugs-To: melrefa3@hotmail.com\n"
+"POT-Creation-Date: 2026-05-18 21:58+0205\n"
+"PO-Revision-Date: 2026-05-18 21:58+0205\n"
+"Last-Translator: melrefa3@hotmail.com\n"
+"Language-Team: melrefa3@hotmail.com\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#. Header text in the Construction Workspace
+#: construction/workspace/construction/construction.json
+msgid "<span class='h4'><b>Construction ERP</b></span>"
+msgstr ""
+
+#. Label of the accent_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Accent Color"
+msgstr ""
+
+#. Label of the accent_primary (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Accent Primary"
+msgstr ""
+
+#. Label of the accent_primary_hover (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Accent Primary Hover"
+msgstr ""
+
+#. Label of the accent_secondary (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Accent Secondary"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:12
+msgid "Actions"
+msgstr ""
+
+#. Name of a role
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Administrator"
+msgstr ""
+
+#. Label of the advanced_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Advanced"
+msgstr ""
+
+#. Name of a role
+#: construction/doctype/construction_theme/construction_theme.json
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "All"
+msgstr ""
+
+#. Label of the allow_user_override (Check) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Allow User Override"
+msgstr ""
+
+#. Description of the 'Allow User Override' (Check) field in DocType 'Modern
+#. Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Allow users to set their own theme preferences"
+msgstr ""
+
+#. Label of the app_title (Data) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "App Title"
+msgstr ""
+
+#. Description of the 'Custom CSS Overrides' (Code) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Appended after generated CSS - use for edge-case overrides"
+msgstr ""
+
+#. Description of the 'Preview Palette' (JSON) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Array of 5 hex colors for switcher thumbnail [\"#1a3a1e\",\"#4CAF50\",...]"
+msgstr ""
+
+#. Description of the 'Contrast Ratio' (Float) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Auto-calculated WCAG contrast (accent_primary vs surface_bg)"
+msgstr ""
+
+#. Description of the 'Primary Button Hover Background' (Color) field in
+#. DocType 'Construction Theme'
+#. Description of the 'Secondary Button Hover Background' (Color) field in
+#. DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Auto-computed if empty"
+msgstr ""
+
+#: construction/public/js/boq_structure_tree.js:15
+msgid "BOQ Header"
+msgstr ""
+
+#: construction/public/js/boq_structure_tree.js:6
+msgid "BOQ Structure"
+msgstr ""
+
+#. Option for the 'Login Page Background Type' (Select) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Background Image"
+msgstr ""
+
+#. Description of the 'Enforce Contrast Check' (Check) field in DocType 'Modern
+#. Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Block theme save if WCAG AA contrast ratio is not met"
+msgstr ""
+
+#. Label of the body_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Body Background"
+msgstr ""
+
+#. Label of the border_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Border Color"
+msgstr ""
+
+#. Label of the branding_section (Section Break) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Branding"
+msgstr ""
+
+#. Label of the buttons_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Buttons"
+msgstr ""
+
+#. Label of the css_cache_ttl (Int) field in DocType 'Modern Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "CSS Cache TTL (seconds)"
+msgstr ""
+
+#. Description of the 'Surface Background' (Color) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Cards, modals, popover backgrounds"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:161
+msgid "Close"
+msgstr ""
+
+#. Label of the color_scheme (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Color Scheme"
+msgstr ""
+
+#. Name of a Workspace
+#: construction/workspace/construction/construction.json
+msgid "Construction"
+msgstr ""
+
+#. Option for the 'Theme Type' (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Construction Dark"
+msgstr ""
+
+#. Option for the 'Theme Type' (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Construction Light"
+msgstr ""
+
+#. Name of a DocType
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Construction Theme"
+msgstr ""
+
+#. Label of the contrast_ratio (Float) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Contrast Ratio"
+msgstr ""
+
+#. Label of the custom_css (Code) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Custom CSS Overrides"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:418
+msgid "Custom CSS contains blocked pattern: {0}. External resources and expressions are not allowed."
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:426
+msgid "Custom CSS exceeds 10KB limit."
+msgstr ""
+
+#. Description of the 'Dark Theme' (Link) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "Custom Construction Theme for Dark mode"
+msgstr ""
+
+#. Description of the 'Light Theme' (Link) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "Custom Construction Theme for Light mode"
+msgstr ""
+
+#. Option for the 'Theme Type' (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Custom Dark"
+msgstr ""
+
+#. Option for the 'Theme Type' (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Custom Light"
+msgstr ""
+
+#. Label of the danger_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Danger Color"
+msgstr ""
+
+#. Label of the dark_theme (Link) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "Dark Theme"
+msgstr ""
+
+#. Option for the 'Login Box Position' (Select) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Default"
+msgstr ""
+
+#. Description of the 'Default Dark Theme' (Link) field in DocType 'Modern
+#. Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Default Construction Theme for Dark mode"
+msgstr ""
+
+#. Description of the 'Default Light Theme' (Link) field in DocType 'Modern
+#. Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Default Construction Theme for Light mode"
+msgstr ""
+
+#. Label of the default_dark_theme (Link) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Default Dark Theme"
+msgstr ""
+
+#. Label of the default_light_theme (Link) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Default Light Theme"
+msgstr ""
+
+#. Label of the description_section (Section Break) field in DocType
+#. 'Construction Theme'
+#. Label of the description (Small Text) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Description"
+msgstr ""
+
+#. Description of the 'Theme Type' (Select) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Determines base styling and CSS generation"
+msgstr ""
+
+#. Label of the disable_update_popup (Check) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Disable Update Popup"
+msgstr ""
+
+#. Label of the emoji_icon (Data) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Emoji Icon"
+msgstr ""
+
+#. Label of the enforce_contrast_check (Check) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Enforce Contrast Check"
+msgstr ""
+
+#. Label of the error_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Error Color"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:122
+msgid "Error generating preview: "
+msgstr ""
+
+#: construction/public/js/construction_export_menu.js:45
+msgid "Export"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:126
+msgid "Failed to generate theme preview"
+msgstr ""
+
+#. Label of the favicon (Attach Image) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Favicon"
+msgstr ""
+
+#. Description of the 'Hide Like and Comment' (Check) field in DocType
+#. 'Construction Theme'
+#. Description of the 'Mobile Card View' (Check) field in DocType 'Construction
+#. Theme'
+#. Description of the 'Hide Help Button' (Check) field in DocType 'Construction
+#. Theme'
+#. Description of the 'Hide Search Bar' (Check) field in DocType 'Construction
+#. Theme'
+#. Description of the 'Hide Sidebar' (Check) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Feature toggle"
+msgstr ""
+
+#. Label of the features_section (Section Break) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Features"
+msgstr ""
+
+#. Label of the footer_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Footer"
+msgstr ""
+
+#. Label of the footer_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Footer Background"
+msgstr ""
+
+#. Label of the footer_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Footer Text"
+msgstr ""
+
+#. Label of the general_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "General"
+msgstr ""
+
+#. Label of the hide_help_button (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Hide Help Button"
+msgstr ""
+
+#. Label of the hide_help_menu (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Hide Help Menu"
+msgstr ""
+
+#. Label of the hide_like_comment (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Hide Like and Comment"
+msgstr ""
+
+#. Label of the hide_search_bar (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Hide Search Bar"
+msgstr ""
+
+#. Label of the hide_sidebar (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Hide Sidebar"
+msgstr ""
+
+#. Description of the 'Accent Primary Hover' (Color) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Hovered/pressed state - auto-calculated if blank"
+msgstr ""
+
+#. Description of the 'CSS Cache TTL (seconds)' (Int) field in DocType 'Modern
+#. Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "How long to cache generated CSS (default: 1 hour)"
+msgstr ""
+
+#. Description of the 'Is Active' (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Inactive themes are hidden from switcher"
+msgstr ""
+
+#. Label of the notes_section (Section Break) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Information"
+msgstr ""
+
+#. Label of the inherit_from_site (Check) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "Inherit from Site"
+msgstr ""
+
+#. Label of the input_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Input Background"
+msgstr ""
+
+#. Label of the input_border (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Input Border"
+msgstr ""
+
+#. Label of the input_fields_tab (Tab Break) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Input Fields"
+msgstr ""
+
+#. Label of the input_label_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Input Label Color"
+msgstr ""
+
+#. Label of the input_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Input Text"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:170
+msgid "Invalid hex color format in field '{0}': {1}"
+msgstr ""
+
+#. Label of the is_active (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Is Active"
+msgstr ""
+
+#. Label of the is_default_dark (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Is Default Dark Theme"
+msgstr ""
+
+#. Label of the is_default_light (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Is Default Light Theme"
+msgstr ""
+
+#: construction/public/js/boq_structure_tree.js:29
+msgid "Is Group (Section)"
+msgstr ""
+
+#. Label of the is_system_theme (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Is System Theme"
+msgstr ""
+
+#. Option for the 'Login Box Position' (Select) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Left"
+msgstr ""
+
+#. Label of the light_theme (Link) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "Light Theme"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:395
+msgid "Live Preview"
+msgstr ""
+
+#. Label of the login_box_position (Select) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Box Position"
+msgstr ""
+
+#. Label of the login_btn_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Button Background"
+msgstr ""
+
+#. Label of the login_btn_hover_bg (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Button Hover Background"
+msgstr ""
+
+#. Label of the login_btn_hover_text (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Button Hover Text"
+msgstr ""
+
+#. Label of the login_btn_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Button Text"
+msgstr ""
+
+#. Label of the login_heading_text_color (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Heading Text Color"
+msgstr ""
+
+#. Label of the login_logo_inside_box (Check) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Logo Inside Box"
+msgstr ""
+
+#. Label of the login_page_tab (Tab Break) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Page"
+msgstr ""
+
+#. Label of the login_page_bg_color (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Page Background Color"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:218
+msgid "Login Page Background Color is required when Login Page Background Type is set to 'Solid Color'."
+msgstr ""
+
+#. Label of the login_page_bg_image (Attach Image) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Page Background Image"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:211
+msgid "Login Page Background Image is required when Login Page Background Type is set to 'Background Image'."
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:251
+msgid "Login Page Background Image was set to public. Private files cannot be accessed on the login page."
+msgstr ""
+
+#. Label of the login_page_bg_type (Select) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Page Background Type"
+msgstr ""
+
+#. Label of the login_page_title (Data) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Page Title"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:228
+msgid "Login Page Title must not exceed 30 characters. Current length: {0}"
+msgstr ""
+
+#. Label of the login_tab_bg_color (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Login Tab Background Color"
+msgstr ""
+
+#. Label of the logo_url (Attach Image) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Logo URL"
+msgstr ""
+
+#. Description of the 'Accent Primary' (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Main brand color (buttons, indicators)"
+msgstr ""
+
+#. Description of the 'Login Page Title' (Data) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Max 30 characters"
+msgstr ""
+
+#. Description of the 'Theme Switcher Limit' (Int) field in DocType 'Modern
+#. Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Maximum number of themes shown in theme switcher dropdown"
+msgstr ""
+
+#. Label of the mobile_card_view (Check) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Mobile Card View"
+msgstr ""
+
+#. Name of a DocType
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Modern Theme Settings"
+msgstr ""
+
+#: construction/api/theme_api.py:389
+msgid "Modern Theme Settings saved successfully"
+msgstr ""
+
+#. Description of the 'Text Secondary' (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Muted text, descriptions"
+msgstr ""
+
+#. Label of the navbar_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Navbar"
+msgstr ""
+
+#. Label of the navbar_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Navbar Background"
+msgstr ""
+
+#. Label of the navbar_text_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Navbar Text Color"
+msgstr ""
+
+#: construction/api/theme_api.py:343 construction/api/theme_api.py:376
+msgid "Not permitted"
+msgstr ""
+
+#: construction/api/modern_form_api.py:215
+msgid "Not permitted to delete this document"
+msgstr ""
+
+#: construction/api/modern_form_api.py:171
+msgid "Not permitted to update this document"
+msgstr ""
+
+#. Label of the notes (Text) field in DocType 'Modern Theme Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Notes"
+msgstr ""
+
+#. Label of the number_card_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Number Card Background"
+msgstr ""
+
+#. Label of the number_card_border (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Number Card Border"
+msgstr ""
+
+#. Label of the number_card_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Number Card Text"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:94
+msgid "Only one theme can be the default dark theme. '{0}' is already set as default."
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:83
+msgid "Only one theme can be the default light theme. '{0}' is already set as default."
+msgstr ""
+
+#: construction/public/js/boq_structure_tree.js:55
+msgid "Open"
+msgstr ""
+
+#. Label of the preview_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Preview"
+msgstr ""
+
+#. Label of the preview_colors (JSON) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Preview Palette"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:8
+msgid "Preview Theme"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:154
+msgid "Preview shows approximate rendering. Save and apply theme to see full effect."
+msgstr ""
+
+#. Label of the primary_btn_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Primary Button Background"
+msgstr ""
+
+#. Label of the primary_btn_hover_bg (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Primary Button Hover Background"
+msgstr ""
+
+#. Label of the primary_btn_hover_text (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Primary Button Hover Text"
+msgstr ""
+
+#. Label of the primary_btn_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Primary Button Text"
+msgstr ""
+
+#. Label of the primary_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Primary Color"
+msgstr ""
+
+#. Option for the 'Login Box Position' (Select) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Right"
+msgstr ""
+
+#. Label of the secondary_btn_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Secondary Button Background"
+msgstr ""
+
+#. Label of the secondary_btn_hover_bg (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Secondary Button Hover Background"
+msgstr ""
+
+#. Label of the secondary_btn_hover_text (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Secondary Button Hover Text"
+msgstr ""
+
+#. Label of the secondary_btn_text (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Secondary Button Text"
+msgstr ""
+
+#. Description of the 'Accent Secondary' (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Secondary actions, badges"
+msgstr ""
+
+#. Label of the semantic_colors_tab (Tab Break) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Semantic Colors"
+msgstr ""
+
+#. Label of the sidebar_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Sidebar Background"
+msgstr ""
+
+#. Description of the 'Emoji Icon' (Data) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Single emoji displayed in theme switcher"
+msgstr ""
+
+#. Option for the 'Login Page Background Type' (Select) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Solid Color"
+msgstr ""
+
+#. Description of the 'Border Color' (Color) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Subtle dividers - auto-calculated if blank"
+msgstr ""
+
+#. Label of the success_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Success Color"
+msgstr ""
+
+#. Label of the surface_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Surface Background"
+msgstr ""
+
+#. Name of a role
+#: construction/doctype/construction_theme/construction_theme.json
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "System Manager"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:450
+msgid "System themes cannot be deleted. Deactivate them instead."
+msgstr ""
+
+#. Label of the table_body_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Table Body Background"
+msgstr ""
+
+#. Label of the table_body_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Table Body Text"
+msgstr ""
+
+#. Label of the table_header_bg (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Table Header Background"
+msgstr ""
+
+#. Label of the table_header_text (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Table Header Text"
+msgstr ""
+
+#. Label of the tables_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Tables"
+msgstr ""
+
+#. Label of the text_primary (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Text Primary"
+msgstr ""
+
+#. Label of the text_secondary (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Text Secondary"
+msgstr ""
+
+#. Description of the 'User' (Link) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "The user these theme settings apply to"
+msgstr ""
+
+#. Label of a Link in the Construction Workspace
+#. Label of a shortcut in the Construction Workspace
+#: construction/workspace/construction/construction.json
+msgid "Theme Configuration"
+msgstr ""
+
+#. Label of the theme_name (Data) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Theme Name"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:134
+msgid "Theme Preview"
+msgstr ""
+
+#. Label of a Card Break in the Construction Workspace
+#. Label of a Link in the Construction Workspace
+#. Label of a shortcut in the Construction Workspace
+#: construction/workspace/construction/construction.json
+msgid "Theme Settings"
+msgstr ""
+
+#. Label of the theme_switcher_limit (Int) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "Theme Switcher Limit"
+msgstr ""
+
+#. Label of the theme_type (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Theme Type"
+msgstr ""
+
+#: construction/api/theme_api.py:327
+msgid "Theme settings saved successfully"
+msgstr ""
+
+#: construction/public/js/boq_structure_tree.js:23
+msgid "Title"
+msgstr ""
+
+#. Description of the 'Is System Theme' (Check) field in DocType 'Construction
+#. Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "True for the 4 Phase 1 themes - prevents deletion"
+msgstr ""
+
+#. Description of the 'Theme Name' (Data) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Unique identifier for this theme"
+msgstr ""
+
+#. Description of the 'Inherit from Site' (Check) field in DocType 'User Desk
+#. Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "Use site default themes instead of custom preferences"
+msgstr ""
+
+#. Description of the 'Is Default Dark Theme' (Check) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Used when user's system is in dark mode"
+msgstr ""
+
+#. Description of the 'Is Default Light Theme' (Check) field in DocType
+#. 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Used when user's system is in light mode"
+msgstr ""
+
+#. Label of the user (Link) field in DocType 'User Desk Theme'
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "User"
+msgstr ""
+
+#. Name of a DocType
+#: construction/doctype/user_desk_theme/user_desk_theme.json
+msgid "User Desk Theme"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Modern Theme
+#. Settings'
+#: construction/doctype/modern_theme_settings/modern_theme_settings.json
+msgid "User Preferences"
+msgstr ""
+
+#: construction/api/theme_api.py:306
+msgid "User theme overrides are not allowed by administrator"
+msgstr ""
+
+#: construction/public/js/construction_export_menu.js:134
+msgid "View"
+msgstr ""
+
+#. Label of the warning_color (Color) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Warning Color"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.js:37
+msgid "Warning: Contrast ratio is below WCAG AA (4.5:1)"
+msgstr ""
+
+#: construction/doctype/construction_theme/construction_theme.py:337
+msgid ""
+"Warning: The following color pairs have contrast ratios below WCAG AA standard (4.5:1):\n"
+"{0}\n"
+"\n"
+"Consider adjusting colors for better accessibility."
+msgstr ""
+
+#. Label of the widgets_tab (Tab Break) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "Widgets"
+msgstr ""
+
+#. Option for the 'Color Scheme' (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "dark"
+msgstr ""
+
+#. Option for the 'Color Scheme' (Select) field in DocType 'Construction Theme'
+#: construction/doctype/construction_theme/construction_theme.json
+msgid "light"
+msgstr ""
+
+#: construction/api/modern_form_api.py:254
+#: construction/api/modern_form_api.py:404
+msgid "{0} is required"
+msgstr ""
+
+#: construction/api/modern_form_api.py:262
+#: construction/api/modern_form_api.py:412
+msgid "{0} must be a number"
+msgstr ""
+
+#: construction/api/modern_form_api.py:266
+msgid "{0} must be a valid date"
+msgstr ""
+
+#: construction/api/modern_form_api.py:270
+msgid "{0} must be a valid email"
+msgstr ""
+

@@ -1,0 +1,20 @@
+FIXTURE_FILE_GATE sha256=d6e27a01483c841dccdb090277aa9c59459b270d52d40661bf9934d9e4c33ad2 rows=12 consistent_with_proposal=yes
+PREVALIDATE_OK rows=15 fixtures_to_enable=12
+WRITE UOM 'M3' value=0804df0daf3d4a64 norm=0804df0daf3d4a64 identity=unchanged enabled=1
+WRITE UOM 'M2' value=e7b2a3d2f82114c7 norm=e7b2a3d2f82114c7 identity=unchanged enabled=1
+WRITE UOM 'M' value=60d80267fce4afdb norm=60d80267fce4afdb identity=unchanged enabled=1
+WRITE UOM 'TON' value=6c97adc355134976 norm=6c97adc355134976 identity=unchanged enabled=1
+WRITE UOM 'KG' value=174e94ae4c517269 norm=174e94ae4c517269 identity=unchanged enabled=1
+WRITE UOM 'PCS' value=848514abbbfdcec4 norm=848514abbbfdcec4 identity=unchanged enabled=1
+WRITE UOM 'LS' value=3dd22c2ed2f99121 norm=3dd22c2ed2f99121 identity=unchanged enabled=1
+WRITE UOM 'DAY' value=eb07f635d8831be8 norm=eb07f635d8831be8 identity=unchanged enabled=1
+WRITE UOM 'HR' value=44c3abfb7720d08f norm=44c3abfb7720d08f identity=unchanged enabled=1
+WRITE UOM 'BAG' value=89e2f096fa1aa360 norm=89e2f096fa1aa360 identity=unchanged enabled=1
+WRITE UOM 'LTR' value=15a5db957dcc091a norm=15a5db957dcc091a identity=unchanged enabled=1
+WRITE UOM 'SET' value=663173f1daa44b54 norm=663173f1daa44b54 identity=unchanged enabled=1
+WRITE UOM 'Nos' value=a760cfd5140ee8f2 norm=a760cfd5140ee8f2 identity=unchanged
+WRITE UOM 'Tonne' value=6c97adc355134976 norm=6c97adc355134976 identity=unchanged
+WRITE UOM 'Box' value=e8c39755d5e8255c norm=e8c39755d5e8255c identity=unchanged
+SUMMARY written=15 skipped=0 failed=0 fixture_enabled=12
+PRIVATE apply.json sha256=a1ba47861f9c4556a827c014f9d2d99d69cf5c60409f191fec7309c4c0dac0a9
+APPLY RESULT: PASS

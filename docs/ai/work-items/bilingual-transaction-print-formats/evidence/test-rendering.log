@@ -1,0 +1,22 @@
+Starting test run with parameters: site=v16.localhost, app=construction, module=construction.tests.test_bilingual_transaction_print, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 10 unspecified-category tests for construction
+
+construction.tests.test_bilingual_transaction_print.TestBilingualTransactionPrint
+    ✔  test_fallback_has_no_dangling_separator
+    ✔  test_frozen_surfaces_byte_identical_to_base_commit
+    ✔  test_no_raw_bilingual_concatenation_without_bdi_join
+    ✔  test_print_format_json_files_are_well_formed
+    ✔  test_print_formats_registered_and_idempotent
+    ✔  test_render_material_request_bilingual
+    ✔  test_render_purchase_order_bilingual
+    ✔  test_render_sales_invoice_bilingual
+    ✔  test_render_stock_entry_bilingual
+    ✔  test_single_escaping_of_ampersand_values
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.459s
+
+OK

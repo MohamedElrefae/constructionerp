@@ -1,0 +1,70 @@
+{
+  "boq_properties": {
+    "passed": 17,
+    "seconds": 3.098
+  },
+  "quantity_revisions": {
+    "passed": 31,
+    "seconds": 10.446
+  },
+  "variation_orders": {
+    "passed": 27,
+    "seconds": 11.706
+  },
+  "cost_analysis_engine": {
+    "passed": 37,
+    "seconds": 13.336
+  },
+  "cost_database_api": {
+    "passed": 23,
+    "seconds": 8.338
+  },
+  "customer_release_financial_guards": {
+    "passed": 12,
+    "seconds": 9.825
+  },
+  "boq_transactions": {
+    "passed": 12,
+    "seconds": 10.031
+  },
+  "boq_wbs_generation": {
+    "passed": 2,
+    "seconds": 8.559
+  },
+  "boq_structure_conversion": {
+    "passed": 1,
+    "seconds": 8.003
+  },
+  "boq_structure_delete_safety": {
+    "passed": 1,
+    "seconds": 7.869
+  },
+  "boq_excel_parser": {
+    "passed": 4,
+    "seconds": 7.575
+  },
+  "boq_rollup_audit": {
+    "passed": 5,
+    "seconds": 7.937
+  },
+  "bilingual_install_schema": {
+    "passed": 6,
+    "seconds": 8.47
+  },
+  "boq_legacy_cost_conversion": {
+    "passed": 8,
+    "seconds": 8.668
+  },
+  "boq_parent_permissions": {
+    "passed": 6,
+    "seconds": 8.33
+  },
+  "bilingual_desk_link_dispatch": {
+    "passed": 17,
+    "seconds": 2.744
+  },
+  "stage7_bilingual_reports": {
+    "passed": 10,
+    "seconds": 2.148
+  }
+}

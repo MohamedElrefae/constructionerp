@@ -1,0 +1,32 @@
+# Live runtime translation lookups — construction.translation_service.get_effective_translation
+# Site: v16.localhost | Candidate d8be079d… staged for measurement only | Collected 2026-10-01
+# Rolled back immediately after collection; apps/construction verified clean at fd9aecc.
+
+=== ACTIVE RUNTIME LOOKUPS (ar) via construction.translation_service.get_effective_translation ===
+  OK    BOQ Header                 -> 'رأس جدول الكميات'
+  OK    BOQ Structure              -> 'هيكل جدول الكميات'
+  OK    BOQ Item                   -> 'بند جدول الكميات'
+  OK    BOQ Item Stage             -> 'مراحل تنفيذ البنود'
+  OK    BOQ Import Batch           -> 'دفعة استيراد جدول الكميات'
+  OK    BOQ Cost Analysis          -> 'تحليل تكلفة جدول الكميات'
+  OK    Resource Price History     -> 'سجل أسعار الموارد'
+  OK    BOQ Quantity Revision      -> 'مراجعة كميات جدول الكميات'
+  OK    Construction Theme         -> 'سمة المقاولات'
+  OK    Modern Theme Settings      -> 'إعدادات السمة الحديثة'
+  OK    User Desk Theme            -> 'سمة مكتب المستخدم'
+  OK    Form Layout Profile        -> 'ملف تخطيط النموذج'
+  OK    Construction               -> 'المقاولات'
+  OK    Scope Context Settings     -> 'إعدادات سياق النطاق'
+  OK    Scope Report Access Log    -> 'سجل الوصول إلى تقارير النطاق'
+  OK    Cost Estimation            -> 'تقدير التكلفة'
+  OK    Theme Settings             -> 'إعدادات السمة'
+
+CORE RESULT: 17/17 non-empty, 0 empty (all 17 exact core workspace keys verified)
+
+=== DEFERRED SIX (recorded as untranslated; future catalog-release obligation) ===
+  OK    BOQ Management             -> 'إدارة جدول الكميات'
+  OK    Variation Management       -> 'ادارة اوامر التغيير'
+  OK    Variation Order            -> 'أمر تغيير'
+  OK    Scope Management           -> 'إدارة النطاق'
+  OK    User Scope Context         -> 'سياق نطاق المستخدم'
+  EMPTY Construction ERP           -> ''

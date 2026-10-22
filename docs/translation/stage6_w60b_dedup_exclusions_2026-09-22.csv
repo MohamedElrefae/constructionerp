@@ -1,0 +1,303 @@
+source_text,reason,length
++ Add / Remove Fields,prior_approved_a1a2,21
+1 Report,prior_approved_a1a2,8
+Add / Remove Columns,prior_approved_a1a2,20
+Add Card to Dashboard,prior_approved_a1a2,21
+Add Child,prior_approved_a1a2,9
+Add Indexes,prior_approved_a1a2,11
+Add Multiple,prior_approved_a1a2,12
+Add Participants,prior_approved_a1a2,16
+Add Roles,prior_approved_a1a2,9
+Add Tags,prior_approved_a1a2,8
+Add Template,prior_approved_a1a2,12
+Add Translate Data,prior_approved_a1a2,18
+Add Video Conferencing,prior_approved_a1a2,22
+Add a Filter,prior_approved_a1a2,12
+Add a New Role,prior_approved_a1a2,14
+Add a Row,prior_approved_a1a2,9
+Add a new section,prior_approved_a1a2,17
+Add a row above the current row,prior_approved_a1a2,31
+Add a row at the bottom,prior_approved_a1a2,23
+Add a row at the top,prior_approved_a1a2,20
+Add a row below the current row,prior_approved_a1a2,31
+Add column,prior_approved_a1a2,10
+Add field,prior_approved_a1a2,9
+Add new tab,prior_approved_a1a2,11
+Add numbers or special characters.,prior_approved_a1a2,34
+Add page break,prior_approved_a1a2,14
+Add tab,prior_approved_a1a2,7
+Add to this activity by mailing to {0},prior_approved_a1a2,38
+Add {0},prior_approved_a1a2,7
+After Rename,prior_approved_a1a2,12
+Apps with Search,prior_approved_a1a2,16
+Assign To User Group,prior_approved_a1a2,20
+Assign a user,prior_approved_a1a2,13
+Attach Files,prior_approved_a1a2,12
+Attach Package,prior_approved_a1a2,14
+Attach a web link,prior_approved_a1a2,17
+Auto Email Report,prior_approved_a1a2,17
+Automatically Assign Documents to Users,prior_approved_a1a2,39
+Before Print,prior_approved_a1a2,12
+Before Rename,prior_approved_a1a2,13
+Brand Logo with Search,prior_approved_a1a2,22
+Bulk Edit,prior_approved_a1a2,9
+Bulk PDF Export,prior_approved_a1a2,15
+Bulk Update,prior_approved_a1a2,11
+Cancel All,prior_approved_a1a2,10
+Cancel Import,prior_approved_a1a2,13
+Cancel Prepared Report,prior_approved_a1a2,22
+Cannot Update After Submit,prior_approved_a1a2,26
+Change Print Format,prior_approved_a1a2,19
+Child Item,prior_approved_a1a2,10
+Clear & Add Template,prior_approved_a1a2,20
+Clear & Add template,prior_approved_a1a2,20
+Close properties,prior_approved_a1a2,16
+Copy Link,prior_approved_a1a2,9
+Copy embed code,prior_approved_a1a2,15
+Copy error to clipboard,prior_approved_a1a2,23
+Copy to Clipboard,prior_approved_a1a2,17
+Copy token to clipboard,prior_approved_a1a2,23
+Create & Continue,prior_approved_a1a2,17
+Create Address,prior_approved_a1a2,14
+Create Child Doctype,prior_approved_a1a2,20
+Create Letter Head,prior_approved_a1a2,18
+Create New DocType,prior_approved_a1a2,18
+Create New Kanban Board,prior_approved_a1a2,23
+Create Saved Filter,prior_approved_a1a2,19
+Create a New Format,prior_approved_a1a2,19
+Create a Reminder,prior_approved_a1a2,17
+Create a new ...,prior_approved_a1a2,16
+Create a {0} Account,prior_approved_a1a2,20
+Create or Edit Print Format,prior_approved_a1a2,27
+Create or Edit Workflow,prior_approved_a1a2,23
+Custom Group Search,prior_approved_a1a2,19
+Customize Dashboard,prior_approved_a1a2,19
+Dashboard View,prior_approved_a1a2,14
+Data Import Log,prior_approved_a1a2,15
+Default View,prior_approved_a1a2,12
+Delete Account,prior_approved_a1a2,14
+Delete All,prior_approved_a1a2,10
+Delete Column,prior_approved_a1a2,13
+Delete Kanban Board,prior_approved_a1a2,19
+Delete Section,prior_approved_a1a2,14
+Delete Tab,prior_approved_a1a2,10
+Delete and Generate New,prior_approved_a1a2,23
+Delete column,prior_approved_a1a2,13
+Delete entire column with fields,prior_approved_a1a2,32
+Delete entire section with fields,prior_approved_a1a2,33
+Delete entire tab with fields,prior_approved_a1a2,29
+Delete section,prior_approved_a1a2,14
+Delete tab,prior_approved_a1a2,10
+Delete {0} item permanently?,prior_approved_a1a2,28
+Desktop,prior_approved_a1a2,7
+Disable System Update Notification,prior_approved_a1a2,34
+Do Not Create New User,prior_approved_a1a2,22
+Document Share Key,prior_approved_a1a2,18
+Document Share Key Expiry (in Days),prior_approved_a1a2,35
+Duplicate Entry,prior_approved_a1a2,15
+Duplicate Row,prior_approved_a1a2,13
+Duplicate current row,prior_approved_a1a2,21
+Duplicate field,prior_approved_a1a2,15
+Edit Address in Form,prior_approved_a1a2,20
+Edit Chart,prior_approved_a1a2,10
+Edit Custom Block,prior_approved_a1a2,17
+Edit Existing,prior_approved_a1a2,13
+Edit Filters,prior_approved_a1a2,12
+Edit Footer,prior_approved_a1a2,11
+Edit Full Form,prior_approved_a1a2,14
+Edit HTML,prior_approved_a1a2,9
+Edit Header,prior_approved_a1a2,11
+Edit Letter Head,prior_approved_a1a2,16
+Edit Letter Head Footer,prior_approved_a1a2,23
+Edit Links,prior_approved_a1a2,10
+Edit Number Card,prior_approved_a1a2,16
+Edit Onboarding,prior_approved_a1a2,15
+Edit Print Format,prior_approved_a1a2,17
+Edit Quick List,prior_approved_a1a2,15
+Edit Shortcut,prior_approved_a1a2,13
+Edit Sidebar,prior_approved_a1a2,12
+Edit mode,prior_approved_a1a2,9
+Edit the {0} Doctype,prior_approved_a1a2,20
+Edit your response,prior_approved_a1a2,18
+Enable Prepared Report,prior_approved_a1a2,22
+Export Data,prior_approved_a1a2,11
+Export Errored Rows,prior_approved_a1a2,19
+Export Import Log,prior_approved_a1a2,17
+Export all matching rows?,prior_approved_a1a2,25
+Export all {0} rows?,prior_approved_a1a2,20
+Export as zip,prior_approved_a1a2,13
+Export in Background,prior_approved_a1a2,20
+Export without main header,prior_approved_a1a2,26
+External Link,prior_approved_a1a2,13
+Fetch on Save if Empty,prior_approved_a1a2,22
+Filter List,prior_approved_a1a2,11
+Filter...,prior_approved_a1a2,9
+Force Re-route to Default View,prior_approved_a1a2,30
+From Attach Field,prior_approved_a1a2,17
+Gantt View,prior_approved_a1a2,10
+Go to Notification Settings List,prior_approved_a1a2,32
+Go to {0} List,prior_approved_a1a2,14
+Google Meet Link,prior_approved_a1a2,16
+Grid Empty State,prior_approved_a1a2,16
+Grid Page Length,prior_approved_a1a2,16
+Grid Shortcuts,prior_approved_a1a2,14
+Group,prior_approved_a1a2,5
+Group By must be a string,prior_approved_a1a2,25
+Group Object Class,prior_approved_a1a2,18
+Group your custom doctypes under modules,prior_approved_a1a2,40
+"Hide Sidebar, Menu, and Comments",prior_approved_a1a2,32
+Image View,prior_approved_a1a2,10
+Import Log,prior_approved_a1a2,10
+Import Progress,prior_approved_a1a2,15
+"Import timed out, please re-try.",prior_approved_a1a2,32
+Inbox View,prior_approved_a1a2,10
+Invalid Filter,prior_approved_a1a2,14
+Is Query Report,prior_approved_a1a2,15
+Kanban View,prior_approved_a1a2,11
+LDAP Group Member attribute,prior_approved_a1a2,27
+LDAP Search and Paths,prior_approved_a1a2,21
+Link,prior_approved_a1a2,4
+Link Count,prior_approved_a1a2,10
+Link Details,prior_approved_a1a2,12
+Link Field Results Limit,prior_approved_a1a2,24
+Link Filters,prior_approved_a1a2,12
+Link To in Row,prior_approved_a1a2,14
+Link Type,prior_approved_a1a2,9
+Link Type in Row,prior_approved_a1a2,16
+"Link for About Us Page is \""/about\"".",prior_approved_a1a2,37
+List / Search Settings,prior_approved_a1a2,22
+List Columns,prior_approved_a1a2,12
+List View,prior_approved_a1a2,9
+List of patches executed,prior_approved_a1a2,24
+List setting message,prior_approved_a1a2,20
+Login with Email Link,prior_approved_a1a2,21
+Map View,prior_approved_a1a2,8
+Max Report Rows,prior_approved_a1a2,15
+"Meaning of Submit, Cancel, Amend",prior_approved_a1a2,32
+New Address,prior_approved_a1a2,11
+New Chart,prior_approved_a1a2,9
+New Contact,prior_approved_a1a2,11
+New Custom Block,prior_approved_a1a2,16
+New Document Form,prior_approved_a1a2,17
+New Event,prior_approved_a1a2,9
+New Links,prior_approved_a1a2,9
+New Number Card,prior_approved_a1a2,15
+New Onboarding,prior_approved_a1a2,14
+New Quick List,prior_approved_a1a2,14
+New Role,prior_approved_a1a2,8
+New Shortcut,prior_approved_a1a2,12
+New Users (Last 30 days),prior_approved_a1a2,24
+New Value,prior_approved_a1a2,9
+New Workflow Name,prior_approved_a1a2,17
+New Workspace,prior_approved_a1a2,13
+New line separated list of scope values.,prior_approved_a1a2,40
+No New notifications,prior_approved_a1a2,20
+Nothing New,prior_approved_a1a2,11
+Open Communication,prior_approved_a1a2,18
+Open Source Applications for the Web,prior_approved_a1a2,36
+Open console,prior_approved_a1a2,12
+Open in a new tab,prior_approved_a1a2,17
+Open in new tab,prior_approved_a1a2,15
+Open reference document,prior_approved_a1a2,23
+Package Import,prior_approved_a1a2,14
+Prepared Report Analytics,prior_approved_a1a2,25
+Print Format Builder,prior_approved_a1a2,20
+Print Format Builder Beta,prior_approved_a1a2,25
+Print Format Error,prior_approved_a1a2,18
+Print Format Field Template,prior_approved_a1a2,27
+Print Format For,prior_approved_a1a2,16
+Print Format not found,prior_approved_a1a2,22
+Print Heading,prior_approved_a1a2,13
+Print Style,prior_approved_a1a2,11
+Print document,prior_approved_a1a2,14
+Quick List Filter,prior_approved_a1a2,17
+Refresh Print Preview,prior_approved_a1a2,21
+Reload List,prior_approved_a1a2,11
+Reload Report,prior_approved_a1a2,13
+Remove,prior_approved_a1a2,6
+Remove Failed Jobs,prior_approved_a1a2,18
+Remove all fields in the column,prior_approved_a1a2,31
+Remove column,prior_approved_a1a2,13
+Remove field,prior_approved_a1a2,12
+Remove last column,prior_approved_a1a2,18
+Remove page break,prior_approved_a1a2,17
+Remove section,prior_approved_a1a2,14
+Remove tab,prior_approved_a1a2,10
+Rename Fieldname,prior_approved_a1a2,16
+Report Ref DocType,prior_approved_a1a2,18
+Report View,prior_approved_a1a2,11
+Report bug,prior_approved_a1a2,10
+"Report initiated, click to view status",prior_approved_a1a2,38
+Report limit reached,prior_approved_a1a2,20
+Report timed out.,prior_approved_a1a2,17
+Report {0} deleted,prior_approved_a1a2,18
+Report {0} saved,prior_approved_a1a2,16
+Reset Dashboard Customizations,prior_approved_a1a2,30
+Reset Password Link Expiry Duration,prior_approved_a1a2,35
+Rows Threshold for Grid Search,prior_approved_a1a2,30
+Save Customizations,prior_approved_a1a2,19
+Save on Completion,prior_approved_a1a2,18
+Save the document.,prior_approved_a1a2,18
+Saving Sidebar,prior_approved_a1a2,14
+Search Results,prior_approved_a1a2,14
+Search by filename or extension,prior_approved_a1a2,31
+Search fields,prior_approved_a1a2,13
+Search fieldtypes...,prior_approved_a1a2,20
+Search for {0},prior_approved_a1a2,14
+Search properties...,prior_approved_a1a2,20
+Select Group By...,prior_approved_a1a2,18
+Select List View,prior_approved_a1a2,16
+Select Report,prior_approved_a1a2,13
+Share this document with,prior_approved_a1a2,24
+Show External Link Warning,prior_approved_a1a2,26
+Show Title in Link Fields,prior_approved_a1a2,25
+Show {0} List,prior_approved_a1a2,13
+Sidebar Item Group,prior_approved_a1a2,18
+Sidebar Item Group Link,prior_approved_a1a2,23
+Sort Options,prior_approved_a1a2,12
+Start Import,prior_approved_a1a2,12
+Submit an Issue,prior_approved_a1a2,15
+Submit another response,prior_approved_a1a2,23
+Submit button label,prior_approved_a1a2,19
+Submit on Creation,prior_approved_a1a2,18
+System Health Report,prior_approved_a1a2,20
+System Health Report Errors,prior_approved_a1a2,27
+System Health Report Failing Jobs,prior_approved_a1a2,33
+System Health Report Queue,prior_approved_a1a2,26
+System Health Report Tables,prior_approved_a1a2,27
+System Health Report Workers,prior_approved_a1a2,28
+Toggle Full Width,prior_approved_a1a2,17
+Toggle Theme,prior_approved_a1a2,12
+Translate Link Fields,prior_approved_a1a2,21
+Try the new Print Designer,prior_approved_a1a2,26
+Update Amendment Naming,prior_approved_a1a2,23
+Update Hooks Resolution Order,prior_approved_a1a2,29
+Update Order,prior_approved_a1a2,12
+Update Password,prior_approved_a1a2,15
+Update Profile,prior_approved_a1a2,14
+Update Series Counter,prior_approved_a1a2,21
+Update from Frappe Cloud,prior_approved_a1a2,24
+Update {0} records,prior_approved_a1a2,18
+Use the new Print Format Builder,prior_approved_a1a2,32
+User Activity Report,prior_approved_a1a2,20
+User Activity Report Without Sort,prior_approved_a1a2,33
+User Group,prior_approved_a1a2,10
+User Group Member,prior_approved_a1a2,17
+User Menu,prior_approved_a1a2,9
+View Audit Trail,prior_approved_a1a2,16
+View Doctype Permissions,prior_approved_a1a2,24
+View File,prior_approved_a1a2,9
+View Full Log,prior_approved_a1a2,13
+View Sidebar,prior_approved_a1a2,12
+View Switcher,prior_approved_a1a2,13
+View all {0} users,prior_approved_a1a2,18
+View your response,prior_approved_a1a2,18
+Web Form List Column,prior_approved_a1a2,20
+Website Search Field,prior_approved_a1a2,20
+What's New,prior_approved_a1a2,10
+Workspace Link,prior_approved_a1a2,14
+Workspace Quick List,prior_approved_a1a2,20
+Workspace Sidebar,prior_approved_a1a2,17
+Workspace Sidebar Item,prior_approved_a1a2,22
+Workspaces,prior_approved_a1a2,10
+{0} List View Settings,prior_approved_a1a2,22

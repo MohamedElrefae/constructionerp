@@ -1,0 +1,6 @@
+CMD: read-only site numbers
+tables: 779 non-utf8mb4: 0
+translation rows: 22762
+global_search_queue len(cache 13000): 10678
+backup dir files: ['20261005_215245-v16_localhost-site_config_backup.json', '20261005_215245-v16_localhost-database.sql.gz']
+rc=0

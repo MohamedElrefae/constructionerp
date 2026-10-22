@@ -1,0 +1,58 @@
+============================================================
+UOM PHASE 2+ POST-IMPORT VERIFICATION
+Base commit: 5d96f12
+============================================================
+
+--- Verification: Target 30 rows have uom_name_ar and server norm ---
+  Ampere: ar='أمبير', norm='امبير' - OK
+  Centimeter: ar='سنتيمتر', norm='سنتيمتر' - OK
+  Cubic Centimeter: ar='سنتيمتر مكعب', norm='سنتيمتر مكعب' - OK
+  Cubic Foot: ar='قدم مكعب', norm='قدم مكعب' - OK
+  Cubic Meter: ar='متر مكعب', norm='متر مكعب' - OK
+  Cubic Yard: ar='ياردة مكعبة', norm='ياردة مكعبة' - OK
+  Foot: ar='قدم', norm='قدم' - OK
+  Gram: ar='جرام', norm='جرام' - OK
+  Horsepower: ar='حصان', norm='حصان' - OK
+  Hour: ar='ساعة', norm='ساعة' - OK
+  Inch: ar='بوصة', norm='بوصة' - OK
+  Joule: ar='جول', norm='جول' - OK
+  Kilojoule: ar='كيلوجول', norm='كيلوجول' - OK
+  Kilometer: ar='كيلومتر', norm='كيلومتر' - OK
+  Kilowatt: ar='كيلوواط', norm='كيلوواط' - OK
+  Meter: ar='متر', norm='متر' - OK
+  Milligram: ar='مليجرام', norm='مليجرام' - OK
+  Millimeter: ar='مليمتر', norm='مليمتر' - OK
+  Minute: ar='دقيقة', norm='دقيقة' - OK
+  Ounce: ar='أونصة', norm='اونصة' - OK
+  Pound: ar='رطل', norm='رطل' - OK
+  Second: ar='ثانية', norm='ثانية' - OK
+  Square Foot: ar='قدم مربع', norm='قدم مربع' - OK
+  Square Meter: ar='متر مربع', norm='متر مربع' - OK
+  Square Yard: ar='ياردة مربعة', norm='ياردة مربعة' - OK
+  Tesla: ar='تسلا', norm='تسلا' - OK
+  Watt: ar='واط', norm='واط' - OK
+  Week: ar='أسبوع', norm='اسبوع' - OK
+  Yard: ar='ياردة', norm='ياردة' - OK
+  Pair: ar='زوج', norm='زوج' - OK
+
+--- Verification: Phase 1 rows intact (15 rows) ---
+  Phase-1 intact: 15/15
+
+--- Verification: Frozen Prior Surfaces ---
+  accounts_ar: 81 == 81 - OK
+  items_ar: 8 == 8 - OK
+  customers_ar: 1 == 1 - OK
+  suppliers_ar: 0 == 0 - OK
+  cost_centers_ar: 3 == 3 - OK
+  warehouses_ar: 6 == 6 - OK
+  projects_ar: 5 == 5 - OK
+  departments_ar: 14 == 14 - OK
+  company_ar (Elrefae): 'شركة الرفاعي للمقاولات العامة' - OK (Tier 5H intact)
+
+  Total UOM rows: 253 (expected 253)
+  Total UOM with Arabic: 45 (expected 45)
+
+============================================================
+POST-IMPORT VERIFICATION RESULT
+verified=30 norm_consistent=30 identity_unchanged=30 exceptions=0
+============================================================

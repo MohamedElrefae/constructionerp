@@ -1,0 +1,118 @@
+{
+ "generated_utc": "2026-09-20T20:11:27Z",
+ "sessions": [
+  {
+   "session": "ar",
+   "steps": [
+    {
+     "step": "login",
+     "ok": false,
+     "error": "TimeoutError('Page.wait_for_function: Timeout 60000ms exceeded.')"
+    },
+    {
+     "step": "boot",
+     "ok": false,
+     "error": "Error('Page.evaluate: ReferenceError: frappe is not defined\\n    at eval (eval at evaluate (:302:30), <anonymous>:1:1)\\n    at eval (<anonymous>)\\n    at UtilityScript.evaluate (<anonymous>:302:30)\\n    at UtilityScript.<anonymous> (<anonymous>:1:44)')"
+    },
+    {
+     "step": "account-form",
+     "ok": true,
+     "detail": {
+      "summary": {
+       "total": 7,
+       "failed": 0,
+       "skipped": 1
+      },
+      "identity_section": {
+       "en": "GST",
+       "ar": "ضريبة السلع والخدمات",
+       "complete": "مفقود: code",
+       "boot_lang": "ar"
+      }
+     }
+    },
+    {
+     "step": "account-tree",
+     "ok": false,
+     "error": "TimeoutError('Page.wait_for_selector: Timeout 60000ms exceeded.\\nCall log:\\n  - waiting for locator(\".tree-label\") to be visible\\n')"
+    }
+   ],
+   "console": [
+    "[FilterFix] Inline styles enforced on 0 filter inputs",
+    "[ConstructionTheme] v5.15 initialized — mode: dark",
+    "Deprecated as of 10.6.0. initHighlighting() is deprecated.  Use highlightAll() instead.",
+    "[ScopeContext UI] enabled=false",
+    "[ScopeContext Filter] loading, scopeContext=true enabled=false",
+    "[FilterFix] Inline styles enforced on 0 filter inputs",
+    "[CT Native Compat] loaded v9",
+    "[ConstructionTheme] v5.15 initialized — mode: dark",
+    "[CT-Filter] CSS injected, variables available",
+    "localStorage cleared",
+    "Cleared App Cache.",
+    "localStorage cleared",
+    "PASS arabic label uses arabic name without internal name",
+    "PASS arabic fallback to english, then identity — still no internal-name append",
+    "PASS english session prefers english then arabic",
+    "PASS labels are HTML-escaped (XSS)",
+    "PASS identity section renders on the open Account form",
+    "PASS identity section text nodes are escaped (no raw HTML injection)",
+    "SKIP tree labels show arabic without internal name (arabic session)",
+    "ct_bilingual_results: %d checks, %d failed, %d skipped 7 0 1",
+    "[ScopeContext UI] enabled=false",
+    "[ScopeContext Filter] loading, scopeContext=true enabled=false",
+    "[CT Native Compat] loaded v9",
+    "[FilterFix] Inline styles enforced on 0 filter inputs",
+    "[ConstructionTheme] v5.15 initialized — mode: dark",
+    "[CT-Filter] CSS injected, variables available"
+   ],
+   "results": [
+    {
+     "where": "account-form/GST - E",
+     "summary": {
+      "total": 7,
+      "failed": 0,
+      "skipped": 1
+     },
+     "boot_lang": "ar",
+     "results": [
+      {
+       "name": "arabic label uses arabic name without internal name",
+       "ok": true,
+       "error": null
+      },
+      {
+       "name": "arabic fallback to english, then identity — still no internal-name append",
+       "ok": true,
+       "error": null
+      },
+      {
+       "name": "english session prefers english then arabic",
+       "ok": true,
+       "error": null
+      },
+      {
+       "name": "labels are HTML-escaped (XSS)",
+       "ok": true,
+       "error": null
+      },
+      {
+       "name": "identity section renders on the open Account form",
+       "ok": true,
+       "error": null
+      },
+      {
+       "name": "identity section text nodes are escaped (no raw HTML injection)",
+       "ok": true,
+       "error": null
+      },
+      {
+       "name": "tree labels show arabic without internal name (arabic session)",
+       "ok": null,
+       "error": null
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

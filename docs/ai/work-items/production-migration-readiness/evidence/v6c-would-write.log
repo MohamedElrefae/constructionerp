@@ -1,0 +1,27 @@
+CMD: runner --dry-run
+runner_sha16=2d1f3581b1acbc83
+PREFLIGHT site=v16.localhost gate=allowlist production_mutation_authorized=False
+PREFLIGHT registry: 15 doctypes, arabic+norm fields present
+PREFLIGHT values: rows=188 sha256=7390a0c87f8ebab1…
+PREFLIGHT schema: arabic+norm columns present, utf8mb4 on all 15 tables
+PREFLIGHT hooks: enforce_*_policy bound on all 15 doctypes (Account=governed)
+PREFLIGHT backup: 20261005_215245-v16_localhost-database.sql.gz (1 min old)
+PREFLIGHT redis: queue:11000, cache:13000
+CLASSIFY {"ABSENT": 0, "ALREADY_APPLIED": 186, "CONFLICT": 0, "WOULD_WRITE": 2}
+  Company: would_write=0 already_applied=1
+  Account: would_write=1 already_applied=80
+  Cost Center: would_write=0 already_applied=3
+  Warehouse: would_write=0 already_applied=5
+  Project: would_write=0 already_applied=5
+  Item Group: would_write=0 already_applied=6
+  Customer Group: would_write=0 already_applied=5
+  Supplier Group: would_write=0 already_applied=8
+  Territory: would_write=0 already_applied=4
+  Department: would_write=0 already_applied=14
+  Task: would_write=0 already_applied=1
+  UOM: would_write=0 already_applied=45
+  Item: would_write=1 already_applied=7
+  Customer: would_write=0 already_applied=1
+  Terms and Conditions: would_write=0 already_applied=1
+RESULT: PASS dry-run, 0 writes, 2 would_write, 186 already_applied (0.5s)
+rc=0

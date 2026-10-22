@@ -1,0 +1,189 @@
+{
+  "artefacts": {
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md": "5eb2ea918a5de59172d4e0d7b3e0adcc682b2a49e008a035324d03356e3551e6",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log": "18a9da5137ae8f3baabb4a9a4b70995c0aaa79d8674db276fa4579fed0361393",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log": "3ce01c1c6e48e5b4cd3590093666cd3d54b8c37aeb63ad34a399823fd7682b83",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log": "9fb1cacccb62d32126d6f731bea24ea515fb0f79c5ced881c7a6464ae3e1fa50",
+    "construction/api/boq_link_queries.py": "cdb3b66370139c814c068ae63ba8baa2aab37c15eb8e6e7a5ac1ae717f8ae3ba",
+    "construction/tests/test_boq_link_queries.py": "ff3da3238cc96f17ae171877604812225e829c70b250e1c1c5ab1a201d18ee05",
+    "construction/hooks.py": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
+    "construction/public/js/overrides/ct_link_control.js": "69fd49c59240e322b43eb23b0001bb9a316467336d28482bce5cb8155651705a",
+    "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix-17m-209t.log": "72a4ffdfd4755348ff85b77d0001f199bf2973a5aa37d879938a9aad18ba4ccb"
+  },
+  "base_commit": "0f5be0d4c89fc775080e7dd92fcfb20c9e6da98c",
+  "branch": "feature/bilingual-boq-title-ar-wiring",
+  "decisions_settled": {
+    "section_3_1": "Option A (Search-only wiring): title_ar appended to SELECT and WHERE, label preserved as title at column 1",
+    "section_3_2": "Untouched: doctype search_fields left unmodified; ADR section 4 baselines preserved without re-measurement"
+  },
+  "test_results": {
+    "unit_suite": {
+      "module": "construction.tests.test_boq_link_queries",
+      "tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/test_boq_link_queries.log"
+    },
+    "canonical_matrix": {
+      "modules": 11,
+      "tests": 133,
+      "passed": 133,
+      "failed": 0,
+      "log": "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/regression-matrix.log"
+    },
+    "reconciliation": {
+      "rows_parsed": 19,
+      "sources_located": 19,
+      "mismatched": 0,
+      "unsourced": 0,
+      "result": "PASS",
+      "log": "docs/ai/work-items/bilingual-boq-title-ar-wiring/evidence/reconciliation.log"
+    }
+  },
+  "primary_invariant": {
+    "claim": "Zero modifications to bilingual_service.py and search.py; zero doctype schema modifications",
+    "reference_commits": [
+      "0f5be0d4c89fc775080e7dd92fcfb20c9e6da98c",
+      "87e88cd",
+      "a7086ef",
+      "2f74193",
+      "2cbe71a",
+      "04dfe35",
+      "abffaaa",
+      "ef36c95",
+      "c1d278b",
+      "c5ee0bb",
+      "b311377",
+      "dc71b56"
+    ],
+    "bilingual_service_py_diff_lines": 0,
+    "search_py_diff_lines": 0,
+    "bilingual_registry_json_diff_lines": 0,
+    "doctype_json_diff_lines": 0,
+    "frappe_vendor_diff_lines": 0,
+    "erpnext_vendor_diff_lines": 0
+  },
+  "out_of_scope_respected": [
+    "doctype search_fields unmodified (Decision 3.2)",
+    "no re-measurement required for BOQ Header / BOQ Structure baselines",
+    "bilingual_service.py / search.py untouched",
+    "bilingual_registry.json untouched",
+    "Arabic data backfill out of scope (fixtures used)",
+    "all foreign work item evidence untouched"
+  ],
+  "causal_order": "final test run -> capture log -> compute blob digests -> write manifest -> commit (SCOPE \u00a77)",
+  "amendments": [
+    {
+      "date": "2026-10-03",
+      "artefact": "construction/hooks.py",
+      "from": "5d1376f64dd0ec365e809d308140087e80c43cce1645681e6cabfa6e817f1fc3",
+      "to": "71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72",
+      "reason": "living file; pin last matched at 46aa201 and went stale via legitimate later hooks.py changes; work item evidence logs unchanged"
+    },
+    {
+      "date": "2026-10-03",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "see git show 46aa201",
+      "to": "fbbc8510d098a745a629ff870de1e48f947e7245f692940c581f937899123b38",
+      "reason": "section 8 amendment note documenting the re-pin above"
+    },
+    {
+      "date": "2026-10-03",
+      "artefact": "construction/hooks.py",
+      "from": "71e3b32963525a46f7e2e83d42871eb158415e53d51ba4ec523ca760235a5c72",
+      "to": "453f08e39747bc2a2e05a289367380e7243567d67c2fb9cd3ab52bb569be377a",
+      "reason": "living file; Brand doc_events registration added by bilingual-brand-master (finding F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "453f08e39747bc2a2e05a289367380e7243567d67c2fb9cd3ab52bb569be377a",
+      "to": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
+      "reason": "living file; Terms and Conditions doc_events registration added by bilingual-terms-conditions-master (finding F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "d7dc510778c22107c7312fde9981e65e4dbade4daeca5e8e4bc01a1cb35e37b8",
+      "to": "602fa07075daa236bc5b684a11e41216d945a17aff146dcf3a54306721a15a77",
+      "reason": "amendment note documenting the re-pin performed by bilingual-asset-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "37be189a45f5484e79a0f37ea68e711815aa00972f08f39d1503078770b681ed",
+      "to": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "reason": "living file; Asset doc_events single-hook registration added by bilingual-asset-master (F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "602fa07075daa236bc5b684a11e41216d945a17aff146dcf3a54306721a15a77",
+      "to": "084bce871eda3eec1a9807002c991bc97939132db364cfb62a526f1a78d7130d",
+      "reason": "SCOPE status line flipped APPROVED -> COMPLETE (implementation merged at dfeace3; evidence pipeline already complete)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "084bce871eda3eec1a9807002c991bc97939132db364cfb62a526f1a78d7130d",
+      "to": "bff577bc1ad2ace9ecf6176305376c1b985cecb043113e9a8f6b63033179a038",
+      "reason": "amendment note documenting the canonical matrix integration (17 modules / 209 tests)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "bff577bc1ad2ace9ecf6176305376c1b985cecb043113e9a8f6b63033179a038",
+      "to": "a08377f84acba0224027a9cca4ea9cb51fd413abac9ae290556d7de5579a3077",
+      "reason": "amendment note documenting the re-pin performed by bilingual-company-master"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "e4beab7a48e95588da0ba9dd8054b610bfc20974999930d0b592d90ee7d36a8b",
+      "to": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "reason": "living file; Company doc_events dual-hook registration added by bilingual-company-master (F1)"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "694da4f4fa06bd5e57dd52a7ada52e0f1f91e5ce27c0661a0dd666ca79bb254b",
+      "to": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "reason": "living file; Tier-4 override_whitelisted_methods binding added (frappe.desk.search.search_link -> construction.api.desk_link_search.search_link, A1) by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "a08377f84acba0224027a9cca4ea9cb51fd413abac9ae290556d7de5579a3077",
+      "to": "322e04cb35c8d48f99ee2f5b408b9bb107beb7166aa1987ec730743cdf3b57f8",
+      "reason": "amendment note documenting the re-pin performed by bilingual-desk-link-dispatch"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "construction/hooks.py",
+      "from": "b668f76ddf186ab45682956c2adaa487bcce66a69abc4bf9e93bc9b984f8c247",
+      "to": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "reason": "living file; Account doc_events mapping-cache bust hooks added (R7: on_update/on_trash/after_rename -> construction.services.report_bilingual_extension.bust_account_mapping_cache) by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-04",
+      "artefact": "docs/ai/work-items/bilingual-boq-title-ar-wiring/SCOPE.md",
+      "from": "322e04cb35c8d48f99ee2f5b408b9bb107beb7166aa1987ec730743cdf3b57f8",
+      "to": "5eb2ea918a5de59172d4e0d7b3e0adcc682b2a49e008a035324d03356e3551e6",
+      "reason": "amendment note documenting the re-pin performed by bilingual-financial-reports"
+    },
+    {
+      "date": "2026-10-05",
+      "artefact": "construction/hooks.py",
+      "from": "3a0abaa00a0e5f8bce851cc84226551c9e8f4093372ecfa4561d01879ccd0233",
+      "to": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
+      "reason": "hooks.py gains the after_install/after_migrate registration of construction.install.setup_transaction_print_formats (+2 lines) added by bilingual-transaction-print-formats; digest re-pinned to post-change content, no other artefact in this manifest changed"
+    },
+    {
+      "date": "2026-10-06",
+      "artefact": "construction/hooks.py",
+      "from": "d54bca4f63374dc018a594bd9c3f05477e790a44f39fc2e9b54a54548ba5f73f",
+      "to": "7131a471c9af7983c418983beca71933daef905555b94e0e5b4654e3aa087224",
+      "reason": "Customer release integration merge (codex/customer-release-gap-fixes): commercial gap fixes, CI harness, and bilingual engine unification"
+    }
+  ]
+}

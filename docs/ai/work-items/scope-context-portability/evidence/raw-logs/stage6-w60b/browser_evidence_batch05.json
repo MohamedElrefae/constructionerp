@@ -1,0 +1,210 @@
+{
+ "batch": "stage6-w60b-batch5",
+ "started_utc": "2026-09-22T19:46:37Z",
+ "site": "v16.localhost",
+ "checks": [
+  {
+   "name": "boot-lang-ar",
+   "ok": true,
+   "detail": "ar"
+  },
+  {
+   "name": "boot-messages-ge-1000",
+   "ok": true,
+   "detail": 11993
+  },
+  {
+   "name": "translate:Not Helpful",
+   "ok": true,
+   "detail": {
+    "expected": "غير مفيد",
+    "got": "غير مفيد"
+   }
+  },
+  {
+   "name": "translate:Number of Queries",
+   "ok": true,
+   "detail": {
+    "expected": "عدد الاستعلامات",
+    "got": "عدد الاستعلامات"
+   }
+  },
+  {
+   "name": "translate:OAuth Client Role",
+   "ok": true,
+   "detail": {
+    "expected": "دور عميل OAuth",
+    "got": "دور عميل OAuth"
+   }
+  },
+  {
+   "name": "translate:Pending Emails",
+   "ok": true,
+   "detail": {
+    "expected": "رسائل بريد معلّقة",
+    "got": "رسائل بريد معلّقة"
+   }
+  },
+  {
+   "name": "translate:Permission Inspector",
+   "ok": true,
+   "detail": {
+    "expected": "فاحص الأذونات",
+    "got": "فاحص الأذونات"
+   }
+  },
+  {
+   "name": "translate:Scheduler: Active",
+   "ok": true,
+   "detail": {
+    "expected": "المجدول: نشط",
+    "got": "المجدول: نشط"
+   }
+  },
+  {
+   "name": "translate:Sync {0} Fields",
+   "ok": true,
+   "detail": {
+    "expected": "مزامنة حقول {0}",
+    "got": "مزامنة حقول {0}"
+   }
+  },
+  {
+   "name": "translate:Welcome to {0}",
+   "ok": true,
+   "detail": {
+    "expected": "مرحبًا بك في {0}",
+    "got": "مرحبًا بك في {0}"
+   }
+  },
+  {
+   "name": "translate:1 day ago",
+   "ok": true,
+   "detail": {
+    "expected": "منذ يوم واحد",
+    "got": "منذ يوم واحد"
+   }
+  },
+  {
+   "name": "translate:'{0}' is not a valid URL",
+   "ok": true,
+   "detail": {
+    "expected": "'{0}' ليس رابط URL صالحًا",
+    "got": "'{0}' ليس رابط URL صالحًا"
+   }
+  },
+  {
+   "name": "translate:Click here",
+   "ok": true,
+   "detail": {
+    "expected": "انقر هنا",
+    "got": "انقر هنا"
+   }
+  },
+  {
+   "name": "translate:Desk Settings",
+   "ok": true,
+   "detail": {
+    "expected": "إعدادات المكتب",
+    "got": "إعدادات المكتب"
+   }
+  },
+  {
+   "name": "translate:MIT License",
+   "ok": true,
+   "detail": {
+    "expected": "ترخيص MIT",
+    "got": "ترخيص MIT"
+   }
+  },
+  {
+   "name": "translate:Postal Code",
+   "ok": true,
+   "detail": {
+    "expected": "الرمز البريدي",
+    "got": "الرمز البريدي"
+   }
+  },
+  {
+   "name": "all-probe-translations",
+   "ok": true,
+   "detail": "14/14"
+  },
+  {
+   "name": "translate-placeholder",
+   "ok": true,
+   "detail": {
+    "expected": "مزامنة حقول Fields",
+    "got": "مزامنة حقول Fields"
+   }
+  },
+  {
+   "name": "boot-messages-lookup",
+   "ok": true,
+   "detail": {
+    "Not Helpful": "غير مفيد",
+    "Number of Queries": "عدد الاستعلامات",
+    "OAuth Client Role": "دور عميل OAuth",
+    "Pending Emails": "رسائل بريد معلّقة"
+   }
+  },
+  {
+   "name": "rendered-dom-arabic-words",
+   "ok": true,
+   "detail": {
+    "count": 13,
+    "sample": [
+     "الأدوات",
+     "الأصول",
+     "الباطن",
+     "البيع",
+     "التصنيع",
+     "الجودة",
+     "المحاسبة",
+     "المخزون",
+     "المشاريع",
+     "المشتريات",
+     "بحث",
+     "مقاولات",
+     "منظمة"
+    ]
+   }
+  },
+  {
+   "name": "rendered-workspace-modules",
+   "ok": true,
+   "detail": [
+    "الأدوات",
+    "المحاسبة",
+    "المشتريات",
+    "المشاريع",
+    "المخزون",
+    "البيع"
+   ]
+  },
+  {
+   "name": "sidebar-arabic-items",
+   "ok": true,
+   "detail": [
+    "بحث                                       Ctrl+K",
+    "إشعار",
+    "سجل الطريق",
+    "إعدادات الإشعارات",
+    "قائمة المهام",
+    "التقارير",
+    "قائمة المهام",
+    "تنزيل النسخ الاحتياطية"
+   ]
+  },
+  {
+   "name": "desk-title-captured",
+   "ok": true,
+   "detail": "Desktop"
+  }
+ ],
+ "finished_utc": "2026-09-22T19:46:48Z",
+ "summary": {
+  "pass": 23,
+  "fail": 0
+ }
+}

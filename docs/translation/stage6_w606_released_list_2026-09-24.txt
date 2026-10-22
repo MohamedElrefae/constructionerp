@@ -1,0 +1,113 @@
+Account not Found
+Asset Depreciation Schedule for Asset {0} and Finance Book {1} is not using shift based depreciation
+Asset Depreciation Schedule not found for Asset {0} and Finance Book {1}
+Asset Depreciation Schedule {0} for Asset {1} already exists.
+Asset Depreciation Schedule {0} for Asset {1} and Finance Book {2} already exists.
+Asset Shift Factor {0} is set as default currently. Please change it first.
+Asset cannot be scrapped before the last depreciation entry.
+Asset capitalized after Asset Capitalization {0} was submitted
+Asset created after being split from Asset {0}
+Asset issued to Employee {0}
+Asset out of order due to Asset Repair {0}
+Asset received at Location {0} and issued to Employee {1}
+Asset restored after Asset Capitalization {0} was cancelled
+Asset transferred to Location {0}
+Asset updated after being split into Asset {0}
+Asset updated due to Asset Repair {0} {1}.
+Asset {0} does not belong to Item {1}
+Asset {0} does not belong to the custodian {1}
+Asset {0} does not belong to the location {1}
+Asset {0} does not exist
+Asset {0} has been updated. Please set the depreciation details if any and submit it.
+Asset {0} is in {1} status and cannot be repaired.
+Asset {0} is not set to calculate depreciation.
+Asset {0} is not submitted. Please submit the asset before proceeding.
+Asset's depreciation schedule updated after Asset Shift Allocation {0}
+Asset's value adjusted after cancellation of Asset Value Adjustment {0}
+Asset's value adjusted after submission of Asset Value Adjustment {0}
+Cannot cancel Asset Depreciation Schedule {0} as it has a draft journal entry {1}.
+Capitalize this asset before submitting.
+Completion Date can not be before Failure Date. Please adjust the dates accordingly.
+Consumed Stock Items, Consumed Asset Items or Consumed Service Items is mandatory for Capitalization
+Cost Center {} doesn't belong to Company {}
+Cost Center {} is a group cost center and group cost centers cannot be used in transactions
+Could not find a suitable shift to match the difference: {0}
+Depreciation Entry against asset {0}
+Depreciation Entry against {0} worth {1}
+Depreciation Expense Account should be an Income or Expense Account.
+Depreciation Posting Date cannot be before Available-for-use Date
+Depreciation Row {0}: Depreciation Posting Date cannot be before Available-for-use Date
+Depreciation cannot be calculated for fully depreciated assets
+Disposal date {0} cannot be before {1} date {2} of the asset.
+Employee {0} does not belong to the company {1}
+Enter date to scrap asset
+From Employee is required while issuing Asset {0}
+Here are the error logs for the aforementioned failed depreciation entries: {0}
+Increase In Asset Life(Months)
+Invalid Net Purchase Amount
+Invalid Schedule
+Manage
+Missing Serial No Bundle
+Net Purchase Amount {0} cannot be depreciated over {1} cycles.
+No.
+Only existing assets
+Please capitalize this asset before submitting.
+Please disable workflow temporarily for Journal Entry {0}
+Please do not book expense of multiple assets against one single Asset.
+Please select an item code before setting the warehouse.
+Please set Fixed Asset Account in Asset Category {0}
+Please set a Cost Center for the Asset or set an Asset Depreciation Cost Center for the Company {}
+Please set opening number of booked depreciations
+Please share this email with your support team so that they can find and fix the issue.
+Please update Repair Status.
+Restore Asset
+Row #{0}: Amount must be a positive number
+Row #{0}: Consumed Asset {1} cannot be Draft
+Row #{0}: Consumed Asset {1} cannot be cancelled
+Row #{0}: Consumed Asset {1} cannot be the same as the Target Asset
+Row #{0}: Consumed Asset {1} cannot be {2}
+Row #{0}: Consumed Asset {1} does not belong to company {2}
+Row #{0}: Item {1} is not a service item
+Row #{0}: Item {1} is not a stock item
+Row #{0}: Next Depreciation Date cannot be before Available-for-use Date
+Row #{0}: Next Depreciation Date cannot be before Purchase Date
+Row #{0}: Opening Accumulated Depreciation must be less than or equal to {1}
+Row #{0}: Qty must be a positive number
+Row #{0}: Repair cost {1} exceeds available amount {2} for Purchase Invoice {3} and Account {4}
+Row #{0}: Total Number of Depreciations cannot be less than or equal to Opening Number of Booked Depreciations
+Row #{0}: {1} of {2} should be {3}. Please update the {1} or select a different account.
+Row #{}: Finance Book should not be empty since you're using multiple.
+Row #{}: Please assign task to a member.
+Row #{}: Please use a different Finance Book.
+Row {0}: Expected Value After Useful Life must be less than Net Purchase Amount
+Row {0}: Shift cannot be changed since the depreciation has already been processed
+Row {0}: The entire expense amount for account {1} in {2} has already been allocated.
+Scrap date cannot be before purchase date
+Select the date
+Sell Asset
+Set {0} in asset category {1} for company {2}
+Split Quantity must be less than Asset Quantity
+Target Asset {0} cannot be cancelled
+Target Asset {0} cannot be submitted
+Target Asset {0} cannot be {1}
+Target Asset {0} does not belong to company {1}
+Target Asset {0} needs to be composite asset
+Target Item {0} must be a Fixed Asset item
+Target Location is required for transferring Asset {0}
+Target Location is required while receiving Asset {0}
+The following Purchase Invoices are not submitted:
+The following assets have failed to automatically post depreciation entries: {0}
+The following rows are duplicates:
+This schedule was created when Asset {0} was adjusted through Asset Value Adjustment {1}.
+This schedule was created when Asset {0} was consumed through Asset Capitalization {1}.
+This schedule was created when Asset {0} was repaired through Asset Repair {1}.
+This schedule was created when Asset {0} was restored on Asset Capitalization {1}'s cancellation.
+This schedule was created when Asset {0} was restored.
+This schedule was created when Asset {0} was scrapped.
+This schedule was created when Asset {0} was {1} into new Asset {2}.
+This schedule was created when Asset {0}'s Asset Value Adjustment {1} was cancelled.
+This schedule was created when Asset {0}'s shifts were adjusted through Asset Shift Allocation {1}.
+To enable Capital Work in Progress Accounting,
+Update stock must be enabled for the purchase invoice {0}
+via Asset Repair
+{0} is in Draft. Submit it before creating the Asset.

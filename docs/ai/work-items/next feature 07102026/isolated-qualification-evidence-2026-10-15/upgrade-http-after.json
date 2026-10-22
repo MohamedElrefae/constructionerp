@@ -1,0 +1,15 @@
+{
+  "site": "f31upgrade.localhost",
+  "admin_login": 200,
+  "admin_login_message": "Logged In",
+  "identity": "Administrator",
+  "private_download_admin": {
+    "status": 200,
+    "bytes": 3236,
+    "pdf": true
+  },
+  "private_download_guest": {
+    "status": 403,
+    "returned_pdf": false
+  }
+}

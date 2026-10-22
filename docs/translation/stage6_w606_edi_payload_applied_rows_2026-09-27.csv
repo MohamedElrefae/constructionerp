@@ -1,0 +1,27 @@
+source_text,context,translated_text,disposition,review_comments
+Additional Data,,بيانات إضافية,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Applies To,,ينطبق على,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Are you sure you want to delete {0}?<p>This action will also delete all associated Common Code documents.</p>,,هل أنت متأكد من رغبتك في حذف {0}؟<p>سيؤدي هذا الإجراء أيضًا إلى حذف جميع مستندات الكود المشترك المرتبطة.</p>,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Canonical URI,,المعرف الموحد القياسي (Canonical URI),quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Code List,,قائمة الأكواد,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Common Code,,الكود المشترك,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Default Common Code,,الكود المشترك الافتراضي,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Deleting {0} and all associated Common Code documents...,,جارٍ حذف {0} وجميع مستندات الكود المشترك المرتبطة...,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Fetching Error,,خطأ في الجلب,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+"If there is no title column, use the code column for the title.",,إذا لم يكن هناك عمود للعنوان، فاستخدم عمود الكود كعنوان.,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Import Genericode File,,استيراد ملف Genericode,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Import completed. {0} common codes created.,,اكتمل الاستيراد. تم إنشاء {0} من الأكواد المشتركة.,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Importing Common Codes,,جار استيراد الأكواد المشتركة,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+Parsing Error,,خطأ في التحليل,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Publisher,,الناشر,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Publisher ID,,معرف الناشر,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+Select Columns and Filters,,تحديد الأعمدة وعوامل التصفية,preserved-site-override,Preserved verbatim from live v16.localhost tabTranslation (Plan §12)
+The uploaded file does not match the selected Code List.,,الملف المرفوع لا يتطابق مع قائمة الأكواد المحددة.,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+This value shall be used when no matching Common Code for a record is found.,,ستُستخدم هذه القيمة عند عدم العثور على كود مشترك مطابق للسجل.,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+You are importing data for the code list:,,أنت تستورد بيانات لقائمة الأكواد:,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+as Code,,ككود,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+as Description,,كوصف,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+as Title,,كعنوان,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+by {},,بواسطة {},quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+description,,الوصف,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"
+{0} {1} is already linked to Common Code {2}.,,{0} {1} مرتبط بالفعل بالكود المشترك {2}.,quorum-confirmed-payload,"Approved by AI-A1, AI-A2, AI-A3 quorum; released to catalog v1.16"

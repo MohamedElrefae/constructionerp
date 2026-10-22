@@ -1,0 +1,241 @@
+{
+  "recorded_utc": "2026-09-11T22:11:37.250800Z",
+  "authority": "Owner Authorization Directive: Phase 3 Pilot Escalation Reset & Bounded Repair",
+  "status": "REPAIR_AND_CAPTURE_COMPLETE_AWAITING_JOB_RECONCILIATION",
+  "job_id": "job-95c14f13265eceab3a38e3b4",
+  "native_session": "ses_f6d7c96eeffeuBc0KNwbYQ4lYP",
+  "failure": "ValidationError",
+  "cause": "Returned SCP-004 snapshot.normalized_material_ref.sha256 was truncated to 62 characters instead of the required 64; strict schema validation rejected the result. Raw output was not rewritten.",
+  "processes_stopped": {
+    "worker_pid": true,
+    "native_pid": true
+  },
+  "raw_result_sha256": "32462d2f02eb4dcfdae632895ac423280366a51f080f7310c001a7fdfc9e18bd",
+  "state": {
+    "work_item": "scope-context-portability",
+    "stage": "1",
+    "status": "PAUSED",
+    "next_roles": [],
+    "active_jobs": [
+      "job-95c14f13265eceab3a38e3b4"
+    ],
+    "candidate": {
+      "archive_sha256": "395ab2d4f44ba9a56ca0daeb0bcb4fc1a85b31efec04f8fd9f4fd41e7d9e924c",
+      "candidate_id": "e49ab5027d062f931ef9153ad5771388dd51ec1d8415929098fe5715e34c2ce8",
+      "manifest": {
+        "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+        "branch": "feature/scope-context-portability",
+        "entries": [
+          {
+            "content_sha256": "331e42e98c6ca053564c6a3a41167b7c5be816b454e05f9ff34057443a7c326e",
+            "kind": "file",
+            "mode": "100644",
+            "path": "docs/ai/SCHEMA_FACTS.md"
+          },
+          {
+            "content_sha256": "dc83593b3ac302b5a42aa567ce81f5f4f62eef74a79d80e593c157bc26036d64",
+            "kind": "file",
+            "mode": "100644",
+            "path": "scripts/ai_context_check.py"
+          },
+          {
+            "content_sha256": "9d86d07a58efdc74dab3a5b557df0c059cde5f592984803b28b400e1e070ce7f",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/conftest.py"
+          },
+          {
+            "content_sha256": "34811f573b6ae709192d42de9ff9597650402c7846df51b03d1e9e71ac96bc65",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/sitecustomize.py"
+          },
+          {
+            "content_sha256": "ae2b05d63bf9e17b7dce7c804c9ccc1ed3f850ab985be5b3ed1f6d5f38942ae6",
+            "kind": "file",
+            "mode": "100644",
+            "path": "tests_offline/test_checkers.py"
+          }
+        ],
+        "kind": "code"
+      },
+      "manifest_hash": "e49ab5027d062f931ef9153ad5771388dd51ec1d8415929098fe5715e34c2ce8",
+      "tree_oid": "a9cdfa93d031c149862682b2152dd6fec7a9c13a"
+    },
+    "plan_revision_hash": "8c1c763d6c81a39b010de5c6ad5f319d084ecb2f90027e4cb6a09a90bd292dc1",
+    "scope_hash": "f748d729630d1f063433bc4c615643b61e075f3123b3f722cadf8784aa6a191f",
+    "round": 4,
+    "attempt": 11,
+    "cursor": 22,
+    "revision": 22,
+    "findings": [
+      {
+        "affected_requirements": [
+          "SCP-R6"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-54cc536f7cfbaf59553b46fe-native-events",
+            "sha256": "57e5a272f64569acdee276528f9f5df811c452961abdae50e0aa2b38cd4b2fee",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-002",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-76240f387e35a58cf37c6430-normalization-0",
+            "sha256": "d81b864eecacaf4690f0284dc6bd8bff24413a410939688fedc8b6f090065efe",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "feb69a2cefb6fd8c6a4fd1d69434e1f086782b51497ab27fa8145c534e602a23",
+          "reproduction_digest": "1510f18200511c606edb9732e5edfded1a2085056d9710448ad13114dd60be69"
+        },
+        "summary": "Partial repair: scripts/ai_context_check.py:22 now rejects non-object JSON and the former exception escape is repaired. The remaining regression requirement is unmet: tests_offline/test_checkers.py:66-72 and :113-118 exercise only _read_json through _check; no committed negative test asserts main/CLI exit 1, parseable JSON with the relevant FAIL, and absence of an uncaught traceback. Normalized reproduction: inspect and execute the frozen suite's negative JSON cases; they never traverse the CLI/reporting boundary. Add retained end-to-end malformed/structurally-invalid and missing-input failure cases, including drift-child error/launch failure assertions required by the approved plan. Route the remaining test implementation to builder."
+      },
+      {
+        "affected_requirements": [
+          "SCP-R6"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-83c42acc9d50346ac7c54635-native-events",
+            "sha256": "9c7c7f94dc83e712f44211bcfbb3a25c15cfb4439420ce7107488015800fb06a",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-003",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-e48329b23ee1a16e352baf7f-normalization-0",
+            "sha256": "de37b4916a442b3444da194aa6d72ae32ce339fbc2668b942c91d1619340a124",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "00fd2ffea02fac7eb4b364274ba154664c7c40154706532e95cc146d55bb2803",
+          "reproduction_digest": "a861c8ad1aac9a3940dcec66eabaf165bc8a1db7e519f537e3e9a044d4f13eba"
+        },
+        "summary": "Partial repair: offline_subprocess_env installs tests_offline/sitecustomize.py for the successful context CLI and malformed/missing-input CLI cases. However, tests_offline/test_checkers.py:62-63 and :217 still launch help, invalid-option and relocated-linter subprocesses without that environment or equivalent import observation. The clean environment captured at builder stdout.jsonl:51 supplies no inherited PYTHONPATH guard, so these children do not inherit the parent conftest MetaPathFinder. Normalized reproduction: inspect these subprocess.run calls and the captured fresh-suite environment; all three lack child import isolation. Apply and regression-test the child guard or equivalent observation across every CLI subprocess, including the relocated linter. Route to builder."
+      },
+      {
+        "affected_requirements": [
+          "SCP-R7"
+        ],
+        "blocking": true,
+        "classification": "implementation_defect",
+        "evidence_refs": [
+          {
+            "artifact_id": "job-83c42acc9d50346ac7c54635-native-events",
+            "sha256": "9c7c7f94dc83e712f44211bcfbb3a25c15cfb4439420ce7107488015800fb06a",
+            "visibility": "public"
+          }
+        ],
+        "finding_id": "SCP-004",
+        "schema_version": 1,
+        "snapshot": {
+          "normalized_material_ref": {
+            "artifact_id": "job-e48329b23ee1a16e352baf7f-normalization-1",
+            "sha256": "ab8e48590926cd2256906cf1ea600c6dad24e0768c070590a8b82839955a88a5",
+            "visibility": "public"
+          },
+          "relevant_evidence_digest": "00fd2ffea02fac7eb4b364274ba154664c7c40154706532e95cc146d55bb2803",
+          "reproduction_digest": "4cc7434a5753849504ee38cd1eace416e7e2903417d7b3c02cbde780751574ea"
+        },
+        "summary": "Partial repair: builder stdout.jsonl:49-51 captures all three prescribed commands passing with copied-root cwd and sanitized environment; :54 and :56 capture copied checkers passing by absolute path from another cwd. Lines :46 and :55 now provide matching pre/post hashes, but only for the five overlaid candidate files. No complete source inventory/comparison against the frozen base plus candidate manifest establishes equality of unchanged checker inputs before and after testing. The supplied current gate evidence also lacks the approved environment's no-installed-app/Frappe-package confirmation. Normalized reproduction: inspect the materialization and validation records through cleanup; hash operands enumerate only five changed files, leaving unchanged source inputs outside the equality assertion. Have the authorized execution channel capture complete frozen-source equality before and after the real gate and package-absence evidence. Preserve the existing successful command evidence; fixtures cannot replace these remaining gate conditions. Route to builder/execution channel."
+      }
+    ],
+    "backlog": [],
+    "next_finding": 5,
+    "unsuccessful_cycles": 0,
+    "unchanged_rounds": 0,
+    "previous_snapshots": [],
+    "gate": {
+      "scope": "DECISION",
+      "gate_id": "decision-22"
+    },
+    "pause_reason": "RECONCILIATION_REQUIRED",
+    "resume_to": "BUILD_IN_PROGRESS",
+    "prior": {
+      "status": "BUILD_IN_PROGRESS",
+      "next_roles": [],
+      "gate": null
+    },
+    "completed_dependencies": [
+      "job-65f2dc51850d479768d6760a",
+      "job-e0ad43a48a20acd89a5eb939",
+      "job-8e3944c2b9cf5637a53cac50",
+      "job-0c6a7cc3df086796fa2d7353",
+      "job-eb36e5f169894f960d989f64",
+      "job-3c71e7eaa530afb5b7990033",
+      "job-2a8db6e046327a58413177ed",
+      "job-54cc536f7cfbaf59553b46fe",
+      "job-76240f387e35a58cf37c6430",
+      "job-83c42acc9d50346ac7c54635",
+      "job-e48329b23ee1a16e352baf7f"
+    ],
+    "approval_refs": [
+      "owner-plan-grant-phase3-pilot"
+    ],
+    "review_results": {},
+    "stages": {},
+    "plan_granted": true,
+    "committed": false
+  },
+  "current_working_candidate": {
+    "archive_sha256": "a3abe403d2abc772d6196a67b318b7b58671b0baf21f4af9c09af97388670886",
+    "candidate_id": "c2af221d73b069cdddaa92dad7d4caec072246854dbde1bb09dfae2df7267d41",
+    "manifest": {
+      "base_commit": "4b77803af418cea8459c4cb7d9a0248674845da3",
+      "branch": "feature/scope-context-portability",
+      "entries": [
+        {
+          "content_sha256": "331e42e98c6ca053564c6a3a41167b7c5be816b454e05f9ff34057443a7c326e",
+          "kind": "file",
+          "mode": "100644",
+          "path": "docs/ai/SCHEMA_FACTS.md"
+        },
+        {
+          "content_sha256": "dc83593b3ac302b5a42aa567ce81f5f4f62eef74a79d80e593c157bc26036d64",
+          "kind": "file",
+          "mode": "100644",
+          "path": "scripts/ai_context_check.py"
+        },
+        {
+          "content_sha256": "9d86d07a58efdc74dab3a5b557df0c059cde5f592984803b28b400e1e070ce7f",
+          "kind": "file",
+          "mode": "100644",
+          "path": "tests_offline/conftest.py"
+        },
+        {
+          "content_sha256": "34811f573b6ae709192d42de9ff9597650402c7846df51b03d1e9e71ac96bc65",
+          "kind": "file",
+          "mode": "100644",
+          "path": "tests_offline/sitecustomize.py"
+        },
+        {
+          "content_sha256": "f792849a832161713684ec71e7a5160108bdea6da53008966c97bf73f20490a6",
+          "kind": "file",
+          "mode": "100644",
+          "path": "tests_offline/test_checkers.py"
+        }
+      ],
+      "kind": "code"
+    },
+    "manifest_hash": "c2af221d73b069cdddaa92dad7d4caec072246854dbde1bb09dfae2df7267d41",
+    "tree_oid": "b9c328ff603414f652713f61cf745829a728e07d"
+  },
+  "complete_source_evidence": "phase-3-complete-source-validation.json",
+  "complete_source_evidence_sha256": "69f5ebc15487028de064d3d5d4c9e44d6dd15d1ea5dbe008cd41eb6c1debec3a",
+  "capture_script_sha256": "4cd806b80cd2b56ab6219b33b89c6e94ef83ea24b681d795de2eedb567158882",
+  "capture_notes": [
+    "First capture stopped before tests because extraction normalizes non-Git permission bits. Final comparison uses Git file modes (100644/100755/120000), content SHA-256, symlink targets, and complete file sets.",
+    "Complete inventory of 802 frozen-source files compared before and after testing; genuine .git metadata copied but excluded from source inventory.",
+    "No graph verdict or checkpoint was changed by operator capture. New candidate bytes differ from the pre-repair checkpoint candidate."
+  ],
+  "next_step": "Owner-reconcile rejected job and explicitly bind the preserved candidate and complete-source evidence into the next native review workflow. No independent PASS or COMMIT permission is inferred.",
+  "malformed_hash_length": 62
+}

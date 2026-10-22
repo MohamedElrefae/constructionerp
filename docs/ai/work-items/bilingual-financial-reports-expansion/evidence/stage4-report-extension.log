@@ -1,0 +1,28 @@
+Starting test run with parameters: site=v16.localhost, module=construction.tests.test_stage4_report_extension, verbose=False, tests=(), force=False, profile=False, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/mohamed/frappe-bench/logs/frappe.testing.log
+
+Running 14 unspecified-category tests for construction
+
+construction.tests.test_stage4_report_extension.TestReportExtensionIntegration
+   [32m ✔ [0m test_financial_statements_reports_are_supported
+   [32m ✔ [0m test_general_ledger_bilingualize_readonly
+   [32m ✔ [0m test_rollback_note_documented
+   [32m ✔ [0m test_trial_balance_bilingualize_readonly
+
+construction.tests.test_stage4_report_extension.TestReportExtensionPure
+   [32m ✔ [0m test_account_save_busts_mapping_cache
+   [32m ✔ [0m test_arabic_mode_swaps_label
+   [32m ✔ [0m test_both_mode_shows_pair
+   [32m ✔ [0m test_columnar_row_translates_account_column
+   [32m ✔ [0m test_english_mode_preserves_labels
+   [32m ✔ [0m test_mapping_cache_hit_serves_identical_mapping
+   [32m ✔ [0m test_mapping_load_matches_reference_build
+   [32m ✔ [0m test_report_label_field_configurations
+   [32m ✔ [0m test_sources_are_not_mutated
+   [32m ✔ [0m test_unknown_label_kept_identity
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.494s
+
+OK
