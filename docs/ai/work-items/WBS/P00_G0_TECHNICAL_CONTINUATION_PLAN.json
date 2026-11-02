@@ -1,0 +1,430 @@
+{
+  "document": "P00_G0_TECHNICAL_CONTINUATION_PLAN",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T12:36:25Z",
+  "authorization": {
+    "basis": "Owner-approved End-to-End Programmatic Execution Plan for P00/G0 (2026-11-01)",
+    "mode": "source-and-document-only; automatic phases A,B,C,E,F,H; owner gates D,G,I,closure",
+    "note": "No target access, credentials, custody acts, configuration, provisioning, implementation, tests, qualification execution or deployment are authorized under this plan."
+  },
+  "baseline": {
+    "d8_rev03": {
+      "file": "P00_G0_MARIADB_D8_BOUNDED_CLASSIFICATION_DRAFT_REV_03_2026-11-01.md",
+      "sha256": "bbe596610537583e370ff7319a44acda588b5c9cefcf50e10f5366c9adc10322",
+      "reverified_utc": "2026-11-01T12:36:25Z",
+      "role": "stable D8 input candidate for precondition B.7.4"
+    },
+    "spec_rev02": {
+      "file": "P00_G0_MARIADB_D8_QUALIFICATION_DESIGN_SPEC_REV_02_2026-11-01.md",
+      "sha256": "0a3aa5c6ed7c0a3dffd09b87e2f53905818d66e7379e6ce9f5d5874e0198328e",
+      "reverified_utc": "2026-11-01T12:36:25Z",
+      "role": "stable evidence-standard design input"
+    },
+    "closures": [
+      "P00_G0_MARIADB_D8_BOUNDED_CLASSIFICATION_RECORD_CLOSURE_2026-11-01.md",
+      "P00_G0_MARIADB_D8_QUALIFICATION_DESIGN_SPEC_CLOSURE_2026-11-01.md"
+    ],
+    "rules": "Any byte change to either digest-bound artifact voids its binding and requires re-issue."
+  },
+  "preserved_rules": [
+    "numeric core 10.11.14",
+    "accepted historical full reference 10.11.14-MariaDB-0ubuntu0.24.04.1",
+    "changed or unrecognized suffix => UNKNOWN",
+    "no independent human adjudicator participates",
+    "custodian cannot self-accept custody evidence",
+    "AI review is not independent human custody",
+    "external human acceptor remains an unselected option",
+    "acceptance authority and evidence destination undesignated",
+    "prior unauthorized inspection unverified and excluded",
+    "weaker-assurance baseline is historical reference only",
+    "UNKNOWN = fact not established",
+    "INCOMPLETE = evidence exists but insufficient/unauthenticated/unsafe to conclude",
+    "UNKNOWN and INCOMPLETE never interchangeable",
+    "a stopped attempt is not a completed campaign",
+    "confirmed failure remains visible and is never erased",
+    "redaction uncertainty => INCOMPLETE, never a pass",
+    "no retry with broader access after a stop condition",
+    "no credentials, raw unexpected values, SQL/script bodies, user identities, document identifiers, or unrelated business records may be collected"
+  ],
+  "phases": [
+    {
+      "id": "A",
+      "name": "Technical continuation plan",
+      "mode": "automatic",
+      "outputs": [
+        "P00_G0_TECHNICAL_CONTINUATION_PLAN.json",
+        "P00_G0_TECHNICAL_CONTINUATION_PLAN.md",
+        "verification record"
+      ],
+      "acceptance_checks": [
+        "digests match baseline",
+        "every evidence class, control, stop and prerequisite enumerated",
+        "dependencies, outputs, acceptance checks and stop conditions present",
+        "MiMo verification recorded"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Evidence-package design",
+      "mode": "automatic",
+      "outputs": [
+        "P00_G0_EVIDENCE_PACKAGE_DESIGNS.md",
+        "P00_G0_EVIDENCE_PACKAGE_DESIGNS.json",
+        "verification records"
+      ],
+      "acceptance_checks": [
+        "eight designs cover Q1-Q8",
+        "each defines purpose, inputs, procedure, expected evidence, redaction rules, failure/stop conditions, status mapping, required artifacts, qualification criteria",
+        "MiMo verification recorded"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Custody and acceptance options",
+      "mode": "automatic (design only)",
+      "outputs": [
+        "P00_G0_CUSTODY_ACCEPTANCE_OPTIONS.md",
+        "P00_G0_CUSTODY_ACCEPTANCE_OPTIONS.json",
+        "verification record"
+      ],
+      "acceptance_checks": [
+        "eight areas covered with options and tradeoffs",
+        "no preserved rule violated",
+        "nothing represented as selected",
+        "MiMo verification recorded"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Owner business gate 1 (custody/destination/authority/retention)",
+      "mode": "owner_gate",
+      "outputs": [
+        "P00_G0_OWNER_DECISION_PACKET_CUSTODY_2026-11-01.md"
+      ],
+      "acceptance_checks": [
+        "packet presents options, tradeoffs, no selection",
+        "exact authorization wording provided"
+      ],
+      "stop": "No directory creation, permission change, backup configuration or custody act until separately authorized."
+    },
+    {
+      "id": "E",
+      "name": "Qualification-proof plan",
+      "mode": "automatic after gate D",
+      "outputs": [
+        "P00_G0_D8_QUALIFICATION_PROOF_PLAN.md",
+        "P00_G0_D8_QUALIFICATION_PROOF_PLAN.json",
+        "verification record"
+      ],
+      "acceptance_checks": [
+        "eleven required elements defined",
+        "verified against D8 REV_03, spec REV_02, selected custody arrangement, preserved rules"
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Feasibility verdict",
+      "mode": "automatic",
+      "outputs": [
+        "P00_G0_D8_FEASIBILITY_VERDICT.md",
+        "P00_G0_D8_FEASIBILITY_VERDICT.json",
+        "verification record"
+      ],
+      "acceptance_checks": [
+        "verdict one of FEASIBLE_WITH_EXISTING_AUTHORIZATION | FEASIBLE_WITH_NEW_AUTHORIZATION | NOT_FEASIBLE_UNDER_CURRENT_RULES",
+        "MiMo verification recorded"
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Owner business gate 2 (execution authorization if needed)",
+      "mode": "owner_gate",
+      "outputs": [
+        "owner decision packet with scope, target/environment/principal/mechanism/destination, stops, rollback, exact wording"
+      ],
+      "acceptance_checks": [
+        "no execution beyond source-and-document-only without explicit owner authorization"
+      ]
+    },
+    {
+      "id": "H",
+      "name": "Source-and-document-only execution",
+      "mode": "automatic within authorized boundary",
+      "outputs": [
+        "evidence-package records",
+        "verification records",
+        "updated ledger"
+      ],
+      "acceptance_checks": [
+        "scope compliance",
+        "digest/signature evidence",
+        "redaction safety",
+        "boundary preservation",
+        "evidence completeness",
+        "stop-condition handling"
+      ]
+    },
+    {
+      "id": "I",
+      "name": "Qualification execution",
+      "mode": "owner_gate",
+      "outputs": [
+        "redacted execution records if separately authorized"
+      ],
+      "acceptance_checks": [
+        "approved principal, mechanism, destination, scope only",
+        "all stop conditions enforced",
+        "no conversion of uncertainty to pass",
+        "no broader-access retry"
+      ]
+    },
+    {
+      "id": "J",
+      "name": "Evidence review and closure",
+      "mode": "automatic after execution",
+      "outputs": [
+        "evidence inventory",
+        "verified/unverified items",
+        "redacted results",
+        "failure/stop records",
+        "provenance chain",
+        "integrity references",
+        "qualification verdict",
+        "final ledger"
+      ],
+      "acceptance_checks": [
+        "MiMo verifies completeness, redaction, statuses, provenance, governance, boundaries",
+        "gate remains BLOCKED unless closure criteria met and owner accepts closure"
+      ]
+    }
+  ],
+  "evidence_classes": [
+    {
+      "id": "Q1",
+      "name": "Read-path inventory",
+      "required_artifacts": [
+        "closed input-channel manifest",
+        "design-level read-set enumeration",
+        "source-level read-path review record"
+      ]
+    },
+    {
+      "id": "Q2",
+      "name": "Input value-domain proof",
+      "required_artifacts": [
+        "per-field value-domain enumerations (worst case)",
+        "no-free-text/no-identity-field analysis"
+      ]
+    },
+    {
+      "id": "Q3",
+      "name": "Opaque-handle lifecycle proof",
+      "required_artifacts": [
+        "construction record (no principal derivation)",
+        "uniqueness-scope statement",
+        "resolvability analysis",
+        "lifecycle/destruction record"
+      ]
+    },
+    {
+      "id": "Q4",
+      "name": "Bounded adversarial negative-search",
+      "required_artifacts": [
+        "adversarial search record",
+        "residual-risk statement",
+        "class-withdrawal rule application (Part 4 stop 1)"
+      ]
+    },
+    {
+      "id": "Q5",
+      "name": "No-passthrough proof",
+      "required_artifacts": [
+        "closed output-vocabulary proof",
+        "label-constant/no-transform analysis"
+      ]
+    },
+    {
+      "id": "Q6",
+      "name": "Re-identification analysis",
+      "required_artifacts": [
+        "auxiliary-data attack analysis",
+        "least-data coarsening record"
+      ]
+    },
+    {
+      "id": "Q7",
+      "name": "Redaction-method qualification",
+      "required_artifacts": [
+        "redaction predicate worst-case analysis",
+        "at-risk predicate record",
+        "adversarial test evidence only under future separate grant"
+      ]
+    },
+    {
+      "id": "Q8",
+      "name": "Independent package review",
+      "required_artifacts": [
+        "technical author/reviewer separation review record (not custody, not acceptance)"
+      ]
+    }
+  ],
+  "controls": [
+    "transaction-correlation",
+    "visibility",
+    "redaction",
+    "failure-record",
+    "provenance",
+    "integrity"
+  ],
+  "stop_conditions": [
+    {
+      "id": 1,
+      "condition": "identity/credential/query-body/suppressed-value exposure risk (input or output)",
+      "status": "INCOMPLETE (withhold)"
+    },
+    {
+      "id": 2,
+      "condition": "redaction sufficiency uncertain",
+      "status": "INCOMPLETE"
+    },
+    {
+      "id": 3,
+      "condition": "correlation invalidated (reconnect, handle reuse, restart, pool switch)",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": 4,
+      "condition": "freshness unprovable or surface visibility uncharacterized",
+      "status": "INCOMPLETE"
+    },
+    {
+      "id": 5,
+      "condition": "version-context mismatch or missing binding",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": 6,
+      "condition": "value outside closed vocabularies",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": 7,
+      "condition": "method unqualified or proof evidence incomplete",
+      "status": "UNKNOWN on classification fact"
+    },
+    {
+      "id": 8,
+      "condition": "authorization record absent/incomplete/inconsistent",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": 9,
+      "condition": "suspected incident-derived or target-derived input",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": 10,
+      "condition": "integrity-chain break (record or digest-bound design inputs)",
+      "status": "FAIL where safe; INCOMPLETE on leak risk; provenance-context verification failures governed separately (UNKNOWN/INCOMPLETE)"
+    },
+    {
+      "id": 11,
+      "condition": "need for configuration change/write attempt/target access/identity collection/provisioning/testing",
+      "status": "stop; INCOMPLETE if evidence exists but scope cannot proceed, else UNKNOWN"
+    },
+    {
+      "id": 12,
+      "condition": "output value not expressible in closed vocabularies",
+      "status": "UNKNOWN (out-of-enumeration rule)"
+    }
+  ],
+  "prerequisites": [
+    {
+      "id": "B.7.1",
+      "name": "timing characterization (D5 closure)"
+    },
+    {
+      "id": "B.7.2",
+      "name": "non-mutation proof for the read path"
+    },
+    {
+      "id": "B.7.3",
+      "name": "correlation-marker availability proof"
+    },
+    {
+      "id": "B.7.4",
+      "name": "D8 qualification of comparison method (identity proof + fixed classes)"
+    },
+    {
+      "id": "B.7.5",
+      "name": "redaction-method qualification and safe-failure record design"
+    },
+    {
+      "id": "B.7.6",
+      "name": "threat matrix and least-data analysis"
+    },
+    {
+      "id": "B.7.7",
+      "name": "governance decisions first (acceptance authority, integrity destination, conflict checks)"
+    },
+    {
+      "id": "B.7.8",
+      "name": "exact version context"
+    }
+  ],
+  "owner_gates": [
+    {
+      "id": "D",
+      "decision": "evidence destination, custody-acceptance process, acceptance authority, retention/recovery",
+      "blocking": "no directory creation/permission/backup/custody act before separate authorization"
+    },
+    {
+      "id": "G",
+      "decision": "execution authorization if feasibility verdict requires it",
+      "blocking": "no target/config/provisioning/testing/qualification/deployment without explicit owner authorization"
+    },
+    {
+      "id": "I",
+      "decision": "qualification execution authorization",
+      "blocking": "no live execution without explicit owner authorization"
+    },
+    {
+      "id": "closure",
+      "decision": "acceptance of closure",
+      "blocking": "gate remains BLOCKED unless closure criteria met and owner separately accepts"
+    }
+  ],
+  "dependencies": {
+    "B": [
+      "A"
+    ],
+    "C": [
+      "A"
+    ],
+    "D": [
+      "C"
+    ],
+    "E": [
+      "D"
+    ],
+    "F": [
+      "E"
+    ],
+    "G": [
+      "F"
+    ],
+    "H": [
+      "G or existing source-document boundary"
+    ],
+    "I": [
+      "G"
+    ],
+    "J": [
+      "H or I"
+    ]
+  },
+  "verification": {
+    "verifier": "MiMo-V2.6-Flash (opencode/mimo-v2.6-flash-free)",
+    "role": "independent technical verification (not independent human custody, not acceptance)"
+  }
+}

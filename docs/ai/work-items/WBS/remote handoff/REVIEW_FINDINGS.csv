@@ -1,0 +1,32 @@
+finding_id,documents,classification,summary,status,evidence
+B1-01,"00,60",Required,Correct unverified owner authorization attribution,OPEN,See handoff;not runtime-reproduced
+B1-02,"00,40,50",Required,Specify field-level upgrade preservation,OPEN,See handoff;not runtime-reproduced
+B1-03,"00,60",Required,Separate header eligibility from mapping exception,OPEN,See handoff;not runtime-reproduced
+B1-04,"10,60",Decision,Default auto codes; manual option needs explicit design,OPEN,See handoff;not runtime-reproduced
+B1-05,"00,10,60",Required,Unify EBN naming,OPEN,See handoff;not runtime-reproduced
+B1-06,"00,20,40",Required,Source grep is not installed schema collision proof,OPEN,See handoff;not runtime-reproduced
+B1-07,"00,10,20,60",Required,Code immutable globally;title historical text caveat,OPEN,See handoff;not runtime-reproduced
+B1-08,"20,60",Required,Clear has no target;target-only relink eligibility,OPEN,See handoff;not runtime-reproduced
+P2-B1,20,Blocking,Audit on_update denial may block insert;trusted creation boundary,OPEN,See handoff;not runtime-reproduced
+P2-B2,20,Blocking,No numeric tolerance for forbidden persisted mutations,OPEN,See handoff;not runtime-reproduced
+P2-B3,20,Blocking,Full diff includes custom fields and hook-induced changes,OPEN,See handoff;not runtime-reproduced
+P2-B4,20,Blocking,Select race-safe lock/reference protocol before implementation,OPEN,See handoff;not runtime-reproduced
+P2-B5,20,Blocking,Coherent rollback/internal caller contract;no auto retry recommended,OPEN,See handoff;not runtime-reproduced
+P2-B6,20,Blocking,Audit Link retention versus node and Stage delete/rename,OPEN,See handoff;not runtime-reproduced
+P2-C1,20,Required,Resolve read-only new-form creation UI,OPEN,See handoff;not runtime-reproduced
+P2-C2,20,Required,Stagewrite;server-derivedaction;no-opsemantics,OPEN,See handoff;not runtime-reproduced
+P2-C3,"20,40",Required,Actual REST/DataImport tests versus controller simulations,OPEN,See handoff;not runtime-reproduced
+P2-C4,"20,40",Required,Fallback not unplanned runtimefeatureflag,OPEN,See handoff;not runtime-reproduced
+ENV-B1,50,Blocking,Complete new-site appinstall and M1 restore sequence,OPEN,See handoff;not runtime-reproduced
+ENV-B2,50,Blocking,Runtime import dependencies assets and uncommittedcandidate binding,OPEN,See handoff;not runtime-reproduced
+ENV-B3,50,Blocking,Exactsite/root/socket/cwd allowlists notprefix,OPEN,See handoff;not runtime-reproduced
+ENV-B4,"40,50",Blocking,Canonical snapshots absent baselinecolumn and separatedphases,OPEN,See handoff;not runtime-reproduced
+ENV-C1,"50,70",Required,Reconfirm UAT;avoid unnecessary UATinspection,OPEN,See handoff;not runtime-reproduced
+ENV-C2,50,Required,RAM/temp/process/ports andrealresourcebudget,OPEN,See handoff;not runtime-reproduced
+ENV-C3,50,Required,Choose exact provisioningprocedurebeforeapproval,OPEN,See handoff;not runtime-reproduced
+ENV-C4,50,Required,Proportionate recovery;restorecapacityseparategates,OPEN,See handoff;not runtime-reproduced
+ENV-C5,"40,50",Required,Broadlint baseline/touchedscope notunrelatedcleanup,OPEN,See handoff;not runtime-reproduced
+OPEN-01,"10,30,40,70",Not reviewed,Complete actualdocumentreview,OPEN,See handoff;not runtime-reproduced
+OPEN-02,"10,30,50,60",Decision,Review limits roledelete overflow secondarymetrics capacityscope,OPEN,See handoff;not runtime-reproduced
+OPEN-03,20,Required,Pin creationaudit hook/planningcheck lifecycle,OPEN,See handoff;not runtime-reproduced
+OPEN-04,"10,20,30",Required,Totalnavigationbudget onecard+onelink,OPEN,See handoff;not runtime-reproduced

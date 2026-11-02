@@ -1,0 +1,32 @@
+{
+  "allowed_paths": [
+    "construction/construction/doctype/execution_breakdown_node/",
+    "tests_offline/test_execution_breakdown_node.py"
+  ],
+  "requirements": [
+    "R1_NODE_SCHEMA_AND_CONTROLLER",
+    "R2_TREE_RULES_AND_CODE_UNIQUENESS",
+    "R3_OFFLINE_UNIT_TESTS"
+  ],
+  "validation_commands": [
+    [
+      "python3",
+      "-m",
+      "pytest",
+      "tests_offline/test_execution_breakdown_node.py",
+      "-v"
+    ]
+  ],
+  "requirement_paths": {
+    "R1_NODE_SCHEMA_AND_CONTROLLER": [
+      "construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.json",
+      "construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py"
+    ],
+    "R2_TREE_RULES_AND_CODE_UNIQUENESS": [
+      "construction/construction/doctype/execution_breakdown_node/tree_rules.py"
+    ],
+    "R3_OFFLINE_UNIT_TESTS": [
+      "tests_offline/test_execution_breakdown_node.py"
+    ]
+  }
+}

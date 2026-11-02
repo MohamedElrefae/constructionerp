@@ -1,0 +1,196 @@
+{
+  "document": "P00_G0_EVIDENCE_PACKAGE_DESIGNS",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T12:36:25Z",
+  "status": "non-executable designs only; nothing produced/tested/qualified/authorized; gate BLOCKED",
+  "common_constraints": "worst-case only; closed vocabularies; no credentials/raw values/bodies/identities/document ids/unrelated records; no incident-derived material; stopped attempt != completed campaign; FAIL visible; redaction uncertainty => INCOMPLETE never pass; no broader-access retry; confirmed-failure branch split per stable artifact rules 4(a)/6 (safe => FAIL visible; leak-risk => withhold + INCOMPLETE)",
+  "packages": [
+    {
+      "id": "Q1",
+      "name": "Read-path inventory",
+      "purpose": "Closed manifest of every input channel read by the method",
+      "inputs": [
+        "method interface declaration",
+        "recorded upstream source paths (10.11.14)",
+        "spec REV_02 \u00a71.1"
+      ],
+      "procedure": "Enumerate read sites from interface + static read-path review; record surface, field, type and cardinality per channel; map each to a preapproved class; record unclassifiable reads",
+      "expected_evidence": [
+        "closed manifest",
+        "read-set enumeration",
+        "source review record with file/line refs"
+      ],
+      "redaction_rules": "field names/types/classes only; no server values",
+      "failure_stop_conditions": "unclassifiable read => UNKNOWN; incomplete read-set => INCOMPLETE; identity-bearing read => Q1 fails",
+      "status_mapping": "incomplete => INCOMPLETE; unclassifiable => UNKNOWN; confirmed identity channel => attempt INCOMPLETE",
+      "required_artifacts": [
+        "q1_manifest.json",
+        "q1_readset_review.md"
+      ],
+      "qualification_criteria": "design-level enumeration completeness accepted by independent technical review; no sampling claims"
+    },
+    {
+      "id": "Q2",
+      "name": "Input value-domain proof",
+      "purpose": "Prove per-field that no identity-bearing value can enter",
+      "inputs": [
+        "Q1 manifest",
+        "field type declarations"
+      ],
+      "procedure": "Worst-case value-domain enumeration per field; classify as bounded/opaque/excluded; document that no free-text field, user/host/credential-bearing field, or server-generated identity-embedding string can enter",
+      "expected_evidence": [
+        "per-field domain tables",
+        "exclusion rationale",
+        "class mapping"
+      ],
+      "redaction_rules": "domain descriptors and class labels only; no example values",
+      "failure_stop_conditions": "free-text/identity field => stop; undetermined domain => INCOMPLETE; unrecognized field => UNKNOWN",
+      "status_mapping": "table incomplete => INCOMPLETE; unclassifiable domain => UNKNOWN",
+      "required_artifacts": [
+        "q2_domains.json",
+        "q2_analysis.md"
+      ],
+      "qualification_criteria": "worst-case coverage of every Q1 channel, independently reviewed"
+    },
+    {
+      "id": "Q3",
+      "name": "Opaque-handle lifecycle proof",
+      "purpose": "Handles carry no identity and cannot resolve to a principal",
+      "inputs": [
+        "mechanism design (future)",
+        "spec Q3 requirements"
+      ],
+      "procedure": "Document construction (non-principal), uniqueness scope (single assessment), resolvability analysis, lifecycle (creation, destruction at close, never carried across assessments)",
+      "expected_evidence": [
+        "construction record",
+        "uniqueness statement",
+        "resolvability analysis",
+        "lifecycle record"
+      ],
+      "redaction_rules": "opaque tokens only; no derivable attributes",
+      "failure_stop_conditions": "principal derivation/resolvability => stop; undocumented lifecycle => INCOMPLETE; conflicting evidence => FAIL where safe",
+      "status_mapping": "missing proof => INCOMPLETE; derivable => attempt INCOMPLETE; unresolvable uniqueness => UNKNOWN",
+      "required_artifacts": [
+        "q3_handle_lifecycle.json",
+        "q3_review.md"
+      ],
+      "qualification_criteria": "independent review confirms non-derivability and destruction-by-design"
+    },
+    {
+      "id": "Q4",
+      "name": "Bounded adversarial negative-search",
+      "purpose": "Adversarial search for identity-encoding values or combinations",
+      "inputs": [
+        "Q1/Q2 outputs",
+        "auxiliary-data categories only"
+      ],
+      "procedure": "Enumerate adversarial classes (incl. indirect identifiers); record outcomes and residual risk; withdraw unbounded classes",
+      "expected_evidence": [
+        "search log in class terms",
+        "residual-risk statement",
+        "withdrawal decisions"
+      ],
+      "redaction_rules": "class outcomes/statuses only; discovered values never retained",
+      "failure_stop_conditions": "unbounded risk => withdraw class => Part 4 stop 1 INCOMPLETE; inconclusive => INCOMPLETE; discovered path => stop",
+      "status_mapping": "exposure risk => INCOMPLETE; unmatched/undetermined => UNKNOWN",
+      "required_artifacts": [
+        "q4_negative_search.json",
+        "q4_residual_risk.md"
+      ],
+      "qualification_criteria": "bounded residual risk per class reviewed; unbounded => withdrawn not waived"
+    },
+    {
+      "id": "Q5",
+      "name": "No-passthrough proof",
+      "purpose": "Emitted outputs are label constants, never server-value transforms",
+      "inputs": [
+        "output vocabulary",
+        "emission-path design"
+      ],
+      "procedure": "Map every emission site to a constant; analyze substring/transform paths; prove closed vocabulary",
+      "expected_evidence": [
+        "emission mapping table",
+        "vocabulary closure proof",
+        "transform-absence analysis"
+      ],
+      "redaction_rules": "constants only; no observed values in the proof",
+      "failure_stop_conditions": "any passthrough => Q5 fails; unanalyzed site => INCOMPLETE",
+      "status_mapping": "unanalyzed => INCOMPLETE; confirmed passthrough => attempt INCOMPLETE; non-constant output => UNKNOWN",
+      "required_artifacts": [
+        "q5_emission_map.json",
+        "q5_vocabulary.md"
+      ],
+      "qualification_criteria": "complete emission coverage reviewed"
+    },
+    {
+      "id": "Q6",
+      "name": "Re-identification analysis",
+      "purpose": "Bound re-identification requirements from the output record",
+      "inputs": [
+        "output record schema",
+        "auxiliary-data categories"
+      ],
+      "procedure": "Enumerate auxiliary categories; analyze joins/combinations; coarsen unjustified fields",
+      "expected_evidence": [
+        "attack analysis",
+        "coarsening decisions",
+        "residual-risk statement"
+      ],
+      "redaction_rules": "category terms only; no auxiliary data collected",
+      "failure_stop_conditions": "unbounded risk => INCOMPLETE; undecidable coarsening => stop; unjustified field => drop",
+      "status_mapping": "unresolved risk => INCOMPLETE; undetermined category => UNKNOWN",
+      "required_artifacts": [
+        "q6_reid_analysis.md",
+        "q6_coarsening.json"
+      ],
+      "qualification_criteria": "bounded risk under stated assumptions, independently reviewed"
+    },
+    {
+      "id": "Q7",
+      "name": "Redaction-method qualification",
+      "purpose": "Qualify redaction predicates and boundary",
+      "inputs": [
+        "redaction predicates",
+        "at-risk definition",
+        "spec Part 2 control 3"
+      ],
+      "procedure": "Worst-case predicate analysis; coarse-leak check design; adversarial test plan (no execution)",
+      "expected_evidence": [
+        "predicate analysis",
+        "leak-check design",
+        "test plan (unexecuted)"
+      ],
+      "redaction_rules": "predicates/class outcomes only; no suppressed values",
+      "failure_stop_conditions": "uncertain redaction => INCOMPLETE; coarse leak path => stop; test execution without grant => prohibited",
+      "status_mapping": "uncertain => INCOMPLETE (never pass); missing analysis => INCOMPLETE; unclassifiable need => UNKNOWN",
+      "required_artifacts": [
+        "q7_redaction_predicates.md",
+        "q7_test_plan.md"
+      ],
+      "qualification_criteria": "worst-case analysis reviewed; test evidence outstanding until separately granted"
+    },
+    {
+      "id": "Q8",
+      "name": "Independent package review",
+      "purpose": "Review Q1-Q7 under technical author/reviewer separation",
+      "inputs": [
+        "Q1-Q7 artifacts"
+      ],
+      "procedure": "Structured review of completeness, consistency, boundaries, statuses; record disagreements; escalate rule-affecting issues",
+      "expected_evidence": [
+        "review record with findings/severities/resolutions"
+      ],
+      "redaction_rules": "class terms only; no values",
+      "failure_stop_conditions": "blocking finding => package INCOMPLETE; rule disagreement => owner escalation (stop)",
+      "status_mapping": "review complete => eligible for Part 3 consideration only; missing review => INCOMPLETE",
+      "required_artifacts": [
+        "q8_review_record.md"
+      ],
+      "qualification_criteria": "technical separation only - not custody, not acceptance, not qualification"
+    }
+  ],
+  "verification": {
+    "verifier": "MiMo-V2.6-Flash",
+    "record": "P00_G0_EVIDENCE_PACKAGE_DESIGNS_VERIFICATION.md"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "document": "P00_G0_MECHANISM_DESIGN_SELECTION_STUDY",
+  "version": "1.0",
+  "generated_utc": "2026-11-02T00:00:00Z",
+  "status": "design/selection record only; no code/env/config/target/Q7/D2/custody/qualification/closure; gate BLOCKED",
+  "source_basis": {
+    "artifact": "mariadb-10.11.14.tar.gz",
+    "sha256": "8a571cb14fb1d4e3663d8e98f3d4200c042fc8b2a4aaaab495860dea8b7d052f",
+    "bytes": 112475645
+  },
+  "requirement_matrix": {
+    "criteria": [
+      "R1 non-mutating",
+      "R2 per-transaction",
+      "R3 identity-free output",
+      "R4 freshness/visibility",
+      "R5 correlation integrity",
+      "R6 redaction safety",
+      "R7 D8 compatibility",
+      "R8 Q7 compatibility",
+      "R9 preserved rules",
+      "R10 stop compatibility"
+    ],
+    "verdicts": {
+      "S1": "REJECTED",
+      "S2": "REJECTED",
+      "S3": "REJECTED",
+      "S4": "RECOMMENDED (conditional)",
+      "S5": "REJECTED",
+      "S6": "REJECTED"
+    }
+  },
+  "recommendation": {
+    "primary": "S4 INNODB_TRX.trx_is_read_only",
+    "supplementary": "none (S1 declaration default; S2 no SQL surface; S3 needs excluded config; S5 cumulative; S6 free text+PROCESS)",
+    "no_selection": false
+  },
+  "semantic_finding": {
+    "source": "trx0trx.cc:904-912",
+    "facts": [
+      "trx_read_only = srv_read_only_mode OR (multi-stmt txn read-only)",
+      "autocommit non-locking trx forced read_only=true",
+      "innodb_read_only=ON makes all trx read-only (confounds attribution)",
+      "trx_autocommit_non_locking column distinguishes autocommit (i_s.cc:355)"
+    ]
+  },
+  "design_spec": {
+    "surface": {
+      "refs": [
+        "i_s.cc:355",
+        "trx0i_s.cc:488",
+        "trx0trx.cc:904-912",
+        "trx0i_s.cc:961-973,1046-1062",
+        "i_s.cc:363-396"
+      ],
+      "digest_basis": "8a571cb1..."
+    },
+    "extraction_contract": {
+      "permitted": [
+        "trx_is_read_only",
+        "trx_autocommit_non_locking",
+        "trx_state",
+        "CONNECTION_ID() predicate only",
+        "@@innodb_read_only"
+      ],
+      "forbidden": [
+        "trx_query",
+        "trx_mysql_thread_id (emission)",
+        "trx_id",
+        "GTID",
+        "XID_*",
+        "XA_STATE",
+        "requested_lock_id",
+        "last_foreign_key_error",
+        "OBJECT_INSTANCE_BEGIN",
+        "raw timers",
+        "user/host",
+        "other sessions"
+      ],
+      "vocabulary": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "UNKNOWN",
+        "INCOMPLETE",
+        "FAIL"
+      ],
+      "failure_behavior": "absent=>C4/UNKNOWN; ambiguous=>C3/UNKNOWN; withheld=>C5/INCOMPLETE; error=>C6/UNKNOWN or FAIL; never pass"
+    },
+    "classification_logic": [
+      "no row -> C4 UNKNOWN",
+      "autocommit_non_locking=1 -> C3 UNKNOWN",
+      "innodb_read_only=1 -> C3 UNKNOWN",
+      "is_read_only=1 -> C1 READONLY",
+      "is_read_only=0 -> C2 READWRITE (adverse)"
+    ],
+    "redaction_predicates": "P1 allowlist; P2 exclusions; P3 at-risk/statement; P4 coarse-leak; P5 withheld never emitted; P6 uncertainty=>INCOMPLETE",
+    "failure_record": "attempt_id,case_id,surface,correlation{handle,predicate,continuity},freshness{idle_gap,cache_class},class_outcomes,status,stop,integrity{prev,this},redaction_decision,timestamp_class,notes_redacted (append-only, digest chain)",
+    "handle_correlation": {
+      "handle": "CSPRNG>=128-bit, non-derived, single-assessment, destroyed at close",
+      "correlation": "own-session predicate trx_mysql_thread_id=CONNECTION_ID() (in-SQL only, never emitted/stored/logged)",
+      "invalidation": [
+        "reconnect",
+        "restart",
+        "pool switch",
+        "handle reuse"
+      ]
+    },
+    "freshness": {
+      "cache_min_idle": "100ms (CACHE_MIN_IDLE_TIME_NS)",
+      "rule": "read only after idle>=150ms to force refetch; stale<=100ms+latency",
+      "absence": "UNKNOWN; one bounded retry within assessment; no broader retry"
+    },
+    "test_seams": [
+      "row presence/absence",
+      "cache timing",
+      "autocommit discrimination",
+      "forbidden-column rejection",
+      "vocabulary enforcement",
+      "correlation invalidation",
+      "redaction/withholding",
+      "integrity break"
+    ],
+    "environment": {
+      "name": "p00-g0-disposable-01",
+      "lifetime": "<=24h single-use",
+      "isolation": "no production network; local MariaDB 10.11.14; synthetic fixtures only",
+      "teardown": "destroy container+volume; delete ephemeral ERFs; record verification",
+      "evidence_boundary": "ephemeral in-memory ERFs only; no D2"
+    },
+    "prerequisites": [
+      "approve design",
+      "implement component (digest-bound) with synthetic unit tests",
+      "independent review",
+      "provision environment",
+      "issue Q7 scope with principal/mechanism/env/destination"
+    ],
+    "prohibited": [
+      "config changes incl PFS",
+      "PROCESS/privilege escalation",
+      "target access",
+      "writes incl rejected",
+      "identity collection",
+      "query-body capture",
+      "D2 access",
+      "custody",
+      "qualification",
+      "closure",
+      "broader retry"
+    ]
+  },
+  "limitations": [
+    "design position only; not qualification",
+    "freshness source-bounded not runtime-characterized",
+    "declared-mode scope for explicit multi-stmt txns only",
+    "connection-id predicate requires Q7 non-emission test",
+    "S3 cleaner if config ever permitted"
+  ],
+  "expiry": "expired on issuance; no execution"
+}

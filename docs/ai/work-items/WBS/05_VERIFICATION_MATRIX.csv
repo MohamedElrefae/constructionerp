@@ -1,0 +1,19 @@
+requirement_id,requirement,package,expected_verification,evidence_type
+W01,Separate execution tree; no auto BOQ Item creation,P1,Create tree leaves; assert commercial records unchanged,Native lifecycle
+W02,Same-project hierarchy and derived company,P1,Reject cross-project parent and invalid project relationship,Native plus ordinary-user transport
+W03,Stable unique execution code per project,P1,Independent concurrent inserts; assert final uniqueness and rollback,Real database concurrency
+W04,Node permissions before any Stage links,P1,Allowed and denied tree/list/link/search routes,Ordinary-user native/API
+W05,Optional Stage mapping preserves quantities/history,P2,Snapshot before/after link and upgrade; compare protected fields/pointers,Native persistence
+W06,Explicit create/map/relink/clear authority,P2,Deny measurement-only unauthorized mapping across save/REST/import,Ordinary-user native/transport
+W07,Valid same-project eligible leaf,P2,Reject group/foreign/invalid/new-disabled link per approved policy,Native validation
+W08,Historical lifecycle handling,P2,Draft/Locked/measured/certified mappings use resolved D01/D02 policy,Native lifecycle
+W09,Out-of-balance mapping handling,P2,VO imbalance fixture; map-only outcome explicit; no hidden qty mutation,Native regression
+W10,Referenced subtree identity safety,P2,Reject dangerous leaf/ancestor delete/reparent/convert/project changes,Native lifecycle
+W11,No auto historical mapping,P2,Repeated upgrade leaves legacy Stage links null and fields unchanged,Install/upgrade
+W12,Coverage count reconciliation,P3,Healthy/unlinked/issues categories reconcile;zero=N/A;noStage separate,Report integration
+W13,Correct filters and grouping,P3,Descendants;node+unlinked interaction;Full not quantity-balanced,Report/UI
+W14,No unit-confused totals or report writes,P3,Mixed UOM fixture;reads leave records unchanged,Report integration
+W15,No scope leak in counts/navigation/export,P3,Compare allowed/denied user datasets and exported rows,Native transport/export
+W16,End-to-end candidate acceptance,P4,Create→map→reload→coverage→forbidden changes→preservation,Native browser plus database
+W17,Documentation/schema/translation consistency,Each,Required checkers;regenerate only intended schema changes;relevant bilingual UI,Offline plus UI
+W18,Supported runtime and upgrade claims bounded,P4,Run on declared supported matrix;report missing combinations,Native install/upgrade

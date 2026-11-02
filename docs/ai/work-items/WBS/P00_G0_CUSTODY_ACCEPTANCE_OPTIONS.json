@@ -1,0 +1,216 @@
+{
+  "document": "P00_G0_CUSTODY_ACCEPTANCE_OPTIONS",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T12:36:25Z",
+  "status": "design-only options; nothing selected/created/configured; gate D pending; gate BLOCKED",
+  "binding_constraints": [
+    "no independent human adjudicator",
+    "custodian cannot self-accept custody evidence",
+    "AI review is not independent human custody",
+    "external acceptor remains unselected",
+    "acceptance authority/evidence destination undesignated until owner selects",
+    "no credential/identity/document-identifier/unrelated-record collection",
+    "incident-derived material excluded",
+    "retention decisions are owner decisions",
+    "creation/configuration needs separate owner authorization"
+  ],
+  "areas": [
+    {
+      "id": 1,
+      "name": "Evidence destination",
+      "options": [
+        {
+          "id": "D1",
+          "name": "in-repo workstream docs directory",
+          "description": "Kept in P00/G0 docs tree",
+          "tradeoffs": "simplest, versioned; lowest assurance; not independent; digest chain only"
+        },
+        {
+          "id": "D2",
+          "name": "owner-managed out-of-repo encrypted store",
+          "description": "Owner-chosen path; encrypted at rest",
+          "tradeoffs": "separates evidence from workstream; needs key/path governance"
+        },
+        {
+          "id": "D3",
+          "name": "external attested repository",
+          "description": "Third-party/organizational store",
+          "tradeoffs": "highest assurance potential; external dependency and authority interplay"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Directory/ownership/permission/path-safety",
+      "options": [
+        {
+          "id": "P1",
+          "name": "owner-only 0700 directory",
+          "description": "Single principal access",
+          "tradeoffs": "minimal surface; no separation; owner sole custodian"
+        },
+        {
+          "id": "P2",
+          "name": "dedicated service account with ACLs",
+          "description": "Recorder/acceptor role separation",
+          "tradeoffs": "supports separation; more principals to govern"
+        },
+        {
+          "id": "P3",
+          "name": "read-only mount + append-only staging",
+          "description": "Writes only in staging",
+          "tradeoffs": "strong append-only; operational complexity"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Backup/recovery/encryption/key custody",
+      "options": [
+        {
+          "id": "B1",
+          "name": "no backup; ephemeral records",
+          "description": "Regenerable only by authorized work",
+          "tradeoffs": "lowest key-loss risk; weakest preservation"
+        },
+        {
+          "id": "B2",
+          "name": "encrypted at rest, owner-held key, backup with restore test",
+          "description": "Balanced continuity",
+          "tradeoffs": "key custody with owner; needs restore discipline"
+        },
+        {
+          "id": "B3",
+          "name": "dual-control/escrow keys, independent backup custodian",
+          "description": "Strongest continuity",
+          "tradeoffs": "second principal; conflicts with minimal-principal preference"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Protected integrity-reference location",
+      "options": [
+        {
+          "id": "I1",
+          "name": "local digest chain in record",
+          "description": "In-record chain",
+          "tradeoffs": "simple tamper-evidence; store controller could rewrite"
+        },
+        {
+          "id": "I2",
+          "name": "separate append-only/WORM media",
+          "description": "Distinct media/host",
+          "tradeoffs": "stronger separation; overhead; same owner"
+        },
+        {
+          "id": "I3",
+          "name": "external timestamping/notarization",
+          "description": "Independent anchor",
+          "tradeoffs": "strongest independent time; external dependency"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Retention/destruction",
+      "options": [
+        {
+          "id": "R1",
+          "name": "minimal retention + scheduled verified destruction",
+          "description": "Shortest lifecycle",
+          "tradeoffs": "least data at rest; loses re-verification"
+        },
+        {
+          "id": "R2",
+          "name": "fixed retention classes per record type",
+          "description": "Predictable lifecycle",
+          "tradeoffs": "requires upfront classification"
+        },
+        {
+          "id": "R3",
+          "name": "owner-directed indefinite hold",
+          "description": "Maximum preservation",
+          "tradeoffs": "maximum exposure; needs justification"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Custody-acceptance process (no self-acceptance)",
+      "options": [
+        {
+          "id": "C1",
+          "name": "owner as acceptance authority (owner not custodian of that evidence)",
+          "description": "Owner accepts; no new role",
+          "tradeoffs": "owner must not be recorder/custodian; acceptance is business act not adjudication"
+        },
+        {
+          "id": "C2",
+          "name": "designated external human acceptor (currently unselected)",
+          "description": "Separation of acceptance from ownership",
+          "tradeoffs": "requires selection + compatibility evaluation; not approved"
+        },
+        {
+          "id": "C3",
+          "name": "no acceptance; records remain inputs",
+          "description": "Status quo",
+          "tradeoffs": "fully preserves statuses; blocks progress by design"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Invalidation authority",
+      "options": [
+        {
+          "id": "V1",
+          "name": "owner only",
+          "description": "Single authority",
+          "tradeoffs": "simple; single point of failure"
+        },
+        {
+          "id": "V2",
+          "name": "designated acceptor (if C2 selected)",
+          "description": "Separated invalidation",
+          "tradeoffs": "requires acceptor role"
+        },
+        {
+          "id": "V3",
+          "name": "technical verifier, integrity scope only",
+          "description": "Fast integrity response",
+          "tradeoffs": "must not extend to business invalidation"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Conflict checks/attestation chain",
+      "options": [
+        {
+          "id": "A1",
+          "name": "self-declaration of conflicts",
+          "description": "Lightest",
+          "tradeoffs": "weakest independence signal"
+        },
+        {
+          "id": "A2",
+          "name": "reviewer attestation under technical separation",
+          "description": "Recorder != reviewer",
+          "tradeoffs": "meaningful separation; not human custody"
+        },
+        {
+          "id": "A3",
+          "name": "third-party attestation",
+          "description": "External party",
+          "tradeoffs": "strongest independence claim; external dependency"
+        }
+      ]
+    }
+  ],
+  "selection_status": "none selected, none recommended, none represented as approved; Owner Gate D",
+  "verification": {
+    "verifier": "MiMo-V2.6-Flash",
+    "record": "P00_G0_CUSTODY_ACCEPTANCE_OPTIONS_VERIFICATION.md"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "document": "P00_G0_D8_FEASIBILITY_VERDICT",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T12:36:25Z",
+  "verdict": "FEASIBLE_WITH_NEW_AUTHORIZATION",
+  "scope_note": "governing verdict for completing the proof; source-only subset feasible under existing boundary; runtime/test/arrangement components require owner authorization",
+  "feasible_now": [
+    {
+      "component": "Q1 read-path inventory",
+      "mode": "source-and-document-only"
+    },
+    {
+      "component": "Q2 value-domain proof",
+      "mode": "source-and-document-only"
+    },
+    {
+      "component": "Q3 handle lifecycle (design record)",
+      "mode": "design+document"
+    },
+    {
+      "component": "Q4 adversarial negative-search (class-level)",
+      "mode": "reasoning, no data collection"
+    },
+    {
+      "component": "Q5 no-passthrough proof",
+      "mode": "source review"
+    },
+    {
+      "component": "Q6 re-identification analysis",
+      "mode": "document-only"
+    },
+    {
+      "component": "Q7 redaction-method analysis",
+      "mode": "analysis only; sufficiency INCOMPLETE until tests"
+    },
+    {
+      "component": "Q8 package review",
+      "mode": "technical separation only"
+    }
+  ],
+  "requires_new_authorization": [
+    {
+      "component": "live correlation/visibility evidence",
+      "gate": "G/I"
+    },
+    {
+      "component": "Q7 adversarial test evidence",
+      "gate": "G/I"
+    },
+    {
+      "component": "evidence placement + D2 setup (dir/permissions/backup/key)",
+      "gate": "separate arrangement authorization"
+    },
+    {
+      "component": "qualification execution / deployment",
+      "gate": "I"
+    }
+  ],
+  "not_other_verdicts": {
+    "not_existing_authorization": "complete proof needs runtime evidence and test execution behind owner gates",
+    "not_not_feasible": "no rule makes a compliant method impossible; source-only subset feasible; runtime subset feasible with authorization; C3 blocks closure by design, not feasibility"
+  },
+  "consequences": [
+    "source-only subset may proceed if owner directs (Phase H subset)",
+    "C3: no acceptance; records remain inputs; closure impossible by design until owner revisits acceptance",
+    "I/V undesignated; records mark PENDING",
+    "no target/config/provisioning/testing/qualification/deployment authorized"
+  ],
+  "verification": {
+    "verifier": "MiMo-V2.6-Flash",
+    "record": "P00_G0_D8_FEASIBILITY_VERDICT_VERIFICATION.md"
+  }
+}

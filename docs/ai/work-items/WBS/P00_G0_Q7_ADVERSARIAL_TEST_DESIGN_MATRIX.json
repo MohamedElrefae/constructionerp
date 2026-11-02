@@ -1,0 +1,274 @@
+{
+  "document": "P00_G0_Q7_ADVERSARIAL_TEST_DESIGN_MATRIX",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T21:35:45Z",
+  "status": "test-design only; no case authorized for execution; Q7 remains INCOMPLETE; gate BLOCKED",
+  "authorization": "Gate G5 (2026-11-01); expired on issuance",
+  "consistency": [
+    "Phase E T1-T12",
+    "Q7 predicates P1-P6",
+    "D8 C1-C6/E1-E4/statuses",
+    "preserved rules",
+    "accepted Phase H/Q8 chain (G4)"
+  ],
+  "stop_map": {
+    "S1": "exposure risk => INCOMPLETE",
+    "S2": "redaction uncertainty/failure => INCOMPLETE (FAIL where confirmed+safe)",
+    "S3": "correlation invalid => UNKNOWN",
+    "S4": "freshness/visibility => INCOMPLETE",
+    "S5": "version mismatch => UNKNOWN",
+    "S6": "out-of-vocabulary => UNKNOWN",
+    "S7": "unqualified => UNKNOWN",
+    "S8": "auth record missing => UNKNOWN",
+    "S9": "incident material => UNKNOWN",
+    "S10": "integrity => FAIL where safe",
+    "S11": "excluded activity need => stop",
+    "S12": "unexpressible output => UNKNOWN"
+  },
+  "probe_template": {
+    "definition": "emit permitted output; attempt inference of suppressed value/identity/boundary from any emitted field",
+    "pass_boundary": "no suppressed info inferable; only allowed labels",
+    "fail_boundary": "any inference => withhold output; INCOMPLETE or FAIL(confirmed+safe)"
+  },
+  "erf_fields": [
+    "attempt_id",
+    "case_id",
+    "predicate",
+    "objective",
+    "input_class",
+    "expected_status",
+    "observed_status",
+    "probe_result",
+    "suppression_outcome",
+    "correlation_probe_result",
+    "stop_triggered",
+    "integrity{prev,this}",
+    "reviewer_separation",
+    "timestamp_class",
+    "notes_redacted"
+  ],
+  "cases": [
+    {
+      "case_id": "Q7-P1-01",
+      "predicate": "P1",
+      "objective": "non-allowlisted field enters extraction path",
+      "input_class": "field outside allowlist, type-valid",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P1-02",
+      "predicate": "P1",
+      "objective": "allowlisted field yields out-of-enum value",
+      "input_class": "allowlisted field, out-of-enum value",
+      "expected_status": "UNKNOWN",
+      "stop_on_failure": "S6",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P1-03",
+      "predicate": "P1",
+      "objective": "conflicting duplicate reads of one field",
+      "input_class": "same field, two conflicting valid values",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P1-04",
+      "predicate": "P1",
+      "objective": "control: clean path emits nothing extra",
+      "input_class": "all fields allowlisted, enums valid",
+      "expected_status": "eligible-path expectation (E1 consideration only)",
+      "stop_on_failure": "none",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P2-01",
+      "predicate": "P2",
+      "objective": "query/statement text enters any read path",
+      "input_class": "text-bearing field (content not retained)",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S1",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P2-02",
+      "predicate": "P2",
+      "objective": "consumer requests identifier field",
+      "input_class": "identifier field requested",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S1",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P2-03",
+      "predicate": "P2",
+      "objective": "pointer/free-text engine field exposure",
+      "input_class": "pointer or free-text field",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S1",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P2-04",
+      "predicate": "P2",
+      "objective": "control: exclusions absent from payload",
+      "input_class": "payload without excluded fields",
+      "expected_status": "no status change",
+      "stop_on_failure": "none",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P3-01",
+      "predicate": "P3",
+      "objective": "statement names a suppressed value",
+      "input_class": "statement referencing suppressed value (abstracted)",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P3-02",
+      "predicate": "P3",
+      "objective": "inference via comparison",
+      "input_class": "comparative statement permitting inference",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P3-03",
+      "predicate": "P3",
+      "objective": "control: label/status-only statement",
+      "input_class": "class-only statement",
+      "expected_status": "pass boundary (no inference)",
+      "stop_on_failure": "none",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P4-01",
+      "predicate": "P4",
+      "objective": "coarse status reveals suppressed detail",
+      "input_class": "coarse status adjacent to withheld detail",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P4-02",
+      "predicate": "P4",
+      "objective": "timing granularity leaks activity boundary",
+      "input_class": "precise timestamp alongside coarse result",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2 (S4 if visibility)",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P4-03",
+      "predicate": "P4",
+      "objective": "control: coarse status leaks nothing",
+      "input_class": "coarse status only",
+      "expected_status": "pass boundary",
+      "stop_on_failure": "none",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P5-01",
+      "predicate": "P5",
+      "objective": "withheld value present in record/log",
+      "input_class": "record containing simulated withheld marker",
+      "expected_status": "FAIL (visible when safe); INCOMPLETE if leak",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P5-02",
+      "predicate": "P5",
+      "objective": "reconstruction from aggregate classes",
+      "input_class": "multiple emitted classes combining to one value",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P5-03",
+      "predicate": "P5",
+      "objective": "withheld value persists in staging after close",
+      "input_class": "staging residue (lifecycle)",
+      "expected_status": "FAIL where safe; else INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P6-01",
+      "predicate": "P6",
+      "objective": "predicate evaluation ambiguous",
+      "input_class": "ambiguous classification",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P6-02",
+      "predicate": "P6",
+      "objective": "conflicting surface evidence",
+      "input_class": "two permitted surfaces disagree",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-P6-03",
+      "predicate": "P6",
+      "objective": "predicate skipped by error",
+      "input_class": "evaluation aborted mid-case",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S2",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-BND-01",
+      "predicate": "binding",
+      "objective": "handle->session derivation",
+      "input_class": "attempt to resolve opaque handle",
+      "expected_status": "FAIL if derivable; else pass",
+      "stop_on_failure": "S1",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-BND-02",
+      "predicate": "binding",
+      "objective": "cross-assessment handle reuse",
+      "input_class": "same handle in second assessment",
+      "expected_status": "UNKNOWN",
+      "stop_on_failure": "S3",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    },
+    {
+      "case_id": "Q7-BND-03",
+      "predicate": "binding",
+      "objective": "transaction-identifier linkage",
+      "input_class": "attempt to bind record to trx id",
+      "expected_status": "INCOMPLETE",
+      "stop_on_failure": "S1",
+      "coarse_leak_probe": "standard coarse-leak probe (\u00a71.3)"
+    }
+  ],
+  "t_mapping": {
+    "T1": "Q7-P1-04",
+    "T2": "Q7-BND-02",
+    "T3": "none (visibility domain)",
+    "T4": "Q7-P3-01/02,Q7-P6-01",
+    "T5": "none (version domain)",
+    "T6": "none (S7 domain)",
+    "T7": "Q7-P5-01 adjacent",
+    "T8": "Q7-P1-02",
+    "T9": "none (S8 domain)",
+    "T10": "none (S9 domain)",
+    "T11": "none (S11 domain)",
+    "T12": "Q7-P2-*,Q7-BND-01"
+  },
+  "non_execution": "no case authorized for execution; no evidence record created; Q7 INCOMPLETE; gate BLOCKED"
+}

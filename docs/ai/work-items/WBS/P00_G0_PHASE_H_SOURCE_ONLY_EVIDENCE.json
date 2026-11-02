@@ -1,0 +1,116 @@
+{
+  "document": "P00_G0_PHASE_H_SOURCE_ONLY_EVIDENCE",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T12:36:25Z",
+  "status": "source-only evidence records; no target/live/tests/D2/acceptance/qualification; Gate G authorization expired on completion; gate BLOCKED",
+  "authorization": "Gate G (2026-11-01): source-and-document-only Phase H subset Q1-Q8; Q7 INCOMPLETE pending tests",
+  "source_basis": {
+    "artifact": "mariadb-10.11.14.tar.gz",
+    "sha256": "8a571cb14fb1d4e3663d8e98f3d4200c042fc8b2a4aaaab495860dea8b7d052f",
+    "bytes": 112475645,
+    "reverified_this_round": true
+  },
+  "caveat": "no mechanism selected; Q1-Q8 are candidate-surface source analyses; completeness vs any future method INCOMPLETE",
+  "surfaces": [
+    {
+      "id": "S1",
+      "name": "tx_read_only session variable",
+      "path": "sql/sys_vars.cc:4356-4364; sql/sys_vars.inl:44",
+      "class": "P",
+      "note": "session default; live flag separate",
+      "cardinality": "{0,1}"
+    },
+    {
+      "id": "S2",
+      "name": "live trx read-only state + protocol status bit",
+      "path": "sql/transaction.cc:60,163-165,210-211; sql/handler.cc:1396-1402",
+      "class": "P",
+      "note": "protocol-level; no SQL extraction path; not usable for emission"
+    },
+    {
+      "id": "S3",
+      "name": "PFS events_transactions.ACCESS_MODE",
+      "path": "storage/perfschema/table_events_transactions.cc:425-427; pfs_instr_class.cc:261-264",
+      "class": "P",
+      "note": "instrument disabled by default; enabling excluded",
+      "cardinality": "{READ ONLY, READ WRITE}"
+    },
+    {
+      "id": "S4",
+      "name": "I_S INNODB_TRX (incl trx_is_read_only)",
+      "path": "storage/innobase/handler/i_s.cc fields; trx0i_s.cc:488,1046-1062; i_s.cc:363-396",
+      "class": "P/X/C",
+      "note": "D5 cache/visibility limits",
+      "cardinality": "trx_is_read_only {0,1}; trx_state {RUNNING, LOCK WAIT, ROLLING BACK, COMMITTING}"
+    },
+    {
+      "id": "S5",
+      "name": "session status counters",
+      "path": "sql/sql_parse.cc:3922; sql/sql_class.h:923",
+      "class": "C",
+      "note": "cumulative; not trx-scoped",
+      "cardinality": "unbounded numeric"
+    },
+    {
+      "id": "S6",
+      "name": "SHOW ENGINE INNODB STATUS",
+      "path": "sql/sql_parse.cc:4226-4231; sql/privilege.h:643",
+      "class": "X",
+      "note": "free text; global PROCESS",
+      "cardinality": "free text (excluded)"
+    }
+  ],
+  "field_classes": {
+    "P": "permitted bounded (bool/enum -> label constants)",
+    "X": "excluded (text/identifiers/pointers)",
+    "C": "coarse-only (timing/aggregates)"
+  },
+  "q_status": {
+    "Q1": "COMPLETE (surfaces) / INCOMPLETE vs unselected method",
+    "Q2": "COMPLETE (domains) / INCOMPLETE vs method",
+    "Q3": "design COMPLETE / evidence INCOMPLETE",
+    "Q4": "COMPLETE (classes) / validation INCOMPLETE",
+    "Q5": "design proof COMPLETE / implementation INCOMPLETE",
+    "Q6": "analysis COMPLETE / empirical INCOMPLETE",
+    "Q7": "INCOMPLETE (pending adversarial testing, as authorized)",
+    "Q8": "plan COMPLETE / formal review pending"
+  },
+  "key_finding": "INNODB_TRX.trx_is_read_only exists (engine per-trx flag, trx0i_s.cc:488); not a qualified witness; D5 limits remain; PFS needs excluded config change",
+  "adversarial_classes": [
+    "A1 SQL text",
+    "A2 session-id joins",
+    "A3 trx-id joins",
+    "A4 timing joins",
+    "A5 ordering/cardinality",
+    "A6 handle derivation",
+    "A7 cross-assessment",
+    "A8 coarse-status leak"
+  ],
+  "redaction_predicates": [
+    "P1 field allowlist",
+    "P2 absolute exclusions",
+    "P3 at-risk per statement",
+    "P4 coarse-leak check",
+    "P5 withheld never emitted",
+    "P6 uncertainty => INCOMPLETE"
+  ],
+  "stop_handling": {
+    "stops_triggered": 0,
+    "expiry": "completed; authorization expired"
+  },
+  "not_done": [
+    "no D2 access/creation",
+    "no target/live observation",
+    "no tests",
+    "no acceptance",
+    "no qualification",
+    "no closure"
+  ],
+  "verification": {
+    "verifier": "MiMo-V2.6-Flash",
+    "record": "P00_G0_PHASE_H_SOURCE_ONLY_EVIDENCE_VERIFICATION.md"
+  },
+  "vocabulary_rule": "only C1-C6 MODE labels, statuses and fixed reasons may be emitted; STATE/ISOLATION_LEVEL/AUTOCOMMIT/trx_state/check-flags are internal-only inputs (new labels would need a new artifact revision)",
+  "incident_exclusion": "prior unauthorized inspection unverified and excluded; no incident-derived material; inputs limited to digest-verified public source + workstream docs",
+  "notation_note": "field-class letters P/X/C are distinct from Q7 predicate labels P1-P6"
+}

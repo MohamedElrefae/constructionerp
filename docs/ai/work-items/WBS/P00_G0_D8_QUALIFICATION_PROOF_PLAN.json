@@ -1,0 +1,248 @@
+{
+  "document": "P00_G0_D8_QUALIFICATION_PROOF_PLAN",
+  "version": "1.0",
+  "generated_utc": "2026-11-01T12:36:25Z",
+  "status": "PLAN ONLY; source-and-document-only; no execution/tests/observation/custody/acceptance; gate BLOCKED",
+  "baseline": {
+    "destination": "D2 (owner-managed out-of-repo encrypted store; not created/accessed)",
+    "acceptance": "C3 (none; records remain inputs)",
+    "acceptance_authority": "undesignated",
+    "retention": "R2 fixed classes",
+    "recovery": "B2 (encrypted at rest, owner key, restore-tested backup)",
+    "supporting_areas": "P/I/V/A undesignated"
+  },
+  "bound_artifacts": {
+    "d8_rev03": "bbe596610537583e370ff7319a44acda588b5c9cefcf50e10f5366c9adc10322",
+    "spec_rev02": "0a3aa5c6ed7c0a3dffd09b87e2f53905818d66e7379e6ce9f5d5874e0198328e"
+  },
+  "q_classes": [
+    {
+      "id": "Q1",
+      "evidence": "closed channel manifest (surface/field/type/cardinality); read-set enumeration; source review",
+      "mode": "source-and-document-only"
+    },
+    {
+      "id": "Q2",
+      "evidence": "per-field worst-case domains; exclusion rationale",
+      "mode": "source-and-document-only"
+    },
+    {
+      "id": "Q3",
+      "evidence": "construction/uniqueness/resolvability/lifecycle records",
+      "mode": "design+document"
+    },
+    {
+      "id": "Q4",
+      "evidence": "adversarial class outcomes; residual risk; withdrawals",
+      "mode": "source-and-document-only (class-level)"
+    },
+    {
+      "id": "Q5",
+      "evidence": "emission->constant map; vocabulary closure; transform absence",
+      "mode": "source-and-document-only"
+    },
+    {
+      "id": "Q6",
+      "evidence": "auxiliary-category attack analysis; coarsening",
+      "mode": "document-only"
+    },
+    {
+      "id": "Q7",
+      "evidence": "predicate worst-case analysis; at-risk record; leak-check design; tests ONLY under separate grant; sufficiency claims INCOMPLETE until adversarial test evidence exists (separate grant)",
+      "mode": "analysis source-only; tests gated"
+    },
+    {
+      "id": "Q8",
+      "evidence": "technical-separation review record",
+      "mode": "document-only"
+    }
+  ],
+  "observation_mechanism": "server-produced state read-only; no config change; never session-self-report alone; bounded classes only; no write attempts",
+  "correlation_method": {
+    "same_server": true,
+    "same_connection": true,
+    "uninterrupted": true,
+    "start_marker_before_observation": true,
+    "handle": "opaque ephemeral, non-principal, single-assessment, destroyed at close",
+    "invalidation": [
+      "reconnect",
+      "handle reuse",
+      "restart",
+      "pool switch"
+    ],
+    "invalidation_status": "UNKNOWN",
+    "record_contents_include_surface_identities": true
+  },
+  "visibility_evidence": [
+    "per-surface freshness max-age",
+    "positive start-proof (absence never evidence)",
+    "two-dimension consistency",
+    "per-surface characterization before use",
+    "uncharacterized => INCOMPLETE"
+  ],
+  "redaction_boundary": {
+    "vocabularies": [
+      "C1-C6",
+      "E1-E4",
+      "statuses",
+      "fixed reasons"
+    ],
+    "at_risk": "per statement",
+    "coarse_leak_check": true,
+    "suppressed": [
+      "identities",
+      "credentials",
+      "query bodies",
+      "unexpected values",
+      "indirect identifiers",
+      "hostnames/usernames",
+      "free-text server output"
+    ],
+    "uncertain": "withhold => INCOMPLETE"
+  },
+  "failure_record_format": [
+    "attempt_id",
+    "timestamp_utc",
+    "package_id",
+    "surface_class",
+    "correlation{handle,start_marker,continuity}",
+    "freshness{bound,age_class}",
+    "class_outcomes",
+    "status",
+    "reason",
+    "redaction_decision",
+    "preservation_state",
+    "integrity{prev_digest,this_digest}",
+    "pending"
+  ],
+  "provenance_integrity": {
+    "version_binding": [
+      "10.11.14",
+      "10.11.14-MariaDB-0ubuntu0.24.04.1"
+    ],
+    "suffix_rule": "changed/unrecognized => UNKNOWN",
+    "digest_binding": true,
+    "incident_screening": true,
+    "destination": "D2 once authorized",
+    "encryption": "B2 future action",
+    "integrity_anchoring": "PENDING_OWNER_DESIGNATION (I undesignated); local digest chain tamper-evident only",
+    "acceptance": "C3 no acceptance step",
+    "invalidation_authority": "V1-V3 undesignated (pending owner)"
+  },
+  "stop_conditions": [
+    "exposure risk => INCOMPLETE",
+    "redaction uncertainty => INCOMPLETE",
+    "correlation invalidation => UNKNOWN",
+    "freshness/visibility gap => INCOMPLETE",
+    "version mismatch => UNKNOWN",
+    "out-of-vocabulary => UNKNOWN",
+    "unqualified method => UNKNOWN (classification fact)",
+    "missing authorization record => UNKNOWN",
+    "suspected incident/target-derived input => UNKNOWN",
+    "integrity break => FAIL where safe; provenance-context failures UNKNOWN/INCOMPLETE",
+    "need for excluded activity => stop (INCOMPLETE if evidence exists else UNKNOWN)",
+    "unexpressible output => UNKNOWN"
+  ],
+  "test_cases": [
+    {
+      "id": "T1",
+      "case": "read-only tx, correlation intact, freshness ok, two dims consistent",
+      "expected": "eligible path (E1 consideration only)"
+    },
+    {
+      "id": "T2",
+      "case": "reconnect mid-attempt",
+      "expected": "UNKNOWN"
+    },
+    {
+      "id": "T3",
+      "case": "record absent/not-started (D5)",
+      "expected": "UNKNOWN"
+    },
+    {
+      "id": "T4",
+      "case": "redaction sufficiency uncertain",
+      "expected": "INCOMPLETE"
+    },
+    {
+      "id": "T5",
+      "case": "version suffix changed/unrecognized",
+      "expected": "UNKNOWN"
+    },
+    {
+      "id": "T6",
+      "case": "comparison without qualification proof",
+      "expected": "UNKNOWN (classification fact)"
+    },
+    {
+      "id": "T7",
+      "case": "digest mismatch on observation record",
+      "expected": "FAIL where safe; INCOMPLETE if leak"
+    },
+    {
+      "id": "T8",
+      "case": "output outside vocabulary",
+      "expected": "UNKNOWN"
+    },
+    {
+      "id": "T9",
+      "case": "authorization record absent/incomplete",
+      "expected": "UNKNOWN"
+    },
+    {
+      "id": "T10",
+      "case": "suspected incident-derived input",
+      "expected": "UNKNOWN"
+    },
+    {
+      "id": "T11",
+      "case": "need for configuration change",
+      "expected": "stop; INCOMPLETE/UNKNOWN by reason"
+    },
+    {
+      "id": "T12",
+      "case": "exposure risk",
+      "expected": "INCOMPLETE (withhold)"
+    }
+  ],
+  "evidence_package_structure": {
+    "layout": [
+      "pkg-<class>/manifest.json",
+      "evidence/",
+      "redaction/",
+      "failures/",
+      "review/",
+      "integrity/ (anchoring PENDING)"
+    ],
+    "created": false
+  },
+  "review_requirements": {
+    "separation": "technical author/reviewer only",
+    "reviewer_not_author": true,
+    "conflicts": "declared; attestation chain undesignated",
+    "disagreements": "recorded, never erased; rule-affecting escalate to owner",
+    "not": "custody/acceptance/qualification"
+  },
+  "feasibility_inputs": {
+    "source_only_now": [
+      "Q1",
+      "Q2",
+      "Q3 (design record)",
+      "Q4 class-level",
+      "Q5",
+      "Q6",
+      "Q7 analysis",
+      "Q8"
+    ],
+    "requires_new_authorization": [
+      "live correlation/visibility evidence",
+      "Q7 adversarial tests",
+      "any target-side observation"
+    ],
+    "closure_under_C3": "impossible by design (no acceptance step); not a defect"
+  },
+  "verification": {
+    "verifier": "MiMo-V2.6-Flash",
+    "record": "P00_G0_D8_QUALIFICATION_PROOF_PLAN_VERIFICATION.md"
+  }
+}
