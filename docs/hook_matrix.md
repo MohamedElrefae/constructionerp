@@ -27,7 +27,7 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 | app_include_js[1] | /assets/construction/js/print_settings_dialog.js | - | 23.0KB |
 | app_include_js[2] | /assets/construction/js/construction_export_menu.js | - | 5.9KB |
 | app_include_js[3] | /assets/construction/js/generic_export_menu.js | ?v=1 | 14.2KB |
-| app_include_js[4] | /assets/construction/js/theme_loader_v24.js | ?v=2.6.1 | 33.7KB |
+| app_include_js[4] | /assets/construction/js/theme_loader_v24.js | ?v=2.6.4 | 33.7KB |
 | app_include_js[5] | /assets/construction/js/typography_settings.js | ?v=21 | 29.7KB |
 | app_include_js[6] | /assets/construction/js/searchable_dropdown/utils.js | - | 2.6KB |
 | app_include_js[7] | /assets/construction/js/searchable_dropdown/searchable_dropdown.js | - | 4.2KB |
@@ -42,7 +42,6 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 | app_include_js[16] | /assets/construction/js/vfc_config.js | ?v=1 | 749B |
 | app_include_js[17] | /assets/construction/js/scope_context_report_filters.js | ?v=4 | 13.8KB |
 | app_include_js[18] | /assets/construction/js/ct_list_view_config.js | ?v=1 | 3.5KB |
-| app_include_js[19] | /assets/construction/js/sidebar_accordion.js | ?v=1 | 1.0KB |
 | app_include_js[20] | /assets/construction/js/translation_list_tools.js | ?v=6 | 8.4KB |
 | app_include_js[21] | /assets/construction/js/boq_filters.js | ?v=8 | 21.2KB |
 | app_include_js[22] | /assets/construction/js/filter_fix.js | ?v=11 | 21.6KB |
@@ -54,7 +53,7 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 
 | Hook | Path | Version | Size |
 |------|------|---------|------|
-| app_include_css[0] | /assets/construction/css/modern_theme.css | ?v=2.5.8 | 142.2KB |
+| app_include_css[0] | /assets/construction/css/modern_theme.css | ?v=2.6.3 | 145.6KB |
 | app_include_css[1] | /assets/construction/css/scope_context.css | ?v=2 | 1.0KB |
 | app_include_css[2] | /assets/construction/css/vite_extensions.css | ?v=1.3 | 2.5KB |
 | app_include_css[3] | /assets/construction/css/vite_form_override.css | ?v=1.5 | 26.3KB |
@@ -65,13 +64,13 @@ Complete reference of all Frappe hooks used by Construction Theming System.
 
 | Hook | Path | Version | Size |
 |------|------|---------|------|
-| web_include_js | /assets/construction/js/theme_loader_v24.js | ?v=2.6.1 | 33.7KB |
+| web_include_js | /assets/construction/js/theme_loader_v24.js | ?v=2.6.4 | 33.7KB |
 
 ### CSS (Frontend - Login Page)
 
 | Hook | Path | Version | Size |
 |------|------|---------|------|
-| web_include_css[0] | /assets/construction/css/modern_theme.css | ?v=2.5.8 | 142.2KB |
+| web_include_css[0] | /assets/construction/css/modern_theme.css | ?v=2.6.3 | 145.6KB |
 | web_include_css[1] | /assets/construction/css/email_theme.css | - | 1.7KB |
 
 ---
@@ -158,7 +157,7 @@ Complete mapping of server-side document lifecycle events declared in `hooks.py`
 | `Purchase Invoice` | `on_cancel` | `construction.services.resource_price_service.cancel_price_history_for_document` | Cancels recorded resource price history |
 | `Stock Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Material issue/transfer validation against BOQ |
 | `Timesheet` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Labor log validation against BOQ activity |
-| `Journal Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document`<br>`construction.services.boq_journal_project.validate_document` | Direct cost validation against BOQ accounts, then derivation and validation of the authoritative BOQ project of every BOQ-bearing row (the wildcard scope hook never sees a Journal Entry Account project) |
+| `Journal Entry` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Direct cost validation against BOQ accounts |
 | `Sales Invoice` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Billing validation against BOQ milestones |
 | `Material Request` | `validate` | `construction.services.boq_transaction_validation.validate_document` | Procurement requisition validation against BOQ |
 | `BOQ Item Stage` | `before_delete` | `construction.services.boq_lifecycle.before_delete_boq_item_stage` | Blocks deletion of committed stage records |
