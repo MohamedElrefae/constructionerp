@@ -2968,6 +2968,12 @@ def add_theme_to_boot(bootinfo):
     bootinfo.construction_typography = get_user_typography_settings()
     # Also set the standard Frappe key for integrations that read it directly.
     bootinfo.theme = mode
+    # CT-THEME-2026-001 P0.11 — loader kill switch. `construction_theme_loader` in
+    # site/common config (default 1). When set to 0/false/no the browser keeps the
+    # theme CSS (ct-enterprise + data-theme are still applied) but every loader
+    # behavior stops — the ops escape hatch for a misbehaving loader on a live site.
+    _ctl = str(frappe.conf.get("construction_theme_loader", 1)).strip().lower()
+    bootinfo.construction_theme_loader = 0 if _ctl in ("0", "false", "no") else 1
 
 
 def _default_typography_settings():

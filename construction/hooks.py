@@ -126,7 +126,7 @@ doctype_tree_js = {
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
 app_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.9",
+    "/assets/construction/css/modern_theme.css?v=2.6.3",
     "/assets/construction/css/scope_context.css?v=2",
     # ─── Vite UI — MUST load LAST to win cascade ───
     # Phase 1: Visual Foundation
@@ -145,7 +145,7 @@ app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
     "/assets/construction/js/generic_export_menu.js?v=1",
-    "/assets/construction/js/theme_loader_v24.js?v=2.6.2",
+    "/assets/construction/js/theme_loader_v24.js?v=2.6.4",
     "/assets/construction/js/typography_settings.js?v=21",
     # Timesheet direct-labor designation derivation (employee -> row designation)
     "/assets/construction/js/timesheet_designation.js?v=4",
@@ -185,8 +185,6 @@ app_include_js = [
     # CT List View Config — hides like column, collapses level-right, fixes dropdown z-index
     # Must load AFTER list view initializes but BEFORE user interaction
     "/assets/construction/js/ct_list_view_config.js?v=1",
-    # Sidebar accordion — only one section stays expanded at a time
-    "/assets/construction/js/sidebar_accordion.js?v=1",
     # Translation workflow helpers (Arabic backlog + filters + catalog workbench)
     "/assets/construction/js/translation_list_tools.js?v=6",
     # BOQ integration filters for transaction child rows
@@ -211,12 +209,12 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.5.9",
+    "/assets/construction/css/modern_theme.css?v=2.6.3",
     "/assets/construction/css/email_theme.css",
 ]
 
 # v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
-web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.2"
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.4"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"

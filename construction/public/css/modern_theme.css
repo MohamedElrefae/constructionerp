@@ -3,7 +3,7 @@
    Strategy: Cooperate with Frappe, never fight layout
    Only visual properties: colors, backgrounds, borders, shadows
    NO layout: position, display, flex, width, height, margin, padding, transform, order
-   Version: 2.5.3 | 2026-05-24
+   Version: 2.6.3 | 2026-11-08 — CT-THEME-2026-001 P0 (Frappe/ERPNext v16.50 desk chrome)
    ════════════════════════════════════════════════════════════ */
 
 /* ─── ROOT FALLBACKS (prevent FOUC before JS loads) ─── */
@@ -24,6 +24,7 @@
 html.ct-enterprise[data-theme="dark"] {
   --ct-primary: #2563eb;
   --ct-primary-hover: #1d4ed8;
+  --ct-primary-dark: #1e40af;
   --ct-primary-light: rgba(37, 99, 235, 0.15);
   --ct-accent: #f59e0b;
   --ct-accent-hover: #d97706;
@@ -73,8 +74,7 @@ html.ct-enterprise[data-theme="dark"] {
   --subtle-accent: var(--ct-bg-3);
   --subtle-fg: var(--ct-surface);
   --navbar-bg: var(--ct-surface);
-  --surface-menu-bar: var(--ct-surface);
-  --fg-hover-color: var(--ct-surface-hover);
+    --fg-hover-color: var(--ct-surface-hover);
   --card-bg: var(--ct-surface);
   --disabled-text-color: var(--ct-text-disabled);
   --disabled-control-bg: var(--ct-bg-3);
@@ -108,10 +108,6 @@ html.ct-enterprise[data-theme="dark"] {
   --scrollbar-thumb-color: var(--ct-surface-hover);
   --scrollbar-track-color: var(--ct-surface);
   --shadow-inset: var(--ct-surface);
-  --sidebar-hover-color: var(--ct-surface-hover);
-  --sidebar-active-color: var(--ct-surface-active);
-  --sidebar-border-color: var(--ct-border);
-  --divider-color: var(--ct-border);
   --placeholder-color: var(--ct-bg-3);
   --btn-group-border-color: var(--ct-border);
   --alert-text-danger: var(--ct-danger);
@@ -146,6 +142,7 @@ html.ct-enterprise[data-theme="dark"] {
 html.ct-enterprise[data-theme="light"] {
   --ct-primary: #2563eb;
   --ct-primary-hover: #1d4ed8;
+  --ct-primary-dark: #1e40af;
   --ct-primary-light: rgba(37, 99, 235, 0.15);
   --ct-accent: #f59e0b;
   --ct-accent-hover: #d97706;
@@ -194,8 +191,7 @@ html.ct-enterprise[data-theme="light"] {
   --subtle-accent: var(--ct-bg-elevated);
   --subtle-fg: var(--ct-surface-hover);
   --navbar-bg: var(--ct-surface);
-  --surface-menu-bar: var(--ct-surface);
-  --fg-hover-color: var(--ct-surface-hover);
+    --fg-hover-color: var(--ct-surface-hover);
   --card-bg: var(--ct-surface);
   --disabled-text-color: var(--ct-text-disabled);
   --disabled-control-bg: var(--ct-bg-3);
@@ -229,10 +225,6 @@ html.ct-enterprise[data-theme="light"] {
   --scrollbar-thumb-color: var(--ct-text-muted);
   --scrollbar-track-color: var(--ct-bg-elevated);
   --shadow-inset: var(--ct-surface-hover);
-  --sidebar-hover-color: var(--ct-surface-hover);
-  --sidebar-active-color: var(--ct-surface-active);
-  --sidebar-border-color: var(--ct-border);
-  --divider-color: var(--ct-border);
   --placeholder-color: var(--ct-bg-elevated);
   --btn-group-border-color: var(--ct-border);
   --alert-text-danger: var(--ct-danger);
@@ -276,8 +268,7 @@ html.ct-enterprise[data-theme="dark"] body {
   --subtle-accent: var(--ct-bg-3);
   --subtle-fg: var(--ct-surface);
   --navbar-bg: var(--ct-surface);
-  --surface-menu-bar: var(--ct-surface);
-  --fg-hover-color: var(--ct-surface-hover);
+    --fg-hover-color: var(--ct-surface-hover);
   --card-bg: var(--ct-surface);
   --disabled-text-color: var(--ct-text-disabled);
   --disabled-control-bg: var(--ct-bg-3);
@@ -311,10 +302,6 @@ html.ct-enterprise[data-theme="dark"] body {
   --scrollbar-thumb-color: var(--ct-surface-hover);
   --scrollbar-track-color: var(--ct-surface);
   --shadow-inset: var(--ct-surface);
-  --sidebar-hover-color: var(--ct-surface-hover);
-  --sidebar-active-color: var(--ct-surface-active);
-  --sidebar-border-color: var(--ct-border);
-  --divider-color: var(--ct-border);
   --placeholder-color: var(--ct-bg-3);
   --btn-group-border-color: var(--ct-border);
   --alert-text-danger: var(--ct-danger);
@@ -349,8 +336,7 @@ html.ct-enterprise[data-theme="light"] body {
   --subtle-accent: var(--ct-bg-elevated);
   --subtle-fg: var(--ct-surface-hover);
   --navbar-bg: var(--ct-surface);
-  --surface-menu-bar: var(--ct-surface);
-  --fg-hover-color: var(--ct-surface-hover);
+    --fg-hover-color: var(--ct-surface-hover);
   --card-bg: var(--ct-surface);
   --disabled-text-color: var(--ct-text-disabled);
   --disabled-control-bg: var(--ct-bg-3);
@@ -384,10 +370,6 @@ html.ct-enterprise[data-theme="light"] body {
   --scrollbar-thumb-color: var(--ct-surface-hover);
   --scrollbar-track-color: var(--ct-surface);
   --shadow-inset: var(--ct-surface);
-  --sidebar-hover-color: var(--ct-surface-hover);
-  --sidebar-active-color: var(--ct-surface-active);
-  --sidebar-border-color: var(--ct-border);
-  --divider-color: var(--ct-border);
   --placeholder-color: var(--ct-bg-3);
   --btn-group-border-color: var(--ct-border);
   --alert-text-danger: var(--ct-danger);
@@ -415,6 +397,253 @@ html.ct-enterprise[data-theme="light"] body {
   --charts-legend-value: var(--ct-text-secondary);
 }
 
+
+/* ════════════════════════════════════════════════════════════
+   ESPRESSO TOKEN BRIDGE — unlayered (CT-THEME-2026-001 P0.1)
+   Maps Frappe v16.50 "espresso" design tokens onto Construction
+   tokens. Two-tier cascade (P0.0): this bridge is UNLAYERED on
+   purpose; it is the only place brand delta punches through
+   upstream recolors. Component rules below live in
+   @layer ct-theme and defer to upstream conflicts by design.
+   ════════════════════════════════════════════════════════════ */
+html.ct-enterprise {
+  /* Surface ramp (upstream uses gray-1..10 + elevation-1..3) */
+  --surface-base: var(--ct-bg);
+  --surface-gray-1: var(--ct-bg-3);
+  --surface-gray-2: var(--ct-surface);
+  --surface-gray-3: var(--ct-surface-hover);
+  --surface-gray-4: var(--ct-surface-active);
+  --surface-gray-5: var(--ct-border-hover);
+  --surface-gray-6: var(--ct-text-muted);
+  --surface-gray-7: var(--ct-text-secondary);
+  --surface-gray-8: var(--ct-text-secondary);
+  --surface-gray-9: var(--ct-text-secondary);
+  --surface-gray-10: var(--ct-text);
+  --surface-sidebar: var(--ct-surface);
+  --desk-sidebar-bg: var(--ct-surface);
+  --surface-elevation-1: var(--ct-surface);
+  --surface-elevation-2: var(--ct-surface-elevated);
+  --surface-elevation-3: var(--ct-surface-hover);
+
+  /* Ink ramp */
+  --ink-gray-4: var(--ct-text-disabled);
+  --ink-gray-5: var(--ct-text-muted);
+  --ink-gray-6: var(--ct-text-secondary);
+  --ink-gray-7: var(--ct-text-2);
+  --ink-gray-8: var(--ct-text);
+  --ink-gray-9: var(--ct-text);
+  --ink-gray-10: var(--ct-text);
+
+  /* Outlines */
+  --outline-gray-1: var(--ct-border);
+  --outline-gray-2: var(--ct-border-hover);
+  --outline-gray-3: var(--ct-border-hover);
+
+  /* Radius */
+  --radius-sm: var(--ct-border-radius-sm);
+  --radius: var(--ct-border-radius);
+  --radius-md: var(--ct-border-radius);
+  --radius-lg: var(--ct-border-radius-lg);
+
+  /* Spacing base (espresso 0.25rem unit — upstream computes off it) */
+  --spacing: 0.25rem;
+
+  /* Type */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-lg: 1.125rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+
+  /* Shadows */
+  --shadow-sm: var(--ct-shadow-sm);
+  --shadow-md: var(--ct-shadow-md);
+  --shadow-lg: var(--ct-shadow-lg);
+  --shadow-2xl: var(--ct-shadow-lg);
+  --elevation-2xl: var(--ct-shadow-lg);
+
+  /* Focus rings (controls, buttons, menus, tabs) */
+  --focus-default: 0px 0px 0px 3px var(--ct-primary);
+  --focus-outline-default: 2px solid var(--ct-primary);
+}
+
+/* Dock: Construction identity for the app rail (upstream reads these local vars) */
+html.ct-enterprise .dock {
+  --dock-bg: var(--ct-surface);
+  --dock-ink: var(--ct-text-secondary);
+  --dock-ink-strong: var(--ct-text);
+  --dock-tile-hover: var(--ct-surface-hover);
+  --dock-tile-active: var(--ct-bg-3);
+  --dock-rule: var(--ct-border);
+  box-shadow: var(--ct-shadow-lg);
+}
+
+/* ════════════════════════════════════════════════════════════
+   @layer ct-theme — layered component rules (P0.0 two-tier)
+   Wraps every component recolor below. Unlayered upstream
+   rules win ties by design: espresso components already paint
+   from the bridged tokens above, so these rules only add the
+   Construction look where upstream is silent. No !important,
+   no layout properties, no fixed widths.
+   ════════════════════════════════════════════════════════════ */
+/* Espresso solid variant = CT primary (construction identity; recolor only, no layout) */
+html.ct-enterprise .es-button[data-variant="solid"]:not([data-theme="red"]) {
+  --bt-solid-bg: var(--ct-primary);
+  --bt-solid-bg-hover: var(--ct-primary-hover);
+  --bt-solid-bg-active: var(--ct-primary-dark);
+  --bt-solid-fg: #ffffff;
+}
+
+
+/* Active item branding — MUST override upstream unlayered .active-sidebar / .item-anchor rules
+   (unlayered beats layered by CSS spec). Keep these OUT of @layer ct-theme. */
+html.ct-enterprise .standard-sidebar-item.active,
+html.ct-enterprise .standard-sidebar-item.active-sidebar,
+html.ct-enterprise .standard-sidebar-item.selected {
+  background: var(--ct-primary);
+  color: #ffffff;
+  border-left-color: var(--ct-accent);
+  font-weight: 600;
+}
+
+html.ct-enterprise .standard-sidebar-item.active:hover,
+html.ct-enterprise .standard-sidebar-item.active-sidebar:hover,
+html.ct-enterprise .standard-sidebar-item.selected:hover {
+  background: var(--ct-primary-hover);
+  color: #ffffff;
+  border-left-color: var(--ct-accent);
+}
+
+html.ct-enterprise .standard-sidebar-item.active .sidebar-item-label,
+html.ct-enterprise .standard-sidebar-item.active-sidebar .sidebar-item-label,
+html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+html.ct-enterprise .standard-sidebar-item.active .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-icon {
+  color: #ffffff;
+}
+
+html.ct-enterprise .active-sidebar {
+  background: var(--ct-primary-light);
+  border-radius: var(--ct-border-radius-sm);
+}
+
+@layer ct-theme {
+
+  /* ─────────────── v16.50 DESK CHROME ───────────────
+     Sidebar shell / collapse controls / standard band /
+     shell header / panels / cards / desktop Apps screen   */
+
+  /* Sidebar: rail + collapse edge/arrow (recolor only) */
+  html.ct-enterprise .sidebar-edge:hover::after {
+    background: var(--ct-border-hover);
+  }
+  html.ct-enterprise .sidebar-collapse-arrow {
+    background: var(--ct-surface-elevated);
+    border-color: var(--ct-border);
+    color: var(--ct-text-secondary);
+    box-shadow: var(--ct-shadow-sm);
+  }
+  html.ct-enterprise .sidebar-collapse-arrow:hover,
+  html.ct-enterprise .sidebar-collapse-arrow:focus-visible {
+    background: var(--ct-surface-hover);
+    color: var(--ct-text);
+  }
+
+  /* Standard items band: Search / Notification rows (ink/hover recolor) */
+  html.ct-enterprise .standard-items-band .sidebar-notification,
+  html.ct-enterprise .standard-items-band .navbar-modal-search-mobile {
+    color: var(--ct-text-secondary);
+  }
+  html.ct-enterprise .standard-items-band .sidebar-notification:hover,
+  html.ct-enterprise .standard-items-band .navbar-modal-search-mobile:hover {
+    color: var(--ct-text);
+  }
+  html.ct-enterprise .notification-count {
+    background: var(--ct-primary);
+    color: #ffffff;
+  }
+
+  /* Shell header (workspace / app switcher) — Construction hover accents */
+  html.ct-enterprise .shell-header {
+    color: var(--ct-text);
+    letter-spacing: 0.02em;
+  }
+  html.ct-enterprise .shell-header:hover .drop-icon,
+  html.ct-enterprise .shell-header.active-sidebar .drop-icon {
+    color: var(--ct-primary);
+  }
+
+  /* Collapsed rail: group-standing-in pill stays quiet */
+  html.ct-enterprise .body-sidebar-container:not(.expanded)
+    .sidebar-item-container:has(> .nested-container.hidden .active-sidebar) > .standard-sidebar-item {
+    box-shadow: var(--ct-shadow-sm);
+  }
+
+  /* Sidebar cards (onboarding / trial / promo) — Construction surfaces */
+  html.ct-enterprise .frappe-card {
+    background: var(--ct-surface-elevated);
+    border-color: var(--ct-border);
+    color: var(--ct-text);
+  }
+  html.ct-enterprise .frappe-card-description {
+    color: var(--ct-text-secondary);
+  }
+  html.ct-enterprise .frappe-card-button {
+    background: var(--ct-primary);
+    border-color: transparent;
+    color: #ffffff;
+  }
+  html.ct-enterprise .frappe-card-button:hover {
+    background: var(--ct-primary-hover);
+  }
+  html.ct-enterprise .promotional-banner {
+    color: var(--ct-text-secondary);
+  }
+  html.ct-enterprise .promotional-banner:hover {
+    color: var(--ct-text);
+  }
+
+  /* Desktop Apps screen — minimal identity accents (descendant-scoped;
+     body.desktop-page is global upstream, never key off it alone) */
+  html.ct-enterprise body.desktop-page .search-widget-button {
+    background: var(--ct-bg-3);
+    border-color: var(--ct-border);
+    color: var(--ct-text-secondary);
+  }
+  html.ct-enterprise body.desktop-page .icons .desktop-icon:hover {
+    border-color: var(--ct-primary);
+  }
+  html.ct-enterprise body.desktop-page .edit-mode-buttons .btn-primary {
+    background: var(--ct-primary);
+    border-color: transparent;
+  }
+
+  /* Forms & controls audit additions (P0.10) — Sales Invoice acceptance */
+  html.ct-enterprise .frappe-control :focus-visible {
+    outline: 2px solid var(--ct-primary);
+    outline-offset: 2px;
+    border-radius: var(--ct-border-radius-sm);
+  }
+  html.ct-enterprise .form-grid {
+    border-color: var(--ct-border);
+  }
+  html.ct-enterprise .grid-row:hover .data-row:not(.editable-row) {
+    background: var(--ct-primary-light);
+  }
+  html.ct-enterprise .form-grid .grid-row-open {
+    background: var(--ct-surface);
+    border-color: var(--ct-primary);
+  }
+  html.ct-enterprise .layout-side-section {
+    border-color: var(--ct-border);
+  }
+
 /* ════════════════════════════════════════════════════════════
    UNIFIED HOVER PATTERN — applied to every interactive element
    ════════════════════════════════════════════════════════════ */
@@ -439,11 +668,6 @@ html.ct-enterprise .body-sidebar-bottom {
 
 html.ct-enterprise .body-sidebar-cards {
   background: var(--ct-bg-elevated);
-}
-
-html.ct-enterprise .body-sidebar-placeholder {
-  background: var(--ct-surface);
-  border-right-color: var(--ct-border);
 }
 
 html.ct-enterprise .sidebar-items {
@@ -491,36 +715,6 @@ html.ct-enterprise .standard-sidebar-item:hover .sidebar-item-label {
 
 html.ct-enterprise .standard-sidebar-item:hover .sidebar-item-icon {
   transform: scale(1.15);
-}
-
-html.ct-enterprise .standard-sidebar-item.active,
-html.ct-enterprise .standard-sidebar-item.active-sidebar,
-html.ct-enterprise .standard-sidebar-item.selected {
-  background: var(--ct-primary);
-  color: #ffffff;
-  border-left-color: var(--ct-accent);
-  font-weight: 600;
-}
-
-html.ct-enterprise .standard-sidebar-item.active:hover,
-html.ct-enterprise .standard-sidebar-item.active-sidebar:hover,
-html.ct-enterprise .standard-sidebar-item.selected:hover {
-  background: var(--ct-primary-hover);
-  color: #ffffff;
-  border-left-color: var(--ct-accent);
-}
-
-html.ct-enterprise .standard-sidebar-item.active .sidebar-item-label,
-html.ct-enterprise .standard-sidebar-item.active-sidebar .sidebar-item-label,
-html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-label {
-  color: #ffffff;
-  font-weight: 600;
-}
-
-html.ct-enterprise .standard-sidebar-item.active .sidebar-item-icon,
-html.ct-enterprise .standard-sidebar-item.active-sidebar .sidebar-item-icon,
-html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-icon {
-  color: #ffffff;
 }
 
 html.ct-enterprise .sidebar-item-label {
@@ -606,10 +800,6 @@ html.ct-enterprise .sidebar-header:hover .sidebar-item-icon {
   transform: scale(1.15);
 }
 
-html.ct-enterprise .sidebar-header:hover .header-subtitle {
-  transform: translateX(4px);
-}
-
 html.ct-enterprise .header-title {
   color: var(--ct-text);
   font-weight: 600;
@@ -618,82 +808,6 @@ html.ct-enterprise .header-title {
   display: inline-block;
 }
 
-html.ct-enterprise .header-subtitle {
-  color: var(--ct-text-muted);
-  font-size: 0.6875rem;
-  display: inline-block;
-  transition: var(--ct-motion);
-}
-
-html.ct-enterprise .header-logo-container {
-  border-radius: var(--ct-border-radius-sm);
-  background: var(--ct-bg-3);
-}
-
-html.ct-enterprise .header-logo-container:has(img) {
-  background: transparent;
-}
-
-/* ─── Frappe Menu (workspace switcher dropdown) ─── */
-html.ct-enterprise .frappe-menu {
-  background: var(--ct-surface);
-  border: 1px solid var(--ct-border);
-  border-radius: var(--ct-border-radius);
-  box-shadow: var(--ct-shadow-lg);
-}
-
-html.ct-enterprise .dropdown-menu-item {
-  border-radius: var(--ct-border-radius-sm);
-  transition: var(--ct-motion);
-  border-left: 3px solid transparent !important;
-  border-style: solid !important;
-  border-width: 0 0 0 3px !important;
-  letter-spacing: 0.02em;
-}
-
-html.ct-enterprise .dropdown-menu-item:hover {
-  background: var(--ct-surface-hover) !important;
-  border-left-color: var(--ct-primary) !important;
-  border-color: transparent transparent transparent var(--ct-primary) !important;
-  letter-spacing: 0.3px;
-}
-
-html.ct-enterprise .dropdown-menu-item:hover .menu-item-title {
-  transform: translateX(4px);
-}
-
-html.ct-enterprise .dropdown-menu-item:hover .menu-item-icon {
-  transform: scale(1.15);
-}
-
-html.ct-enterprise .dropdown-menu-item a {
-  color: var(--ct-text);
-  text-decoration: none;
-}
-
-html.ct-enterprise .dropdown-menu-item:hover a {
-  color: var(--ct-text);
-}
-
-html.ct-enterprise .menu-item-title {
-  color: var(--ct-text);
-  font-size: 0.875rem;
-  transition: var(--ct-motion);
-  display: inline-block;
-}
-
-html.ct-enterprise .menu-item-icon {
-  color: var(--ct-text-secondary);
-  transition: var(--ct-transition);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-html.ct-enterprise .active-sidebar {
-  background: var(--ct-primary-light);
-  border-radius: var(--ct-border-radius-sm);
-}
 
 /* Unified hover: sidebar nav items */
 html.ct-enterprise .nav-item {
@@ -4644,7 +4758,26 @@ html.ct-enterprise .frappe-control.ct-boq-step-blocked .help-block {
   }
 }
 
-/* ─── SIDEBAR TOGGLE BUTTON (visible on desktop toolbar) ─── */
-.page-title .sidebar-toggle-btn {
-  display: flex !important;
-}
+
+  /* ─── CT Scope Context strip — construction app topbar zone on its own full-width row
+     (eliminates the v16.50 page-head overflow that overlapped the banner and list filters). */
+  html.ct-enterprise .ct-scope-zone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    padding: 0 8px;
+    border-bottom: 1px solid var(--ct-border);
+    background: var(--ct-bg-elevated);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+  html.ct-enterprise .ct-scope-zone:empty,
+  html.ct-enterprise .ct-scope-zone:has(.ct-scope-selectors:empty) {
+    display: none;
+  }
+  html.ct-enterprise .ct-scope-zone .ct-topbar-zone--standard {
+    flex-shrink: 0;
+  }
+} /* @layer ct-theme */

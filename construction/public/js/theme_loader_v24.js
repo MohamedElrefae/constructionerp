@@ -11,6 +11,17 @@
 	var html = document.documentElement;
 	var path = window.location.pathname;
 
+	// CT-THEME-2026-001 P0.11 — kill switch. `construction_theme_loader` is
+	// served via frappe.boot (see construction/theme_api add_theme_to_boot).
+	// When disabled, keep applying ONLY the ct-enterprise namespace and the
+	// resolved data-theme (so theme CSS still renders) and skip every loader
+	// behavior: topbar zones, tree coloring, ghost/brand hiding, chart
+	// guards, sidebar sync, filter inline styles.
+	var CT_LOADER_DISABLED = !!(
+		window.frappe &&
+		frappe.boot &&
+		frappe.boot.construction_theme_loader === 0
+	);
 	if (
 		path.startsWith("/desk") ||
 		path.startsWith("/app") ||
@@ -38,6 +49,15 @@
 				: "dark";
 		html.setAttribute("data-theme", initialMode);
 		localStorage.setItem("ct-theme-mode", initialMode);
+	}
+
+	// Kill switch: CSS-only mode — no loader behaviors (zones, sync, inline
+	// styles, guards). The theme stylesheet alone keeps the brand applied.
+	if (CT_LOADER_DISABLED) {
+		console.log(
+			"[ConstructionTheme] construction_theme_loader=0 — loader disabled, CSS-only mode"
+		);
+		return;
 	}
 
 	function setMode(mode) {
@@ -346,6 +366,10 @@
 				}
 
 				// 2. Active Page Head (Workspaces, List views, Form views, Reports, Trees, Pages)
+				// The zone used to live inside the page-head-content row, whose flex-wrap: wrap
+				// let it overflow onto the line below — overlapping mobile/tablet banners and
+				// list-filter inputs (v16.50 page-head). It now gets its own full-width strip
+				// directly under the page head.
 				var pageHead = null;
 				if (activeContainer) {
 					pageHead = activeContainer.querySelector(".page-head");
@@ -355,18 +379,26 @@
 				}
 
 				if (pageHead) {
-					var existing = pageHead.querySelector(".ct-topbar-zone--standard");
-					if (existing) return existing;
+					var host = pageHead.parentElement;
+					if (host) {
+						var bar = host.querySelector(":scope > .ct-scope-zone");
+						if (!bar) {
+							bar = document.createElement("div");
+							bar.className = "ct-scope-zone";
+							bar.setAttribute("role", "region");
+							bar.setAttribute("aria-label", "Working context scope");
+							host.insertBefore(bar, pageHead.nextSibling);
+						}
+						var existing = bar.querySelector(".ct-topbar-zone--standard");
+						if (existing) return existing;
 
-					var zone = document.createElement("div");
-					zone.className = "ct-topbar-zone ct-topbar-zone--standard";
-					zone.style.cssText =
-						"display:flex;align-items:center;margin-left:auto;flex-shrink:0;gap:4px;padding:0 4px;";
-					// The outer header contains a full-width Bootstrap container.
-					// A sibling zone overflows it and can cover the Save button.
-					var content = pageHead.querySelector(".page-head-content") || pageHead;
-					content.appendChild(zone);
-					return zone;
+						var zone = document.createElement("div");
+						zone.className = "ct-topbar-zone ct-topbar-zone--standard";
+						zone.style.cssText =
+							"display:flex;align-items:center;margin-left:auto;flex-shrink:0;gap:4px;padding:0 4px;";
+						bar.appendChild(zone);
+						return zone;
+					}
 				}
 
 				// 3. Page Actions fallback
@@ -890,23 +922,6 @@
 
 	setInterval(colorTreeToolbarButtons, 500);
 
-	function syncSidebarActive() {
-		var currentPath = window.location.pathname.replace(/\/$/, "");
-		var allItems = document.querySelectorAll(".standard-sidebar-item");
-		allItems.forEach(function (item) {
-			item.classList.remove("active-sidebar", "active");
-		});
-		allItems.forEach(function (item) {
-			var anchor = item.querySelector(".item-anchor[href]");
-			if (!anchor) return;
-			var href = anchor.getAttribute("href");
-			if (!href) return;
-			href = href.split("?")[0].split("#")[0].replace(/\/$/, "");
-			if (currentPath === href || currentPath.startsWith(href + "/")) {
-				item.classList.add("active-sidebar");
-			}
-		});
-	}
 
 	function installChartGuard() {
 		if (typeof frappe === "undefined") return;
@@ -962,7 +977,6 @@
 		removeGhostButtons();
 		hideFrappeBranding();
 		colorTreeToolbarButtons();
-		syncSidebarActive();
 
 		setTimeout(installChartGuard, 300);
 		setTimeout(installChartGuard, 1000);
@@ -991,7 +1005,6 @@
 					}
 				}, 450);
 				setTimeout(installChartGuard, 300);
-				setTimeout(syncSidebarActive, 200);
 			});
 			return true;
 		}
@@ -1012,7 +1025,6 @@
 	if (typeof jQuery !== "undefined") {
 		try {
 			$(document).on("page-change", function () {
-				setTimeout(syncSidebarActive, 200);
 			});
 		} catch (e) {}
 	}

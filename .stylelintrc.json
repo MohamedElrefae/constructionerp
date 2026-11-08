@@ -1,0 +1,12 @@
+{
+  "//": "Ratchet: modern_theme.css is grandfathered (legacy ~700 !important kept deliberately; no NEW declarations allowed from P0 onwards). New CSS files must comply.",
+  "ignoreFiles": ["**/modern_theme.css"],
+  "overrides": [
+    {
+      "files": ["**/*.css"],
+      "rules": {
+        "declaration-no-important": true
+      }
+    }
+  ]
+}
