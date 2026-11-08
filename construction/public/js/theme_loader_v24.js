@@ -366,16 +366,34 @@
 				}
 
 				// 2. Active Page Head (Workspaces, List views, Form views, Reports, Trees, Pages)
-				// The zone used to live inside the page-head-content row, whose flex-wrap: wrap
-				// let it overflow onto the line below — overlapping mobile/tablet banners and
-				// list-filter inputs (v16.50 page-head). It now gets its own full-width strip
-				// directly under the page head.
+				// Wide viewports (>=900px): the zone lives in the page-head top bar row, as it
+				// did before the v16.50 migration; the pre-existing `:has(.ct-topbar-zone--standard)`
+				// rules in modern_theme.css allow the row to wrap cleanly with height:auto (no overlap).
+				// Narrow viewports (<900px): the zone gets its own full-width strip directly under
+				// the page head — the v16.50 page-head clips/overlaps the zone next to wide action
+				// clusters on mobile/tablet (v16.50).
 				var pageHead = null;
 				if (activeContainer) {
 					pageHead = activeContainer.querySelector(".page-head");
 				}
 				if (!pageHead) {
 					pageHead = this._findVisible(".page-head");
+				}
+
+				var wideViewport =
+					typeof window.matchMedia === "function" &&
+					window.matchMedia("(min-width: 900px)").matches;
+				if (pageHead && wideViewport) {
+					var content = pageHead.querySelector(".page-head-content") || pageHead;
+					var existingTop = content.querySelector(".ct-topbar-zone--standard");
+					if (existingTop) return existingTop;
+
+					var topZone = document.createElement("div");
+					topZone.className = "ct-topbar-zone ct-topbar-zone--standard";
+					topZone.style.cssText =
+						"display:flex;align-items:center;margin-left:auto;flex-shrink:0;gap:4px;padding:0 4px;";
+					content.appendChild(topZone);
+					return topZone;
 				}
 
 				if (pageHead) {

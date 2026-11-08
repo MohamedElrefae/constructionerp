@@ -3,7 +3,7 @@
    Strategy: Cooperate with Frappe, never fight layout
    Only visual properties: colors, backgrounds, borders, shadows
    NO layout: position, display, flex, width, height, margin, padding, transform, order
-   Version: 2.6.3 | 2026-11-08 — CT-THEME-2026-001 P0 (Frappe/ERPNext v16.50 desk chrome)
+   Version: 2.6.5 | 2026-11-09 — CT-THEME-2026-001 P0 (Frappe/ERPNext v16.50 desk chrome)
    ════════════════════════════════════════════════════════════ */
 
 /* ─── ROOT FALLBACKS (prevent FOUC before JS loads) ─── */
@@ -531,6 +531,21 @@ html.ct-enterprise .standard-sidebar-item.selected .sidebar-item-icon {
 html.ct-enterprise .active-sidebar {
   background: var(--ct-primary-light);
   border-radius: var(--ct-border-radius-sm);
+}
+
+/* v16.50 page-head grows when the scope zone wraps to a second row (wide action clusters).
+   Upstream pins .page-head to 49px with overflow:visible, which let the wrapped zone
+   overflow onto the filters — keep it inside the header instead. Unlayered: must beat
+   upstream's unlayered .page-head{height:49px}. */
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) {
+  height: auto;
+  min-height: 49px;
+}
+html.ct-enterprise .page-head:has(.ct-topbar-zone--standard) .page-head-content {
+  /* upstream unlayered .page-head-content{height:var(--page-head-height,48px)} pins the row
+     and clips the wrapped zone out of the header — beat it by specificity (unlayered) */
+  height: auto;
+  min-height: var(--page-head-height, 48px);
 }
 
 @layer ct-theme {
