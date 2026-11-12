@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -238,6 +239,28 @@ def _missing_node_deps(path: Path, tests_dir: Path, root: Path) -> list[str]:
     return sorted(set(missing))
 
 
+def _needs_pinned_vendor(path: Path) -> bool:
+    """True when a test reads Frappe/ERPNext source it can only get from a vendor tree."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return "F44_PINNED_VENDOR_ROOT" in text or "pinned vendor" in text
+
+
+def _pinned_vendor_available(root: Path) -> bool:
+    """A vendor tree reachable without F44_PINNED_VENDOR_ROOT.
+
+    The tests resolve vendor files as siblings of the checkout, so a bench
+    layout (apps/construction next to apps/frappe) satisfies them, while a
+    bare GitHub checkout at step 16 does not — CI exports
+    F44_PINNED_VENDOR_ROOT only in the later "Run JS Property Tests" step.
+    """
+    if os.environ.get("F44_PINNED_VENDOR_ROOT"):
+        return True
+    return (root.parent / "frappe").is_dir() or (root.parent.parent / "frappe").is_dir()
+
+
 def _js_regressions(root: Path) -> tuple[bool, list[str]]:
     """SCP-C11 — run the offline Node unit/regression tests.
 
@@ -262,22 +285,29 @@ def _js_regressions(root: Path) -> tuple[bool, list[str]]:
     if not files:
         return False, [f"no unit tests matched {tests_dir}/test_*.js"]
 
-    # A test may require an npm package (e.g. fast-check). node_modules is
-    # gitignored, and in CI `npm ci` runs in a LATER step than the one that
-    # calls this check — so running those tests here would fail for a missing
-    # dependency rather than a real regression. Defer them explicitly and say
-    # so; CI runs them itself in the "Run JS Property Tests" step.
+    # A test may require an npm package (e.g. fast-check) or a pinned vendor
+    # tree. node_modules is gitignored, and in CI `npm ci` runs in a LATER step
+    # than the one that calls this check; likewise F44_PINNED_VENDOR_ROOT is
+    # only exported by the later "Run JS Property Tests" step. Running those
+    # tests here would fail for a missing prerequisite rather than a real
+    # regression. Defer them explicitly and say so — CI runs them itself once
+    # the prerequisite exists.
     runnable, deferred = [], []
     for path in files:
+        reasons = []
         missing = _missing_node_deps(path, tests_dir, root)
-        (deferred if missing else runnable).append((path, missing))
+        if missing:
+            reasons.append("deps not installed: " + ", ".join(missing))
+        if _needs_pinned_vendor(path) and not _pinned_vendor_available(root):
+            reasons.append("no pinned vendor root (F44_PINNED_VENDOR_ROOT unset, no sibling frappe/)")
+        (deferred if reasons else runnable).append((path, reasons))
 
     details = []
     if deferred:
         details.append(
-            "deferred (dependency not installed; CI runs these in "
-            "'Run JS Property Tests' after `npm ci`): "
-            + ", ".join(f"{p.name} [{', '.join(m)}]" for p, m in deferred)
+            "deferred (prerequisite unavailable here; CI runs these in "
+            "'Run JS Property Tests'): "
+            + "; ".join(f"{p.name} [{', '.join(r)}]" for p, r in deferred)
         )
     if not runnable:
         details.append("no runnable unit tests after deferral")
