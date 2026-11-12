@@ -268,6 +268,127 @@ def delete_layout(name: str) -> dict:
 
 
 # ──────────────────────────────────────────────────────────────────────
+# save_my_native_layout — narrow, per-user revert to native
+# ──────────────────────────────────────────────────────────────────────
+
+NATIVE_PROFILE_PREFIX = "__native__"
+# Step 1 of the resolver returns the first personal match in priority-desc
+# order, so the sentinel must outrank any other personal row for this user.
+NATIVE_PROFILE_PRIORITY = 1000
+
+
+def _native_sections_json() -> str:
+    """The sentinel payload: a valid v1 structure containing zero sections."""
+    return json.dumps(
+        {
+            "version": 1,
+            "unassigned_policy": "append",
+            "unassigned_column_count": 2,
+            "sections": [],
+        }
+    )
+
+
+@frappe.whitelist(methods=["POST"])
+def save_my_native_layout(doctype: str) -> dict:
+    """
+    Pin the CURRENT user's layout for ``doctype`` to the native Frappe layout.
+
+    Deliberately narrow, in contrast to ``save_layout`` which stays
+    System Manager only:
+
+    * the target is always ``frappe.session.user`` — a caller cannot name
+      another user, a role, or a default profile;
+    * the payload is fixed to the empty-sections sentinel — there is no
+      caller-supplied JSON to validate or to smuggle fields through;
+    * the doctype must exist and the caller must hold read permission on it.
+
+    An empty-sections profile wins resolution at Step 1 (personal), which is
+    what displaces an active role/default profile, while the engine renders
+    nothing for it — so the form is left exactly as Frappe built it.
+
+    ``profile_name`` carries the user because the DocType autonames rows as
+    ``{reference_doctype}-{profile_name}``; a bare ``__native__`` would collide
+    on the primary key as soon as a second user reverted the same doctype.
+    """
+    user = frappe.session.user
+    if not user or user == "Guest":
+        frappe.throw(_("Not permitted."), frappe.PermissionError)
+
+    if not doctype or not frappe.db.exists("DocType", doctype):
+        frappe.throw(_("Invalid document type."), frappe.ValidationError)
+
+    if not frappe.has_permission(doctype, "read"):
+        frappe.throw(
+            _("You cannot set a layout for a document type you cannot read."),
+            frappe.PermissionError,
+        )
+
+    if not frappe.db.has_column("Form Layout Profile", "for_user"):
+        frappe.throw(
+            _("Personal layouts are not available on this site yet."),
+            frappe.ValidationError,
+        )
+
+    profile_name = f"{NATIVE_PROFILE_PREFIX}:{user}"
+
+    # Revert means the user's own custom arrangement goes away: remove any
+    # other personal row for this doctype so no stale sections can survive
+    # alongside the sentinel. System-seeded rows are skipped — the shared
+    # deletion guard forbids removing them and they were never this user's.
+    for old_name in frappe.get_all(
+        "Form Layout Profile",
+        filters={
+            "reference_doctype": doctype,
+            "for_user": user,
+            "profile_name": ("!=", profile_name),
+        },
+        pluck="name",
+    ):
+        if frappe.db.get_value("Form Layout Profile", old_name, "is_system"):
+            continue
+        frappe.delete_doc("Form Layout Profile", old_name, ignore_permissions=True)
+
+    payload = _native_sections_json()
+    existing = frappe.db.get_value(
+        "Form Layout Profile",
+        {
+            "reference_doctype": doctype,
+            "profile_name": profile_name,
+            "for_user": user,
+        },
+        "name",
+    )
+
+    if existing:
+        doc = frappe.get_doc("Form Layout Profile", existing)
+        doc.sections_json = payload
+        doc.enabled = 1
+        doc.priority = NATIVE_PROFILE_PRIORITY
+        doc.save(ignore_permissions=True)
+        action = "updated"
+    else:
+        doc = frappe.get_doc(
+            {
+                "doctype": "Form Layout Profile",
+                "reference_doctype": doctype,
+                "profile_name": profile_name,
+                "for_user": user,
+                "enabled": 1,
+                "is_default": 0,
+                "is_system": 0,
+                "priority": NATIVE_PROFILE_PRIORITY,
+                "layout_version": 1,
+                "sections_json": payload,
+            }
+        )
+        doc.insert(ignore_permissions=True)
+        action = "created"
+
+    return {"status": action, "name": doc.name, "profile_name": profile_name}
+
+
+# ──────────────────────────────────────────────────────────────────────
 # validate_layout
 # ──────────────────────────────────────────────────────────────────────
 

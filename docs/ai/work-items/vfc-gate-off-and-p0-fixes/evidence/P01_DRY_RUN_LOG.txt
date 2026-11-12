@@ -1,0 +1,41 @@
+==============================================================================
+P0-1 DRY RUN  (no DELETE executed, no COMMIT issued)
+generated_utc : 2026-11-11T22:39:58Z
+site          : v16.localhost
+database      : _6d52b48c328b294e
+predicate     : profile_name LIKE '\_Test\_%'
+==============================================================================
+
+DRY-RUN SELECT matched: 202 rows
+
+PRE-DELETE SAFETY ASSERTIONS  (all must PASS before DELETE is authorised)
+------------------------------------------------------------------------------
+  [PASS] matched count == 202                   202
+  [PASS] total profiles == 210                  210
+  [PASS] real profiles preserved == 8           8
+  [PASS] NO row resolver-matchable              0
+  [PASS] NO row has for_user (Step 1)           0
+  [PASS] NO row has for_role (Step 2)           0
+  [PASS] NO row is_default (Step 3)             0
+------------------------------------------------------------------------------
+ALL ASSERTIONS PASS: True
+
+Context flags (informational, NOT blockers):
+  enabled=1  : 202 / 202   (why they appear in profile lists)
+  is_system=1: 202 / 202   (why the API refuses to delete them)
+
+rows to delete (first 10):
+   Task-_Test_01a1a7                _Test_01a1a7               Task
+   Task-_Test_025b09                _Test_025b09               Task
+   Task-_Test_04b353                _Test_04b353               Task
+   Task-_Test_0948c6                _Test_0948c6               Task
+   Task-_Test_0bec3f                _Test_0bec3f               Task
+   Task-_Test_0d53a0                _Test_0d53a0               Task
+   Task-_Test_0eba05                _Test_0eba05               Task
+   Task-_Test_118498                _Test_118498               Task
+   Task-_Test_123221                _Test_123221               Task
+   Task-_Test_13fffc                _Test_13fffc               Task
+   ... (202 total)
+
+NO DELETE EXECUTED. NO COMMIT ISSUED. AWAITING OWNER SIGN-OFF.
+==============================================================================

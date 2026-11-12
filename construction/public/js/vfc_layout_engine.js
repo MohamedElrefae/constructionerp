@@ -143,48 +143,30 @@
 			// Tab detection — DocTypes with Tab Break fields use tab-aware rendering.
 			const hasTabs = (frm.meta?.fields || []).some((f) => f.fieldtype === "Tab Break");
 
-			if (hasTabs && frm.layout && frm.layout.tabs && frm.layout.tabs.length) {
-				const TabClass = frm.layout.tabs[0].constructor;
-				if (TabClass && !TabClass._vfc_patched) {
-					TabClass._vfc_patched = true;
-					TabClass.prototype.refresh = function () {
-						if (!this.df) return;
-
-						let hide = this.df.hidden || this.df.hidden_due_to_dependency;
-
-						if (
-							!hide &&
-							this.frm &&
-							!this.frm.get_perm(this.df.permlevel || 0, "read")
-						) {
-							hide = true;
-						}
-						if (!hide) {
-							hide = true;
-							const hasVfcHost = this.wrapper.find(".vfc-tab-pane-host").length > 0;
-							if (hasVfcHost) {
-								const hasVisibleFields =
-									this.wrapper.find(
-										".vfc-tab-pane-host .frappe-control:not(.hide-control)"
-									).length > 0;
-								if (hasVisibleFields) {
-									hide = false;
-								}
-							}
-							if (hide) {
-								if (
-									this.wrapper.find(
-										".form-section:not(.hide-control, .empty-section), .form-dashboard-section:not(.hide-control, .empty-section)"
-									).length
-								) {
-									hide = false;
-								}
-							}
-						}
-
-						this.toggle(!hide);
-					};
-				}
+			// D4 — tabbed-doctype support is RETIRED, together with the global
+			// Tab.prototype.refresh monkey-patch that used to sit below.
+			//
+			// The patch was not cosmetic: once VFC moved a tab's fields out of the
+			// native sections, Frappe's own Tab.refresh saw those sections hidden
+			// and hid the tab itself. The patch existed to overrule that and keep
+			// the tab visible when the VFC host still had content. Overruling a
+			// vendor refresh by replacing it on the prototype is the global
+			// prototype replacement Standard §13 warns against — and it stuck for
+			// the whole session via a _vfc_patched flag, so one render on a tabbed
+			// doctype changed tab visibility on EVERY form afterwards.
+			//
+			// With the patch gone there is nothing left to overrule Frappe with, so
+			// tabbed doctypes are simply left native. Removing only the patch and
+			// keeping VFC on tabs produced a blank form (verified), which is why
+			// both halves retire together.
+			if (hasTabs) {
+				vfcDebugLog(
+					"log",
+					`[LE] ${dt} has Tab Break fields — tabbed-doctype support is retired (D4), leaving native layout.`
+				);
+				// Unwind anything an earlier build may have injected, then stop.
+				this._clearSections(frm);
+				return;
 			}
 
 			const key = frm.doctype + "__" + frm.docname;
@@ -212,8 +194,18 @@
 					return;
 				}
 
-				// No profile → check density override or fallback to native
-				if (!profile) {
+				// Nothing to render: either no profile at all, or an empty-sections
+				// profile — which is the __native__ sentinel. The sentinel exists only
+				// to win resolution over role/default profiles; it must never reach
+				// _render, because _render hides every native section shell BEFORE it
+				// iterates sections (data-vfc-hidden + display:none !important), so
+				// with no sections to build the form would be left blank.
+				const hasNothingToRender =
+					!profile ||
+					!Array.isArray(profile.sections) ||
+					profile.sections.length === 0;
+
+				if (hasNothingToRender) {
 					if (layoutRoot) {
 						const denClass = [...layoutRoot.classList].find((c) =>
 							/^vfc-density-\d+$/.test(c)
@@ -223,7 +215,7 @@
 							if (density !== 2 && !hasTabs) {
 								vfcDebugLog(
 									"log",
-									`[LE] No profile, non-default density (${density}) — density rendering.`
+									`[LE] No sections, non-default density (${density}) — density rendering.`
 								);
 								this.renderWithDensity(frm, density);
 								return;
@@ -231,7 +223,13 @@
 						}
 					}
 
-					vfcDebugLog("log", `[LE] No profile found for ${dt}. Aborting VFC layout.`);
+					// Unwind anything an earlier render injected so the form returns
+					// to its native state, then leave it exactly as Frappe built it.
+					this._clearSections(frm);
+					vfcDebugLog(
+						"log",
+						`[LE] No sections for ${dt} (__native__ sentinel or no profile) — leaving native layout untouched.`
+					);
 					return;
 				}
 
@@ -857,7 +855,22 @@
 				return;
 			}
 
-			nativeEl.classList.remove("hide-control", "hidden", "d-none");
+			// Frappe applies .hide-control whenever a control's display status is
+			// "None". That is not only a permlevel restriction: it also fires for an
+			// empty read-only field when System Settings.hide_empty_read_only_fields
+			// is enabled (base_control.js get_status -> refresh). In that path
+			// df.hidden is never set, so the guard above cannot see it and the field
+			// would otherwise be moved and revealed.
+			//
+			// Deciding which controls the platform hides is not this engine's job, so
+			// a control Frappe is hiding is left exactly as Frappe left it. The class
+			// is never stripped here, on the wrapper or on any descendant.
+			if (nativeEl.classList.contains("hide-control")) {
+				nativeEl.setAttribute("data-vfc-managed", "1");
+				return;
+			}
+
+			nativeEl.classList.remove("hidden", "d-none");
 			nativeEl.removeAttribute("hidden");
 			nativeEl.setAttribute("data-vfc-managed", "1");
 			nativeEl.style.removeProperty("display");
@@ -871,7 +884,8 @@
 					".control-label, .control-input-wrapper, .control-value, .control-input"
 				)
 				.forEach((el) => {
-					el.classList.remove("hide-control", "hidden", "d-none");
+					if (el.classList.contains("hide-control")) return;
+					el.classList.remove("hidden", "d-none");
 					el.removeAttribute("hidden");
 					el.style.removeProperty("visibility");
 					el.style.removeProperty("opacity");
@@ -1099,6 +1113,18 @@
 					el.remove();
 				});
 				layoutRoot.querySelectorAll(".vfc-tab-pane-host").forEach((el) => el.remove());
+
+				// Restore every native shell this engine previously hid.
+				// _hideNativeLayoutShells sets display:none !important and marks
+				// data-vfc-hidden, and nothing else ever undoes either. Without
+				// this, moving from a VFC-rendered form back to the native layout
+				// — the __native__ revert — would leave all native sections hidden
+				// with nothing in their place, i.e. a blank form. The doc comment
+				// above has always claimed this happened; it did not.
+				layoutRoot.querySelectorAll("[data-vfc-hidden='1']").forEach((el) => {
+					el.style.removeProperty("display");
+					el.removeAttribute("data-vfc-hidden");
+				});
 			}
 
 			// Also clear any cached active sections for this doctype
@@ -1412,8 +1438,24 @@
      Fires AFTER the VFC panel attach (which runs at 150ms).
      Layout engine runs at 250ms to ensure fields_dict is fully ready.
   ═══════════════════════════════════════════════════════════════════ */
+	/* ═══════════════════════════════════════════════════════════════════
+     GATE (Construction Settings.enable_form_config, default OFF)
+     When closed the engine never attaches: no field is re-parented and
+     no wrapper is touched, so the form renders exactly as Frappe would.
+     Fails CLOSED if vfc_config.js did not load.
+  ═══════════════════════════════════════════════════════════ */
+	function _vfcGateOpen() {
+		try {
+			if (typeof window.VFCisEnabled === "function") return window.VFCisEnabled();
+		} catch (e) {
+			// fall through to closed
+		}
+		return false;
+	}
+
 	frappe.ui.form.on("*", {
 		refresh(frm) {
+			if (!_vfcGateOpen()) return;
 			setTimeout(() => {
 				try {
 					LayoutEngine.attach(frm);
@@ -1423,6 +1465,7 @@
 			}, 250);
 		},
 		onload_post_render(frm) {
+			if (!_vfcGateOpen()) return;
 			setTimeout(() => {
 				try {
 					LayoutEngine.attach(frm);

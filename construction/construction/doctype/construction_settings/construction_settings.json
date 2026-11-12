@@ -27,6 +27,8 @@
     "enable_variation_orders",
     "global_export_menu_section",
     "enable_global_export_menu",
+    "vfc_form_config_section",
+    "enable_form_config",
     "vfc_debug_logging_section",
     "enable_vfc_debug_logging",
     "direct_labor_designations",
@@ -179,6 +181,18 @@
       "label": "Enable Global Export Menu on all Forms"
     },
     {
+      "fieldname": "vfc_form_config_section",
+      "fieldtype": "Section Break",
+      "label": "Form Layout (VFC)"
+    },
+    {
+      "default": "0",
+      "description": "Master switch for the Form Layout Engine. OFF by default: no Form Config button is injected and the layout engine does not attach to any form, so forms render exactly as Frappe would. Turn on to opt this site in.",
+      "fieldname": "enable_form_config",
+      "fieldtype": "Check",
+      "label": "Enable Form Config (VFC)"
+    },
+    {
       "fieldname": "vfc_debug_logging_section",
       "fieldtype": "Section Break",
       "label": "VFC Debug Logging"
@@ -223,7 +237,7 @@
   "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2026-05-22 12:00:00",
+  "modified": "2026-11-12 00:00:00",
   "modified_by": "Administrator",
   "module": "Construction",
   "name": "Construction Settings",

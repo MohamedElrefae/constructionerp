@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -205,6 +207,80 @@ def _adr(root: Path) -> tuple[bool, list[str]]:
     return count >= 7, [f"ADR.md contains {count} ADRs"]
 
 
+def _js_regressions(root: Path) -> tuple[bool, list[str]]:
+    """SCP-C11 — run the offline Node unit/regression tests.
+
+    These are the only automated net over the client-side logic (the VFC
+    layout engine, profile merge, BOQ query shaping, scope filters). Without
+    this check they were reachable only by a command written in each file's
+    own header — which is how a real defect survived: nothing ran the suite.
+
+    Browser/integration tests are deliberately excluded. They need a running
+    bench and credentials, and the workflow proposal (§5.2) forbids gates from
+    starting services or invoking a browser. They stay documented and manual,
+    named by the ``test_browser_`` prefix so the exclusion is visible rather
+    than silent.
+    """
+    tests_dir = root / "construction" / "tests"
+    if not tests_dir.is_dir():
+        return False, [f"missing tests directory: {tests_dir}"]
+
+    files = sorted(
+        p for p in tests_dir.glob("test_*.js") if not p.name.startswith("test_browser_")
+    )
+    excluded = sorted(p.name for p in tests_dir.glob("test_browser_*.js"))
+    if not files:
+        return False, [f"no unit tests matched {tests_dir}/test_*.js"]
+
+    node = shutil.which("node")
+    if node is None:
+        # Explicit blocked result (Standard §16): a missing dependency is
+        # reported, never silently skipped.
+        return False, [
+            "node not found on PATH — JS regressions cannot run. Install Node.js, "
+            "or run them manually: node --test construction/tests/test_*.js"
+        ]
+
+    cmd = [node, "--test", *[str(p) for p in files]]
+    try:
+        proc = subprocess.run(
+            cmd, cwd=root, capture_output=True, text=True, timeout=300, check=False
+        )
+    except subprocess.TimeoutExpired:
+        return False, ["node --test timed out after 300s"]
+
+    output = (proc.stdout or "") + (proc.stderr or "")
+    passed = re.search(r"^ℹ pass (\d+)", output, re.M)
+    failed = re.search(r"^ℹ fail (\d+)", output, re.M)
+    n_pass = int(passed.group(1)) if passed else None
+    n_fail = int(failed.group(1)) if failed else None
+
+    details = [f"{len(files)} file(s) run via `node --test`"]
+    if excluded:
+        details.append(
+            "excluded browser tests (need a running bench + credentials): "
+            + ", ".join(excluded)
+        )
+    if n_pass is not None:
+        details.append(f"{n_pass} passed")
+    if n_fail is not None:
+        details.append(f"{n_fail} failed")
+
+    if proc.returncode != 0 or (n_fail is not None and n_fail > 0):
+        # Surface the failing test names so the report names the cause.
+        for line in output.splitlines():
+            if line.startswith("✖") and "failing tests" not in line:
+                details.append(line.strip())
+        return False, details
+
+    if n_pass is None:
+        # Ran but produced no recognisable summary — never call that a pass.
+        return False, [*details, "node --test produced no parseable summary"]
+
+    details.append("ALL PASS")
+    return True, details
+
+
 def run_checks(root: Path) -> list[CheckResult]:
     checks = (
         ("SCP-C1", "Core Memory Files", _memory_files),
@@ -218,6 +294,7 @@ def run_checks(root: Path) -> list[CheckResult]:
         ("SCP-C8B", "Schema Facts Drift", _schema_drift),
         ("SCP-C9", "CostItem and PlantResource", _resource_schema),
         ("SCP-C10", "Architecture Decisions", _adr),
+        ("SCP-C11", "JS Regression Tests", _js_regressions),
     )
     return [
         _check(check_id, name, lambda callback=callback: callback(root))

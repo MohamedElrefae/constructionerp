@@ -2,7 +2,7 @@
 
 > Generated from live DocType JSON by `scripts/schema_drift_checker.py --update`.
 > Do not hand-edit field tables. Update the DocType JSON, then regenerate this file.
-> Last verified: 2026-10-15
+> Last verified: 2026-11-11
 
 ## Summary
 
@@ -20,7 +20,7 @@
 | `boq_item_stage` | BOQ Item Stage | `boq_item_stage.json` | 16 |  |
 | `boq_quantity_revision` | BOQ Quantity Revision | `boq_quantity_revision.json` | 37 |  |
 | `boq_structure` | BOQ Structure | `boq_structure.json` | 31 |  |
-| `construction_settings` | Construction Settings | `construction_settings.json` | 28 |  |
+| `construction_settings` | Construction Settings | `construction_settings.json` | 30 |  |
 | `construction_theme` | Construction Theme | `construction_theme.json` | 94 |  |
 | `costitem` | CostItem | `cost_item.json` | 9 |  |
 | `direct_labor_designation` | Direct Labor Designation | `direct_labor_designation.json` | 2 | Child table |
@@ -296,7 +296,7 @@
 | `rgt` | Int |  | hidden, read_only |
 | `old_parent` | Link | BOQ Structure | hidden |
 
-### Construction Settings (`construction_settings/construction_settings.json`) - 28 fields
+### Construction Settings (`construction_settings/construction_settings.json`) - 30 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -321,6 +321,8 @@
 | `enable_variation_orders` | Check |  |  |
 | `global_export_menu_section` | Section Break |  |  |
 | `enable_global_export_menu` | Check |  |  |
+| `vfc_form_config_section` | Section Break |  |  |
+| `enable_form_config` | Check |  |  |
 | `vfc_debug_logging_section` | Section Break |  |  |
 | `enable_vfc_debug_logging` | Check |  |  |
 | `direct_labor_designations` | Table | Direct Labor Designation |  |

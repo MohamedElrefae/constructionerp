@@ -1,0 +1,114 @@
+==============================================================================
+P0-1 DELETE EXECUTION LOG
+generated_utc : 2026-11-11T22:50:51Z
+site          : v16.localhost
+database      : _6d52b48c328b294e
+predicate     : profile_name LIKE '\_Test\_%'
+authorised    : owner said 'delete' (2026-11-12)
+==============================================================================
+
+NOTE ON THE FIRST RUN
+------------------------------------------------------------------------------
+The first execution of this script printed
+    'EXCEPTION - rolling back'
+but that message is INCORRECT and must not be read as a failure.
+The exception was a TypeError on the LOGGING line that follows
+frappe.db.commit() - i.e. AFTER the commit had already succeeded.
+The rollback() that followed was therefore a no-op: the transaction
+had already been committed. The DELETE completed as intended.
+Root cause of the TypeError is recorded in section 5 below.
+
+STEP 1 - PRE-FLIGHT ASSERTIONS (recorded from the executing run)
+------------------------------------------------------------------------------
+  [PASS] total == 210                 210
+  [PASS] test rows == 202             202
+  [PASS] real rows == 8               8
+  [PASS] 0 resolver-matchable         0
+  pre-flight: ALL PASS - DELETE authorised to proceed
+
+STEP 2 - is_system FLAG ON THE 8 REAL PROFILES (read-only, pre-delete)
+------------------------------------------------------------------------------
+  BOQ Header           Default  enabled=1 is_default=1 is_system=1
+  BOQ Item             Default  enabled=1 is_default=1 is_system=1
+  BOQ Item Stage       Default  enabled=1 is_default=1 is_system=1
+  BOQ Structure        Default  enabled=1 is_default=1 is_system=1
+  Budget               Default  enabled=1 is_default=1 is_system=0
+  Project              Default  enabled=1 is_default=1 is_system=0
+  User Scope Context   Default  enabled=1 is_default=1 is_system=1
+  Variation Order      Default  enabled=1 is_default=1 is_system=0
+  real profiles flagged is_system=1: 5 / 8
+  -> the is_system deletion guard protects THESE REAL SEEDS.
+     Guard intent CONFIRMED. The 202 fixtures were mis-flagged
+     is_system=1, which is why the API could never remove them.
+
+STEP 3 - EXECUTE DELETE
+------------------------------------------------------------------------------
+  DELETE FROM `tabForm Layout Profile` WHERE profile_name LIKE '\_Test\_%'
+  executed via frappe.db.sql(...) + frappe.db.commit()
+  result: COMMITTED SUCCESSFULLY on the first run
+
+STEP 4 - POST-DELETE VERIFICATION (re-run against live DB)
+------------------------------------------------------------------------------
+  [PASS] test rows == 0               0
+  [PASS] real rows == 8               8
+  [PASS] total == 8                   8
+  post-delete: ALL PASS
+
+  Remaining profiles:
+    BOQ Header               Default    enabled=1 is_default=1
+    BOQ Item                 Default    enabled=1 is_default=1
+    BOQ Item Stage           Default    enabled=1 is_default=1
+    BOQ Structure            Default    enabled=1 is_default=1
+    Budget                   Default    enabled=1 is_default=1
+    Project                  Default    enabled=1 is_default=1
+    User Scope Context       Default    enabled=1 is_default=1
+    Variation Order          Default    enabled=1 is_default=1
+
+STEP 5 - RESOLVER STILL RETURNS THE REAL DEFAULTS
+------------------------------------------------------------------------------
+  acting as: site.engineer@example.com
+  [PASS] BOQ Header               -> BOQ Header-Default (is_default=None)
+  [PASS] BOQ Item                 -> BOQ Item-Default (is_default=None)
+  [PASS] BOQ Item Stage           -> BOQ Item Stage-Default (is_default=None)
+  [PASS] BOQ Structure            -> BOQ Structure-Default (is_default=None)
+  [PASS] Budget                   -> Budget-Default (is_default=None)
+  [PASS] Project                  -> Project-Default (is_default=None)
+  [PASS] User Scope Context       -> User Scope Context-Default (is_default=None)
+  [PASS] Variation Order          -> Variation Order-Default (is_default=None)
+  resolver: all 8 real defaults still resolve
+
+STEP 6 - ROOT CAUSE OF THE FIRST RUN'S TypeError  (determined by probe)
+------------------------------------------------------------------------------
+  The failing line was:
+      L("  rows affected : %s" % affected)
+
+  PROBE RESULT (throwaway table, no real data touched):
+      frappe.db.sql("DELETE ...") -> type tuple, value ()   <-- EMPTY TUPLE
+      "x : %s" % ()  ->  TypeError: not enough arguments for format string
+
+  EXPLANATION: in Python, "%" with a tuple on the right-hand side treats that
+  tuple as the ARGUMENT LIST, not as a single value. An empty tuple supplies
+  ZERO arguments while the format string requires ONE, hence the error.
+  (SELECT statements return int/tuple-of-row, which is why COUNT worked.)
+
+  IMPACT ON THE OPERATION: NONE. The line sat AFTER frappe.db.commit(), so
+  the DELETE was already durable. The rollback() in the except block was a
+  no-op because the transaction had committed.
+
+  CORRECTION APPLIED: this log formats with str() and concatenation instead
+  of "%" so no format-string hazard remains.
+
+  SECOND LEARNING: frappe.db.sql("DROP TABLE ...") raises ImplicitCommitError
+  in this Frappe build; DDL must be executed outside the ORM (mysql CLI).
+
+STEP 7 - ROLLBACK SOURCES RETAINED
+------------------------------------------------------------------------------
+  1. full site backup : 20261112_040539-v16_localhost-database.sql.gz (72,752,884 B)
+  2. table dump       : vfc_p01_profile_table_20261111_223504.sql
+                        (all 210 rows, restore-tested -> 210 in scratch DB)
+  3. scratch database : _vfc_restore_verify (210 rows, still present)
+  All three retained until the owner is satisfied.
+
+==============================================================================
+RESULT: DELETE COMPLETE AND VERIFIED
+==============================================================================

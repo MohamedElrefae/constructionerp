@@ -326,11 +326,6 @@
           <div class="vfc-tab" data-vfc-tab="fields" data-panel="${panelId}">
             ${ICON_EYE} ${__("Fields")}
           </div>
-          <div class="vfc-tab" data-vfc-tab="sections" data-panel="${panelId}">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:text-bottom;margin-right:2px"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="10" x2="15" y2="10"/></svg> ${__(
-				"Sections"
-			)}
-          </div>
           ${
 				hasPresets
 					? `
@@ -387,6 +382,14 @@
                 <div id="vfc-den-preview-rows-${dtId}"></div>
               </div>
             </div>
+
+            <!-- D4: the Sections editor is retired. Revert to Default / Native
+                 moved here from that pane so P1-1 keeps a home. -->
+            <div style="margin-top:16px">
+              <button class="btn btn-default btn-xs" id="vfc-revert-btn-${dtId}" style="padding:2px 8px;font-size:10px;color:var(--ct-danger);border-color:var(--ct-danger)">${__(
+				"Revert to Default / Native"
+			)}</button>
+            </div>
           </div>
 
           <!-- Tab: Fields -->
@@ -401,25 +404,12 @@
             <div id="vfc-vis-list-${dtId}"></div>
           </div>
 
-          <!-- Tab: Sections -->
-          <div class="vfc-tab-pane" data-vfc-pane="sections" style="display:none">
-            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ct-text-muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="14" height="14" rx="2"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="10" x2="15" y2="10"/></svg>
-              ${__("Manage Sections")}
-              <button class="btn btn-default btn-xs vfc-btn-add-section" id="vfc-add-sec-btn-${dtId}" style="margin-left:auto;padding:2px 8px;font-size:10px">${__(
-				"+ Add Section"
-			)}</button>
-            </div>
-            <div style="font-size:10px;color:var(--ct-text-muted);margin-bottom:12px;line-height:1.6">
-              ${__(
-					"Drag sections to reorder. Drag fields inside/between sections to arrange columns. Set 1, 2, or 3 columns per section."
-				)}
-            </div>
-            <div id="vfc-sec-list-${dtId}" class="vfc-sec-list-container" style="display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;padding-right:4px"></div>
-            <button class="btn btn-default btn-xs" id="vfc-revert-btn-${dtId}" style="margin-top:8px;padding:2px 8px;font-size:10px;color:var(--ct-danger);border-color:var(--ct-danger)">${__(
-				"Revert to Default / Native"
-			)}</button>
-          </div>
+          <!-- D4: the Sections editor (Manage Sections / + Add Section /
+               drag-to-reorder) is RETIRED. Its pane and tab are gone; the
+               revert control moved to the Layout pane above. The profile
+               MERGE that fed this editor is not retired — it is what loads
+               profiles for rendering, and it no longer strips user-placed
+               fields (P0-3). -->
 
           <!-- Tab: Presets -->
           ${
@@ -513,7 +503,10 @@
 					if (name === "fields") this._renderFieldList(frm, dtId, fields);
 					if (name === "presets") this._renderPresetList(frm, dtId);
 					if (name === "layout") this._renderDensityPreview(dtId, loadDensity(dt));
-					if (name === "sections") this._renderSectionsTab(frm, dtId);
+					// D4: the Sections editor is retired — its tab no longer exists, so
+					// "sections" can never arrive here. The render helpers below remain
+					// but are unreachable; every entry point also early-returns when the
+					// (now absent) container is missing.
 				});
 			});
 
@@ -982,7 +975,7 @@
 						const settings = loadUserSettings(dt);
 						const hiddenFields = settings.vfc_hidden_fields || [];
 						const resp = await frappe.call({
-							method: "construction.construction.api.layout_api.delete_my_personal_layout",
+							method: "construction.construction.api.layout_api.save_my_native_layout",
 							args: { doctype: dt },
 						});
 
@@ -1000,12 +993,17 @@
 							window.VFCLayoutEngine.attach?.(frm);
 						}
 
+						// Report what the server actually did. An unconditional green
+						// "reset" here is what made the old revert read as success while
+						// no personal profile had ever existed to remove.
+						const pinned =
+							result &&
+							(result.status === "created" || result.status === "updated");
 						frappe.show_alert({
-							message:
-								result?.status === "deleted"
-									? __("VFC preferences reset and personal layout removed")
-									: __("VFC preferences reset"),
-							indicator: "green",
+							message: pinned
+								? __("VFC preferences reset — this form now uses the native layout")
+								: __("VFC preferences reset, but the native layout could not be pinned"),
+							indicator: pinned ? "green" : "orange",
 						});
 
 						this._togglePanel(frm, false);
@@ -1359,7 +1357,24 @@
 					return;
 				}
 
-				const nativeFieldnames = new Set(nativeFields.map((field) => field.fieldname));
+				// A native section the profile does not carry may only collect the
+				// fields the user has NOT already placed. usedFields holds every
+				// fieldname assigned to a section of the user's own profile, so a
+				// field absent from it is genuinely unassigned and free to adopt.
+				//
+				// The previous version here took every field of the native section and
+				// filtered it out of all merged sections first. That is what destroyed
+				// a user's arrangement on each save/load: a field deliberately placed
+				// in one of the user's sections was pulled back into the native one.
+				// Nothing is removed from a section the user placed a field in.
+				const unplacedNativeFields = nativeFields.filter(
+					(field) => !usedFields.has(field.fieldname)
+				);
+				if (!unplacedNativeFields.length) return;
+
+				const nativeFieldnames = new Set(
+					unplacedNativeFields.map((field) => field.fieldname)
+				);
 				merged.forEach((section) => {
 					section.fields = (section.fields || []).filter(
 						(field) => !nativeFieldnames.has(field.fieldname)
@@ -1369,14 +1384,14 @@
 				merged.push({
 					...nativeSec,
 					sort_order: merged.length + 1,
-					fields: nativeFields.map((field, idx) => ({
+					fields: unplacedNativeFields.map((field, idx) => ({
 						...field,
 						col: field.col || (idx % (nativeSec.column_count || 2)) + 1,
 						sort_order: nativeFieldOrder.get(field.fieldname) || idx + 1,
 					})),
 					tab_fieldname: nativeSec.tab_fieldname || "",
 				});
-				nativeFields.forEach((field) => usedFields.add(field.fieldname));
+				unplacedNativeFields.forEach((field) => usedFields.add(field.fieldname));
 			});
 
 			merged.forEach((section, idx) => {
@@ -1927,9 +1942,24 @@
 
 	/* ══════════════════════════════════════════════════════════════
      GLOBAL ATTACH HOOK — fires on EVERY form in the app
+
+     GATED: Construction Settings.enable_form_config defaults to OFF.
+     When closed this returns before VFC.attach runs, so no Form Config
+     button is injected, no panel is built and no density control is
+     registered. Fails CLOSED if vfc_config.js did not load.
   ══════════════════════════════════════════════════════════════ */
+	function _vfcGateOpen() {
+		try {
+			if (typeof window.VFCisEnabled === "function") return window.VFCisEnabled();
+		} catch (e) {
+			// fall through to closed
+		}
+		return false;
+	}
+
 	frappe.ui.form.on("*", {
 		refresh(frm) {
+			if (!_vfcGateOpen()) return;
 			// Small delay ensures Frappe has fully rendered the page head
 			setTimeout(() => {
 				try {

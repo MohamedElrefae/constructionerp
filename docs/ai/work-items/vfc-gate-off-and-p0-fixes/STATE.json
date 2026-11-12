@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "work_item": "vfc-gate-off-and-p0-fixes",
+  "title": "VFC gate off by default + three P0 fixes (Option C)",
+  "status": "APPROVED_FOR_BUILD",
+  "stage": "build",
+  "authority": "owner-gm-authorised; VERIFIED_FOR_RELEASE; owner rulings on S4/waiver recorded; awaiting explicit commit authorisation",
+  "owner_role": "architect",
+  "spec": "docs/ai/work-items/vfc-gate-off-and-p0-fixes/PLAN.md",
+  "created_utc": "2026-11-12T00:00:00Z",
+  "updated_at_utc": "2026-11-12T12:00:00Z",
+  "base_ref": "develop",
+  "base_commit": "9796c5f27bc899867699b81d3e89d6dd5c62710f",
+  "branch": "develop",
+  "summary": "Execute GM-approved Option C: gate the Form Layout Engine off by default, fix P0-1 (202 test rows in production), P0-2 (hide-control permission regression), P0-3 (section editor data loss), keep the backend, retire the Sections editor and tabbed-doctype support.",
+  "authority_chain": [
+    "docs/ai/VFC_AND_UI_OVERRIDE_AUDIT_2026-11-11.md (22 findings, F1-F22)",
+    "docs/ai/VFC_DECISION_KEEP_FIX_RETIRE_2026-11-11.md (Options A/B/C)",
+    "apps/../docs/ai/GM_REPLY_VFC_NEXT_STEPS_2026-11-11.md (Option C accepted)",
+    "docs/ai/ENG_REVIEW_OF_GM_REPLY_VFC_2026-11-11.md (C1-C4 corrections)",
+    "docs/ai/GM_REVISED_WORK_ORDER_VFC_2026-11-11.md (corrected P0 numbering + hide-control addendum)",
+    "docs/ai/GM_EXECUTION_AUTHORISED_VFC_2026-11-11.md (execution authorised; gate = Project browser test)"
+  ],
+  "findings_in_scope": {
+    "P0-1": "RESOLVED 2026-11-12 - 202 _Test_* rows deleted under D3 conditions (backup + published row list + dry-run). Verified 210->8, 202->0, 8->8. ROOT CAUSE LATER FOUND AND FIXED: test_is_system_delete_guard and test_delete_layout_blocks_is_system create is_system=1 fixtures, and tearDown's bare 'except: pass' swallowed on_trash's refusal, leaking one row per run. tearDown now falls back to frappe.db.delete. Verified: full 51/51 run leaves profiles=8, _Test_=0, personal=0, test users=0.",
+    "P0-2": "hide-control stripped by _restoreVisibleFieldWrapper - CONFIRMED REPRODUCED (A/B browser test). Permlevel case UNREACHABLE (Desk User auto-granted); hide_empty_read_only_fields case REPRODUCED (Frappe JSON default is 1, this site had it 0)",
+    "P0-3": "RESOLVED - _mergeProfileWithNativeSections now only adopts fields absent from usedFields and never strips a user-placed field. Verified in-browser: new code keeps project_name in the user's section, reimplemented old algorithm moves it back to native (test discriminates).",
+    "P1-1": "RESOLVED - narrow endpoint layout_api.save_my_native_layout(doctype) writes only the caller's own __native__ sentinel (signature is doctype-only, payload fixed). Revert button now calls it and reports conditionally. Root cause proven: save_layout + before_insert were both System Manager only, so no non-admin could ever create the personal row the resolver Step 1 and delete_my_personal_layout act on (0 personal profiles site-wide). Controller guard relaxed ONLY for a row scoped to the caller with is_default/is_system/for_role all clear; 4 negative-control tests assert shared profiles still blocked.",
+    "F3": "Tabbed-doctype support - NOT REPRODUCED in browser (Project renders all 5 tabs). Recommend strike pending new evidence",
+    "D4": "DONE 2026-11-12 - Sections editor (tab + pane + Add Section + dead branch) retired; Tab.prototype.refresh monkey-patch removed. Retiring the patch alone blanked tabbed forms (0/5 tabs visible), so tabbed-doctype support retired with it: attach now returns early for any doctype with a Tab Break. Revert control relocated from the retired Sections pane to the Layout pane so P1-1 survives."
+  },
+  "phase0_gate": {
+    "description": "No fix is written until the Phase 0 browser tests run.",
+    "tests": [
+      "AC-1 Project browser test with throwaway user (Projects User, no Desk User)",
+      "AC-2 F3 reproduce-or-strike on a doctype with real tabs",
+      "AC-3 P0-1 backup + published row list + dry-run before delete",
+      "AC-4 post-delete count = 0, 8 real doctype profiles intact"
+    ],
+    "status": "PHASE0_COMPLETE",
+    "results": {
+      "AC-1": "PASS - P0-2 hide-empty case REPRODUCED via A/B experiment (VFC ON vs OFF, same setting/user/document). Permlevel case proven UNREACHABLE.",
+      "AC-2": "PASS - F3 NOT reproduced. Project renders all 5 tabs correctly. Recommend striking F3 pending new evidence.",
+      "AC-3": "PASS - backup taken (full site 72,752,884 B gzip-verified + targeted table dump restore-tested to 210 rows), row list published BEFORE delete (202 rows), dry-run SELECT logged with 7/7 assertions PASS before COMMIT.",
+      "AC-4": "PASS - post-delete: total 210->8, _Test_ 202->0, real 8->8. All 8 real defaults still resolve for a non-admin user (site.engineer@example.com)."
+    },
+    "evidence": [
+      "docs/ai/work-items/vfc-gate-off-and-p0-fixes/evidence/AC1_AC2_PROJECT_BROWSER_TEST.md",
+      "docs/ai/work-items/vfc-gate-off-and-p0-fixes/evidence/P01_ROW_LIST_BEFORE_DELETION.md",
+      "docs/ai/work-items/vfc-gate-off-and-p0-fixes/evidence/P01_DRY_RUN_LOG.txt",
+      "docs/ai/work-items/vfc-gate-off-and-p0-fixes/evidence/P01_DELETE_EXECUTION_LOG.txt"
+    ],
+    "environment_restored": true
+  },
+  "prerequisites": [
+    "Site v16.localhost reachable (HTTP 200 verified 2026-11-12)",
+    "Redis ports 13000/11000 PONG, MariaDB running",
+    "schema_drift_checker EXIT=0, ai_context_check EXIT=0 (11/11)"
+  ],
+  "non_goals": [
+    "Frontend rewrite (Phase 2+ deferred by GM)",
+    "Schema change beyond enable_form_config site setting",
+    "Extension of VFC to new doctypes",
+    "Any commit, push, deploy or migration without separate owner authorisation",
+    "Changes to the theme system (126 selectors, zero Frappe internals)",
+    "Changes to deprecated React modern_form_api.py (ADR-008)"
+  ],
+  "expected_changes": [
+    "construction/public/js/vfc_layout_engine.js",
+    "construction/public/js/vite_layout_controls.js",
+    "construction/construction/api/layout_api.py",
+    "construction/construction/doctype/construction_settings/construction_settings.json",
+    "construction/public/js/vfc_config.js",
+    "construction/hooks.py",
+    "docs/ai/work-items/vfc-gate-off-and-p0-fixes/"
+  ],
+  "dirty_worktree_disclosure": {
+    "note": "UNRELATED work by task t3-engineering-control-wp1 is present and MUST be preserved and NOT committed with this work item.",
+    "modified": [
+      "SESSION_MEMORY.md",
+      "dashboard/app.py",
+      "dashboard/tests/conftest.py",
+      "orchestrator/candidates.py",
+      "orchestrator/engine.py"
+    ],
+    "untracked": [
+      "dashboard/tests/_test_root_state.py",
+      "dashboard/tests/test_approval_token_producer.py",
+      "dashboard/tests/test_conftest_isolation.py",
+      "orchestrator/engineering_control_contracts/",
+      "orchestrator/tests/test_engineering_control_contracts*.py"
+    ]
+  },
+  "startup_evidence": {
+    "branch": "develop",
+    "head": "9796c5f27bc899867699b81d3e89d6dd5c62710f",
+    "ahead_behind_origin_develop": "0 0",
+    "schema_drift_checker": "PASS exit=0",
+    "ai_context_check": "PASS exit=0 (11 passed, 0 failed)",
+    "site_http": 200
+  },
+  "separation_of_duties": {
+    "architect": "PLAN.md submitted (2026-11-12)",
+    "reviewer": "NOT PERFORMED pre-build - architect and builder were the same session. Disclosed in REVIEW.md rather than backfilled with an approval that never happened. Post-build independent verification exists instead: FINAL_REVIEW.md.",
+    "builder": "cannot mark own work VERIFIED_FOR_RELEASE - not self-certified",
+    "final_verifier": "PERFORMED - FINAL_REVIEW.md, fresh-context agent, verdict CHANGES_REQUESTED (no functional blocker; 2 MAJOR + 3 MINOR, all coverage/traceability)"
+  },
+  "open_questions": [
+    "O1: P0-2 is latent (0 affected users). Fix anyway? Architect recommends YES - one-line fix, gap opens on routine user creation.",
+    "O2: F3 unverified. Reproduce or strike at AC-2."
+  ],
+  "evidence": [],
+  "reviewer": "REVIEW.md written 2026-11-12 as a DISCLOSURE, not an approval: no separate reviewer agent reviewed PLAN.md before build (architect and builder were the same session). Post-build independent verification IS present: FINAL_REVIEW.md, verdict CHANGES_REQUESTED.",
+  "verification": {
+    "artifact": "docs/ai/work-items/vfc-gate-off-and-p0-fixes/FINAL_REVIEW.md",
+    "verdict": "VERIFIED_FOR_RELEASE (FINAL_REVIEW.md section 9 supersedes section 8)",
+    "independent": true,
+    "primary_gap_closed": true,
+    "blocker": null,
+    "majors": [
+      "MAJOR-1 no AC-5 regression test",
+      "MAJOR-6/MAJOR-2 AC-6 not a reload test"
+    ],
+    "builder_response": "MAJOR-1 and MAJOR-2 addressed by construction/tests/test_vfc_layout_regressions.js (11 tests, proven to fail when each fix is reverted); MINOR-1 addressed by REVIEW.md (disclosure); MINOR-2 IMPLEMENTATION.md refreshed; MINOR-3 and NOTE-1 amendments recorded in PLAN.md",
+    "owner_decisions_outstanding": [
+      "S4: D4 silently withdraws VFC from Project and Task (both have enabled default profiles)",
+      "Waiver option in FINAL_REVIEW.md section 8: accept committed regressions, or reclassify as follow-ups to reach VERIFIED_FOR_RELEASE"
+    ],
+    "owner_rulings_recorded": true
+  },
+  "owner_rulings": {
+    "recorded_utc": "2026-11-12T12:00:00Z",
+    "source": "owner reply to re-verification: 'i authorize recommendations'",
+    "S4": {
+      "ruling": "ACKNOWLEDGED AS A KNOWN LIMITATION",
+      "detail": "D4 skips every doctype with a Tab Break, so VFC no longer applies to Project (4 tabs) and Task (2 tabs), both of which have enabled default profiles. No user is exposed to this today because enable_form_config ships OFF. Tabbed support is NOT to be revisited now; un-freezing the frontend is a Phase-2 decision the owner already deferred, and would be reconsidered then, without a prototype patch, only if the gate is ever enabled for a tabbed doctype.",
+      "consequence": "known_limitation, not a defect; no code change"
+    },
+    "waiver": {
+      "ruling": "MOOT - TESTS ACCEPTED",
+      "detail": "The waiver in FINAL_REVIEW.md section 8 existed because the AC-5/AC-6 coverage gap was real. Committed regressions now exist and were proven discriminating by both builder and verifier (verifier reproduced 4 fail / 7 pass against true pre-fix code from git show HEAD:). Waiving would discard evidence in favour of a weaker standard.",
+      "consequence": "MAJOR-1 and MAJOR-2 closed on evidence, not waived"
+    },
+    "minor_4": {
+      "ruling": "WIRED - recommended by verifier before commit, owner authorised",
+      "detail": "SCP-C11 'JS Regression Tests' added to scripts/ai_context_check.py, which is mandated at every session startup (Standard section 3) and is the Context gate in the workflow proposal section 5 gate table. Runs construction/tests/test_*.js via node --test; excludes test_browser_* because browser tests need a running bench and credentials and proposal section 5.2 forbids gates from starting services or invoking a browser.",
+      "verified": "pass path: 12 checks, 181 tests, ALL PASS, exit 0. fail path: P0-2 fix temporarily reverted -> exit 1, 1 CHECK(S) FAILED, message names the failing assertion. File restored, diff clean."
+    }
+  }
+}

@@ -35,12 +35,37 @@ class FormLayoutProfile(Document):
     def before_insert(self):
         # System Manager only — enforced by DocType permissions.
         # Extra guard in case API is called directly.
-        if frappe.session.user != "Administrator":
-            if "System Manager" not in frappe.get_roles(frappe.session.user):
-                frappe.throw(
-                    _("Only System Manager can create Form Layout Profiles."),
-                    frappe.PermissionError,
-                )
+        if frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles(
+            frappe.session.user
+        ):
+            return
+
+        # An ordinary user may create a profile scoped to THEMSELVES and to
+        # nothing else.
+        #
+        # Without this exemption the personal-override step of the resolver and
+        # delete_my_personal_layout — both deliberately non-admin — have no row
+        # they could ever act on: this site held 0 personal profiles, which is
+        # exactly why "Revert to Default / Native" always answered not_found
+        # while still reporting success (P1-1).
+        #
+        # Shared profiles remain System Manager only. A personal row must not
+        # be usable to change anyone else's form, nor to become the default,
+        # role-targeted or system-seeded profile this guard exists to protect —
+        # so every one of those flags must be clear.
+        if (
+            self.for_user
+            and self.for_user == frappe.session.user
+            and not self.is_default
+            and not self.is_system
+            and not self.for_role
+        ):
+            return
+
+        frappe.throw(
+            _("Only System Manager can create Form Layout Profiles."),
+            frappe.PermissionError,
+        )
 
     def on_trash(self):
         if self.is_system:

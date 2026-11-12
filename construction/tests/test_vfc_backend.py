@@ -20,11 +20,13 @@ import unittest
 import frappe
 
 from construction.construction.api.layout_api import (
+    NATIVE_PROFILE_PREFIX,
     delete_layout,
     delete_my_personal_layout,
     get_active_layout,
     list_layouts,
     save_layout,
+    save_my_native_layout,
     validate_layout,
 )
 
@@ -81,7 +83,13 @@ class TestFormLayoutProfile(unittest.TestCase):
             try:
                 frappe.delete_doc("Form Layout Profile", doc.name, ignore_permissions=True)
             except Exception:
-                pass
+                # on_trash refuses is_system rows, and test_is_system_delete_guard
+                # creates one. Swallowing that let fixtures survive — the exact
+                # mechanism that accumulated 202 _Test_ rows in the live database
+                # (P0-1). A test fixture must never outlive its test, so fall back
+                # to a direct delete: the guard exists to protect real seeds.
+                frappe.db.delete("Form Layout Profile", {"name": doc.name})
+        frappe.db.commit()
 
     def _make_profile(self, **overrides):
         doc = _create_profile(**overrides)
@@ -169,7 +177,10 @@ class TestLayoutAPI(unittest.TestCase):
             try:
                 frappe.delete_doc("Form Layout Profile", doc.name, ignore_permissions=True)
             except Exception:
-                pass
+                # on_trash refuses is_system rows and test_delete_layout_blocks_is_system
+                # creates one; swallowing it leaked fixtures (see P0-1). Fall back to a
+                # direct delete so no test row can survive its test.
+                frappe.db.delete("Form Layout Profile", {"name": doc.name})
         frappe.db.delete(
             "Form Layout Profile", {"name": ("in", ["Task-_Test_UpdateMe", "Task-_Test_SaveNew"])}
         )
@@ -453,3 +464,204 @@ class TestModernFormAPIRestrictions(unittest.TestCase):
         from construction.api.modern_form_api import search_link
 
         self._assert_gate(search_link, "User Scope Context", "test")
+
+
+# ──────────────────────────────────────────────────────────────────────
+# save_my_native_layout — narrow per-user revert endpoint (P1-1)
+# ──────────────────────────────────────────────────────────────────────
+
+
+class TestSaveMyNativeLayout(unittest.TestCase):
+    """
+    The revert endpoint must only ever write the caller's OWN personal
+    sentinel, with a payload the caller cannot shape.
+
+    Uses a real non-admin user (Standard §10: an ordinary allowed user and a
+    denied user, not Administrator-only success). 'Projects User' can read
+    Task and cannot read BOQ Item — verified against live permissions.
+    """
+
+    READER = "vfc.test.reader@example.com"
+    ALLOWED_DOCTYPE = "Task"
+    DENIED_DOCTYPE = "BOQ Item"
+
+    def setUp(self):
+        if not frappe.db.exists("User", self.READER):
+            user = frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": self.READER,
+                    "first_name": "VFC",
+                    "last_name": "Reader",
+                    "enabled": 1,
+                    "user_type": "System User",
+                    "roles": [{"role": "Projects User"}],
+                }
+            )
+            user.insert(ignore_permissions=True)
+        self._purge()
+        frappe.db.commit()
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        self._purge()
+        # Leave no trace in the site. The reader account is test-only and must
+        # not accumulate between runs — the same pollution class that put 202
+        # _Test_ rows in the live database (P0-1) and that D6 targets.
+        if frappe.db.exists("User", self.READER):
+            frappe.db.delete("Has Role", {"parent": self.READER, "parenttype": "User"})
+            frappe.db.delete("DefaultValue", {"parent": self.READER})
+            frappe.db.delete("User", {"name": self.READER})
+        frappe.db.commit()
+
+    def _purge(self):
+        # Removes anything this class may have created: the __native__ sentinel
+        # and any _Test_ fixture on the doctypes it uses. Two passes because
+        # frappe.db.delete takes plain filters only — it has no or_filters.
+        for pattern in (f"{NATIVE_PROFILE_PREFIX}%", "_Test_%"):
+            frappe.db.delete(
+                "Form Layout Profile",
+                {
+                    "reference_doctype": ("in", [self.ALLOWED_DOCTYPE, self.DENIED_DOCTYPE]),
+                    "profile_name": ("like", pattern),
+                },
+            )
+
+    def _sentinels(self, doctype, user=None):
+        filters = {
+            "reference_doctype": doctype,
+            "profile_name": ("like", f"{NATIVE_PROFILE_PREFIX}%"),
+        }
+        if user:
+            filters["for_user"] = user
+        return frappe.get_all(
+            "Form Layout Profile",
+            filters=filters,
+            fields=["name", "profile_name", "for_user", "enabled", "priority", "sections_json"],
+        )
+
+    # ── the endpoint cannot be aimed at anyone else ──
+
+    def test_signature_exposes_only_doctype(self):
+        import inspect
+
+        params = list(inspect.signature(save_my_native_layout).parameters)
+        self.assertEqual(
+            params,
+            ["doctype"],
+            "save_my_native_layout must accept only 'doctype' — a caller-supplied "
+            "user, role or payload would defeat the narrow-endpoint guarantee",
+        )
+
+    # ── creation ──
+
+    def test_creates_sentinel_for_caller_only(self):
+        frappe.set_user(self.READER)
+        result = save_my_native_layout(self.ALLOWED_DOCTYPE)
+
+        self.assertIn(result["status"], ("created", "updated"))
+
+        rows = self._sentinels(self.ALLOWED_DOCTYPE)
+        self.assertEqual(len(rows), 1, "exactly one sentinel row expected")
+        self.assertEqual(rows[0]["for_user"], self.READER)
+        self.assertEqual(rows[0]["enabled"], 1)
+        self.assertNotEqual(rows[0]["for_user"], None)
+
+    def test_payload_is_fixed_empty_sections(self):
+        frappe.set_user(self.READER)
+        save_my_native_layout(self.ALLOWED_DOCTYPE)
+
+        rows = self._sentinels(self.ALLOWED_DOCTYPE)
+        payload = json.loads(rows[0]["sections_json"])
+
+        self.assertEqual(payload["version"], 1)
+        self.assertEqual(
+            payload["sections"], [], "the sentinel must contain zero sections"
+        )
+        # no field may be smuggled in through any other key
+        self.assertNotIn("fields", payload)
+
+    def test_idempotent_second_call_updates_not_duplicates(self):
+        frappe.set_user(self.READER)
+        first = save_my_native_layout(self.ALLOWED_DOCTYPE)
+        second = save_my_native_layout(self.ALLOWED_DOCTYPE)
+
+        self.assertEqual(first["status"], "created")
+        self.assertEqual(second["status"], "updated")
+        self.assertEqual(first["name"], second["name"])
+        self.assertEqual(len(self._sentinels(self.ALLOWED_DOCTYPE)), 1)
+
+    # ── the sentinel actually wins resolution ──
+
+    def test_sentinel_displaces_default_profile(self):
+        default = _create_profile(doctype=self.ALLOWED_DOCTYPE, is_default=1)
+        try:
+            frappe.set_user(self.READER)
+            # without a personal row the default wins
+            before = get_active_layout(self.ALLOWED_DOCTYPE)
+            self.assertIsNotNone(before)
+            self.assertEqual(before["name"], default.name)
+
+            save_my_native_layout(self.ALLOWED_DOCTYPE)
+
+            after = get_active_layout(self.ALLOWED_DOCTYPE)
+            self.assertIsNotNone(after)
+            self.assertNotEqual(
+                after["name"], default.name, "sentinel must win Step 1 over default"
+            )
+            self.assertEqual(after["sections"], [], "resolved layout must be empty/native")
+        finally:
+            frappe.set_user("Administrator")
+            frappe.delete_doc("Form Layout Profile", default.name, ignore_permissions=True)
+
+    # ── denials ──
+
+    def test_rejects_unknown_doctype(self):
+        frappe.set_user(self.READER)
+        with self.assertRaises(frappe.ValidationError):
+            save_my_native_layout("DefinitelyNotARealDocType123")
+        self.assertEqual(len(self._sentinels("DefinitelyNotARealDocType123")), 0)
+
+    def test_rejects_doctype_user_cannot_read(self):
+        # sanity: the denial is meaningful, i.e. the user really lacks read
+        frappe.set_user(self.READER)
+        self.assertFalse(
+            frappe.has_permission(self.DENIED_DOCTYPE, "read"),
+            "precondition: reader must not have read on this doctype",
+        )
+        with self.assertRaises(frappe.PermissionError):
+            save_my_native_layout(self.DENIED_DOCTYPE)
+        self.assertEqual(len(self._sentinels(self.DENIED_DOCTYPE)), 0)
+
+    def test_rejects_guest(self):
+        frappe.set_user("Guest")
+        with self.assertRaises(frappe.PermissionError):
+            save_my_native_layout(self.ALLOWED_DOCTYPE)
+
+    # ── the guard still protects SHARED profiles (negative controls) ──
+
+    def test_guard_still_blocks_default_profile_for_ordinary_user(self):
+        frappe.set_user(self.READER)
+        with self.assertRaises(frappe.PermissionError):
+            _create_profile(doctype=self.ALLOWED_DOCTYPE, is_default=1, for_user=self.READER)
+
+    def test_guard_still_blocks_role_profile_for_ordinary_user(self):
+        frappe.set_user(self.READER)
+        with self.assertRaises(frappe.PermissionError):
+            _create_profile(
+                doctype=self.ALLOWED_DOCTYPE, for_role="Projects User", for_user=self.READER
+            )
+
+    def test_guard_still_blocks_profile_for_another_user(self):
+        frappe.set_user(self.READER)
+        # must be an existing user so Link validation passes and the guard —
+        # not the link check — is what rejects the insert
+        other = "Administrator"
+        self.assertNotEqual(other, self.READER)
+        with self.assertRaises(frappe.PermissionError):
+            _create_profile(doctype=self.ALLOWED_DOCTYPE, for_user=other)
+
+    def test_guard_still_blocks_system_flag_for_ordinary_user(self):
+        frappe.set_user(self.READER)
+        with self.assertRaises(frappe.PermissionError):
+            _create_profile(doctype=self.ALLOWED_DOCTYPE, is_system=1, for_user=self.READER)

@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import cint
 
 
 def _translate_sidebar_labels(bootinfo):
@@ -46,6 +47,13 @@ def extend_bootinfo(bootinfo):
     ]
 
     bootinfo["vfc_debug_enabled"] = bool(getattr(settings, "enable_vfc_debug_logging", False))
+
+    # Master switch for the Form Layout Engine. Default OFF: with this false the
+    # Form Config button is never injected and the layout engine never attaches,
+    # so forms render exactly as Frappe would. cint() rather than bool() because
+    # an unset Check can surface as the string "0" from the DocType default,
+    # and bool("0") is True — which would invert the intended default.
+    bootinfo["vfc_enabled"] = bool(cint(getattr(settings, "enable_form_config", 0)))
 
     bootinfo["scope_context_enabled_dimensions"] = {
         "company": bool(settings.enable_scope_company if scope_enabled else False),
