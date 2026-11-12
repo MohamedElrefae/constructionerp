@@ -67,7 +67,7 @@
       "guards": [
         {
           "path": "construction/construction/api/layout_api.py",
-          "sha256": "c691e48bb1c21cabc7e5ebf1feed712f1c82c32c0cb0240d8cefc54d07d1adfc"
+          "sha256": "b2ccb20543ae2c56446bbfc4ec1eb63548b97325c87b9a75802ede3498c23888"
         },
         {
           "path": "construction/overrides/layout_permissions.py",
@@ -75,7 +75,7 @@
         },
         {
           "path": "construction/hooks.py",
-          "sha256": "0f263d5afff27853e6a1156c683d57a82132eea3494fb46113ec4c3412217159"
+          "sha256": "b7f0550fcfa94b74e10fc73d794f3a9edddbf0ffd915553c64a5b4732d01eae5"
         }
       ],
       "permission_record": {
@@ -171,7 +171,7 @@
           "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
           "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
         },
-        "reviewed_source_manifest_sha256": "bde159d5e03bc6dcdf64a21a7ae09fd0243dca456404bc861f630248518131b5"
+        "reviewed_source_manifest_sha256": "349d5616996562046f81a2f6adaea511df9813bc2265d465d3578c3b8b159557"
       },
       "source_sha256": "c9887ae7b2d6c2db422135dc3f4ef8dba90f7cafedf18b68455cf2714ebf47cf",
       "status": "REVIEWED",
@@ -257,7 +257,7 @@
         },
         {
           "path": "construction/hooks.py",
-          "sha256": "0f263d5afff27853e6a1156c683d57a82132eea3494fb46113ec4c3412217159"
+          "sha256": "b7f0550fcfa94b74e10fc73d794f3a9edddbf0ffd915553c64a5b4732d01eae5"
         }
       ],
       "permission_record": {
@@ -353,7 +353,7 @@
           "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
           "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
         },
-        "reviewed_source_manifest_sha256": "25b4679879e9d1c73ce5048cb357a7235aa9fedc10f08bc80e1b8c6530ac3965"
+        "reviewed_source_manifest_sha256": "e6218c828be8526bfd1117116ac31275488089b51cf8bd5288517a6f7e1d7cc2"
       },
       "source_sha256": "090006e01ba4b1e4fad6dea77543263b1507748129237c2f3d63a2d69b0dc023",
       "status": "REVIEWED",
@@ -391,7 +391,7 @@
         },
         {
           "path": "construction/hooks.py",
-          "sha256": "0f263d5afff27853e6a1156c683d57a82132eea3494fb46113ec4c3412217159"
+          "sha256": "b7f0550fcfa94b74e10fc73d794f3a9edddbf0ffd915553c64a5b4732d01eae5"
         },
         {
           "path": "construction/construction/doctype/user_scope_context/user_scope_context.py",
@@ -495,7 +495,7 @@
           "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
           "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
         },
-        "reviewed_source_manifest_sha256": "a486f762e884da4909a93706dc5c484fc199d8aa74b7205d826782e03fd9e7ce"
+        "reviewed_source_manifest_sha256": "da9dac2e6716e9b67d3fe1166e9e5bc32bf10cc5faa8bac2aebf1742ab1363f2"
       },
       "source_sha256": "054446a3f27f7d5b34cfd542cbc9536f6f6d559246c5888a40dd6bdb510b3b24",
       "status": "REVIEWED",
