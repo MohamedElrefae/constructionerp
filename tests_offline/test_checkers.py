@@ -84,6 +84,7 @@ def test_context_checker_json_cli_passes_from_unrelated_cwd(tmp_path):
         "SCP-C8B",
         "SCP-C9",
         "SCP-C10",
+        "SCP-C11",
     }
     assert json.loads((tmp_path / "imports.json").read_text(encoding="utf-8")) == []
 
