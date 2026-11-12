@@ -617,8 +617,11 @@ class TestSaveMyNativeLayout(unittest.TestCase):
     # ── denials ──
 
     def test_rejects_unknown_doctype(self):
+        # Deliberately PermissionError, not ValidationError: an unknown doctype
+        # and a readable-but-forbidden one are reported identically so a caller
+        # cannot probe which doctypes exist. See save_my_native_layout.
         frappe.set_user(self.READER)
-        with self.assertRaises(frappe.ValidationError):
+        with self.assertRaises(frappe.PermissionError):
             save_my_native_layout("DefinitelyNotARealDocType123")
         self.assertEqual(len(self._sentinels("DefinitelyNotARealDocType123")), 0)
 

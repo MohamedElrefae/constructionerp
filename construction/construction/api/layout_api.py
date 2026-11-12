@@ -312,23 +312,33 @@ def save_my_native_layout(doctype: str) -> dict:
     on the primary key as soon as a second user reverted the same doctype.
     """
     user = frappe.session.user
-    if not user or user == "Guest":
-        frappe.throw(_("Not permitted."), frappe.PermissionError)
 
-    if not doctype or not frappe.db.exists("DocType", doctype):
-        frappe.throw(_("Invalid document type."), frappe.ValidationError)
-
-    if not frappe.has_permission(doctype, "read"):
+    # Guest never reaches this body: @frappe.whitelist() defaults to
+    # allow_guest=False, and frappe.is_whitelisted() rejects a Guest call
+    # before the function runs — so no message of our own is needed here.
+    #
+    # One message covers both an unknown doctype and one the caller may not
+    # read. The distinction is deliberately not observable to the caller:
+    # confirming that a doctype exists but is unreadable would leak its
+    # existence. "{0} {1} not found or not readable" is already catalogued
+    # and already used from Python (bilingual_service.py).
+    if (
+        not doctype
+        or not frappe.db.exists("DocType", doctype)
+        or not frappe.has_permission(doctype, "read")
+    ):
         frappe.throw(
-            _("You cannot set a layout for a document type you cannot read."),
+            _("{0} {1} not found or not readable").format("Document type", doctype or ""),
             frappe.PermissionError,
         )
 
     if not frappe.db.has_column("Form Layout Profile", "for_user"):
-        frappe.throw(
-            _("Personal layouts are not available on this site yet."),
-            frappe.ValidationError,
-        )
+        # Machine-readable status instead of a translated message: without
+        # the column a personal row would be silently dropped on insert, so
+        # refuse rather than create a profile that can never resolve. The
+        # caller renders its own already-catalogued alert for any status
+        # other than created/updated, so nothing user-facing is untranslated.
+        return {"status": "unavailable", "reason": "for_user column absent"}
 
     profile_name = f"{NATIVE_PROFILE_PREFIX}:{user}"
 

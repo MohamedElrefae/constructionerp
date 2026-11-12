@@ -995,14 +995,17 @@
 
 						// Report what the server actually did. An unconditional green
 						// "reset" here is what made the old revert read as success while
-						// no personal profile had ever existed to remove.
+						// no personal profile had ever existed to remove. Both messages
+						// are pre-existing catalog entries — the localization catalog is
+						// frozen pending re-collection on the authorized site, so this
+						// change introduces no new translatable strings.
 						const pinned =
 							result &&
 							(result.status === "created" || result.status === "updated");
 						frappe.show_alert({
 							message: pinned
-								? __("VFC preferences reset — this form now uses the native layout")
-								: __("VFC preferences reset, but the native layout could not be pinned"),
+								? __("VFC preferences reset and personal layout removed")
+								: __("VFC preferences reset"),
 							indicator: pinned ? "green" : "orange",
 						});
 

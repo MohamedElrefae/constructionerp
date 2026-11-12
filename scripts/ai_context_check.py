@@ -207,6 +207,37 @@ def _adr(root: Path) -> tuple[bool, list[str]]:
     return count >= 7, [f"ADR.md contains {count} ADRs"]
 
 
+_REQUIRE_RE = re.compile(r'require\(\s*["\']([^"\']+)["\']\s*\)')
+
+
+def _node_pkg_installed(pkg: str, tests_dir: Path, root: Path) -> bool:
+    for base in (tests_dir / "node_modules", root / "node_modules"):
+        if (base / pkg / "package.json").is_file():
+            return True
+    return False
+
+
+def _missing_node_deps(path: Path, tests_dir: Path, root: Path) -> list[str]:
+    """External npm packages a test requires that are not installed yet.
+
+    Relative and ``node:`` specifiers are always resolvable and are ignored.
+    """
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    missing = []
+    for spec in _REQUIRE_RE.findall(text):
+        if spec.startswith("node:") or spec.startswith("."):
+            continue
+        # scoped packages are "@scope/name"; bare ones are a single segment
+        parts = spec.split("/")
+        pkg = "/".join(parts[:2]) if spec.startswith("@") else parts[0]
+        if not _node_pkg_installed(pkg, tests_dir, root):
+            missing.append(pkg)
+    return sorted(set(missing))
+
+
 def _js_regressions(root: Path) -> tuple[bool, list[str]]:
     """SCP-C11 — run the offline Node unit/regression tests.
 
@@ -225,12 +256,32 @@ def _js_regressions(root: Path) -> tuple[bool, list[str]]:
     if not tests_dir.is_dir():
         return False, [f"missing tests directory: {tests_dir}"]
 
-    files = sorted(
-        p for p in tests_dir.glob("test_*.js") if not p.name.startswith("test_browser_")
-    )
-    excluded = sorted(p.name for p in tests_dir.glob("test_browser_*.js"))
+    all_tests = sorted(tests_dir.glob("test_*.js"))
+    excluded = sorted(p.name for p in all_tests if p.name.startswith("test_browser_"))
+    files = [p for p in all_tests if not p.name.startswith("test_browser_")]
     if not files:
         return False, [f"no unit tests matched {tests_dir}/test_*.js"]
+
+    # A test may require an npm package (e.g. fast-check). node_modules is
+    # gitignored, and in CI `npm ci` runs in a LATER step than the one that
+    # calls this check — so running those tests here would fail for a missing
+    # dependency rather than a real regression. Defer them explicitly and say
+    # so; CI runs them itself in the "Run JS Property Tests" step.
+    runnable, deferred = [], []
+    for path in files:
+        missing = _missing_node_deps(path, tests_dir, root)
+        (deferred if missing else runnable).append((path, missing))
+
+    details = []
+    if deferred:
+        details.append(
+            "deferred (dependency not installed; CI runs these in "
+            "'Run JS Property Tests' after `npm ci`): "
+            + ", ".join(f"{p.name} [{', '.join(m)}]" for p, m in deferred)
+        )
+    if not runnable:
+        details.append("no runnable unit tests after deferral")
+        return True, details   # nothing to run is not a failure of this check
 
     node = shutil.which("node")
     if node is None:
@@ -241,7 +292,7 @@ def _js_regressions(root: Path) -> tuple[bool, list[str]]:
             "or run them manually: node --test construction/tests/test_*.js"
         ]
 
-    cmd = [node, "--test", *[str(p) for p in files]]
+    cmd = [node, "--test", *[str(p) for p, _ in runnable]]
     try:
         proc = subprocess.run(
             cmd, cwd=root, capture_output=True, text=True, timeout=300, check=False
@@ -255,7 +306,7 @@ def _js_regressions(root: Path) -> tuple[bool, list[str]]:
     n_pass = int(passed.group(1)) if passed else None
     n_fail = int(failed.group(1)) if failed else None
 
-    details = [f"{len(files)} file(s) run via `node --test`"]
+    details.insert(0, f"{len(runnable)} file(s) run via `node --test`")
     if excluded:
         details.append(
             "excluded browser tests (need a running bench + credentials): "
