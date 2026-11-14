@@ -3,7 +3,7 @@
    Strategy: Cooperate with Frappe, never fight layout
    Only visual properties: colors, backgrounds, borders, shadows
    NO layout: position, display, flex, width, height, margin, padding, transform, order
-   Version: 2.6.5 | 2026-11-09 — CT-THEME-2026-001 P0 (Frappe/ERPNext v16.50 desk chrome)
+   Version: 2.6.6 | 2026-11-14 — CT-THEME-2026-001 P0 (Frappe/ERPNext v16.50 desk chrome)
    ════════════════════════════════════════════════════════════ */
 
 /* ─── ROOT FALLBACKS (prevent FOUC before JS loads) ─── */
@@ -3457,6 +3457,60 @@ html.ct-enterprise body > .dropdown-menu > li > a:hover,
 html.ct-enterprise [class*="dropdown-menu"] > .dropdown-item:hover {
   background: var(--ct-surface-hover) !important;
   color: var(--ct-text) !important;
+}
+
+/* ─── v16.50 Espresso menus (es-menu) — Construction look parity with .dropdown-menu ───
+   Frappe v16.50 Dropdown/ContextMenu portals render <div class="es-menu"> instead of
+   bootstrap .dropdown-menu; they paint from bridged espresso tokens (close but not the
+   CT look: wrong radius, no CT accent, wrong hover). Unlayered + !important: must beat
+   upstream unlayered menu.css component rules. */
+html.ct-enterprise .es-menu {
+  background: var(--ct-surface) !important;
+  border: 1px solid var(--ct-border) !important;
+  border-left: 3px solid var(--ct-primary) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--ct-shadow-lg) !important;
+  padding: 4px !important;
+  z-index: 1060 !important; /* upstream order: above bootstrap modals (1050) */
+}
+
+html.ct-enterprise .es-menu__item {
+  color: var(--ct-text) !important;
+  border-radius: var(--ct-border-radius-sm) !important;
+  border-left: 3px solid transparent !important;
+  letter-spacing: 0.02em !important;
+  font-size: 0.875rem !important;
+}
+
+html.ct-enterprise .es-menu__item>svg {
+  color: var(--ct-text-secondary) !important;
+}
+
+html.ct-enterprise .es-menu__item[data-highlighted],
+html.ct-enterprise .es-menu__item[data-state="open"],
+html.ct-enterprise .es-menu__item[data-state="checked"] {
+  background: var(--ct-surface-hover) !important;
+  color: var(--ct-text) !important;
+  border-left-color: var(--ct-primary) !important;
+}
+
+html.ct-enterprise .es-menu__group-label {
+  color: var(--ct-text-muted) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+html.ct-enterprise .es-menu__empty,
+html.ct-enterprise .es-menu__loading,
+html.ct-enterprise .es-menu__description {
+  color: var(--ct-text-muted) !important;
+}
+
+html.ct-enterprise .es-menu__shortcut,
+html.ct-enterprise .es-menu__shortcut kbd {
+  color: var(--ct-text-secondary) !important;
 }
 
 /* Any element with role=listbox */

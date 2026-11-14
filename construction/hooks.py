@@ -126,7 +126,7 @@ doctype_tree_js = {
 # CSS includes for authenticated users (desk)
 # v2.2: Single-file theme — tokens + 1,180 selectors, html.ct-enterprise[data-theme] namespace
 app_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.6.5",
+    "/assets/construction/css/modern_theme.css?v=2.6.6",
     "/assets/construction/css/scope_context.css?v=2",
     # ─── Vite UI — MUST load LAST to win cascade ───
     # Phase 1: Visual Foundation
@@ -209,7 +209,7 @@ app_include_js = [
 # CSS includes for unauthenticated pages (login, etc.)
 # v2.4-r3: modern_theme.css handles all theming including login
 web_include_css = [
-    "/assets/construction/css/modern_theme.css?v=2.6.5",
+    "/assets/construction/css/modern_theme.css?v=2.6.6",
     "/assets/construction/css/email_theme.css",
 ]
 
