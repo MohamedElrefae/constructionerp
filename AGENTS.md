@@ -13,7 +13,7 @@
 ## 1. Project Identity
 - **Name:** Construction ERP (Frappe/ERPNext custom app)
 - **App name:** `construction` (used in imports: `from construction.xxx import yyy`)
-- **Repo root:** `/home/mohamed/frappe-bench/apps/construction`
+- **Repo root:** checkout-specific; resolve with `git rev-parse --show-toplevel`. For the T3 integration continuation, use the checkout tracking `t3-integration-review-20261117` and read `docs/ai/t3-integration-handover/README.md`. An installed bench checkout is a deployment location and may have separate local work.
 - **Author:** Mohamed Elrefae (solo civil engineer developer)
 - **License:** MIT
 - **Current branch:** `develop`

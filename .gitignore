@@ -43,3 +43,11 @@ construction/public/css/theme_*.css
 docs/ai/work-items/*/runs/
 docs/ai/work-items/*/inbox/
 docs/ai/work-items/*/outbox/
+
+# Local operational state and recovery material are never development source.
+/local-runtime/
+/.private/
+/sites/
+.env
+.env.*
+!.env.example

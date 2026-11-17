@@ -22,3 +22,7 @@ A separate authenticated dashboard suite passed 14 tests against a synthetic Git
 The builder packet currently has small UTF-8 file and total-size limits and does not support general delete/rename operations. Model output is untrusted data; approvals and workflow state remain controlled by the engine. Separate prototype files are not independent proof of production behavior.
 
 This report deliberately excludes local credentials, private runtime data, transcripts, site data, backups and machine-specific evidence paths. External agents should work from the reviewed repository revision and record new evidence without checking secrets or customer data into Git.
+
+## Consolidation update
+
+The local development source is now a fresh clone of the public continuation branch. Earlier standalone contract/enrollment/projection source was recovered and separately tested (314 passed, 3 explicit expected failures for a missing legacy API). See [the consolidation record](CONSOLIDATION.md) for source, archive, runtime and test boundaries. This is source consolidation, not a production deployment.
