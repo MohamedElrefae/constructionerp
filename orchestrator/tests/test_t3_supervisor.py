@@ -261,6 +261,24 @@ class SupervisorTests(unittest.TestCase):
             launcher.preflight(job)
         self.assertEqual(self._launch_count(), 0)
 
+    def test_builder_preflight_matches_service_brief_limit(self):
+        from t3_supervisor import MAX_BUILDER_BRIEF_CHARS
+
+        self._start_sim()
+        self._start_sup()
+        launcher = SyntheticWorkflowLauncher(self.dir, self.sock_path, self.token, allowed_models=[MODEL])
+        job = {
+            "job_id": "job-" + "a" * 24,
+            "role": "builder",
+            "spec": {"model": MODEL, "prompt": "x" * MAX_BUILDER_BRIEF_CHARS, "hard_timeout": 60},
+        }
+        launcher.preflight(job)  # exact upper bound is valid
+        job["spec"]["prompt"] += "x"
+        with self.assertRaisesRegex(SupervisorRefusal, "brief size bound"):
+            launcher.preflight(job)
+        self.assertEqual(launcher.calls, [])
+        self.assertEqual(self._launch_count(), 0)
+
     def test_lost_reply_is_uncertain_and_never_resent(self):
         self._start_sim(fail="lost_reply")
         self._start_sup()

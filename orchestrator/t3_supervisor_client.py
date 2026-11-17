@@ -230,8 +230,12 @@ class SupervisorLauncher:
             raise SupervisorRefusal("T3 hard timeout must be between 1 millisecond and 1 hour")
         # Match the supervisor's task validation before Engine persists a
         # launch intent; an invalid brief should never strand a prepared job.
+        from t3_supervisor import MAX_BUILDER_BRIEF_CHARS
         from t3_transport import TransportRefusal, build_task_spec
 
+        prompt = spec.get("prompt")
+        if role == "builder" and isinstance(prompt, str) and len(prompt) > MAX_BUILDER_BRIEF_CHARS:
+            raise SupervisorRefusal("builder source packet exceeds brief size bound")
         job_id = job.get("job_id")
         if not isinstance(job_id, str):
             raise SupervisorRefusal("T3 job id must be a string")

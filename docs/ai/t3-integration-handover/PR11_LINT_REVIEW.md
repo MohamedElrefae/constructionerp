@@ -22,3 +22,7 @@ The dashboard and orchestrator remain integration work in progress. This lint co
 ## Follow-up hosted review
 
 The hosted review of `fb3a3a7` found two further retry gaps. Scope adoption now rejects cached actions from a different operation, including a matching-body run-start collision. A completed commit retry now ensures its coordinator handoff. The handoff generation is recorded in the existing action manifest in the same SQLite transaction that creates the run; a retry cannot start another generation after that handoff. A crash before spawning the loop leaves a durable STARTING row for normal recovery. Reconciliation guards remain enforced. Authenticated API tests now pass 25 cases; coordinator tests pass 38, including crash-window recovery and retry after completion.
+
+## Final preflight correction before develop merge
+
+The review of `224a947` found a deterministic builder prompt-size refusal occurring after launch intent. Engine-side preflight now uses the supervisor's existing `MAX_BUILDER_BRIEF_CHARS` constant and checks the completed builder prompt before dispatch. The exact 80,000-character upper bound passes; 80,001 characters are refused with no transport launch. Supervisor and managed-builder tests passed 19 cases plus three subtests; three optional fixture-dependent cases were skipped. No provider/model was invoked.
