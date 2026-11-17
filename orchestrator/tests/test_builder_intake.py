@@ -3,7 +3,6 @@ import hashlib
 import os
 
 import pytest
-
 from builder_intake import MAX_FILE_BYTES, MAX_FILES, MAX_TOTAL_BYTES, stage_bundle
 from core import WorkflowError
 
@@ -25,8 +24,12 @@ def test_stages_verified_changes_in_new_separate_workspace(tmp_path):
     source = tmp_path / "source"
     source.mkdir()
     (source / "existing.txt").write_bytes(b"baseline")
-    bundle = {"files": [_entry("existing.txt", b"baseline", b"proposed"),
-                        _entry("new/file.txt", None, b"new content")]}
+    bundle = {
+        "files": [
+            _entry("existing.txt", b"baseline", b"proposed"),
+            _entry("new/file.txt", None, b"new content"),
+        ]
+    }
 
     result = stage_bundle(source, bundle, tmp_path / "staged", ["existing.txt", "new/"])
 
@@ -45,8 +48,7 @@ def test_rejects_traversal_absolute_and_non_normalized_paths(tmp_path, path):
     source = tmp_path / "source"
     source.mkdir()
     with pytest.raises(WorkflowError):
-        stage_bundle(source, {"files": [_entry(path, None, b"x")]},
-                     tmp_path / "staged", ["safe/"])
+        stage_bundle(source, {"files": [_entry(path, None, b"x")]}, tmp_path / "staged", ["safe/"])
     assert not (tmp_path / "staged").exists()
 
 
@@ -68,10 +70,13 @@ def test_rejects_symlinked_source_path_and_duplicate_names(tmp_path):
     assert not (tmp_path / "duplicate").exists()
 
 
-@pytest.mark.parametrize("bad_entry", [
-    lambda: {**_entry("file", None, b"payload"), "content_sha256": "0" * 64},
-    lambda: {**_entry("file", b"wrong-base", b"payload"), "base_sha256": _hash(b"wrong-base")},
-])
+@pytest.mark.parametrize(
+    "bad_entry",
+    [
+        lambda: {**_entry("file", None, b"payload"), "content_sha256": "0" * 64},
+        lambda: {**_entry("file", b"wrong-base", b"payload"), "base_sha256": _hash(b"wrong-base")},
+    ],
+)
 def test_rejects_content_or_base_hash_mismatch(tmp_path, bad_entry):
     source = tmp_path / "source"
     source.mkdir()
@@ -86,15 +91,13 @@ def test_rejects_size_limits_and_existing_or_in_tree_destination(tmp_path):
     source.mkdir()
     oversized = b"x" * (MAX_FILE_BYTES + 1)
     with pytest.raises(WorkflowError, match="size limit"):
-        stage_bundle(source, {"files": [_entry("large", None, oversized)]},
-                     tmp_path / "staged", ["large"])
+        stage_bundle(source, {"files": [_entry("large", None, oversized)]}, tmp_path / "staged", ["large"])
     existing = tmp_path / "existing"
     existing.mkdir()
     with pytest.raises(WorkflowError, match="already exists"):
         stage_bundle(source, {"files": [_entry("small", None, b"x")]}, existing, ["small"])
     with pytest.raises(WorkflowError, match="separate"):
-        stage_bundle(source, {"files": [_entry("small", None, b"x")]},
-                     source / "staged", ["small"])
+        stage_bundle(source, {"files": [_entry("small", None, b"x")]}, source / "staged", ["small"])
     assert not (tmp_path / "staged").exists()
 
 
@@ -103,8 +106,7 @@ def test_rejects_fifo_without_waiting_for_a_writer(tmp_path):
     source.mkdir()
     os.mkfifo(source / "pipe")
     with pytest.raises(WorkflowError, match="regular file"):
-        stage_bundle(source, {"files": [_entry("pipe", b"unused", b"new")]},
-                     tmp_path / "staged", ["pipe"])
+        stage_bundle(source, {"files": [_entry("pipe", b"unused", b"new")]}, tmp_path / "staged", ["pipe"])
     assert not (tmp_path / "staged").exists()
 
 

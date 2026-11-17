@@ -173,9 +173,7 @@ class RunCoordinator:
     def _row(self, task_id: str) -> sqlite3.Row | None:
         conn = self._conn()
         try:
-            return conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
+            return conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
         finally:
             conn.close()
 
@@ -253,14 +251,17 @@ class RunCoordinator:
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
-            if row and (row["state"] in ACTIVE_STATES
-                        or row["state"] in ("RECONCILIATION_REQUIRED", "ABANDONED")):
+            row = conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
+            if row and (
+                row["state"] in ACTIVE_STATES or row["state"] in ("RECONCILIATION_REQUIRED", "ABANDONED")
+            ):
                 conn.rollback()
-                return {"ok": False, "conflict": True, "run": self.status(task_id),
-                        "detail": f"Run is {self.status(task_id)['state']}; resolve or stop it first"}
+                return {
+                    "ok": False,
+                    "conflict": True,
+                    "run": self.status(task_id),
+                    "detail": f"Run is {self.status(task_id)['state']}; resolve or stop it first",
+                }
             generation = (row["generation"] if row else 0) + 1
             owner = self._owner_fields()
             if row:
@@ -269,8 +270,14 @@ class RunCoordinator:
                     "owner_instance_id=?, owner_pid=?, owner_start_time=?, pass_count=0, "
                     "last_pass_index=NULL, last_result_json=NULL, last_error=NULL, "
                     "pause_reason=NULL, updated_utc=? WHERE task_id=?",
-                    (generation, owner["owner_instance_id"], owner["owner_pid"],
-                     owner["owner_start_time"], now, task_id),
+                    (
+                        generation,
+                        owner["owner_instance_id"],
+                        owner["owner_pid"],
+                        owner["owner_start_time"],
+                        now,
+                        task_id,
+                    ),
                 )
             else:
                 conn.execute(
@@ -278,8 +285,17 @@ class RunCoordinator:
                     "owner_instance_id, owner_pid, owner_start_time, pass_count, "
                     "last_pass_index, last_result_json, last_error, pause_reason, "
                     "created_utc, updated_utc) VALUES (?,?,?,?,?,?,?,0,NULL,NULL,NULL,NULL,?,?)",
-                    (task_id, "STARTING", "RUN", generation, owner["owner_instance_id"],
-                     owner["owner_pid"], owner["owner_start_time"], now, now),
+                    (
+                        task_id,
+                        "STARTING",
+                        "RUN",
+                        generation,
+                        owner["owner_instance_id"],
+                        owner["owner_pid"],
+                        owner["owner_start_time"],
+                        now,
+                        now,
+                    ),
                 )
             conn.commit()
             self._direct.add(task_id)
@@ -287,17 +303,18 @@ class RunCoordinator:
         finally:
             conn.close()
 
-    def finalize_direct(self, task_id: str, generation: int,
-                        result: dict | None = None, error: str | None = None) -> None:
+    def finalize_direct(
+        self, task_id: str, generation: int, result: dict | None = None, error: str | None = None
+    ) -> None:
         if error:
-            self._set_state(task_id, generation, "RECONCILIATION_REQUIRED",
-                            reason="pass_failed", error=error[:1000])
+            self._set_state(
+                task_id, generation, "RECONCILIATION_REQUIRED", reason="pass_failed", error=error[:1000]
+            )
         elif result and result.get("terminal"):
             state, reason = self._terminal_state(result)
             self._set_state(task_id, generation, state, reason=reason, result=result)
         else:
-            self._set_state(task_id, generation, "PAUSED", reason="single_pass",
-                            result=result or {})
+            self._set_state(task_id, generation, "PAUSED", reason="single_pass", result=result or {})
         self._direct.discard(task_id)
 
     async def run_single(self, task_id: str) -> dict[str, Any]:
@@ -311,8 +328,7 @@ class RunCoordinator:
             if result is None:
                 self._direct.discard(task_id)
                 run = self.status(task_id)
-                return {"ok": False, "run": run,
-                        "detail": run.get("last_error") or "Run failed"}
+                return {"ok": False, "run": run, "detail": run.get("last_error") or "Run failed"}
             self.finalize_direct(task_id, generation, result=result)
             return {
                 "ok": True,
@@ -322,8 +338,9 @@ class RunCoordinator:
                 "run": self.status(task_id),
             }
         except asyncio.CancelledError:
-            self.finalize_direct(task_id, generation,
-                                 error="Single pass cancelled; outcome requires reconciliation")
+            self.finalize_direct(
+                task_id, generation, error="Single pass cancelled; outcome requires reconciliation"
+            )
             raise
 
     def start(self, task_id: str) -> dict[str, Any]:
@@ -332,36 +349,35 @@ class RunCoordinator:
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
+            row = conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
             if row and row["state"] == "ABANDONED":
                 conn.rollback()
                 return {"ok": False, "abandoned": True, "run": self.status(task_id)}
             if row and row["state"] == "RECONCILIATION_REQUIRED":
                 conn.rollback()
-                return {"ok": False, "conflict": True, "run": self.status(task_id),
-                        "detail": "Resolve the uncertain outcome before starting another run"}
+                return {
+                    "ok": False,
+                    "conflict": True,
+                    "run": self.status(task_id),
+                    "detail": "Resolve the uncertain outcome before starting another run",
+                }
             if row and row["state"] in ACTIVE_STATES:
-                same_owner = (
-                    row["owner_instance_id"] == self.instance_id
-                    and (task_id in self._direct or (
-                        task_id in self._loops and not self._loops[task_id].done()
-                    ))
+                same_owner = row["owner_instance_id"] == self.instance_id and (
+                    task_id in self._direct or (task_id in self._loops and not self._loops[task_id].done())
                 )
                 # Tracked passes retain their lease while queued or executing,
                 # regardless of heartbeat age. Recent untracked rows and other
                 # live owner instances also refuse takeover.
                 live_lease = self._owner_alive(row) and (
-                    row["owner_instance_id"] != self.instance_id
-                    or _recent(row["updated_utc"])
+                    row["owner_instance_id"] != self.instance_id or _recent(row["updated_utc"])
                 )
                 if same_owner or live_lease:
                     conn.rollback()
                     return {"ok": False, "conflict": True, "run": self.status(task_id)}
                 unknown_pass = conn.execute(
                     "SELECT 1 FROM run_passes WHERE task_id=? AND generation=? "
-                    "AND state='IN_FLIGHT' LIMIT 1", (task_id, row["generation"]),
+                    "AND state='IN_FLIGHT' LIMIT 1",
+                    (task_id, row["generation"]),
                 ).fetchone()
                 if unknown_pass:
                     conn.execute(
@@ -371,8 +387,12 @@ class RunCoordinator:
                         (now, task_id, row["generation"]),
                     )
                     conn.commit()
-                    return {"ok": False, "conflict": True, "run": self.status(task_id),
-                            "detail": "Resolve the uncertain pass before starting another run"}
+                    return {
+                        "ok": False,
+                        "conflict": True,
+                        "run": self.status(task_id),
+                        "detail": "Resolve the uncertain pass before starting another run",
+                    }
                 # Same instance but no live loop: a crashed loop, not a live owner.
                 logger.warning("taking over orphaned run loop for %s", task_id)
             generation = (row["generation"] if row else 0) + 1
@@ -432,9 +452,7 @@ class RunCoordinator:
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
+            row = conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
             if not row:
                 conn.rollback()
                 return {"ok": True, "run": self.status(task_id)}
@@ -453,8 +471,11 @@ class RunCoordinator:
                 )
                 conn.commit()
                 self._event(
-                    task_id, row["generation"], "stop_requested" if desired == "STOP" else "pause_requested",
-                    {"state": effective}, actor=None,
+                    task_id,
+                    row["generation"],
+                    "stop_requested" if desired == "STOP" else "pause_requested",
+                    {"state": effective},
+                    actor=None,
                 )
                 return {"ok": True, "run": self.status(task_id)}
             if row["state"] in ACTIVE_STATES and owner_alive:
@@ -465,9 +486,11 @@ class RunCoordinator:
                 )
                 conn.commit()
                 self._event(
-                    task_id, row["generation"],
+                    task_id,
+                    row["generation"],
                     "stop_requested" if desired == "STOP" else "pause_requested",
-                    {"state": row["state"]}, actor=None,
+                    {"state": row["state"]},
+                    actor=None,
                 )
                 return {"ok": True, "run": self.status(task_id)}
             conn.rollback()
@@ -485,9 +508,13 @@ class RunCoordinator:
         """
         loop = self._loops.get(task_id)
         if (loop and not loop.done()) or task_id in self._direct:
-            return {"ok": False, "resolved": False, "conflict": True,
-                    "run": self.status(task_id),
-                    "detail": "A live pass is running; wait for it to finish"}
+            return {
+                "ok": False,
+                "resolved": False,
+                "conflict": True,
+                "run": self.status(task_id),
+                "detail": "A live pass is running; wait for it to finish",
+            }
         row = self._row(task_id)
         if not row:
             return {"ok": False, "resolved": False, "run": self.status(task_id)}
@@ -496,9 +523,13 @@ class RunCoordinator:
         # (even the same instance, e.g. a direct pass) is never raced.
         if row["state"] in ACTIVE_STATES:
             if self._owner_alive(row):
-                return {"ok": False, "resolved": False, "conflict": True,
-                        "run": self.status(task_id),
-                        "detail": "A live run owns this task; stop it or wait for it to finish"}
+                return {
+                    "ok": False,
+                    "resolved": False,
+                    "conflict": True,
+                    "run": self.status(task_id),
+                    "detail": "A live run owns this task; stop it or wait for it to finish",
+                }
             owner = self._owner_fields()
             conn = self._conn()
             try:
@@ -508,9 +539,17 @@ class RunCoordinator:
                     "owner_pid=?, owner_start_time=?, updated_utc=? "
                     "WHERE task_id=? AND generation=? AND state IN ('STARTING','RUNNING') "
                     "AND owner_instance_id IS ? AND owner_pid IS ? AND owner_start_time IS ?",
-                    (owner["owner_instance_id"], owner["owner_pid"], owner["owner_start_time"],
-                     _now(), task_id, row["generation"],
-                     row["owner_instance_id"], row["owner_pid"], row["owner_start_time"]),
+                    (
+                        owner["owner_instance_id"],
+                        owner["owner_pid"],
+                        owner["owner_start_time"],
+                        _now(),
+                        task_id,
+                        row["generation"],
+                        row["owner_instance_id"],
+                        row["owner_pid"],
+                        row["owner_start_time"],
+                    ),
                 )
                 conn.commit()
             finally:
@@ -530,9 +569,17 @@ class RunCoordinator:
                     "UPDATE run_state SET owner_instance_id=?, owner_pid=?, owner_start_time=?, "
                     "updated_utc=? WHERE task_id=? AND generation=? AND state='RECONCILIATION_REQUIRED' "
                     "AND owner_instance_id IS ? AND owner_pid IS ? AND owner_start_time IS ?",
-                    (owner["owner_instance_id"], owner["owner_pid"], owner["owner_start_time"],
-                     _now(), task_id, generation,
-                     row["owner_instance_id"], row["owner_pid"], row["owner_start_time"]),
+                    (
+                        owner["owner_instance_id"],
+                        owner["owner_pid"],
+                        owner["owner_start_time"],
+                        _now(),
+                        task_id,
+                        generation,
+                        row["owner_instance_id"],
+                        row["owner_pid"],
+                        row["owner_start_time"],
+                    ),
                 )
                 conn.commit()
             finally:
@@ -563,7 +610,9 @@ class RunCoordinator:
         if result is not None:
             if result.get("selected") == []:
                 self._set_state(
-                    task_id, generation, "RECONCILIATION_REQUIRED",
+                    task_id,
+                    generation,
+                    "RECONCILIATION_REQUIRED",
                     reason="no_correlated_job",
                     error="No unsettled job bound to this run was found to collect.",
                 )
@@ -575,7 +624,9 @@ class RunCoordinator:
                 resolved = state in VERIFIED_TERMINAL
             else:
                 self._set_state(
-                    task_id, generation, "RECONCILIATION_REQUIRED",
+                    task_id,
+                    generation,
+                    "RECONCILIATION_REQUIRED",
                     reason="still_uncertain",
                     error="Authoritative collect did not prove the original job outcome.",
                 )
@@ -595,7 +646,9 @@ class RunCoordinator:
         finally:
             conn.close()
         self._event(
-            task_id, generation, "resolved",
+            task_id,
+            generation,
+            "resolved",
             {"resolved": resolved, "state": self.status(task_id)["state"]},
             actor=None,
         )
@@ -614,13 +667,14 @@ class RunCoordinator:
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
+            row = conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
             if not row or row["state"] not in ("RECONCILIATION_REQUIRED", "ABANDONED"):
                 conn.rollback()
-                return {"ok": False, "detail": "no unknown-outcome run to abandon",
-                        "run": self.status(task_id)}
+                return {
+                    "ok": False,
+                    "detail": "no unknown-outcome run to abandon",
+                    "run": self.status(task_id),
+                }
             conn.execute(
                 "UPDATE run_state SET state='ABANDONED', desired='STOP', remote_state='unknown', "
                 "abandoned_utc=COALESCE(abandoned_utc, ?), abandoned_by=COALESCE(abandoned_by, ?), "
@@ -630,8 +684,13 @@ class RunCoordinator:
             conn.commit()
         finally:
             conn.close()
-        self._event(task_id, row["generation"], "abandoned",
-                    {"remote_state": "unknown", "acknowledge": acknowledge}, actor=actor)
+        self._event(
+            task_id,
+            row["generation"],
+            "abandoned",
+            {"remote_state": "unknown", "acknowledge": acknowledge},
+            actor=actor,
+        )
         return {"ok": True, "run": self.status(task_id)}
 
     def events(self, task_id: str) -> list[dict[str, Any]]:
@@ -639,7 +698,8 @@ class RunCoordinator:
         try:
             rows = conn.execute(
                 "SELECT id, generation, event, detail, actor, created_utc "
-                "FROM run_events WHERE task_id=? ORDER BY id", (task_id,),
+                "FROM run_events WHERE task_id=? ORDER BY id",
+                (task_id,),
             ).fetchall()
         finally:
             conn.close()
@@ -649,8 +709,16 @@ class RunCoordinator:
                 detail = json.loads(r["detail"]) if r["detail"] else None
             except ValueError:
                 detail = r["detail"]
-            out.append({"id": r["id"], "generation": r["generation"], "event": r["event"],
-                        "detail": detail, "actor": r["actor"], "created_utc": r["created_utc"]})
+            out.append(
+                {
+                    "id": r["id"],
+                    "generation": r["generation"],
+                    "event": r["event"],
+                    "detail": detail,
+                    "actor": r["actor"],
+                    "created_utc": r["created_utc"],
+                }
+            )
         return out
 
     def _event(self, task_id: str, generation: int, event: str, detail=None, actor=None) -> None:
@@ -660,8 +728,14 @@ class RunCoordinator:
                 conn.execute(
                     "INSERT INTO run_events (task_id, generation, event, detail, actor, created_utc) "
                     "VALUES (?,?,?,?,?,?)",
-                    (task_id, generation, event,
-                     json.dumps(detail) if detail is not None else None, actor, _now()),
+                    (
+                        task_id,
+                        generation,
+                        event,
+                        json.dumps(detail) if detail is not None else None,
+                        actor,
+                        _now(),
+                    ),
                 )
         finally:
             conn.close()
@@ -671,9 +745,7 @@ class RunCoordinator:
         resumed: list[str] = []
         conn = self._conn()
         try:
-            rows = conn.execute(
-                "SELECT * FROM run_state WHERE state IN ('STARTING','RUNNING')"
-            ).fetchall()
+            rows = conn.execute("SELECT * FROM run_state WHERE state IN ('STARTING','RUNNING')").fetchall()
         finally:
             conn.close()
         for row in rows:
@@ -685,8 +757,11 @@ class RunCoordinator:
             task = self.registry.get_task(task_id)
             if not task:
                 self._set_state(
-                    task_id, row["generation"], "STOPPED",
-                    reason="task_missing", owner_instance=row["owner_instance_id"],
+                    task_id,
+                    row["generation"],
+                    "STOPPED",
+                    reason="task_missing",
+                    owner_instance=row["owner_instance_id"],
                 )
                 continue
             last = self._last_pass(task_id, row["generation"])
@@ -743,8 +818,9 @@ class RunCoordinator:
         this worktree is still alive.
         """
         row = self._row(task_id)
-        if row and (row["state"] in ACTIVE_STATES
-                    or row["state"] in ("RECONCILIATION_REQUIRED", "ABANDONED")):
+        if row and (
+            row["state"] in ACTIVE_STATES or row["state"] in ("RECONCILIATION_REQUIRED", "ABANDONED")
+        ):
             raise RunBusy(f"run {task_id} is {row['state']}; resolve or stop it first")
         loop = self._loops.pop(task_id, None)
         if loop and not loop.done():
@@ -755,9 +831,7 @@ class RunCoordinator:
                 pass
         task = self.registry.get_task(task_id)
         if task and _engine_child_pids(task["worktree_path"]):
-            raise RunBusy(
-                f"engine subprocess still alive for {task_id}; refusing to drop run records"
-            )
+            raise RunBusy(f"engine subprocess still alive for {task_id}; refusing to drop run records")
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
@@ -766,14 +840,18 @@ class RunCoordinator:
                 "AND state NOT IN ('STARTING','RUNNING','RECONCILIATION_REQUIRED','ABANDONED')",
                 (task_id,),
             )
-            if cur.rowcount != 1 and conn.execute(
-                "SELECT 1 FROM run_state WHERE task_id=?", (task_id,),
-            ).fetchone():
+            if (
+                cur.rowcount != 1
+                and conn.execute(
+                    "SELECT 1 FROM run_state WHERE task_id=?",
+                    (task_id,),
+                ).fetchone()
+            ):
                 conn.rollback()
                 raise RunBusy(f"run {task_id} became active during unregister")
             conn.execute("DELETE FROM run_passes WHERE task_id = ?", (task_id,))
             conn.execute(
-                "DELETE FROM action_log WHERE task_id = ? AND action_type IN ('run','run_start')",
+                "DELETE FROM action_log WHERE task_id = ? AND action_type IN ('run','run_start','run_direct')",
                 (task_id,),
             )
             conn.commit()
@@ -837,9 +915,7 @@ class RunCoordinator:
                     return
                 if result.get("terminal"):
                     state, reason = self._terminal_state(result)
-                    self._set_state(
-                        task_id, generation, state, reason=reason, result=result
-                    )
+                    self._set_state(task_id, generation, state, reason=reason, result=result)
                     return
                 idle += 1
                 delay = min(self.poll_base * (2 ** (idle - 1)), self.poll_cap)
@@ -888,7 +964,9 @@ class RunCoordinator:
             return None
         if claim == "pass_exists":
             self._set_state(
-                task_id, generation, "RECONCILIATION_REQUIRED",
+                task_id,
+                generation,
+                "RECONCILIATION_REQUIRED",
                 reason="pass_index_exists",
                 error=f"Pass index {pass_index} already exists; manual reconciliation required.",
             )
@@ -917,13 +995,13 @@ class RunCoordinator:
                 fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 self._fail_pass(
-                    task_id, generation, pass_index,
+                    task_id,
+                    generation,
+                    pass_index,
                     f"Action lock for {action_id} is held by another executor",
                 )
                 return None
-            result = await self._run_once(
-                task["worktree_path"], action_id, generation, lock_fd, action
-            )
+            result = await self._run_once(task["worktree_path"], action_id, generation, lock_fd, action)
         except SubprocessClientError as exc:
             self._fail_pass(task_id, generation, pass_index, str(exc))
             return None
@@ -948,8 +1026,12 @@ class RunCoordinator:
         return result
 
     async def _default_run_once(
-        self, worktree_path: str, action_id: str, generation: int,
-        lock_fd: int | None = None, action: str = "run",
+        self,
+        worktree_path: str,
+        action_id: str,
+        generation: int,
+        lock_fd: int | None = None,
+        action: str = "run",
     ) -> dict[str, Any]:
         return await run_action(
             worktree_path,
@@ -980,9 +1062,7 @@ class RunCoordinator:
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
+            row = conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
             if (
                 not row
                 or row["generation"] != generation
@@ -992,9 +1072,7 @@ class RunCoordinator:
             ):
                 conn.rollback()
                 return "lease_lost"
-            existing = conn.execute(
-                "SELECT 1 FROM action_log WHERE action_id = ?", (action_id,)
-            ).fetchone()
+            existing = conn.execute("SELECT 1 FROM action_log WHERE action_id = ?", (action_id,)).fetchone()
             if existing:
                 conn.rollback()
                 return "action_exists"
@@ -1083,9 +1161,7 @@ class RunCoordinator:
         finally:
             conn.close()
 
-    def _fail_pass(
-        self, task_id: str, generation: int, pass_index: int, error: str
-    ) -> None:
+    def _fail_pass(self, task_id: str, generation: int, pass_index: int, error: str) -> None:
         now = _now()
         conn = self._conn()
         try:

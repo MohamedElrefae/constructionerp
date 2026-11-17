@@ -116,17 +116,20 @@ def test_managed_builder_preparation_persists_scoped_source_packet(configured, m
     git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "approved builder context")
     config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
     config["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md"]
-    config["roles"]["builder"]["prompt_sha256"] = bytes_hash(
-        (root / "docs/ai/roles/builder.md").read_bytes()
-    )
+    config["roles"]["builder"]["prompt_sha256"] = bytes_hash((root / "docs/ai/roles/builder.md").read_bytes())
     engine = Engine(root, launcher=Stub())
     try:
         engine.initialize(config)
         engine.run()
         engine.launcher = RefusingManagedLauncher()
-        monkeypatch.setattr(engine, "_capture_builder_baseline", lambda job_id: {
-            "artifact": "/synthetic/baseline", "manifest_sha256": "a" * 64,
-        })
+        monkeypatch.setattr(
+            engine,
+            "_capture_builder_baseline",
+            lambda job_id: {
+                "artifact": "/synthetic/baseline",
+                "manifest_sha256": "a" * 64,
+            },
+        )
         with pytest.raises(WorkflowError, match="test stops before dispatch"):
             engine.approve(plan_token(engine))
         rows = engine.store.conn.execute(
@@ -171,17 +174,20 @@ def test_managed_builder_refuses_context_that_transport_would_rewrite(configured
     git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "approved redacted context fixture")
     config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
     config["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md"]
-    config["roles"]["builder"]["prompt_sha256"] = bytes_hash(
-        (root / "docs/ai/roles/builder.md").read_bytes()
-    )
+    config["roles"]["builder"]["prompt_sha256"] = bytes_hash((root / "docs/ai/roles/builder.md").read_bytes())
     engine = Engine(root, launcher=Stub())
     try:
         engine.initialize(config)
         engine.run()
         engine.launcher = RefusingManagedLauncher()
-        monkeypatch.setattr(engine, "_capture_builder_baseline", lambda job_id: {
-            "artifact": "/synthetic/baseline", "manifest_sha256": "a" * 64,
-        })
+        monkeypatch.setattr(
+            engine,
+            "_capture_builder_baseline",
+            lambda job_id: {
+                "artifact": "/synthetic/baseline",
+                "manifest_sha256": "a" * 64,
+            },
+        )
         with pytest.raises(WorkflowError, match="context would be altered by T3 path redaction"):
             engine.approve(plan_token(engine))
     finally:

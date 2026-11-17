@@ -13,7 +13,6 @@ import socket
 from pathlib import Path
 from typing import Awaitable, Callable
 
-
 MAX_REQUEST_BYTES = 8192
 MAX_CLIENT_HELLO_BYTES = 65536
 CONNECT_LINE = re.compile(rb"^CONNECT ([A-Za-z0-9.-]+):([0-9]{1,5}) HTTP/1\.[01]$")
@@ -35,8 +34,12 @@ def valid_dns_name(host: str) -> bool:
         pass
     labels = host.split(".")
     return not (
-        host.startswith(".") or host.endswith(".") or ".." in host
-        or any(not label or len(label) > 63 or label.startswith("-") or label.endswith("-") for label in labels)
+        host.startswith(".")
+        or host.endswith(".")
+        or ".." in host
+        or any(
+            not label or len(label) > 63 or label.startswith("-") or label.endswith("-") for label in labels
+        )
     )
 
 
@@ -83,14 +86,14 @@ def parse_client_hello_sni(handshake: bytes) -> str:
     declared = int.from_bytes(handshake[1:4], "big")
     if declared > MAX_CLIENT_HELLO_BYTES or len(handshake) < declared + 4:
         raise ProxyRequestError(400, "invalid TLS ClientHello length")
-    body = memoryview(handshake)[4:4 + declared]
+    body = memoryview(handshake)[4 : 4 + declared]
     pos = 0
 
     def take(length: int) -> memoryview:
         nonlocal pos
         if length < 0 or pos + length > len(body):
             raise ProxyRequestError(400, "truncated TLS ClientHello")
-        result = body[pos:pos + length]
+        result = body[pos : pos + length]
         pos += length
         return result
 
@@ -117,10 +120,10 @@ def parse_client_hello_sni(handshake: bytes) -> str:
     while ext_pos < len(extensions):
         if ext_pos + 4 > len(extensions):
             raise ProxyRequestError(400, "truncated TLS extension")
-        ext_type = int.from_bytes(extensions[ext_pos:ext_pos + 2], "big")
-        ext_len = int.from_bytes(extensions[ext_pos + 2:ext_pos + 4], "big")
+        ext_type = int.from_bytes(extensions[ext_pos : ext_pos + 2], "big")
+        ext_len = int.from_bytes(extensions[ext_pos + 2 : ext_pos + 4], "big")
         ext_pos += 4
-        ext = extensions[ext_pos:ext_pos + ext_len]
+        ext = extensions[ext_pos : ext_pos + ext_len]
         if len(ext) != ext_len:
             raise ProxyRequestError(400, "truncated TLS extension")
         ext_pos += ext_len
@@ -133,9 +136,9 @@ def parse_client_hello_sni(handshake: bytes) -> str:
             if name_pos + 3 > len(ext):
                 raise ProxyRequestError(400, "truncated TLS SNI name")
             name_type = ext[name_pos]
-            name_len = int.from_bytes(ext[name_pos + 1:name_pos + 3], "big")
+            name_len = int.from_bytes(ext[name_pos + 1 : name_pos + 3], "big")
             name_pos += 3
-            name_bytes = ext[name_pos:name_pos + name_len]
+            name_bytes = ext[name_pos : name_pos + name_len]
             if len(name_bytes) != name_len:
                 raise ProxyRequestError(400, "truncated TLS SNI name")
             name_pos += name_len
@@ -179,9 +182,7 @@ async def open_public_connection(host: str, port: int) -> tuple[asyncio.StreamRe
     """Resolve on the host side and connect only to globally routable addresses."""
     loop = asyncio.get_running_loop()
     try:
-        infos = await asyncio.wait_for(
-            loop.getaddrinfo(host, port, type=socket.SOCK_STREAM), timeout=5
-        )
+        infos = await asyncio.wait_for(loop.getaddrinfo(host, port, type=socket.SOCK_STREAM), timeout=5)
     except (OSError, asyncio.TimeoutError) as exc:
         raise OSError("host lookup failed") from exc
     seen: set[tuple[int, str]] = set()
@@ -242,7 +243,9 @@ class HTTPSConnectBroker:
     def __init__(
         self,
         allowed_hosts: set[str],
-        connector: Callable[[str, int], Awaitable[tuple[asyncio.StreamReader, asyncio.StreamWriter]]] = open_public_connection,
+        connector: Callable[
+            [str, int], Awaitable[tuple[asyncio.StreamReader, asyncio.StreamWriter]]
+        ] = open_public_connection,
     ):
         self.allowed_hosts = {host.lower() for host in allowed_hosts}
         if not self.allowed_hosts or any(not valid_dns_name(h) for h in self.allowed_hosts):
@@ -270,9 +273,7 @@ class HTTPSConnectBroker:
             await client_writer.drain()
             connect_established = True
             try:
-                client_hello, sni = await asyncio.wait_for(
-                    read_tls_client_hello(client_reader), timeout=5
-                )
+                client_hello, sni = await asyncio.wait_for(read_tls_client_hello(client_reader), timeout=5)
             except asyncio.TimeoutError:
                 raise ProxyRequestError(408, "TLS ClientHello timeout")
             if sni != host:
@@ -337,10 +338,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--socket", required=True, type=Path)
     parser.add_argument("--allow-host", action="append", required=True)
-    parser.add_argument("--socket-gid", type=int,
-                        help="optional dedicated client group; socket is then mode 0660")
-    parser.add_argument("--socket-group",
-                        help="optional dedicated client group name; socket is then mode 0660")
+    parser.add_argument(
+        "--socket-gid", type=int, help="optional dedicated client group; socket is then mode 0660"
+    )
+    parser.add_argument(
+        "--socket-group", help="optional dedicated client group name; socket is then mode 0660"
+    )
     args = parser.parse_args()
     if args.socket_gid is not None and args.socket_group is not None:
         parser.error("--socket-gid and --socket-group are mutually exclusive")

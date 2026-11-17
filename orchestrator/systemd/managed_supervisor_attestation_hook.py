@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from pathlib import Path
 import pwd
 import secrets
 import socket
@@ -21,15 +20,15 @@ import stat
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from managed_supervisor_attestation import (  # noqa: E402
+from managed_supervisor_attestation import (
     AttestationConfig,
     AttestationError,
     _listener_inode,
     verify_peer_and_processes,
 )
-
 
 ATTESTATION_PATH = Path("/run/managed-supervisor-attestation/record.json")
 SOCKET_PATH = Path("/run/managed-supervisor/managed.sock")
@@ -47,8 +46,12 @@ def _run_systemctl(unit: str, *, runner=subprocess.run) -> dict[str, int | str]:
     try:
         result = runner(
             [SYSTEMCTL, "show", "--no-pager", f"--property={requested}", unit],
-            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL, text=True, timeout=3, check=False,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=3,
+            check=False,
             env={"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL": "C"},
         )
     except (OSError, subprocess.TimeoutExpired):
@@ -70,8 +73,11 @@ def _run_systemctl(unit: str, *, runner=subprocess.run) -> dict[str, int | str]:
     if unit not in expected_group:
         raise HookError("unsupported service unit")
     user, group = expected_group[unit]
-    if (values.get("ActiveState") not in ("active", "activating")
-            or values.get("User") != user or values.get("Group") != group):
+    if (
+        values.get("ActiveState") not in ("active", "activating")
+        or values.get("User") != user
+        or values.get("Group") != group
+    ):
         raise HookError("service unit identity or active state mismatch")
     expected_cgroup = f"/system.slice/{unit}"
     if values.get("ControlGroup") != expected_cgroup:
@@ -110,8 +116,9 @@ def _proc_identity(pid: int, uid: int, cgroup: str, *, proc_root: Path) -> tuple
     return start_ticks, cgroup_lines
 
 
-def _listener_owner_pid(unit_main_pid: int, unit_uid: int, unit_cgroup: str, *,
-                        proc_root: Path, port: int) -> tuple[int, int, tuple[str, ...]]:
+def _listener_owner_pid(
+    unit_main_pid: int, unit_uid: int, unit_cgroup: str, *, proc_root: Path, port: int
+) -> tuple[int, int, tuple[str, ...]]:
     """Resolve the unique process owning the listener FD inside the unit cgroup.
 
     The T3 service MainPID is a runner, not necessarily the listener. First
@@ -141,7 +148,10 @@ def _listener_owner_pid(unit_main_pid: int, unit_uid: int, unit_cgroup: str, *,
         raise HookError("T3 listener FD owner is absent or ambiguous")
     listener_pid = holders[0]
     start_ticks, cgroups = _proc_identity(
-        listener_pid, unit_uid, unit_cgroup, proc_root=proc_root,
+        listener_pid,
+        unit_uid,
+        unit_cgroup,
+        proc_root=proc_root,
     )
     # Re-read runner identity to detect exit, PID reuse, or cgroup movement
     # during the discovery pass. verify_peer_and_processes repeats this check.
@@ -160,9 +170,11 @@ def _open_record_directory(path: Path, *, require_root: bool) -> int:
         for component in path.parts[1:-1]:
             next_fd = os.open(component, flags, dir_fd=directory_fd)
             metadata = os.fstat(next_fd)
-            if (not stat.S_ISDIR(metadata.st_mode)
-                    or (require_root and metadata.st_uid != 0)
-                    or (require_root and metadata.st_mode & 0o022)):
+            if (
+                not stat.S_ISDIR(metadata.st_mode)
+                or (require_root and metadata.st_uid != 0)
+                or (require_root and metadata.st_mode & 0o022)
+            ):
                 os.close(next_fd)
                 raise HookError("attestation parent directory is not protected")
             os.close(directory_fd)
@@ -189,20 +201,27 @@ def _publish_record(path: Path, config: AttestationConfig, *, require_root: bool
     directory_fd = _open_record_directory(path, require_root=require_root)
     temporary = f".record.{os.getpid()}.{secrets.token_hex(8)}"
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0)
-    raw = (json.dumps({
-        "schema": "managed-supervisor-attestation/v1",
-        "socket_path": str(config.socket_path),
-        "supervisor_pid": config.supervisor_pid,
-        "supervisor_uid": config.supervisor_uid,
-        "supervisor_start_ticks": config.supervisor_start_ticks,
-        "t3_pid": config.t3_pid,
-        "t3_uid": config.t3_uid,
-        "t3_start_ticks": config.t3_start_ticks,
-        "supervisor_cgroup_membership": list(config.supervisor_cgroup_membership),
-        "t3_cgroup_membership": list(config.t3_cgroup_membership),
-        "t3_listener_host": config.t3_listener_host,
-        "t3_listener_port": config.t3_listener_port,
-    }, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    raw = (
+        json.dumps(
+            {
+                "schema": "managed-supervisor-attestation/v1",
+                "socket_path": str(config.socket_path),
+                "supervisor_pid": config.supervisor_pid,
+                "supervisor_uid": config.supervisor_uid,
+                "supervisor_start_ticks": config.supervisor_start_ticks,
+                "t3_pid": config.t3_pid,
+                "t3_uid": config.t3_uid,
+                "t3_start_ticks": config.t3_start_ticks,
+                "supervisor_cgroup_membership": list(config.supervisor_cgroup_membership),
+                "t3_cgroup_membership": list(config.t3_cgroup_membership),
+                "t3_listener_host": config.t3_listener_host,
+                "t3_listener_port": config.t3_listener_port,
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+    ).encode("utf-8")
     fd = None
     try:
         fd = os.open(temporary, flags, 0o400, dir_fd=directory_fd)
@@ -234,10 +253,15 @@ def _publish_record(path: Path, config: AttestationConfig, *, require_root: bool
         os.close(directory_fd)
 
 
-def publish_attestation(*, path: Path = ATTESTATION_PATH,
-                        runner=subprocess.run, proc_root=Path("/proc"),
-                        timeout: float = 15.0, sleeper=time.sleep,
-                        require_root: bool = True) -> dict:
+def publish_attestation(
+    *,
+    path: Path = ATTESTATION_PATH,
+    runner=subprocess.run,
+    proc_root=Path("/proc"),
+    timeout: float = 15.0,
+    sleeper=time.sleep,
+    require_root: bool = True,
+) -> dict:
     """Observe services and publish only after peer/listener verification."""
     if require_root and os.geteuid() != 0:
         raise HookError("attestation lifecycle hook must run as root")
@@ -252,16 +276,26 @@ def publish_attestation(*, path: Path = ATTESTATION_PATH,
     )
     # The systemd MainPID is the T3 runner. Verify it, then resolve the unique
     # child process that owns the actual configured loopback listener socket.
-    _proc_identity(
-        t3["pid"], t3["uid"], t3["cgroup"], proc_root=Path(proc_root)
-    )
+    _proc_identity(t3["pid"], t3["uid"], t3["cgroup"], proc_root=Path(proc_root))
     listener_pid, t3_start, t3_cgroups = _listener_owner_pid(
-        t3["pid"], t3["uid"], t3["cgroup"], proc_root=Path(proc_root), port=T3_PORT,
+        t3["pid"],
+        t3["uid"],
+        t3["cgroup"],
+        proc_root=Path(proc_root),
+        port=T3_PORT,
     )
     config = AttestationConfig(
-        SOCKET_PATH, supervisor["pid"], supervisor["uid"], supervisor_start,
-        listener_pid, t3["uid"], t3_start, supervisor_cgroups, t3_cgroups,
-        T3_HOST, T3_PORT,
+        SOCKET_PATH,
+        supervisor["pid"],
+        supervisor["uid"],
+        supervisor_start,
+        listener_pid,
+        t3["uid"],
+        t3_start,
+        supervisor_cgroups,
+        t3_cgroups,
+        T3_HOST,
+        T3_PORT,
     )
     deadline = time.monotonic() + timeout
     while True:

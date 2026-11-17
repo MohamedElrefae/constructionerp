@@ -302,7 +302,7 @@ def _probes(engine: Engine, monkeypatch):
     real_popen = engine_module.subprocess.Popen
 
     def guarded_popen(cmd, *args, **kwargs):
-        executable = cmd[0] if isinstance(cmd, (list, tuple)) and cmd else cmd
+        executable = cmd[0] if isinstance(cmd, list | tuple) and cmd else cmd
         if Path(str(executable)).name != "git":
             raise AssertionError(f"Unexpected non-git subprocess: {cmd!r}")
         return real_popen(cmd, *args, **kwargs)

@@ -60,12 +60,13 @@ class DashboardRunSubprocessTests(unittest.TestCase):
         os.environ["DASHBOARD_SUPERVISOR_SOCKET"] = str(cls.dir / "sup.sock")
         os.environ["DASHBOARD_SUPERVISOR_TOKEN_FILE"] = str(cls.dir / "peer.token")
         try:
-            import dashboard.app  # noqa: F401
+            import dashboard.app
             import dashboard.registry as registry_mod
         except Exception as exc:
             raise unittest.SkipTest(f"dashboard unavailable: {type(exc).__name__}: {exc}")
         registry_mod.init_registry_db(dash_var / "registry.db")
         from starlette.testclient import TestClient
+
         import dashboard.app as appmod
 
         cls.appmod = appmod
@@ -74,7 +75,6 @@ class DashboardRunSubprocessTests(unittest.TestCase):
         cls.client.__enter__()
         cls._login()
 
-
     @classmethod
     def tearDownClass(cls):
         try:
@@ -82,10 +82,13 @@ class DashboardRunSubprocessTests(unittest.TestCase):
         finally:
             for p in getattr(cls, "_procs", []):
                 try:
-                    p.terminate(); p.wait(timeout=5)
+                    p.terminate()
+                    p.wait(timeout=5)
                 except Exception:
-                    try: p.kill()
-                    except Exception: pass
+                    try:
+                        p.kill()
+                    except Exception:
+                        pass
             cls._tmp.cleanup()
 
     @classmethod
@@ -94,24 +97,44 @@ class DashboardRunSubprocessTests(unittest.TestCase):
         (cls.dir / "mcp.token").write_text(mcp)
         os.chmod(cls.dir / "mcp.token", 0o600)
         cls.events = cls.dir / "launches.jsonl"
-        args = [sys.executable, str(TESTS / "_mcp_sim_server.py"), "--token", mcp,
-                "--events", str(cls.events)] + (["--fail", fail] if fail else [])
-        sim = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                               text=True, cwd=str(ORCH))
+        args = [
+            sys.executable,
+            str(TESTS / "_mcp_sim_server.py"),
+            "--token",
+            mcp,
+            "--events",
+            str(cls.events),
+        ] + (["--fail", fail] if fail else [])
+        sim = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH))
         cls._procs.append(sim)
         cls.url = json.loads(sim.stdout.readline())["url"]
         peer = "synthetic-peer-token-0123456789"
         (cls.dir / "peer.token").write_text(peer)
         os.chmod(cls.dir / "peer.token", 0o600)
         sup = subprocess.Popen(
-            [sys.executable, str(ORCH / "t3_supervisor.py"),
-             "--socket", str(cls.dir / "sup.sock"),
-             "--state", str(cls.dir / "state.json"),
-             "--token-file", str(cls.dir / "peer.token"),
-             "--base-url", cls.url,
-             "--mcp-token-file", str(cls.dir / "mcp.token"),
-             "--model", MODEL, "--allowed-model", MODEL],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH))
+            [
+                sys.executable,
+                str(ORCH / "t3_supervisor.py"),
+                "--socket",
+                str(cls.dir / "sup.sock"),
+                "--state",
+                str(cls.dir / "state.json"),
+                "--token-file",
+                str(cls.dir / "peer.token"),
+                "--base-url",
+                cls.url,
+                "--mcp-token-file",
+                str(cls.dir / "mcp.token"),
+                "--model",
+                MODEL,
+                "--allowed-model",
+                MODEL,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+        )
         cls._procs.append(sup)
         assert _wait_for(lambda: (cls.dir / "sup.sock").exists())
         assert sup.stdout.readline()
@@ -119,22 +142,30 @@ class DashboardRunSubprocessTests(unittest.TestCase):
     @classmethod
     def _login(cls):
         from dashboard import auth as auth_mod
+
         creds = auth_mod.auth_store.credentials_file_path
         if not creds.is_file():
             auth_mod.create_initial_credentials_file(file_path=creds)
         user = pw = None
         for line in creds.read_text().splitlines():
-            if line.startswith("Username: "): user = line.split(": ", 1)[1]
-            if line.startswith("Password: "): pw = line.split(": ", 1)[1]
+            if line.startswith("Username: "):
+                user = line.split(": ", 1)[1]
+            if line.startswith("Password: "):
+                pw = line.split(": ", 1)[1]
         cls.client.get("/api/auth/csrf-token")
         tok = cls.client.cookies.get("dashboard_csrf") or ""
-        r = cls.client.post("/api/auth/login", json={"username": user, "password": pw},
-                            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": tok})
+        r = cls.client.post(
+            "/api/auth/login",
+            json={"username": user, "password": pw},
+            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": tok},
+        )
         assert r.status_code == 200, r.text
         csrf = r.json()["csrf_token"]
-        r2 = cls.client.post("/api/auth/setup-password",
-                             json={"current_password": pw, "new_password": "NewPermanentPass123!"},
-                             headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": csrf})
+        r2 = cls.client.post(
+            "/api/auth/setup-password",
+            json={"current_password": pw, "new_password": "NewPermanentPass123!"},
+            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": csrf},
+        )
         assert r2.status_code == 200, r2.text
         cls.csrf = csrf
 
@@ -149,15 +180,19 @@ class DashboardRunSubprocessTests(unittest.TestCase):
         cfg = json.loads(row[0].replace(OLD_ROOT, str(root)))
         cfg["root"] = str(root)
         conn.execute("update workflow_meta set value=? where key='config'", (json.dumps(cfg),))
-        conn.commit(); conn.close()
+        conn.commit()
+        conn.close()
         for p in root.rglob("*"):
             if p.is_file() and p.suffix in (".json", ".md", ".txt") and p.stat().st_size < 2_000_000:
-                try: text = p.read_text()
-                except (UnicodeDecodeError, OSError): continue
+                try:
+                    text = p.read_text()
+                except (UnicodeDecodeError, OSError):
+                    continue
                 if OLD_ROOT in text:
                     p.write_text(text.replace(OLD_ROOT, str(root)))
         from cli import make_engine
         from core import WorkflowError
+
         os.environ.pop("ENGINE_NATIVE_DISPATCH", None)
         os.environ.pop("ENGINE_T3_BACKEND", None)
         try:
@@ -256,7 +291,8 @@ class DashboardRunSubprocessTests(unittest.TestCase):
         root, job_id, task_id = self._make_task("refused")
         # stop the supervisor; the run must fail with a clear error, no dispatch
         sup = self._procs[-1]
-        sup.terminate(); sup.wait(timeout=5)
+        sup.terminate()
+        sup.wait(timeout=5)
         launches = self._launch_count(job_id)
         r = self._post_run(task_id, f"act-sub-refused-{time.time_ns()}")
         self.assertEqual(r.status_code, 500, r.text)

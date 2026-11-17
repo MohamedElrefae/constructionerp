@@ -26,9 +26,17 @@ from pathlib import Path
 
 MAX_FRAME = 1024 * 1024
 MAX_BUILDER_BRIEF_CHARS = 80_000
-ENGINE_T3_ROLES = frozenset({
-    "architect", "reviewer", "verifier", "proposer", "ai-a1", "ai-a2", "ai-a3",
-})
+ENGINE_T3_ROLES = frozenset(
+    {
+        "architect",
+        "reviewer",
+        "verifier",
+        "proposer",
+        "ai-a1",
+        "ai-a2",
+        "ai-a3",
+    }
+)
 
 
 def _now() -> str:
@@ -42,11 +50,23 @@ def _redact(text: str, token: str) -> str:
 
 def _request_digest(job: dict) -> str:
     """Bind idempotency to all values used to select and launch a task."""
-    request = {key: job.get(key) for key in (
-        "job_id", "client_request_id", "model", "role", "brief",
-        "expect_marker", "project_id", "timeout_ms", "spec")}
-    wire = json.dumps(request, sort_keys=True, separators=(",", ":"),
-                      ensure_ascii=True, allow_nan=False).encode("utf-8")
+    request = {
+        key: job.get(key)
+        for key in (
+            "job_id",
+            "client_request_id",
+            "model",
+            "role",
+            "brief",
+            "expect_marker",
+            "project_id",
+            "timeout_ms",
+            "spec",
+        )
+    }
+    wire = json.dumps(
+        request, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+    ).encode("utf-8")
     return hashlib.sha256(wire).hexdigest()
 
 
@@ -64,8 +84,12 @@ class SupervisorState:
         if fd is not None:
             try:
                 meta = os.fstat(fd)
-                if (not stat.S_ISREG(meta.st_mode) or meta.st_uid != os.geteuid()
-                        or meta.st_mode & 0o077 or meta.st_size > 16 * 1024 * 1024):
+                if (
+                    not stat.S_ISREG(meta.st_mode)
+                    or meta.st_uid != os.geteuid()
+                    or meta.st_mode & 0o077
+                    or meta.st_size > 16 * 1024 * 1024
+                ):
                     raise SystemExit("supervisor state ownership, permissions, or size invalid")
                 with os.fdopen(fd, "r", encoding="utf-8", closefd=False) as fh:
                     raw = fh.read(16 * 1024 * 1024 + 1)
@@ -117,10 +141,20 @@ class Supervisor:
     # unless an explicitly test-owned subclass enables its synthetic workflow.
     allow_builder_for_tests = False
 
-    def __init__(self, *, socket_path: Path, state_path: Path, token: str,
-                 base_url: str, mcp_token: str, model: str,
-                 allowed_models, peer_uid=None, provider="opencode",
-                 builder_enabled=False):
+    def __init__(
+        self,
+        *,
+        socket_path: Path,
+        state_path: Path,
+        token: str,
+        base_url: str,
+        mcp_token: str,
+        model: str,
+        allowed_models,
+        peer_uid=None,
+        provider="opencode",
+        builder_enabled=False,
+    ):
         self.socket_path = Path(socket_path)
         self.state = SupervisorState(Path(state_path))
         self.token = token
@@ -141,6 +175,7 @@ class Supervisor:
     # -- MCP client (reuses the reviewed transport client) ----------------- #
     def _client(self):
         from t3_transport import HttpT3Client
+
         client = HttpT3Client(self.base_url, self.mcp_token, provider=self.provider)
         client.initialize()
         return client
@@ -153,8 +188,11 @@ class Supervisor:
             if rec.get("client_request_id") != job.get("client_request_id"):
                 return {"state": "refused", "error": "job_id reused with a divergent request id"}
             if not rec.get("request_digest"):
-                return {"state": "uncertain", "task_id": rec.get("task_id"),
-                        "error": "legacy job cannot verify retry contents; reconcile"}
+                return {
+                    "state": "uncertain",
+                    "task_id": rec.get("task_id"),
+                    "error": "legacy job cannot verify retry contents; reconcile",
+                }
             if rec["request_digest"] != request_digest:
                 return {"state": "refused", "error": "job_id reused with divergent task contents"}
             # never relaunch: known task, in-flight marker, or terminal.
@@ -167,22 +205,31 @@ class Supervisor:
             # uncertain. Only delegate() follows the durable launch marker.
             client = self._client()
         except Exception as exc:
-            return {"state": "prelaunch_failed", "error": _redact(
-                f"T3 session unavailable: {type(exc).__name__}: {exc}", self.mcp_token)}
-        rec = {"job_id": job_id, "client_request_id": job["client_request_id"],
-               "request_digest": request_digest,
-               "model": job["model"], "role": job["role"],
-               "expect_marker": job.get("spec", {}).get("expect_marker") or job["expect_marker"],
-               "state": "launching", "task_id": None,
-               "history": [{"state": "launching", "utc": _now()}]}
-        self.state.put(job_id, rec)          # durable BEFORE the MCP call
+            return {
+                "state": "prelaunch_failed",
+                "error": _redact(f"T3 session unavailable: {type(exc).__name__}: {exc}", self.mcp_token),
+            }
+        rec = {
+            "job_id": job_id,
+            "client_request_id": job["client_request_id"],
+            "request_digest": request_digest,
+            "model": job["model"],
+            "role": job["role"],
+            "expect_marker": job.get("spec", {}).get("expect_marker") or job["expect_marker"],
+            "state": "launching",
+            "task_id": None,
+            "history": [{"state": "launching", "utc": _now()}],
+        }
+        self.state.put(job_id, rec)  # durable BEFORE the MCP call
         try:
             spec = job.get("spec") or {}
-            task = spec.get("task") or (f"[engine job {job_id}] {job['brief']} "
-                                        f"The LAST line must contain: {job['expect_marker']}")
+            task = spec.get("task") or (
+                f"[engine job {job_id}] {job['brief']} " f"The LAST line must contain: {job['expect_marker']}"
+            )
             out = client.delegate(
                 task=task,
-                model=job["model"], role=job["role"],
+                model=job["model"],
+                role=job["role"],
                 client_request_id=job["client_request_id"],
                 timeout_ms=int(job.get("timeout_ms", 120000)),
                 expect_marker=spec.get("expect_marker") or job["expect_marker"],
@@ -191,7 +238,7 @@ class Supervisor:
             task_id = out.get("taskId")
             if not task_id:
                 raise RuntimeError("delegate returned no taskId")
-        except Exception as exc:             # outcome unknown: never re-send
+        except Exception as exc:  # outcome unknown: never re-send
             rec.update(state="uncertain", error=_redact(f"{type(exc).__name__}: {exc}", self.mcp_token))
             rec["history"].append({"state": "uncertain", "utc": _now()})
             self.state.put(job_id, rec)
@@ -258,12 +305,16 @@ class Supervisor:
             rec.pop("wait_reason", None)
             self.state.put(job_id, rec)
             return {"state": "failed", "error": rec["error"]}
-        receipt = {"job_id": job_id, "task_id": rec["task_id"], "state": "completed",
-                   "summary": redacted_summary,
-                   "configured_model": outcome.get("model"),
-                   "executed_model": outcome.get("executedModel"),
-                   "model_evidence": "executed" if outcome.get("executedModel") else "configured_only",
-                   "validated_utc": _now()}
+        receipt = {
+            "job_id": job_id,
+            "task_id": rec["task_id"],
+            "state": "completed",
+            "summary": redacted_summary,
+            "configured_model": outcome.get("model"),
+            "executed_model": outcome.get("executedModel"),
+            "model_evidence": "executed" if outcome.get("executedModel") else "configured_only",
+            "validated_utc": _now(),
+        }
         rec.update(state="completed", receipt=receipt)
         rec.pop("wait_reason", None)
         rec["history"].append({"state": "completed", "utc": _now()})
@@ -274,19 +325,31 @@ class Supervisor:
         if not isinstance(request, dict):
             return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "request must be an object"}}
         import hmac as _hmac
+
         candidate = request.get("token")
-        if (not isinstance(self.token, str) or not self.token.isascii() or not self.token
-                or not isinstance(candidate, str) or not candidate.isascii()
-                or not _hmac.compare_digest(candidate, self.token)):
+        if (
+            not isinstance(self.token, str)
+            or not self.token.isascii()
+            or not self.token
+            or not isinstance(candidate, str)
+            or not candidate.isascii()
+            or not _hmac.compare_digest(candidate, self.token)
+        ):
             return {"ok": False, "error": {"code": "UNAUTHORIZED", "message": "peer token mismatch"}}
         op = request.get("op")
         payload = request.get("payload") or {}
         if not isinstance(payload, dict):
             return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "payload must be an object"}}
         if op == "health":
-            return {"ok": True, "result": {"pid": os.getpid(), "uid": self.uid,
-                                           "netns_inode": os.stat("/proc/self/ns/net").st_ino,
-                                           "started_utc": self.started}}
+            return {
+                "ok": True,
+                "result": {
+                    "pid": os.getpid(),
+                    "uid": self.uid,
+                    "netns_inode": os.stat("/proc/self/ns/net").st_ino,
+                    "started_utc": self.started,
+                },
+            }
         if op == "cancel":
             job_id = payload.get("job_id", "")
             if not isinstance(job_id, str) or not job_id:
@@ -295,20 +358,36 @@ class Supervisor:
             if rec is None:
                 return {"ok": False, "error": {"code": "REFUSED", "message": "unknown job_id"}}
             if rec.get("state") in ("completed", "failed", "cancelled"):
-                return {"ok": True, "result": {"state": rec["state"], "cancelled": False,
-                                               "error": "job is already terminal"}}
+                return {
+                    "ok": True,
+                    "result": {"state": rec["state"], "cancelled": False, "error": "job is already terminal"},
+                }
             if not rec.get("task_id"):
                 return {"ok": True, "result": {"state": rec["state"], "cancelled": False}}
             try:
                 outcome = self._client().cancel(rec["task_id"], "engine cancel")
             except Exception as exc:
-                return {"ok": True, "result": {"state": rec["state"], "cancelled": False,
-                                               "error": _redact(f"{type(exc).__name__}: {exc}", self.mcp_token)}}
-            if (not isinstance(outcome, dict)
-                    or outcome.get("threadId") != rec["task_id"]
-                    or outcome.get("status") != "cancelled"):
-                return {"ok": True, "result": {"state": rec["state"], "cancelled": False,
-                                               "error": "T3 did not confirm cancellation"}}
+                return {
+                    "ok": True,
+                    "result": {
+                        "state": rec["state"],
+                        "cancelled": False,
+                        "error": _redact(f"{type(exc).__name__}: {exc}", self.mcp_token),
+                    },
+                }
+            if (
+                not isinstance(outcome, dict)
+                or outcome.get("threadId") != rec["task_id"]
+                or outcome.get("status") != "cancelled"
+            ):
+                return {
+                    "ok": True,
+                    "result": {
+                        "state": rec["state"],
+                        "cancelled": False,
+                        "error": "T3 did not confirm cancellation",
+                    },
+                }
             rec.update(state="cancelled")
             self.state.put(job_id, rec)
             return {"ok": True, "result": {"state": "cancelled", "cancelled": True}}
@@ -322,43 +401,72 @@ class Supervisor:
             job = payload.get("job") or {}
             if not isinstance(job, dict):
                 return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "job must be an object"}}
-            missing = [k for k in ("job_id", "client_request_id", "model", "brief", "expect_marker", "role") if not job.get(k)]
+            missing = [
+                k
+                for k in ("job_id", "client_request_id", "model", "brief", "expect_marker", "role")
+                if not job.get(k)
+            ]
             if missing:
                 return {"ok": False, "error": {"code": "BAD_REQUEST", "message": f"missing {missing}"}}
-            if any(not isinstance(job[k], str) for k in
-                   ("job_id", "client_request_id", "model", "brief", "expect_marker", "role")):
-                return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "job fields must be strings"}}
-            if (job.get("project_id") is not None and not isinstance(job["project_id"], str)):
-                return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "project_id must be a string"}}
-            if (job.get("timeout_ms") is not None and
-                    (isinstance(job["timeout_ms"], bool) or not isinstance(job["timeout_ms"], int)
-                     or not 1 <= job["timeout_ms"] <= 3600000)):
+            if any(
+                not isinstance(job[k], str)
+                for k in ("job_id", "client_request_id", "model", "brief", "expect_marker", "role")
+            ):
+                return {
+                    "ok": False,
+                    "error": {"code": "BAD_REQUEST", "message": "job fields must be strings"},
+                }
+            if job.get("project_id") is not None and not isinstance(job["project_id"], str):
+                return {
+                    "ok": False,
+                    "error": {"code": "BAD_REQUEST", "message": "project_id must be a string"},
+                }
+            if job.get("timeout_ms") is not None and (
+                isinstance(job["timeout_ms"], bool)
+                or not isinstance(job["timeout_ms"], int)
+                or not 1 <= job["timeout_ms"] <= 3600000
+            ):
                 return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "invalid timeout_ms"}}
-            if (job.get("role") == "builder"
-                    and len(job.get("brief", "")) > MAX_BUILDER_BRIEF_CHARS):
-                return {"ok": False, "error": {"code": "REFUSED",
-                                               "message": "builder source packet exceeds brief size bound"}}
-            if (job.get("idempotency_key") is not None and not isinstance(job["idempotency_key"], str)):
-                return {"ok": False, "error": {"code": "BAD_REQUEST", "message": "idempotency_key must be a string"}}
+            if job.get("role") == "builder" and len(job.get("brief", "")) > MAX_BUILDER_BRIEF_CHARS:
+                return {
+                    "ok": False,
+                    "error": {"code": "REFUSED", "message": "builder source packet exceeds brief size bound"},
+                }
+            if job.get("idempotency_key") is not None and not isinstance(job["idempotency_key"], str):
+                return {
+                    "ok": False,
+                    "error": {"code": "BAD_REQUEST", "message": "idempotency_key must be a string"},
+                }
             if job["role"] not in ENGINE_T3_ROLES | {"builder"}:
                 return {"ok": False, "error": {"code": "REFUSED", "message": "unsupported Engine role"}}
-            if (job["role"] == "builder" and not self.builder_enabled
-                    and getattr(type(self), "allow_builder_for_tests", False) is not True):
+            if (
+                job["role"] == "builder"
+                and not self.builder_enabled
+                and getattr(type(self), "allow_builder_for_tests", False) is not True
+            ):
                 return {"ok": False, "error": {"code": "REFUSED", "message": "builder dispatch is disabled"}}
             if job["model"] not in self.allowed_models:
                 return {"ok": False, "error": {"code": "REFUSED", "message": "model not allowed"}}
             from t3_transport import TransportRefusal, build_task_spec
+
             try:
                 spec = build_task_spec(
-                    {"job_id": job["job_id"],
-                     "idempotency_key": job.get("idempotency_key") or job["client_request_id"],
-                     "model": job["model"], "brief": job["brief"],
-                     "expect_marker": job["expect_marker"], "access": "read-only",
-                     "role": job["role"]},
-                    allowed_models=self.allowed_models)
+                    {
+                        "job_id": job["job_id"],
+                        "idempotency_key": job.get("idempotency_key") or job["client_request_id"],
+                        "model": job["model"],
+                        "brief": job["brief"],
+                        "expect_marker": job["expect_marker"],
+                        "access": "read-only",
+                        "role": job["role"],
+                    },
+                    allowed_models=self.allowed_models,
+                )
             except TransportRefusal as exc:
-                return {"ok": False, "error": {"code": "REFUSED",
-                                               "message": _redact(str(exc), self.mcp_token)}}
+                return {
+                    "ok": False,
+                    "error": {"code": "REFUSED", "message": _redact(str(exc), self.mcp_token)},
+                }
             return {"ok": True, "result": self._dispatch({**job, "spec": spec})}
         if op == "collect":
             job_id = payload.get("job_id", "")
@@ -389,6 +497,7 @@ def serve(supervisor: Supervisor):
     lock_path = path.with_name(path.name + ".lock")
     lock_fh = open(lock_path, "a+")
     import fcntl
+
     try:
         fcntl.flock(lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
@@ -413,8 +522,9 @@ def serve(supervisor: Supervisor):
             creds = conn.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i"))
             pid, uid, gid = struct.unpack("3i", creds)
             if uid != supervisor.peer_uid:
-                conn.sendall(_frame({"ok": False, "error": {"code": "PEER_REJECTED",
-                                                           "message": "peer uid mismatch"}}))
+                conn.sendall(
+                    _frame({"ok": False, "error": {"code": "PEER_REJECTED", "message": "peer uid mismatch"}})
+                )
                 try:
                     conn.shutdown(socket.SHUT_WR)
                     conn.settimeout(0.5)
@@ -428,12 +538,12 @@ def serve(supervisor: Supervisor):
                 continue
             (length,) = struct.unpack(">I", header)
             if length <= 0:
-                conn.sendall(_frame({"ok": False, "error": {"code": "BAD_FRAME",
-                                                           "message": str(length)}}))
+                conn.sendall(_frame({"ok": False, "error": {"code": "BAD_FRAME", "message": str(length)}}))
                 continue
             if length > MAX_FRAME:
-                conn.sendall(_frame({"ok": False, "error": {"code": "FRAME_TOO_LARGE",
-                                                           "message": str(length)}}))
+                conn.sendall(
+                    _frame({"ok": False, "error": {"code": "FRAME_TOO_LARGE", "message": str(length)}})
+                )
                 continue
             body = _recv_exact(conn, length)
             if body is None:
@@ -441,14 +551,14 @@ def serve(supervisor: Supervisor):
             try:
                 request = json.loads(body.decode())
             except ValueError:
-                conn.sendall(_frame({"ok": False, "error": {"code": "BAD_JSON",
-                                                           "message": "invalid json"}}))
+                conn.sendall(_frame({"ok": False, "error": {"code": "BAD_JSON", "message": "invalid json"}}))
                 continue
             response = supervisor.handle(request)
             framed = _frame(response)
             if len(framed) - 4 > MAX_FRAME:
-                framed = _frame({"ok": False, "error": {"code": "RESPONSE_TOO_LARGE",
-                                                        "message": "response bound"}})
+                framed = _frame(
+                    {"ok": False, "error": {"code": "RESPONSE_TOO_LARGE", "message": "response bound"}}
+                )
             conn.sendall(framed)
         except (BrokenPipeError, ConnectionResetError):
             pass
@@ -477,10 +587,17 @@ def main() -> int:
     args = parser.parse_args()
     token = Path(args.token_file).read_text().strip()
     mcp_token = Path(args.mcp_token_file).read_text().strip()
-    sup = Supervisor(socket_path=Path(args.socket), state_path=Path(args.state),
-                     token=token, base_url=args.base_url, mcp_token=mcp_token,
-                     model=args.model, allowed_models=args.allowed_model or [args.model],
-                     peer_uid=args.peer_uid, provider=args.provider)
+    sup = Supervisor(
+        socket_path=Path(args.socket),
+        state_path=Path(args.state),
+        token=token,
+        base_url=args.base_url,
+        mcp_token=mcp_token,
+        model=args.model,
+        allowed_models=args.allowed_model or [args.model],
+        peer_uid=args.peer_uid,
+        provider=args.provider,
+    )
     serve(sup)
     return 0
 

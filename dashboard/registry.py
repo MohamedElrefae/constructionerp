@@ -337,9 +337,7 @@ def init_registry_db(db_path: Path | str = REGISTRY_DB_PATH) -> None:
                 );
                 """
             )
-            conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_run_passes_task ON run_passes(task_id, generation);"
-            )
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_run_passes_task ON run_passes(task_id, generation);")
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS run_events (
@@ -353,9 +351,7 @@ def init_registry_db(db_path: Path | str = REGISTRY_DB_PATH) -> None:
                 );
                 """
             )
-            conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_run_events_task ON run_events(task_id, id);"
-            )
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_run_events_task ON run_events(task_id, id);")
             for _col, _decl in (
                 ("stop_requested_utc", "TEXT"),
                 ("abandoned_utc", "TEXT"),

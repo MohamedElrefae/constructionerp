@@ -107,10 +107,12 @@ class Store:
 
     def pending_builder_artifacts(self):
         with self._lock:
-            return [dict(json.loads(row["data"]), created_utc=row["created_utc"])
-                    for row in self.conn.execute(
-                        "SELECT data,created_utc FROM pending_builder_artifacts ORDER BY created_utc,job_id"
-                    )]
+            return [
+                dict(json.loads(row["data"]), created_utc=row["created_utc"])
+                for row in self.conn.execute(
+                    "SELECT data,created_utc FROM pending_builder_artifacts ORDER BY created_utc,job_id"
+                )
+            ]
 
     def job(self, job_id):
         with self._lock:

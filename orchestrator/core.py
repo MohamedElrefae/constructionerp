@@ -140,6 +140,7 @@ def execution_lock(path, timeout=0):
         finally:
             fcntl.flock(handle, fcntl.LOCK_UN)
 
+
 # --- Host-execution guards (fail-closed acknowledgments) -------------------
 # Acknowledgment tokens are deliberate operator opt-ins, never containment.
 NATIVE_DISPATCH_ENV = "ENGINE_NATIVE_DISPATCH"

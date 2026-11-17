@@ -4,9 +4,8 @@ import shutil
 import subprocess
 import sys
 
-import pytest
-
 import apply_builder_git_candidate as apply_candidate
+import pytest
 from core import WorkflowError
 from validation_runner import can_unshare_net
 

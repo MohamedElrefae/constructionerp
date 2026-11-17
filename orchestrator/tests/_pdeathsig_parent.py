@@ -1,4 +1,5 @@
 """Test-only parent: spawns a PDEATHSIG child that spawns a grandchild."""
+
 import asyncio
 import json
 import os

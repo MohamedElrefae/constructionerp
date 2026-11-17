@@ -145,7 +145,7 @@ app_include_js = [
     "/assets/construction/js/print_settings_dialog.js",
     "/assets/construction/js/construction_export_menu.js",
     "/assets/construction/js/generic_export_menu.js?v=1",
-    "/assets/construction/js/theme_loader_v24.js?v=2.6.5",
+    "/assets/construction/js/theme_loader_v24.js?v=2.6.5.1",
     "/assets/construction/js/typography_settings.js?v=21",
     # Timesheet direct-labor designation derivation (employee -> row designation)
     "/assets/construction/js/timesheet_designation.js?v=4",
@@ -199,10 +199,10 @@ app_include_js = [
     # Must load last: native Frappe affordances remain available after theme styling
     "/assets/construction/js/native_frappe_controls_compat.js?v=9",
     # ─── Vite UI Phase 2: Form Config — auto-attaches to every form. MUST load LAST ───
-    "/assets/construction/js/vite_layout_controls.js?v=1.29",
+    "/assets/construction/js/vite_layout_controls.js?v=1.29.1",
     # Phase 2: Generic Layout Engine — re-parents field wrappers per Form Layout Profile.
     # Must load AFTER vite_layout_controls.js (engine fires at 250ms, controls at 150ms).
-    "/assets/construction/js/vfc_layout_engine.js?v=1.50",
+    "/assets/construction/js/vfc_layout_engine.js?v=1.50.1",
 ]
 
 
@@ -214,7 +214,7 @@ web_include_css = [
 ]
 
 # v2.4-r3: theme_loader_v24 handles namespace injection and theming for all pages
-web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.5"
+web_include_js = "/assets/construction/js/theme_loader_v24.js?v=2.6.5.1"
 
 # ─── BRAND OVERRIDES & WEBSITE CONTEXT ───
 brand_html = "construction/templates/includes/navbar_brand.html"

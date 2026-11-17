@@ -11,10 +11,9 @@ from __future__ import annotations
 
 import argparse
 import os
-from pathlib import Path
 import subprocess
 import sys
-
+from pathlib import Path
 
 NAMESPACE = "managed-t3"
 NAMESPACE_PATH = Path("/run/netns") / NAMESPACE
@@ -28,9 +27,12 @@ class NamespaceError(RuntimeError):
 def _run(args: list[str]) -> None:
     try:
         result = subprocess.run(
-            [str(IP), *args], stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            timeout=5, check=False,
+            [str(IP), *args],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+            check=False,
             env={"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL": "C"},
         )
     except (OSError, subprocess.TimeoutExpired):

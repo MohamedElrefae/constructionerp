@@ -37,6 +37,7 @@ if str(_orchestrator_dir) not in sys.path:
     sys.path.insert(0, str(_orchestrator_dir))
 
 import engineering_startup
+from cli import make_engine
 from core import (
     DuplicateKeyConflict,
     GrantReconciliationRequired,
@@ -50,7 +51,6 @@ from core import (
 from core import (
     ValidationError as CoreValidationError,
 )
-from cli import make_engine
 from engine import Engine
 from preflight import (
     run_dispatch_preflight,
@@ -1606,8 +1606,7 @@ def _supervisor_engine(root: Path, socket_path: str, token_file: str):
     allowed = []
     if policy_path.is_file():
         allowed = list((json.loads(policy_path.read_text()) or {}).get("allowed_models") or [])
-    return Engine(root, launcher=SupervisorLauncher(
-        root, socket_path, token, allowed_models=allowed))
+    return Engine(root, launcher=SupervisorLauncher(root, socket_path, token, allowed_models=allowed))
 
 
 def _managed_supervisor_engine(root: Path, config_path: str):
@@ -1633,25 +1632,38 @@ def _managed_supervisor_engine(root: Path, config_path: str):
     finally:
         os.close(fd)
     policy_models = policy.get("allowed_models") if isinstance(policy, dict) else None
-    if (not isinstance(policy_models, list) or not policy_models
-            or any(not isinstance(model, str) or not model for model in policy_models)
-            or not set(config.allowed_models).issubset(set(policy_models))):
+    if (
+        not isinstance(policy_models, list)
+        or not policy_models
+        or any(not isinstance(model, str) or not model for model in policy_models)
+        or not set(config.allowed_models).issubset(set(policy_models))
+    ):
         raise WorkflowError("managed supervisor model pins must be a nonempty subset of Engine launch policy")
     token = load_private_supervisor_token(config.token_file)
     launcher = ManagedSupervisorLauncher(
-        root, config.socket_path, token, allowed_models=config.allowed_models,
-        expected_uid=config.expected_uid, peer_verifier=config.peer_verifier(),
+        root,
+        config.socket_path,
+        token,
+        allowed_models=config.allowed_models,
+        expected_uid=config.expected_uid,
+        peer_verifier=config.peer_verifier(),
         builder_enabled=config.builder_enabled,
     )
     return Engine(root, launcher=launcher)
 
 
-def execute_action(root: Path, action: str, payload: dict | None = None, *,
-                   engine_factory=None, supervisor_socket=None,
-                   supervisor_token_file=None,
-                   managed_supervisor_config=None,
-                   managed_dispatch_config=None,
-                   managed_dispatch_enabled=None) -> dict:
+def execute_action(
+    root: Path,
+    action: str,
+    payload: dict | None = None,
+    *,
+    engine_factory=None,
+    supervisor_socket=None,
+    supervisor_token_file=None,
+    managed_supervisor_config=None,
+    managed_dispatch_config=None,
+    managed_dispatch_enabled=None,
+) -> dict:
     payload = payload or {}
     root = Path(root).resolve()
     runtime_path = root / "orchestrator/var"
@@ -1666,15 +1678,19 @@ def execute_action(root: Path, action: str, payload: dict | None = None, *,
     # policy, so normal dashboard processes must never select this route.
     if managed_dispatch_requested:
         from managed_supervisor_contract import (
-            ManagedSupervisorConfigError, require_test_only_dispatch,
+            ManagedSupervisorConfigError,
+            require_test_only_dispatch,
         )
+
         try:
             require_test_only_dispatch(os.environ.get("DASHBOARD_TEST_MODE") == "1")
         except ManagedSupervisorConfigError as exc:
             raise WorkflowError(str(exc)) from None
     if action in ("run", "collect"):
         if managed_dispatch_config and not managed_dispatch_enabled:
-            raise WorkflowError("managed supervisor dispatch is configured but the explicit process enable flag is off")
+            raise WorkflowError(
+                "managed supervisor dispatch is configured but the explicit process enable flag is off"
+            )
         if managed_dispatch_enabled and not managed_dispatch_config:
             raise WorkflowError("managed supervisor dispatch is enabled but no dispatch config is set")
         if managed_dispatch_requested and engine_factory is not None:
@@ -1686,6 +1702,7 @@ def execute_action(root: Path, action: str, payload: dict | None = None, *,
         if not managed_supervisor_config:
             raise WorkflowError("managed supervisor health is not configured")
         from managed_supervisor_contract import check_managed_supervisor_health
+
         return check_managed_supervisor_health(managed_supervisor_config)
 
     # Read-only display actions do not acquire execution.lock and do not construct Engine
@@ -1973,8 +1990,7 @@ def execute_action(root: Path, action: str, payload: dict | None = None, *,
                 if not isinstance(token, dict):
                     raise CoreValidationError("arm_commit requires the owner COMMIT token")
                 view = engine.approve(token)
-                return {"view": view, "gate": view.get("gate"),
-                        "status": view.get("status")}
+                return {"view": view, "gate": view.get("gate"), "status": view.get("status")}
             elif action == "record_commit":
                 view = engine.record_owner_commit()
                 return {
@@ -2054,10 +2070,16 @@ def main():
     parser.add_argument("--action-id", type=str, default=None, help="Action ID")
     parser.add_argument("--fencing-token", type=int, default=None, help="Fencing token")
     parser.add_argument("--executor-instance-id", type=str, default=None, help="Executor instance ID")
-    parser.add_argument("--supervisor-socket", type=str, default=None, help="Supervisor Unix socket (run action)")
+    parser.add_argument(
+        "--supervisor-socket", type=str, default=None, help="Supervisor Unix socket (run action)"
+    )
     parser.add_argument("--supervisor-token-file", type=str, default=None, help="Supervisor peer token file")
-    parser.add_argument("--managed-supervisor-config", type=str, default=None,
-                        help="Read-only managed supervisor connection contract")
+    parser.add_argument(
+        "--managed-supervisor-config",
+        type=str,
+        default=None,
+        help="Read-only managed supervisor connection contract",
+    )
     args = parser.parse_args()
 
     payload = {}
@@ -2078,14 +2100,16 @@ def main():
         payload["executor_instance_id"] = args.executor_instance_id
 
     try:
-        res = execute_action(args.root, args.action, payload,
-                             supervisor_socket=args.supervisor_socket,
-                             supervisor_token_file=args.supervisor_token_file,
-                             managed_supervisor_config=args.managed_supervisor_config,
-                             managed_dispatch_config=os.environ.get(
-                                 "DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None,
-                             managed_dispatch_enabled=(
-                                 os.environ.get("DASHBOARD_ENABLE_MANAGED_DISPATCH") == "1"))
+        res = execute_action(
+            args.root,
+            args.action,
+            payload,
+            supervisor_socket=args.supervisor_socket,
+            supervisor_token_file=args.supervisor_token_file,
+            managed_supervisor_config=args.managed_supervisor_config,
+            managed_dispatch_config=os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None,
+            managed_dispatch_enabled=(os.environ.get("DASHBOARD_ENABLE_MANAGED_DISPATCH") == "1"),
+        )
         output = {"ok": True, "result": res}
         print(json.dumps(output, default=str))
         sys.exit(0)

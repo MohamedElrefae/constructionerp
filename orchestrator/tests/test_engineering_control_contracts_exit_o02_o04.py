@@ -573,8 +573,12 @@ def _cut_role(engine, view: dict, action_id: str, *, request_hash: str):
         )
 
 
-@pytest.mark.xfail(not hasattr(Engine, "reconfigure_role_paused"), strict=True,
-                   raises=AttributeError, reason="Legacy WP1 role-cut API absent; compatibility remains unresolved")
+@pytest.mark.xfail(
+    not hasattr(Engine, "reconfigure_role_paused"),
+    strict=True,
+    raises=AttributeError,
+    reason="Legacy WP1 role-cut API absent; compatibility remains unresolved",
+)
 def test_reconfigure_cut_before_mirror_leaves_sqlite_atomic_effect_only(configured, monkeypatch):
     engine, root, before, roles_before = _role_cut_fixture(configured)
     try:
@@ -605,8 +609,12 @@ def test_reconfigure_cut_before_mirror_leaves_sqlite_atomic_effect_only(configur
     assert _read_view(root)["plan_granted"] is True
 
 
-@pytest.mark.xfail(not hasattr(Engine, "reconfigure_role_paused"), strict=True,
-                   raises=AttributeError, reason="Legacy WP1 role-cut API absent; compatibility remains unresolved")
+@pytest.mark.xfail(
+    not hasattr(Engine, "reconfigure_role_paused"),
+    strict=True,
+    raises=AttributeError,
+    reason="Legacy WP1 role-cut API absent; compatibility remains unresolved",
+)
 def test_reconfigure_cut_after_mirror_before_checkpoint_leaves_checkpoint_old(configured, monkeypatch):
     engine, root, before, roles_before = _role_cut_fixture(configured)
     try:
@@ -625,8 +633,12 @@ def test_reconfigure_cut_after_mirror_before_checkpoint_leaves_checkpoint_old(co
     assert _read_view(root)["plan_granted"] is True
 
 
-@pytest.mark.xfail(not hasattr(Engine, "reconfigure_role_paused"), strict=True,
-                   raises=AttributeError, reason="Legacy WP1 role-cut API absent; compatibility remains unresolved")
+@pytest.mark.xfail(
+    not hasattr(Engine, "reconfigure_role_paused"),
+    strict=True,
+    raises=AttributeError,
+    reason="Legacy WP1 role-cut API absent; compatibility remains unresolved",
+)
 def test_reconfigure_full_cut_updates_config_mirror_checkpoint_and_invalidates_grant(configured):
     engine, root, before, roles_before = _role_cut_fixture(configured)
     try:

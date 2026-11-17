@@ -195,11 +195,7 @@ describe("AC-5 P0-2: _restoreVisibleFieldWrapper never strips hide-control", fun
 		);
 		assert.equal(el.classList.contains("hidden"), false, "hidden must be cleared");
 		assert.equal(el.classList.contains("d-none"), false, "d-none must be cleared");
-		assert.equal(
-			el.hasAttribute("hidden"),
-			false,
-			"the hidden attribute must be cleared"
-		);
+		assert.equal(el.hasAttribute("hidden"), false, "the hidden attribute must be cleared");
 		assert.equal(el.getAttribute("data-vfc-managed"), "1", "must be marked managed");
 	});
 

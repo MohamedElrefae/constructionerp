@@ -100,11 +100,16 @@ def make_engine(root, *, transport_factory=None, min_poll_interval_s=5.0):
         # still constructed so read-only status/doctor keep working; dispatch
         # (preflight) refuses unconditionally. No env, marker or namespace grants
         # it, and injection is a test-only Python seam, not a boundary.
-        return Engine(root, launcher=T3DispatchLauncher(
-            root, transport_factory=None, allow_dispatch=False))
-    return Engine(root, launcher=T3DispatchLauncher(
-        root, transport_factory=transport_factory, allow_dispatch=True,
-        min_poll_interval_s=min_poll_interval_s))
+        return Engine(root, launcher=T3DispatchLauncher(root, transport_factory=None, allow_dispatch=False))
+    return Engine(
+        root,
+        launcher=T3DispatchLauncher(
+            root,
+            transport_factory=transport_factory,
+            allow_dispatch=True,
+            min_poll_interval_s=min_poll_interval_s,
+        ),
+    )
 
 
 def main():
@@ -238,9 +243,7 @@ def main():
                         result = e.view()
                     elif args.command == "run":
                         if args.dry_run or args.import_erp:
-                            require_host_execution(
-                                "ERP dry-run" if args.dry_run else "ERP import"
-                            )
+                            require_host_execution("ERP dry-run" if args.dry_run else "ERP import")
                         if args.backup_to:
                             e.store.backup(args.backup_to)
                             result = {"ok": True, "backup": str(args.backup_to.resolve())}

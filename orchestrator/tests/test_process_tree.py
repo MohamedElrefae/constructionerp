@@ -40,13 +40,15 @@ class ProcessTreeTests(unittest.TestCase):
         tmp = tempfile.mkdtemp(prefix="pdeathsig-")
         pidfile = Path(tmp) / "grandchild.pid"
         env = dict(os.environ)
-        env["PYTHONPATH"] = ":".join(
-            [str(ORCH.parent), str(ORCH), env.get("PYTHONPATH", "")]
-        )
+        env["PYTHONPATH"] = ":".join([str(ORCH.parent), str(ORCH), env.get("PYTHONPATH", "")])
         parent = subprocess.Popen(
             [sys.executable, str(PARENT), str(pidfile)],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-            cwd=str(ORCH), env=env)
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+            env=env,
+        )
         try:
             line = parent.stdout.readline()
             self.assertTrue(line, "parent did not report a child pid")
@@ -57,8 +59,7 @@ class ProcessTreeTests(unittest.TestCase):
             self.assertTrue(_alive(grandchild))
             parent.kill()
             parent.wait(timeout=5)
-            self.assertTrue(
-                _wait(lambda: not _alive(child)), "direct child survived parent death")
+            self.assertTrue(_wait(lambda: not _alive(child)), "direct child survived parent death")
             # Grandchildren do not inherit PDEATHSIG.
             self.assertTrue(_alive(grandchild), "grandchild unexpectedly died")
         finally:

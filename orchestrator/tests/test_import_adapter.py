@@ -8,7 +8,6 @@ import hashlib
 import json
 
 import import_adapter
-
 import pytest
 
 
@@ -16,6 +15,8 @@ import pytest
 def _ack_host_execution(monkeypatch):
     """These tests mock the bench call; the gate still requires the operation class ack."""
     monkeypatch.setenv("ENGINE_HOST_EXECUTION", "allow-host-execution")
+
+
 from core import WorkflowError, canonical
 
 DESCRIPTOR = {

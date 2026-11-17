@@ -4,14 +4,14 @@ import subprocess
 import sys
 
 import pytest
-
 from core import WorkflowError, canonical
 from engine import Engine
 
 
 def _git(root, *args):
-    return subprocess.run(["git", "-C", str(root), *args], check=True,
-                          capture_output=True, text=True).stdout.strip()
+    return subprocess.run(
+        ["git", "-C", str(root), *args], check=True, capture_output=True, text=True
+    ).stdout.strip()
 
 
 def _task_checkout(root):
@@ -40,7 +40,9 @@ def _empty_engine(root, tmp_path):
         "base_commit": _git(root, "rev-parse", "HEAD"),
         "branch": _git(root, "branch", "--show-current"),
         "scope": {"allowed_paths": ["src/"], "validation_commands": [["/usr/bin/python3", "-c", "pass"]]},
-        "generated": [], "work_item": "test-builder", "builder_validation_timeout": 30,
+        "generated": [],
+        "work_item": "test-builder",
+        "builder_validation_timeout": 30,
     }
     artifact_dir = tmp_path / "artifacts"
     artifact_dir.mkdir(mode=0o700)
@@ -105,7 +107,9 @@ def test_engine_generated_changes_are_ignored_but_staged_changes_are_rejected(tm
         engine._builder_application_checkout_state()
 
 
-def test_interrupted_detached_intake_discards_unverified_workspace_and_rechecks_receipt(tmp_path, monkeypatch):
+def test_interrupted_detached_intake_discards_unverified_workspace_and_rechecks_receipt(
+    tmp_path, monkeypatch
+):
     from t3_supervisor_client import ManagedSupervisorLauncher
 
     root = tmp_path / "task-worktree"
@@ -126,11 +130,16 @@ def test_interrupted_detached_intake_discards_unverified_workspace_and_rechecks_
     launcher = object.__new__(Launcher)
     launcher.receipt = receipt
     engine.launcher = launcher
-    job = {"job_id": "job-crash", "spec": {
-        "envelope": {"candidate_id": "c" * 64, "plan_revision_hash": "p" * 64},
-        "builder_baseline": {"artifact": str(private_artifacts / "baseline.json"),
-                             "manifest_sha256": "b" * 64},
-    }}
+    job = {
+        "job_id": "job-crash",
+        "spec": {
+            "envelope": {"candidate_id": "c" * 64, "plan_revision_hash": "p" * 64},
+            "builder_baseline": {
+                "artifact": str(private_artifacts / "baseline.json"),
+                "manifest_sha256": "b" * 64,
+            },
+        },
+    }
     observation = {"supervisor_receipt": receipt}
     attempts = []
 
@@ -160,6 +169,7 @@ def test_interrupted_detached_intake_discards_unverified_workspace_and_rechecks_
     launcher.receipt = receipt
     observation["supervisor_receipt"] = receipt
     import shutil
+
     shutil.rmtree(attempts[-1][0])
     outside = tmp_path / "outside-residue"
     outside.mkdir()
@@ -180,8 +190,11 @@ def test_blocked_builder_retains_previous_candidate_without_validation():
 
 
 def test_pending_native_application_uses_real_offline_validator(tmp_path):
-    from builder_project_candidate import _network_boundary_available, capture_baseline
-    from builder_project_candidate import accept_t3_builder_return
+    from builder_project_candidate import (
+        _network_boundary_available,
+        accept_t3_builder_return,
+        capture_baseline,
+    )
     from pending_builder_artifact import record_pending_builder_artifact
     from test_builder_artifact_contract import MODEL, TASK_ID, _bundle, _job, _response
 
@@ -202,27 +215,39 @@ def test_pending_native_application_uses_real_offline_validator(tmp_path):
     baseline_dir = artifacts / "baselines"
     baseline_dir.mkdir(mode=0o700)
     job = _job()
-    baseline = capture_baseline(root, baseline_dir / "baseline.json",
-                                generated=engine.config["generated"])
+    baseline = capture_baseline(root, baseline_dir / "baseline.json", generated=engine.config["generated"])
     generated_file.write_text("generated after baseline\n")
     old = (root / "src/app.py").read_bytes()
     proposed = b"VALUE = 'builder'\n"
     bundle = _bundle(job, path="src/app.py", base=old, content=proposed)
     response = _response(job, bundle)
     receipt = {
-        "state": "completed", "job_id": job["job_id"], "task_id": TASK_ID,
-        "model_evidence": "executed", "executed_model": MODEL,
-        "configured_model": MODEL, "validated_utc": "2026-11-16T00:00:01Z",
+        "state": "completed",
+        "job_id": job["job_id"],
+        "task_id": TASK_ID,
+        "model_evidence": "executed",
+        "executed_model": MODEL,
+        "configured_model": MODEL,
+        "validated_utc": "2026-11-16T00:00:01Z",
         "summary": response,
     }
     result = accept_t3_builder_return(
-        assistant_text=response, job=job, task_id=TASK_ID,
-        supervisor_receipt=receipt, source_root=root,
+        assistant_text=response,
+        job=job,
+        task_id=TASK_ID,
+        supervisor_receipt=receipt,
+        source_root=root,
         baseline_artifact=baseline["artifact"],
         trusted_baseline_sha256=baseline["manifest_sha256"],
-        destination=candidate_parent / "validated-detached", allowed_paths=["src/"],
-        trusted_commands=[["/usr/bin/python3", "-c",
-                           "from pathlib import Path; assert 'builder' in Path('src/app.py').read_text()"]],
+        destination=candidate_parent / "validated-detached",
+        allowed_paths=["src/"],
+        trusted_commands=[
+            [
+                "/usr/bin/python3",
+                "-c",
+                "from pathlib import Path; assert 'builder' in Path('src/app.py').read_text()",
+            ]
+        ],
     )
     result["builder_binding"]["supervisor_receipt_sha256"] = hashlib.sha256(canonical(receipt)).hexdigest()
     result["builder_binding_sha256"] = hashlib.sha256(canonical(result["builder_binding"])).hexdigest()
@@ -230,6 +255,7 @@ def test_pending_native_application_uses_real_offline_validator(tmp_path):
     class MemoryStore:
         def put_pending_builder_artifact(self, job_id, payload):
             self.payload = payload
+
         def pending_builder_artifact(self, job_id):
             return self.payload if getattr(self, "payload", {}).get("job_id") == job_id else None
 
@@ -237,8 +263,11 @@ def test_pending_native_application_uses_real_offline_validator(tmp_path):
     evidence_dir = artifacts / "evidence"
     evidence_dir.mkdir(mode=0o700)
     record_pending_builder_artifact(
-        store=engine.store, result=result, source_root=root,
-        baseline_artifact=baseline["artifact"], evidence_directory=evidence_dir,
+        store=engine.store,
+        result=result,
+        source_root=root,
+        baseline_artifact=baseline["artifact"],
+        evidence_directory=evidence_dir,
     )
 
     # Exercise the real `_accept_inner` managed branch. The launcher is a
@@ -246,9 +275,9 @@ def test_pending_native_application_uses_real_offline_validator(tmp_path):
     # a successful event proves the branch does not fall through to the legacy
     # synthetic fixture gate. The application call still runs the native
     # validator above, without substituting a PASS result.
-    from t3_supervisor_client import ManagedSupervisorLauncher
     import engine as engine_module
     import stage4
+    from t3_supervisor_client import ManagedSupervisorLauncher
 
     class ManagedLauncher(ManagedSupervisorLauncher):
         def parse(self, _job, _raw):
@@ -274,22 +303,32 @@ def test_pending_native_application_uses_real_offline_validator(tmp_path):
     accepted_job.update(job_id=job["job_id"], role="builder", runtime=str(runtime))
     accepted_job["spec"] = dict(job["spec"])
     accepted_job["spec"]["envelope"] = dict(job["spec"]["envelope"])
-    accepted_job["spec"]["envelope"].update(work_item="test-builder", stage="implementation",
-                                             prompt_version="c" * 64)
+    accepted_job["spec"]["envelope"].update(
+        work_item="test-builder", stage="implementation", prompt_version="c" * 64
+    )
     accepted_job["spec"].update(tool="opencode", model=MODEL)
     engine.config["scope"]["requirements"] = []
-    view = {"candidate": {"kind": "code", "candidate_id": "prior"},
-            "findings": [], "backlog": [], "work_item": "test-builder"}
-    observation = {"exit_code": 0, "timeout": False, "started_utc": "2026-11-16T00:00:00Z",
-                   "finished_utc": "2026-11-16T00:00:01Z", "supervisor_receipt": receipt,
-                   "model_evidence": "executed"}
+    view = {
+        "candidate": {"kind": "code", "candidate_id": "prior"},
+        "findings": [],
+        "backlog": [],
+        "work_item": "test-builder",
+    }
+    observation = {
+        "exit_code": 0,
+        "timeout": False,
+        "started_utc": "2026-11-16T00:00:00Z",
+        "finished_utc": "2026-11-16T00:00:01Z",
+        "supervisor_receipt": receipt,
+        "model_evidence": "executed",
+    }
 
     event = engine._accept_inner(accepted_job, observation, view)
     # Replay is safe after persistence: the same receipt-bound pending record
     # and immutable plan are reused, with no second builder intake.
-    temp_leaf = ".engine-builder-" + hashlib.sha256(
-        (job["job_id"] + "\0src/app.py").encode()
-    ).hexdigest()[:24]
+    temp_leaf = (
+        ".engine-builder-" + hashlib.sha256((job["job_id"] + "\0src/app.py").encode()).hexdigest()[:24]
+    )
     interrupted_temp = root / "src" / temp_leaf
     interrupted_temp.write_bytes(b"partial pre-replace write")
     event_retry = engine._accept_inner(accepted_job, observation, view)
@@ -306,8 +345,7 @@ def test_pending_native_application_uses_real_offline_validator(tmp_path):
         (engine._builder_application_directory(job["job_id"]) / "native-validation").iterdir()
     )
     assert len(validation_attempts) == 2
-    assert all((attempt / "tested-candidate" / "tree.tar").is_file()
-               for attempt in validation_attempts)
+    assert all((attempt / "tested-candidate" / "tree.tar").is_file() for attempt in validation_attempts)
     assert event["validation"].get("mode") != "SYNTHETIC"
     assert (root / "src/app.py").read_bytes() == proposed
     engine._recheck_candidate(event["candidate"])

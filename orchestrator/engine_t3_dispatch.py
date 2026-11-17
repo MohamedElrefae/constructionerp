@@ -79,12 +79,12 @@ from t3_transport import (
 )
 
 # ledger states (engine side)
-L_PENDING = "pending"               # accepted durably; zero T3 contact
-L_DISPATCHING = "dispatching"       # T3 contact possible (crash window)
-L_DISPATCHED = "dispatched"         # task_id adopted/correlated; awaiting collection
-L_COLLECTED = "collected"           # terminal: validated receipt persisted
-L_FAILED = "failed"                 # terminal: validation/transport failure
-L_CANCELLED = "cancelled"           # terminal: scoped cancel succeeded
+L_PENDING = "pending"  # accepted durably; zero T3 contact
+L_DISPATCHING = "dispatching"  # T3 contact possible (crash window)
+L_DISPATCHED = "dispatched"  # task_id adopted/correlated; awaiting collection
+L_COLLECTED = "collected"  # terminal: validated receipt persisted
+L_FAILED = "failed"  # terminal: validation/transport failure
+L_CANCELLED = "cancelled"  # terminal: scoped cancel succeeded
 L_RECONCILIATION = "reconciliation_required"  # terminal: owner must reconcile
 
 TERMINAL = {L_COLLECTED, L_FAILED, L_CANCELLED, L_RECONCILIATION}
@@ -135,8 +135,7 @@ class DispatchLedger:
         return self._json.loads(self.path.read_text())
 
     def _write(self, doc: dict) -> None:
-        tmp = self.path.with_name(
-            self.path.name + f".tmp.{self._os.getpid()}")
+        tmp = self.path.with_name(self.path.name + f".tmp.{self._os.getpid()}")
         tmp.write_text(self._json.dumps(doc, sort_keys=True, indent=1))
         self._os.replace(tmp, self.path)
 
@@ -164,10 +163,16 @@ class EngineT3Dispatcher:
         properties (process-restart recovery)
     """
 
-    def __init__(self, *, work_item: str, root: str, allowed_models: list[str],
-                 transport,  # wp1.t3_transport.T3Transport
-                 ledger: DispatchLedger,
-                 allow_dispatch: bool = False):
+    def __init__(
+        self,
+        *,
+        work_item: str,
+        root: str,
+        allowed_models: list[str],
+        transport,  # wp1.t3_transport.T3Transport
+        ledger: DispatchLedger,
+        allow_dispatch: bool = False,
+    ):
         self.work_item = str(work_item)
         self.root = str(root)
         self.allowed_models = list(allowed_models)
@@ -182,29 +187,27 @@ class EngineT3Dispatcher:
         job_id = job.get("job_id", "")
         if not isinstance(job_id, str) or not JOB_ID_RE.match(job_id):
             raise ScopeRefusal(f"malformed engine job_id: {job_id!r}")
-        if not isinstance(job.get("idempotency_key"), str) or not IDEM_RE.match(
-                job["idempotency_key"]):
-            raise ScopeRefusal(
-                "idempotency_key must match [A-Za-z0-9_-]{16,128}")
+        if not isinstance(job.get("idempotency_key"), str) or not IDEM_RE.match(job["idempotency_key"]):
+            raise ScopeRefusal("idempotency_key must match [A-Za-z0-9_-]{16,128}")
         if job.get("work_item") != self.work_item:
             raise ScopeRefusal(
-                f"job work_item {job.get('work_item')!r} outside dispatcher "
-                f"scope {self.work_item!r}")
+                f"job work_item {job.get('work_item')!r} outside dispatcher " f"scope {self.work_item!r}"
+            )
         if job.get("root") != self.root:
             raise ScopeRefusal(
                 f"job root {job.get('root')!r} outside dispatcher root "
-                f"{self.root!r} (cross-root dispatch refused)")
+                f"{self.root!r} (cross-root dispatch refused)"
+            )
         if job.get("model") not in self.allowed_models:
             raise ScopeRefusal(
-                f"model {job.get('model')!r} not in pinned allowed models "
-                f"{self.allowed_models}")
+                f"model {job.get('model')!r} not in pinned allowed models " f"{self.allowed_models}"
+            )
         return job
 
     def _own(self, job_id: str) -> dict:
         rec = self.ledger.get(job_id)
         if rec is None:
-            raise DispatchRefusal(
-                f"unknown job_id {job_id!r} (not in this dispatcher's ledger)")
+            raise DispatchRefusal(f"unknown job_id {job_id!r} (not in this dispatcher's ledger)")
         return rec
 
     @staticmethod
@@ -217,25 +220,24 @@ class EngineT3Dispatcher:
 
     # -- phase 1: durable dispatch ---------------------------------------- #
     def dispatch(self, job: dict) -> dict:
-        self._check_scope(job)                    # scope FIRST (zero effects)
+        self._check_scope(job)  # scope FIRST (zero effects)
         if not self.allow_dispatch:
             raise DispatchRefusal(
                 "dispatch gate closed (allow_dispatch=False) — engine launch "
-                "authorization required before any delegation")
+                "authorization required before any delegation"
+            )
         job_id = job["job_id"]
         rec = self.ledger.get(job_id)
         if rec is not None:
             if rec.get("idempotency_key") != job["idempotency_key"]:
-                raise DispatchRefusal(
-                    "job_id reused with a divergent idempotency_key")
+                raise DispatchRefusal("job_id reused with a divergent idempotency_key")
             if rec["state"] == L_RECONCILIATION:
                 # durable owner gate: re-dispatch never guesses either
-                raise DispatchRefusal(
-                    "job parked reconciliation-required; owner must reconcile")
+                raise DispatchRefusal("job parked reconciliation-required; owner must reconcile")
             if rec["state"] in TERMINAL:
-                return rec                        # idempotent: terminal
+                return rec  # idempotent: terminal
             if rec["state"] == L_DISPATCHED:
-                return rec                        # idempotent: already sent
+                return rec  # idempotent: already sent
             # pending/dispatching -> fall through to (re)send path
         else:
             rec = {
@@ -245,32 +247,29 @@ class EngineT3Dispatcher:
                 "root": self.root,
                 "state": L_PENDING,
                 "task_id": None,
-                "job": dict(job),                 # full payload for recovery
+                "job": dict(job),  # full payload for recovery
                 "history": [{"state": L_PENDING, "utc": _now()}],
             }
-            self.ledger.put(rec)                  # durable BEFORE T3 contact
+            self.ledger.put(rec)  # durable BEFORE T3 contact
         # dispatching marker BEFORE any transport call (crash window W1/W2)
         self._advance(rec, L_DISPATCHING)
         self.ledger.put(rec)
         try:
             task_rec = self._ensure_sent(job)
         except TransportUncertain:
-            raise                                  # ledger stays dispatching
+            raise  # ledger stays dispatching
         except TransportReconciliationRequired as exc:
-            self._advance(rec, L_RECONCILIATION, error=str(exc)[:300],
-                          via="recover")
+            self._advance(rec, L_RECONCILIATION, error=str(exc)[:300], via="recover")
             self.ledger.put(rec)
             raise
         except TransportRefusal:
             raise
         if task_rec["state"] == S_FAILED:
-            self._advance(rec, L_FAILED,
-                          error=str(task_rec.get("error", ""))[:300])
+            self._advance(rec, L_FAILED, error=str(task_rec.get("error", ""))[:300])
             self.ledger.put(rec)
             return rec
         # sent (or transport already terminal-successful — adopt the outcome then collect)
-        self._advance(rec, L_DISPATCHED,
-                      task_id=task_rec.get("task_id"))
+        self._advance(rec, L_DISPATCHED, task_id=task_rec.get("task_id"))
         rec["task_id"] = task_rec.get("task_id")
         self.ledger.put(rec)
         return rec
@@ -284,59 +283,53 @@ class EngineT3Dispatcher:
         Dispatch()-path refusals never create a thread.
         """
         existing = self.transport.store.get(job["job_id"])
-        if existing is not None and existing.get("state") in (
-                S_SENDING, S_UNCERTAIN):
+        if existing is not None and existing.get("state") in (S_SENDING, S_UNCERTAIN):
             # W2/W5: interrupted send, outcome unknown — diagnostic reattach or require
             # reconciliation; never an automatic re-send.
             return self.transport.reattach(job["job_id"])
-        self.transport.begin_intent(job)           # durable intent (no network)
-        return self.transport.send(job)            # marker THEN network
+        self.transport.begin_intent(job)  # durable intent (no network)
+        return self.transport.send(job)  # marker THEN network
 
     # -- phase 2: collect + validate --------------------------------------- #
     def collect(self, job_id: str) -> dict:
         rec = self._own(job_id)
         if rec["state"] in TERMINAL:
-            return rec                             # idempotent: zero client calls
+            return rec  # idempotent: zero client calls
         if rec["state"] in (L_PENDING, L_DISPATCHING):
-            raise DispatchRefusal(
-                "job not dispatched; run dispatch()/recover() first")
+            raise DispatchRefusal("job not dispatched; run dispatch()/recover() first")
         try:
             task_rec = self.transport.collect(job_id)
         except TransportUncertain:
-            raise                                  # caller must recover() first
+            raise  # caller must recover() first
         except TransportRefusal as exc:
             # transport marks its own record failed on validation refusal;
             # divergence (no record / never sent) surfaces unchanged.
             stored = self.transport.store.get(job_id)
             if stored is not None and stored.get("state") == S_FAILED:
-                self._advance(rec, L_FAILED,
-                              error=str(exc)[:300])
+                self._advance(rec, L_FAILED, error=str(exc)[:300])
                 self.ledger.put(rec)
             raise
         # ENGINE-side result guard: the task result must be for THE task the
         # ledger correlated (corruption / store-mixup detection).
-        if (task_rec.get("task_id") and rec.get("task_id")
-                and task_rec["task_id"] != rec["task_id"]):
+        if task_rec.get("task_id") and rec.get("task_id") and task_rec["task_id"] != rec["task_id"]:
             raise DispatchRefusal(
                 "ledger/transport task_id mismatch (corruption): "
-                f"{rec['task_id']} != {task_rec['task_id']}")
+                f"{rec['task_id']} != {task_rec['task_id']}"
+            )
         if task_rec["state"] == S_COMPLETED:
             receipt = task_rec.get("receipt") or {}
             if receipt.get("job_id") != job_id:
-                raise DispatchRefusal(
-                    "receipt job linkage mismatch (corruption)")
-            self._advance(rec, L_COLLECTED,
-                          task_id=task_rec.get("task_id"))
+                raise DispatchRefusal("receipt job linkage mismatch (corruption)")
+            self._advance(rec, L_COLLECTED, task_id=task_rec.get("task_id"))
             rec["receipt"] = {
                 **receipt,
-                "work_item": rec["work_item"],     # engine-linked
+                "work_item": rec["work_item"],  # engine-linked
                 "root": rec["root"],
             }
             self.ledger.put(rec)
             return rec
         if task_rec["state"] == S_FAILED:
-            self._advance(rec, L_FAILED,
-                          error=str(task_rec.get("error", ""))[:300])
+            self._advance(rec, L_FAILED, error=str(task_rec.get("error", ""))[:300])
             self.ledger.put(rec)
             return rec
         if task_rec["state"] == S_CANCELLED:
@@ -353,7 +346,7 @@ class EngineT3Dispatcher:
         if rec["state"] in TERMINAL:
             return rec
         if rec["state"] == L_PENDING:
-            return rec                # zero T3 contact yet; dispatch() later
+            return rec  # zero T3 contact yet; dispatch() later
         # dispatching or dispatched: reconcile against the task record
         stored = self.transport.store.get(job_id)
         if stored is None:
@@ -368,29 +361,24 @@ class EngineT3Dispatcher:
             try:
                 stored = self.transport.reattach(job_id)
             except TransportReconciliationRequired as exc:
-                self._advance(rec, L_RECONCILIATION, error=str(exc)[:300],
-                              via="recover")
+                self._advance(rec, L_RECONCILIATION, error=str(exc)[:300], via="recover")
                 self.ledger.put(rec)
                 raise
         # stored is now sent/completed/failed/cancelled
-        if stored.get("state") in (S_SENT, S_COMPLETED) and stored.get(
-                "task_id"):
+        if stored.get("state") in (S_SENT, S_COMPLETED) and stored.get("task_id"):
             if rec.get("task_id") and rec["task_id"] != stored["task_id"]:
                 raise DispatchRefusal(
-                    "ledger/transport task_id divergence: "
-                    f"{rec['task_id']} != {stored['task_id']}")
+                    "ledger/transport task_id divergence: " f"{rec['task_id']} != {stored['task_id']}"
+                )
             if rec["state"] == L_DISPATCHING:
-                self._advance(rec, L_DISPATCHED,
-                              task_id=stored["task_id"], via="recover")
+                self._advance(rec, L_DISPATCHED, task_id=stored["task_id"], via="recover")
                 rec["task_id"] = stored["task_id"]
                 self.ledger.put(rec)
             # W3/W4 (already dispatched): nothing to change; collect() reads
             # the durable task record with zero client calls when terminal.
             return rec
         if stored.get("state") == S_FAILED:
-            self._advance(rec, L_FAILED,
-                          error=str(stored.get("error", ""))[:300],
-                          via="recover")
+            self._advance(rec, L_FAILED, error=str(stored.get("error", ""))[:300], via="recover")
             self.ledger.put(rec)
             return rec
         if stored.get("state") == S_CANCELLED:
@@ -401,12 +389,11 @@ class EngineT3Dispatcher:
         # caller (the engine launcher), which maps them to a durable
         # reconciliation-required outcome — never a re-send. Anything else
         # lands here as an honest divergence.
-        raise DispatchRefusal(
-            f"unrecoverable task state {stored.get('state')!r} for {job_id}")
+        raise DispatchRefusal(f"unrecoverable task state {stored.get('state')!r} for {job_id}")
 
     # -- scoped cancellation (own ledger only) ------------------------------ #
     def cancel(self, job_id: str, reason: str) -> dict:
-        rec = self._own(job_id)          # own-ledger scope: foreign refused
+        rec = self._own(job_id)  # own-ledger scope: foreign refused
         if rec["state"] in TERMINAL:
             raise DispatchRefusal(f"job already terminal ({rec['state']})")
         # transport enforces its own gates: allow_cancel, correlated task_id

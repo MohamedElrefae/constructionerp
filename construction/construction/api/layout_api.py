@@ -322,11 +322,7 @@ def save_my_native_layout(doctype: str) -> dict:
     # confirming that a doctype exists but is unreadable would leak its
     # existence. "{0} {1} not found or not readable" is already catalogued
     # and already used from Python (bilingual_service.py).
-    if (
-        not doctype
-        or not frappe.db.exists("DocType", doctype)
-        or not frappe.has_permission(doctype, "read")
-    ):
+    if not doctype or not frappe.db.exists("DocType", doctype) or not frappe.has_permission(doctype, "read"):
         frappe.throw(
             _("{0} {1} not found or not readable").format("Document type", doctype or ""),
             frappe.PermissionError,

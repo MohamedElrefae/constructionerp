@@ -25,7 +25,7 @@ TESTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(ORCH))
 sys.path.insert(0, str(TESTS))
 
-from t3_supervisor_client import SupervisorLauncher  # noqa: E402
+from t3_supervisor_client import SupervisorLauncher
 
 MODEL = "opencode/deepseek-v4.1-flash-free"
 
@@ -62,12 +62,13 @@ class DashboardRunActionTests(unittest.TestCase):
         os.environ["ENGINE_NATIVE_DISPATCH"] = "allow-native-host-access"
         os.environ.pop("ENGINE_T3_BACKEND", None)
         try:
-            import dashboard.app  # noqa: F401
+            import dashboard.app
             import dashboard.registry as registry_mod
         except Exception as exc:
             raise unittest.SkipTest(f"dashboard unavailable: {type(exc).__name__}: {exc}")
         registry_mod.init_registry_db(dash_var / "registry.db")
         from starlette.testclient import TestClient
+
         import dashboard.app as appmod
 
         cls.appmod = appmod
@@ -86,10 +87,13 @@ class DashboardRunActionTests(unittest.TestCase):
         finally:
             for p in getattr(cls, "_procs", []):
                 try:
-                    p.terminate(); p.wait(timeout=5)
+                    p.terminate()
+                    p.wait(timeout=5)
                 except Exception:
-                    try: p.kill()
-                    except Exception: pass
+                    try:
+                        p.kill()
+                    except Exception:
+                        pass
             cls._tmp.cleanup()
 
     # -- auth ----------------------------------------------------------- #
@@ -110,18 +114,25 @@ class DashboardRunActionTests(unittest.TestCase):
                 auth_mod.create_initial_credentials_file(file_path=creds)
             user = pw = None
             for line in creds.read_text().splitlines():
-                if line.startswith("Username: "): user = line.split(": ", 1)[1]
-                if line.startswith("Password: "): pw = line.split(": ", 1)[1]
+                if line.startswith("Username: "):
+                    user = line.split(": ", 1)[1]
+                if line.startswith("Password: "):
+                    pw = line.split(": ", 1)[1]
         cls.user = user
         tok = cls._csrf()
-        r = cls.client.post("/api/auth/login", json={"username": user, "password": pw},
-                            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": tok})
+        r = cls.client.post(
+            "/api/auth/login",
+            json={"username": user, "password": pw},
+            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": tok},
+        )
         assert r.status_code == 200, r.text
         cls.csrf = r.json()["csrf_token"]
         if auth_mod.auth_store.is_initial_user(user):
-            r2 = cls.client.post("/api/auth/setup-password",
-                                 json={"current_password": pw, "new_password": "NewPermanentPass123!"},
-                                 headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": cls.csrf})
+            r2 = cls.client.post(
+                "/api/auth/setup-password",
+                json={"current_password": pw, "new_password": "NewPermanentPass123!"},
+                headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": cls.csrf},
+            )
             assert r2.status_code == 200, r2.text
             cls.password = "NewPermanentPass123!"
         else:
@@ -130,9 +141,10 @@ class DashboardRunActionTests(unittest.TestCase):
     # -- synthetic engine + supervisor --------------------------------- #
     @classmethod
     def _wire_engine(cls):
-        import orchestrator.dashboard_api as oda
         from engine import Engine
         from t3_supervisor_client import SupervisorLauncher
+
+        import orchestrator.dashboard_api as oda
         from dashboard import subprocess_client
 
         cls.sim_state = {"launches": []}
@@ -143,15 +155,17 @@ class DashboardRunActionTests(unittest.TestCase):
 
         async def fake_run_action(worktree, action, payload=None, **kw):
             def factory(root):
-                return Engine(root, launcher=SyntheticWorkflowLauncher(
-                    root, sock, token, allowed_models=[MODEL]))
+                return Engine(
+                    root, launcher=SyntheticWorkflowLauncher(root, sock, token, allowed_models=[MODEL])
+                )
+
             try:
-                return oda.execute_action(Path(worktree), action, payload or {},
-                                          engine_factory=factory)
+                return oda.execute_action(Path(worktree), action, payload or {}, engine_factory=factory)
             except Exception as exc:
                 raise subprocess_client.SubprocessClientError(str(exc)) from None
 
         from unittest import mock
+
         cls._patch = mock.patch.object(cls.appmod, "run_action", fake_run_action)
         cls._patch.start()
 
@@ -162,11 +176,18 @@ class DashboardRunActionTests(unittest.TestCase):
         os.chmod(cls.dir / "mcp.token", 0o600)
         cls.mcp_token = token
         cls.events = events
-        args = [sys.executable, str(TESTS / "_mcp_sim_server.py"), "--token", token,
-                "--events", str(events)] + (["--fail", fail] if fail else [])
-        cls.sim = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                   text=True, cwd=str(ORCH))
-        cls._procs = getattr(cls, "_procs", []) + [cls.sim]
+        args = [
+            sys.executable,
+            str(TESTS / "_mcp_sim_server.py"),
+            "--token",
+            token,
+            "--events",
+            str(events),
+        ] + (["--fail", fail] if fail else [])
+        cls.sim = subprocess.Popen(
+            args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH)
+        )
+        cls._procs = [*getattr(cls, "_procs", []), cls.sim]
         cls.url = json.loads(cls.sim.stdout.readline())["url"]
 
     @classmethod
@@ -175,15 +196,30 @@ class DashboardRunActionTests(unittest.TestCase):
         (cls.dir / "peer.token").write_text(token)
         os.chmod(cls.dir / "peer.token", 0o600)
         cls.sup = subprocess.Popen(
-            [sys.executable, str(TESTS / "_synthetic_managed_supervisor_server.py"),
-             "--socket", str(cls.dir / "sup.sock"),
-             "--state", str(cls.dir / "state.json"),
-             "--token-file", str(cls.dir / "peer.token"),
-             "--base-url", cls.url,
-             "--mcp-token-file", str(cls.dir / "mcp.token"),
-             "--model", MODEL, "--allowed-model", MODEL],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH))
-        cls._procs = getattr(cls, "_procs", []) + [cls.sup]
+            [
+                sys.executable,
+                str(TESTS / "_synthetic_managed_supervisor_server.py"),
+                "--socket",
+                str(cls.dir / "sup.sock"),
+                "--state",
+                str(cls.dir / "state.json"),
+                "--token-file",
+                str(cls.dir / "peer.token"),
+                "--base-url",
+                cls.url,
+                "--mcp-token-file",
+                str(cls.dir / "mcp.token"),
+                "--model",
+                MODEL,
+                "--allowed-model",
+                MODEL,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+        )
+        cls._procs = [*getattr(cls, "_procs", []), cls.sup]
         assert _wait_for(lambda: (cls.dir / "sup.sock").exists())
         assert cls.sup.stdout.readline()
 
@@ -204,6 +240,7 @@ class DashboardRunActionTests(unittest.TestCase):
         from candidates import git
         from core import bytes_hash
         from engine import Engine
+
         git(root, "init", "-b", "pilot")
         git(root, "config", "user.name", "Synthetic Test")
         git(root, "config", "user.email", "synthetic@example.invalid")
@@ -214,24 +251,56 @@ class DashboardRunActionTests(unittest.TestCase):
         evidence = root / "docs/ai/work-items/pilot-loop/evidence"
         evidence.mkdir(parents=True)
         (evidence / "phase-0-capabilities.json").write_text(
-            json.dumps({"phase_exit": "PASSED_WITH_OWNER_DIRECTIVE"}))
+            json.dumps({"phase_exit": "PASSED_WITH_OWNER_DIRECTIVE"})
+        )
         git(root, "add", ".")
         git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "synthetic dashboard fixture")
         base = git(root, "rev-parse", "HEAD").decode().strip()
         cfg = {
-            "root": str(root), "work_item": "pilot-loop", "stages": ["1"],
-            "base_commit": base, "branch": "pilot", "plan_path": "plan.md",
+            "root": str(root),
+            "work_item": "pilot-loop",
+            "stages": ["1"],
+            "base_commit": base,
+            "branch": "pilot",
+            "plan_path": "plan.md",
             "plan_revision_hash": bytes_hash((root / "plan.md").read_bytes()),
-            "scope": {"allowed_paths": ["app.py"], "requirements": ["R1"],
-                      "validation_commands": [["/usr/bin/python3", "-c", "pass"]]},
-            "roles": {role: {"tool": "synthetic", "binary": "synthetic", "model": MODEL,
-                             "prompt_sha256": bytes_hash((root / "docs/ai/roles" /
-                                 ((role if role in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer") + ".md")).read_bytes())}
-                      for role in ("architect", "reviewer", "builder", "verifier", "ai-a1", "ai-a2", "ai-a3")},
+            "scope": {
+                "allowed_paths": ["app.py"],
+                "requirements": ["R1"],
+                "validation_commands": [["/usr/bin/python3", "-c", "pass"]],
+            },
+            "roles": {
+                role: {
+                    "tool": "synthetic",
+                    "binary": "synthetic",
+                    "model": MODEL,
+                    "prompt_sha256": bytes_hash(
+                        (
+                            root
+                            / "docs/ai/roles"
+                            / (
+                                (
+                                    role
+                                    if role in ("architect", "reviewer", "builder", "verifier")
+                                    else "ai-reviewer"
+                                )
+                                + ".md"
+                            )
+                        ).read_bytes()
+                    ),
+                }
+                for role in ("architect", "reviewer", "builder", "verifier", "ai-a1", "ai-a2", "ai-a3")
+            },
         }
-        seed = Engine(root, launcher=SyntheticWorkflowLauncher(
-            root, cls.dir / "sup.sock", (cls.dir / "peer.token").read_text().strip(),
-            allowed_models=[MODEL]))
+        seed = Engine(
+            root,
+            launcher=SyntheticWorkflowLauncher(
+                root,
+                cls.dir / "sup.sock",
+                (cls.dir / "peer.token").read_text().strip(),
+                allowed_models=[MODEL],
+            ),
+        )
         try:
             seed.initialize(cfg)
         finally:
@@ -240,6 +309,7 @@ class DashboardRunActionTests(unittest.TestCase):
         # create the job through the native gate (refusal leaves it CREATED)
         from cli import make_engine
         from core import WorkflowError
+
         os.environ.pop("ENGINE_NATIVE_DISPATCH", None)
         os.environ.pop("ENGINE_T3_BACKEND", None)
         try:
@@ -261,8 +331,7 @@ class DashboardRunActionTests(unittest.TestCase):
             conn.execute(
                 "INSERT OR REPLACE INTO registered_tasks (task_id, work_item, worktree_path, "
                 "task_branch, registered_utc, cached_status, cached_stage) VALUES (?,?,?,?,?,?,?)",
-                ("task-run-1", "pilot-loop", str(root), "pilot",
-                 "2026-11-15T00:00:00Z", "DRAFT", "1"),
+                ("task-run-1", "pilot-loop", str(root), "pilot", "2026-11-15T00:00:00Z", "DRAFT", "1"),
             )
         conn.close()
 
@@ -305,7 +374,9 @@ class DashboardRunActionTests(unittest.TestCase):
         # engine may need a collect pass; use a new action id for a second pass
         for _ in range(3):
             conn = sqlite3.connect(str(self.root / "orchestrator/var/checkpoints.db"))
-            status = conn.execute("select status from workflow_jobs where job_id=?", (self.job_id,)).fetchone()[0]
+            status = conn.execute(
+                "select status from workflow_jobs where job_id=?", (self.job_id,)
+            ).fetchone()[0]
             conn.close()
             if status == "ACCEPTED":
                 break
@@ -331,23 +402,29 @@ class DashboardRunActionTests(unittest.TestCase):
         from dashboard import subprocess_client
 
         config_path = self.dir / "managed-dispatch.json"
-        config_path.write_text(json.dumps({
-            "schema": "dashboard-managed-supervisor-dispatch/v1",
-            "dispatch_enabled": True,
-            "socket_path": str(self.dir / "sup.sock"),
-            "token_file": str(self.dir / "peer.token"),
-            "expected_uid": os.geteuid() + 1,
-            "socket_group_gid": os.getegid(),
-            "expected_cgroup": "/user.slice/test-managed-supervisor.service",
-            "allowed_models": [MODEL],
-        }))
+        config_path.write_text(
+            json.dumps(
+                {
+                    "schema": "dashboard-managed-supervisor-dispatch/v1",
+                    "dispatch_enabled": True,
+                    "socket_path": str(self.dir / "sup.sock"),
+                    "token_file": str(self.dir / "peer.token"),
+                    "expected_uid": os.geteuid() + 1,
+                    "socket_group_gid": os.getegid(),
+                    "expected_cgroup": "/user.slice/test-managed-supervisor.service",
+                    "allowed_models": [MODEL],
+                }
+            )
+        )
         config_path.chmod(0o600)
         before = self._launch_count(self.job_id)
 
         async def managed_route(worktree, action, payload=None, **_kwargs):
             try:
                 return oda.execute_action(
-                    Path(worktree), action, payload or {},
+                    Path(worktree),
+                    action,
+                    payload or {},
                     managed_dispatch_config=str(config_path),
                     managed_dispatch_enabled=True,
                 )
@@ -380,7 +457,8 @@ class DashboardRunActionTests(unittest.TestCase):
         async def failing(*args, **kwargs):
             calls["n"] += 1
             raise subprocess_client.SubprocessClientError(
-                "RECONCILIATION_REQUIRED: synthetic lost reply; no re-send")
+                "RECONCILIATION_REQUIRED: synthetic lost reply; no re-send"
+            )
 
         self.appmod.run_action = failing
         try:
@@ -432,7 +510,9 @@ class RunTerminalContractTests(unittest.TestCase):
         self.assertFalse(self.fn(view, {"j1": "ACCEPTED", "j2": "CREATED"}))
 
     def test_reconciliation_job_is_terminal(self):
-        self.assertTrue(self.fn({"status": "PAUSED", "active_jobs": ["j1"]}, {"j1": "RECONCILIATION_REQUIRED"}))
+        self.assertTrue(
+            self.fn({"status": "PAUSED", "active_jobs": ["j1"]}, {"j1": "RECONCILIATION_REQUIRED"})
+        )
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 """Tests for the future external-supervisor contract; no dispatch is enabled."""
 
-import os
 import json
+import os
 import stat
 import struct
 import sys
@@ -14,7 +14,7 @@ from unittest import mock
 ORCH = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ORCH))
 
-from managed_supervisor_contract import (  # noqa: E402
+from managed_supervisor_contract import (
     DISPATCH_SCHEMA,
     SCHEMA,
     ManagedSupervisorConfig,
@@ -22,7 +22,7 @@ from managed_supervisor_contract import (  # noqa: E402
     ManagedSupervisorDispatchConfig,
     require_test_only_dispatch,
 )
-from t3_supervisor_client import SupervisorClient, SupervisorLauncher  # noqa: E402
+from t3_supervisor_client import SupervisorClient, SupervisorLauncher
 
 
 def config(socket_path, *, expected_uid=None, socket_group_gid=None, **overrides):
@@ -68,7 +68,8 @@ class ManagedSupervisorContractTests(unittest.TestCase):
         self.assertEqual(parsed.allowed_models, ("opencode-go/deepseek-v4.1-flash",))
         self.assertFalse(parsed.builder_enabled)
         enabled = ManagedSupervisorDispatchConfig.from_mapping(
-            dispatch_config("/run/sup.sock", builder_enabled=True))
+            dispatch_config("/run/sup.sock", builder_enabled=True)
+        )
         self.assertTrue(enabled.builder_enabled)
         for invalid in (
             dispatch_config("/run/sup.sock", dispatch_enabled=False),
@@ -126,10 +127,13 @@ class ManagedSupervisorContractTests(unittest.TestCase):
         parsed = ManagedSupervisorConfig.from_mapping(config("/run/dashboard-t3/supervisor.sock"))
         self.assertEqual(parsed.expected_uid, os.geteuid() + 1)
         self.assertEqual(parsed.socket_path, Path("/run/dashboard-t3/supervisor.sock"))
-        self.assertEqual(parsed.launcher_options(), {
-            "allowed_models": ["opencode-go/deepseek-v4.1-flash"],
-            "expected_uid": os.geteuid() + 1,
-        })
+        self.assertEqual(
+            parsed.launcher_options(),
+            {
+                "allowed_models": ["opencode-go/deepseek-v4.1-flash"],
+                "expected_uid": os.geteuid() + 1,
+            },
+        )
 
     def test_refuses_enabled_or_unknown_contract(self):
         with self.assertRaisesRegex(ManagedSupervisorConfigError, "dispatch_enabled false"):
@@ -157,9 +161,10 @@ class ManagedSupervisorContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-") as tmp:
             directory = Path(tmp)
             path = directory / "supervisor.sock"
-            parsed = ManagedSupervisorConfig.from_mapping(config(
-                path, expected_uid=os.geteuid(), socket_group_gid=os.getegid()),
-                dashboard_uid=os.geteuid() + 1)
+            parsed = ManagedSupervisorConfig.from_mapping(
+                config(path, expected_uid=os.geteuid(), socket_group_gid=os.getegid()),
+                dashboard_uid=os.geteuid() + 1,
+            )
             sock_stat = SimpleNamespace(
                 st_mode=stat.S_IFSOCK | 0o660,
                 st_uid=parsed.expected_uid,
@@ -170,8 +175,10 @@ class ManagedSupervisorContractTests(unittest.TestCase):
                 st_uid=parsed.expected_uid,
                 st_gid=parsed.socket_group_gid,
             )
-            with mock.patch.object(Path, "lstat", return_value=sock_stat), \
-                    mock.patch.object(Path, "stat", return_value=parent_stat):
+            with (
+                mock.patch.object(Path, "lstat", return_value=sock_stat),
+                mock.patch.object(Path, "stat", return_value=parent_stat),
+            ):
                 parsed.verify_socket(access=lambda *_args: True)
                 sock_stat.st_mode = stat.S_IFSOCK | 0o666
                 with self.assertRaisesRegex(ManagedSupervisorConfigError, "deny all world"):
@@ -200,19 +207,29 @@ class ManagedSupervisorContractTests(unittest.TestCase):
             token_path.write_text("synthetic-private-token-0123456789")
             os.chmod(token_path, 0o600)
             config_path = directory / "config.json"
-            config_path.write_text(json.dumps(config(
-                "/run/dashboard-t3/supervisor.sock",
-                token_file=str(token_path),
-            )))
+            config_path.write_text(
+                json.dumps(
+                    config(
+                        "/run/dashboard-t3/supervisor.sock",
+                        token_file=str(token_path),
+                    )
+                )
+            )
             os.chmod(config_path, 0o600)
             fake = mock.Mock()
             fake.call.return_value = {
-                "ready": True, "uid": os.geteuid() + 1, "read_only": True,
-                "protocol": "managed-supervisor-health/v1", "pid": 123,
+                "ready": True,
+                "uid": os.geteuid() + 1,
+                "read_only": True,
+                "protocol": "managed-supervisor-health/v1",
+                "pid": 123,
             }
-            with mock.patch.object(ManagedSupervisorConfig, "verify_socket"), \
-                    mock.patch("t3_supervisor_client.SupervisorClient", return_value=fake) as client:
+            with (
+                mock.patch.object(ManagedSupervisorConfig, "verify_socket"),
+                mock.patch("t3_supervisor_client.SupervisorClient", return_value=fake) as client,
+            ):
                 from managed_supervisor_contract import check_managed_supervisor_health
+
                 result = check_managed_supervisor_health(config_path)
             client.assert_called_once()
             fake.call.assert_called_once_with("health")
@@ -222,8 +239,12 @@ class ManagedSupervisorContractTests(unittest.TestCase):
 
     def test_launcher_can_pin_distinct_kernel_peer_uid(self):
         launcher = SupervisorLauncher(
-            "/tmp/root", "/run/sup.sock", "test-token",
-            allowed_models=["opencode-go/deepseek-v4.1-flash"], expected_uid=12345)
+            "/tmp/root",
+            "/run/sup.sock",
+            "test-token",
+            allowed_models=["opencode-go/deepseek-v4.1-flash"],
+            expected_uid=12345,
+        )
         self.assertEqual(launcher.client.expected_uid, 12345)
         with self.assertRaisesRegex(ValueError, "expected_uid"):
             SupervisorClient("/run/sup.sock", "test-token", expected_uid=True)

@@ -34,8 +34,7 @@ MAX_BUILDER_ASSISTANT_CHARS = 50_000
 def _extract_wire(text: str, marker: str, *, allow_builder_bundle=False) -> dict:
     if not isinstance(text, str) or not text.strip():
         raise T3ResultError("T3 assistant response is empty")
-    max_chars = (MAX_BUILDER_ASSISTANT_CHARS if allow_builder_bundle
-                 else MAX_STANDARD_ASSISTANT_CHARS)
+    max_chars = MAX_BUILDER_ASSISTANT_CHARS if allow_builder_bundle else MAX_STANDARD_ASSISTANT_CHARS
     if len(text) > max_chars:
         raise T3ResultError(f"T3 assistant response exceeds {max_chars} characters")
     if marker not in text:
@@ -68,8 +67,9 @@ def _extract_wire(text: str, marker: str, *, allow_builder_bundle=False) -> dict
     raise T3ResultError("T3 assistant response has no complete result wire")
 
 
-def decode_t3_result(*, assistant_text: str, job: dict, task_id: str,
-                     executed_model: str) -> tuple[str, dict, dict, list]:
+def decode_t3_result(
+    *, assistant_text: str, job: dict, task_id: str, executed_model: str
+) -> tuple[str, dict, dict, list]:
     """Return Engine parse tuple after validating received content and bindings."""
     if not isinstance(job, dict) or not isinstance(job.get("spec"), dict):
         raise T3ResultError("prepared Engine job is malformed")
@@ -85,9 +85,7 @@ def decode_t3_result(*, assistant_text: str, job: dict, task_id: str,
         raise T3ResultError("T3 executed model does not match prepared model")
 
     marker = f"ENGINE-T3-RESULT {job.get('job_id', '')}"
-    wire = _extract_wire(
-        assistant_text, marker, allow_builder_bundle=job.get("role") == "builder"
-    )
+    wire = _extract_wire(assistant_text, marker, allow_builder_bundle=job.get("role") == "builder")
     try:
         body = json.loads(wire["result_json"])
     except (TypeError, ValueError) as exc:
@@ -113,11 +111,13 @@ def decode_t3_result(*, assistant_text: str, job: dict, task_id: str,
         dispatch_mode="manual",
         started_utc="2026-01-01T00:00:00Z",
         finished_utc="2026-01-01T00:00:00Z",
-        evidence_paths=[{
-            "artifact_id": f"{job['job_id']}-native-events",
-            "sha256": "0" * 64,
-            "visibility": "public",
-        }],
+        evidence_paths=[
+            {
+                "artifact_id": f"{job['job_id']}-native-events",
+                "sha256": "0" * 64,
+                "visibility": "public",
+            }
+        ],
     )
     try:
         validate_document("result-envelope", validation_body)

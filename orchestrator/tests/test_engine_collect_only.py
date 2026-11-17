@@ -39,7 +39,8 @@ class CollectOnlyTests(unittest.TestCase):
         cfg = json.loads(row[0].replace(OLD_ROOT, str(self.root)))
         cfg["root"] = str(self.root)
         conn.execute("update workflow_meta set value=? where key='config'", (json.dumps(cfg),))
-        conn.commit(); conn.close()
+        conn.commit()
+        conn.close()
         for p in self.root.rglob("*"):
             if p.is_file() and p.suffix in (".json", ".md", ".txt") and p.stat().st_size < 2_000_000:
                 try:
@@ -113,7 +114,9 @@ class CollectOnlyTests(unittest.TestCase):
 
     def test_mismatched_plan_binding_is_refused(self):
         self.engine.store.update_job(
-            self.job_id, "LAUNCH_INTENT", launch_attempts=1,
+            self.job_id,
+            "LAUNCH_INTENT",
+            launch_attempts=1,
             plan_revision_hash="0" * 64,
         )
         from core import WorkflowError
@@ -126,9 +129,7 @@ class CollectOnlyTests(unittest.TestCase):
         self.engine.store.update_job(self.job_id, "LAUNCH_INTENT", launch_attempts=1)
         dest = Path(self.engine.store.job(self.job_id)["runtime"])
         dest.mkdir(parents=True, exist_ok=True)
-        (dest / "terminal.json").write_text(
-            json.dumps({"job_id": self.job_id, "phase": "TERMINAL"})
-        )
+        (dest / "terminal.json").write_text(json.dumps({"job_id": self.job_id, "phase": "TERMINAL"}))
         self.engine.collect_only(job_ids=[])
         self.assertEqual(self._status(), "LAUNCH_INTENT")
         result_events = [e for e in self.engine.store.events() if e["kind"] == "result"]

@@ -20,17 +20,17 @@ from pathlib import Path
 from typing import Any
 
 from dashboard.config import (
-    FORWARD_ENGINE_DISPATCH_ENV,
     CANONICAL_REGISTRY_PATH,
+    FORWARD_ENGINE_DISPATCH_ENV,
+    MANAGED_SUPERVISOR_CONFIG,
+    MANAGED_SUPERVISOR_DISPATCH_CONFIG,
+    MANAGED_SUPERVISOR_DISPATCH_ENABLED,
     MAX_CONCURRENT_SUBPROCESSES,
     ORCHESTRATOR_PYTHON,
     ORCHESTRATOR_ROOT,
     SUBPROCESS_TIMEOUT_SECONDS,
     SUPERVISOR_SOCKET,
     SUPERVISOR_TOKEN_FILE,
-    MANAGED_SUPERVISOR_CONFIG,
-    MANAGED_SUPERVISOR_DISPATCH_CONFIG,
-    MANAGED_SUPERVISOR_DISPATCH_ENABLED,
 )
 from dashboard.process import async_spawn_supervised_child
 
@@ -72,11 +72,7 @@ def child_env(environ=None, forward_engine_dispatch=None, managed_dispatch=False
     sets DASHBOARD_ALLOW_ENGINE_DISPATCH=1. Everything else is inherited.
     """
     env = dict(os.environ if environ is None else environ)
-    forward = (
-        FORWARD_ENGINE_DISPATCH_ENV
-        if forward_engine_dispatch is None
-        else forward_engine_dispatch
-    )
+    forward = FORWARD_ENGINE_DISPATCH_ENV if forward_engine_dispatch is None else forward_engine_dispatch
     if not forward:
         env.pop("ENGINE_NATIVE_DISPATCH", None)
         env.pop("ENGINE_T3_BACKEND", None)
@@ -87,9 +83,7 @@ def child_env(environ=None, forward_engine_dispatch=None, managed_dispatch=False
         if not MANAGED_SUPERVISOR_DISPATCH_ENABLED or not MANAGED_SUPERVISOR_DISPATCH_CONFIG:
             raise SubprocessClientError("managed dispatch requires an explicit enable flag and config")
         env["DASHBOARD_ENABLE_MANAGED_DISPATCH"] = "1"
-        env["DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG"] = str(
-            MANAGED_SUPERVISOR_DISPATCH_CONFIG
-        )
+        env["DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG"] = str(MANAGED_SUPERVISOR_DISPATCH_CONFIG)
     env["CANONICAL_DASHBOARD_REGISTRY"] = env.get(
         "CANONICAL_DASHBOARD_REGISTRY", str(CANONICAL_REGISTRY_PATH)
     )
@@ -115,9 +109,7 @@ async def run_action(
         raise FileNotFoundError(f"Worktree directory not found: {worktree}")
 
     managed_setting_present = bool(MANAGED_SUPERVISOR_DISPATCH_CONFIG)
-    if action in ("run", "collect") and (
-        managed_setting_present or MANAGED_SUPERVISOR_DISPATCH_ENABLED
-    ):
+    if action in ("run", "collect") and (managed_setting_present or MANAGED_SUPERVISOR_DISPATCH_ENABLED):
         if not MANAGED_SUPERVISOR_DISPATCH_ENABLED:
             raise SubprocessClientError("managed dispatch config is present but dispatch is disabled")
         if not MANAGED_SUPERVISOR_DISPATCH_CONFIG:
@@ -197,7 +189,7 @@ async def run_action(
         stderr_str = stderr_b.decode("utf-8", errors="replace").strip()
 
         if proc.returncode != 0:
-            err_msg = (stderr_str or stdout_str or f"Subprocess exited with code {proc.returncode}")
+            err_msg = stderr_str or stdout_str or f"Subprocess exited with code {proc.returncode}"
             err_msg = " ".join(err_msg.split())[:300]
             try:
                 err_json = json.loads(stdout_str)

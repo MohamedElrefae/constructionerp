@@ -99,11 +99,7 @@ class CheckBinaryBoundedControlTests(unittest.TestCase):
 
     def _fake_binary(self, directory: Path, marker: Path) -> Path:
         path = directory / "fake-binary"
-        path.write_text(
-            "#!/bin/sh\n"
-            f"echo executed >> {marker}\n"
-            "echo 'fake 9.9.9'\n"
-        )
+        path.write_text("#!/bin/sh\n" f"echo executed >> {marker}\n" "echo 'fake 9.9.9'\n")
         path.chmod(path.stat().st_mode | stat.S_IXUSR)
         return path
 
@@ -144,11 +140,7 @@ class LibraryCallGateTests(unittest.TestCase):
         bench_dir = tmp / "env" / "bin"
         bench_dir.mkdir(parents=True)
         bench = bench_dir / "bench"
-        bench.write_text(
-            "#!/bin/sh\n"
-            f"echo ran >> {marker}\n"
-            f"echo '{payload_line}'\n"
-        )
+        bench.write_text("#!/bin/sh\n" f"echo ran >> {marker}\n" f"echo '{payload_line}'\n")
         bench.chmod(bench.stat().st_mode | stat.S_IXUSR)
         return bench
 
@@ -210,11 +202,15 @@ class AgentEnvStripTests(unittest.TestCase):
             "control_root": "/tmp/control",
             "read_artifacts": [],
         }
-        with mock.patch.dict(os.environ, {
-            "ENGINE_NATIVE_DISPATCH": "allow-native-host-access",
-            "ENGINE_HOST_EXECUTION": "allow-host-execution",
-            "WORKFLOW_SECRET": "x",
-        }, clear=False):
+        with mock.patch.dict(
+            os.environ,
+            {
+                "ENGINE_NATIVE_DISPATCH": "allow-native-host-access",
+                "ENGINE_HOST_EXECUTION": "allow-host-execution",
+                "WORKFLOW_SECRET": "x",
+            },
+            clear=False,
+        ):
             _argv, env = adapters.invocation(spec)
         self.assertNotIn("ENGINE_NATIVE_DISPATCH", env)
         self.assertNotIn("ENGINE_HOST_EXECUTION", env)

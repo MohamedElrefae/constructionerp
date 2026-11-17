@@ -3,9 +3,8 @@ import hashlib
 import shutil
 import sys
 
-import pytest
-
 import builder_candidate_prototype as prototype
+import pytest
 from builder_candidate_binding import (
     capture_baseline_snapshot,
     load_baseline_snapshot,
@@ -30,12 +29,16 @@ def _source(path):
 
 
 def _bundle(base=b"VALUE = 1\n", content=b"VALUE = 2\n"):
-    return {"files": [{
-        "path": "src/base.py",
-        "base_sha256": _sha(base),
-        "content_base64": base64.b64encode(content).decode("ascii"),
-        "content_sha256": _sha(content),
-    }]}
+    return {
+        "files": [
+            {
+                "path": "src/base.py",
+                "base_sha256": _sha(base),
+                "content_base64": base64.b64encode(content).decode("ascii"),
+                "content_sha256": _sha(content),
+            }
+        ]
+    }
 
 
 def test_baseline_manifest_is_immutable_and_rechecks_exact_tree(tmp_path):
@@ -58,6 +61,7 @@ def test_baseline_recheck_detects_source_drift_and_digest_tampering(tmp_path):
         recheck_baseline(source, baseline)
 
     import json
+
     document = json.loads(artifact.read_text())
     document["tree_sha256"] = "0" * 64
     artifact.chmod(0o600)
@@ -71,7 +75,10 @@ def test_candidate_recheck_detects_staged_artifact_drift(tmp_path, monkeypatch):
     baseline = capture_baseline_snapshot(source, tmp_path / "baseline.json")
     monkeypatch.setattr(prototype, "_network_boundary_available", lambda: False)
     result = prototype.prepare_and_validate(
-        source, _bundle(), tmp_path / "candidate", ["src/"],
+        source,
+        _bundle(),
+        tmp_path / "candidate",
+        ["src/"],
         [[sys.executable, "-c", "raise SystemExit(0)"]],
     )
     assert result["validation_status"] == "refused"
@@ -79,8 +86,10 @@ def test_candidate_recheck_detects_staged_artifact_drift(tmp_path, monkeypatch):
     assert recheck_candidate(tmp_path / "candidate", digest) == digest
     with pytest.raises(WorkflowError, match="not complete and passing"):
         verify_isolated_validation(
-            baseline=baseline, source_root=source,
-            candidate_root=tmp_path / "candidate", validation=result,
+            baseline=baseline,
+            source_root=source,
+            candidate_root=tmp_path / "candidate",
+            validation=result,
         )
     (tmp_path / "candidate/src/base.py").write_bytes(b"changed after staging\n")
     with pytest.raises(WorkflowError, match="changed after validation"):
@@ -100,13 +109,23 @@ def test_binds_real_isolated_validation_when_kernel_boundary_exists(tmp_path):
     source = _source(tmp_path / "source")
     baseline = capture_baseline_snapshot(source, tmp_path / "baseline.json")
     result = prototype.prepare_and_validate(
-        source, _bundle(), tmp_path / "candidate", ["src/"],
-        [["/usr/bin/python3", "-c",
-          "from pathlib import Path; assert Path('src/base.py').read_text() == 'VALUE = 2\\n'"]],
+        source,
+        _bundle(),
+        tmp_path / "candidate",
+        ["src/"],
+        [
+            [
+                "/usr/bin/python3",
+                "-c",
+                "from pathlib import Path; assert Path('src/base.py').read_text() == 'VALUE = 2\\n'",
+            ]
+        ],
     )
     binding = verify_isolated_validation(
-        baseline=baseline, source_root=source,
-        candidate_root=tmp_path / "candidate", validation=result,
+        baseline=baseline,
+        source_root=source,
+        candidate_root=tmp_path / "candidate",
+        validation=result,
     )
     assert binding["baseline_sha256"] == baseline["tree_sha256"]
     assert binding["candidate_sha256"] == result["candidate_snapshot_sha256"]
@@ -120,13 +139,22 @@ def test_engine_candidate_binding_rechecks_validation_and_both_trees(tmp_path):
         create_engine_candidate_binding,
         recheck_engine_candidate,
     )
+
     source = _source(tmp_path / "source")
     baseline_path = tmp_path / "baseline.json"
     baseline = capture_baseline_snapshot(source, baseline_path)
     result = prototype.prepare_and_validate(
-        source, _bundle(), tmp_path / "candidate", ["src/"],
-        [["/usr/bin/python3", "-c",
-          "from pathlib import Path; assert Path('src/base.py').read_text() == 'VALUE = 2\\n'"]],
+        source,
+        _bundle(),
+        tmp_path / "candidate",
+        ["src/"],
+        [
+            [
+                "/usr/bin/python3",
+                "-c",
+                "from pathlib import Path; assert Path('src/base.py').read_text() == 'VALUE = 2\\n'",
+            ]
+        ],
     )
     engine_candidate = create_engine_candidate_binding(
         source_root=source,
@@ -151,11 +179,15 @@ def test_engine_candidate_rejects_changed_validation_evidence(tmp_path):
         create_engine_candidate_binding,
         recheck_engine_candidate,
     )
+
     source = _source(tmp_path / "source")
     baseline_path = tmp_path / "baseline.json"
     capture_baseline_snapshot(source, baseline_path)
     result = prototype.prepare_and_validate(
-        source, _bundle(), tmp_path / "candidate", ["src/"],
+        source,
+        _bundle(),
+        tmp_path / "candidate",
+        ["src/"],
         [["/usr/bin/python3", "-c", "pass"]],
     )
     candidate = create_engine_candidate_binding(
@@ -175,6 +207,7 @@ def test_engine_candidate_rejects_changed_validation_evidence(tmp_path):
 def test_engine_recheck_refuses_forged_artifact_binding_on_ordinary_root(tmp_path):
     from builder_candidate_binding import recheck_engine_candidate
     from core import digest
+
     ordinary = tmp_path / "ordinary-repo"
     ordinary.mkdir()
     (ordinary / ".git").mkdir()
@@ -207,6 +240,7 @@ def test_engine_recheck_refuses_forged_artifact_binding_on_ordinary_root(tmp_pat
 def test_engine_recheck_rejects_synthetic_marker_inside_git_repository(tmp_path):
     from builder_candidate_binding import recheck_engine_candidate
     from core import digest
+
     repository = _source(tmp_path / "marked-repo")
     (repository / ".git").mkdir()
     manifest = {
@@ -219,10 +253,14 @@ def test_engine_recheck_rejects_synthetic_marker_inside_git_repository(tmp_path)
     }
     identity = digest(manifest)
     forged = {
-        "kind": "code", "candidate_id": identity, "manifest_hash": identity,
-        "tree_oid": manifest["candidate_sha256"], "manifest": manifest,
+        "kind": "code",
+        "candidate_id": identity,
+        "manifest_hash": identity,
+        "tree_oid": manifest["candidate_sha256"],
+        "manifest": manifest,
         "artifact_binding": {
-            "source_root": str(repository), "candidate_root": str(repository),
+            "source_root": str(repository),
+            "candidate_root": str(repository),
             "baseline_artifact": str(tmp_path / "missing-baseline.json"),
             "validation_artifact": str(tmp_path / "missing-validation.json"),
         },

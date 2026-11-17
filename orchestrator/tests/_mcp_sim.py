@@ -14,8 +14,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 
 class SimState:
-    def __init__(self, token="sim-token-0123456789abcdef", fail=None, delay=0.0,
-                 legacy_marker_mode=False):
+    def __init__(self, token="sim-token-0123456789abcdef", fail=None, delay=0.0, legacy_marker_mode=False):
         self.token = token
         self.fail = fail
         self.delay = float(delay or 0.0)
@@ -25,13 +24,13 @@ class SimState:
         self.legacy_marker_mode = bool(legacy_marker_mode)
         # fail: None | "http500" | "malformed" | "lost_reply" | "no_marker"
         self.lock = threading.Lock()
-        self.calls = []             # [(method, name_or_none)]
-        self.sessions_seen = []     # Mcp-Session-Id header per tools/call
-        self.threads = {}           # threadId -> record
+        self.calls = []  # [(method, name_or_none)]
+        self.sessions_seen = []  # Mcp-Session-Id header per tools/call
+        self.threads = {}  # threadId -> record
         self.projects = [{"projectId": "proj-a"}, {"projectId": "proj-b"}, {"projectId": "proj-c"}]
         self._next = 0
         self.session = "sess-sim-1"
-        self.event_file = None      # optional JSONL launch log for tests
+        self.event_file = None  # optional JSONL launch log for tests
 
 
 class _Handler(BaseHTTPRequestHandler):
@@ -76,22 +75,50 @@ class _Handler(BaseHTTPRequestHandler):
         if fail == "malformed":
             return self._send(200, b"this is not json")
         if method == "initialize":
-            return self._send(200, {"jsonrpc": "2.0", "id": body.get("id"),
-                                    "result": {"protocolVersion": "2025-03-26",
-                                               "capabilities": {},
-                                               "serverInfo": {"name": "mcp-sim", "version": "1"}}},
-                              headers={"Mcp-Session-Id": state.session})
+            return self._send(
+                200,
+                {
+                    "jsonrpc": "2.0",
+                    "id": body.get("id"),
+                    "result": {
+                        "protocolVersion": "2025-03-26",
+                        "capabilities": {},
+                        "serverInfo": {"name": "mcp-sim", "version": "1"},
+                    },
+                },
+                headers={"Mcp-Session-Id": state.session},
+            )
         if method == "notifications/initialized":
             return self._send(202, {})
         if method == "tools/list":
-            return self._send(200, {"jsonrpc": "2.0", "id": body.get("id"),
-                                    "result": {"tools": [{"name": n} for n in (
-                                        "t3_thread_launch", "t3_thread_read",
-                                        "t3_thread_interrupt", "t3_project_list",
-                                        "t3_thread_list")]}})
+            return self._send(
+                200,
+                {
+                    "jsonrpc": "2.0",
+                    "id": body.get("id"),
+                    "result": {
+                        "tools": [
+                            {"name": n}
+                            for n in (
+                                "t3_thread_launch",
+                                "t3_thread_read",
+                                "t3_thread_interrupt",
+                                "t3_project_list",
+                                "t3_thread_list",
+                            )
+                        ]
+                    },
+                },
+            )
         if method != "tools/call":
-            return self._send(200, {"jsonrpc": "2.0", "id": body.get("id"),
-                                    "error": {"code": -32601, "message": "unknown method"}})
+            return self._send(
+                200,
+                {
+                    "jsonrpc": "2.0",
+                    "id": body.get("id"),
+                    "error": {"code": -32601, "message": "unknown method"},
+                },
+            )
         params = body.get("params") or {}
         name = params.get("name")
         args = params.get("arguments") or {}
@@ -118,13 +145,14 @@ class _Handler(BaseHTTPRequestHandler):
                     "message": args.get("message"),
                     "model": model,
                     "provider": (args.get("modelSelection") or {}).get("instanceId"),
-                    "createdAt": datetime.now(timezone.utc).strftime(
-                        "%Y-%m-%dT%H:%M:%S.000Z"),
+                    "createdAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
                 }
                 if state.event_file:
                     with open(state.event_file, "a") as fh:
-                        fh.write(json.dumps({"event": "launch", "threadId": tid,
-                                             "title": args.get("title")}) + "\n")
+                        fh.write(
+                            json.dumps({"event": "launch", "threadId": tid, "title": args.get("title")})
+                            + "\n"
+                        )
                 if state.fail == "lost_reply":
                     return None  # caller turns this into a 500
             return text({"threadId": tid, "projectId": "proj-a", "title": args.get("title")})
@@ -134,6 +162,7 @@ class _Handler(BaseHTTPRequestHandler):
             if rec is None:
                 raise KeyError(tid)
             import re as _re
+
             marker = _re.search(r"ENGINE-T3-RESULT job-[0-9a-f]+", rec["message"] or "")
             nonce = _re.search(r"Per-attempt token: ([0-9a-f]+)", rec["message"] or "")
             if state.fail == "no_marker" or marker is None:
@@ -144,6 +173,7 @@ class _Handler(BaseHTTPRequestHandler):
                 # the simulator synthetic while exercising production decoding
                 # and binding checks instead of relying on a fabricated PASS.
                 import json as _json
+
                 prompt = rec.get("message") or ""
                 prefix = "result_json must encode this envelope, changing verdict/findings as warranted: "
                 at = prompt.find(prefix)
@@ -156,38 +186,52 @@ class _Handler(BaseHTTPRequestHandler):
                     prepared, _end = _json.JSONDecoder().raw_decode(prompt, start)
                     prepared = dict(prepared)
                     prepared.update(status="COMPLETE", failure_class=None, findings=[])
-                    prepared["verdict"] = "PROPOSED" if prepared.get("role") in ("architect", "proposer") else "PASS"
-                    wire = {"result_json": _json.dumps(prepared),
-                            "explanation": "Synthetic simulator result wire.",
-                            "plan_text": "Synthetic simulator plan." if prepared.get("role") in ("architect", "proposer") else ""}
+                    prepared["verdict"] = (
+                        "PROPOSED" if prepared.get("role") in ("architect", "proposer") else "PASS"
+                    )
+                    wire = {
+                        "result_json": _json.dumps(prepared),
+                        "explanation": "Synthetic simulator result wire.",
+                        "plan_text": "Synthetic simulator plan."
+                        if prepared.get("role") in ("architect", "proposer")
+                        else "",
+                    }
                     answer = _json.dumps(wire) + "\n" + marker.group(0)
                 if nonce:
                     answer += f"\nPer-attempt token: {nonce.group(1)}"
-            return text({
-                "thread": {"threadId": tid, "status": "completed",
-                           "model": rec["model"], "pendingRequestCount": 0},
-                "recentRuns": [{"status": "completed", "executedModel": rec["model"]}],
-                "items": [{"type": "assistant_message", "text": answer}],
-            })
+            return text(
+                {
+                    "thread": {
+                        "threadId": tid,
+                        "status": "completed",
+                        "model": rec["model"],
+                        "pendingRequestCount": 0,
+                    },
+                    "recentRuns": [{"status": "completed", "executedModel": rec["model"]}],
+                    "items": [{"type": "assistant_message", "text": answer}],
+                }
+            )
         if name == "t3_thread_interrupt":
             if state.event_file:
                 with open(state.event_file, "a") as fh:
-                    fh.write(json.dumps({"event": "interrupt",
-                                         "threadId": args.get("threadId")}) + "\n")
+                    fh.write(json.dumps({"event": "interrupt", "threadId": args.get("threadId")}) + "\n")
             return text({"threadId": args.get("threadId"), "status": "cancelled"})
         if name == "t3_project_list":
             limit = int(args.get("limit") or 100)
             cursor = int(args.get("cursor") or 0)
-            page = state.projects[cursor:cursor + limit]
+            page = state.projects[cursor : cursor + limit]
             nxt = cursor + limit if cursor + limit < len(state.projects) else None
             return text({"projects": page, "nextCursor": nxt})
         if name == "t3_thread_list":
             title = args.get("titleContains") or ""
-            matches = [{"threadId": t, "title": r["title"], "createdAt": r["createdAt"]}
-                       for t, r in state.threads.items() if title in (r["title"] or "")]
+            matches = [
+                {"threadId": t, "title": r["title"], "createdAt": r["createdAt"]}
+                for t, r in state.threads.items()
+                if title in (r["title"] or "")
+            ]
             limit = int(args.get("limit") or 100)
             cursor = int(args.get("cursor") or 0)
-            page = matches[cursor:cursor + limit]
+            page = matches[cursor : cursor + limit]
             nxt = cursor + limit if cursor + limit < len(matches) else None
             return text({"threads": page, "nextCursor": nxt})
         return {"isError": True, "content": [{"type": "text", "text": f"unknown tool {name}"}]}

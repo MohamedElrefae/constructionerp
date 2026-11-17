@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import argparse
 import os
-from pathlib import Path
 import socket
 import stat
 import struct
 import sys
+from pathlib import Path
 
 try:
     from ..managed_supervisor_attestation import (
@@ -65,8 +65,7 @@ def _read_exact_request(conn) -> bytes:
     return bytes(data)
 
 
-def verify_request(conn, *, verifier=verify_local_service_attestation,
-                   config_path=CONFIG_PATH):
+def verify_request(conn, *, verifier=verify_local_service_attestation, config_path=CONFIG_PATH):
     """Authorize a single request; all failures map to a generic deny."""
     try:
         peer_pid, peer_uid, _peer_gid = _peer_credentials(conn)
@@ -88,11 +87,16 @@ def _prepare_socket(path=SOCKET_PATH, *, group_name="managed-supervisor"):
         directory = path.parent.lstat()
     except OSError:
         raise VerifierError("verifier socket directory must be provisioned") from None
-    if (not stat.S_ISDIR(directory.st_mode) or stat.S_ISLNK(directory.st_mode)
-            or directory.st_uid != 0 or directory.st_mode & 0o027):
+    if (
+        not stat.S_ISDIR(directory.st_mode)
+        or stat.S_ISLNK(directory.st_mode)
+        or directory.st_uid != 0
+        or directory.st_mode & 0o027
+    ):
         raise VerifierError("verifier socket directory ownership or mode is unsafe")
     try:
         import grp
+
         gid = grp.getgrnam(group_name).gr_gid
     except (ImportError, KeyError):
         raise VerifierError("managed-supervisor group is not provisioned") from None
@@ -122,7 +126,7 @@ def serve_forever(*, path=SOCKET_PATH, group_name="managed-supervisor"):
         while True:
             try:
                 conn, _address = listener.accept()
-            except socket.timeout:
+            except TimeoutError:
                 continue
             with conn:
                 conn.settimeout(CLIENT_TIMEOUT)

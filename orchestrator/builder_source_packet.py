@@ -16,7 +16,6 @@ from pathlib import Path, PurePosixPath
 
 from core import WorkflowError
 
-
 SOURCE_PACKET_SCHEMA = "engine-builder-source-packet/v1"
 MAX_SOURCE_FILES = 32
 MAX_SOURCE_FILE_BYTES = 12_000
@@ -27,12 +26,26 @@ MAX_RETURN_TOTAL_BYTES = 24_000
 MAX_RETURN_JSON_CHARS = 50_000
 _HEX = re.compile(r"^[0-9a-f]{64}$")
 _BLOCKED_PARTS = {
-    ".git", ".codex", ".agents", "private", "secrets", "credentials",
-    "orchestrator/var", "state.json", "checkpoints.db", "launch_policy.json",
-    "approval.json", "approvals", "owner-approval", "owner_approval",
-    "dispatch-ledger.sqlite3", "dispatch-ledger.db",
+    ".git",
+    ".codex",
+    ".agents",
+    "private",
+    "secrets",
+    "credentials",
+    "orchestrator/var",
+    "state.json",
+    "checkpoints.db",
+    "launch_policy.json",
+    "approval.json",
+    "approvals",
+    "owner-approval",
+    "owner_approval",
+    "dispatch-ledger.sqlite3",
+    "dispatch-ledger.db",
 }
-_CREDENTIAL_NAME = re.compile(r"(?:^|[._-])(secret|credential|password|token|private[-_]?key)(?:$|[._-])", re.I)
+_CREDENTIAL_NAME = re.compile(
+    r"(?:^|[._-])(secret|credential|password|token|private[-_]?key)(?:$|[._-])", re.I
+)
 
 
 def _sha(data):
@@ -40,12 +53,14 @@ def _sha(data):
 
 
 def _relative(value):
-    if (not isinstance(value, str) or not value or len(value) > 240
-            or "\\" in value or "\x00" in value):
+    if not isinstance(value, str) or not value or len(value) > 240 or "\\" in value or "\x00" in value:
         raise WorkflowError("Invalid builder source path")
     path = PurePosixPath(value)
-    if (path.is_absolute() or any(part in ("", ".", "..") for part in value.split("/"))
-            or path.as_posix() != value):
+    if (
+        path.is_absolute()
+        or any(part in ("", ".", "..") for part in value.split("/"))
+        or path.as_posix() != value
+    ):
         raise WorkflowError("Builder source path must be normalized and relative")
     if _sensitive_path(value):
         raise WorkflowError("Git, control, and credential paths are excluded from builder source packets")
@@ -66,8 +81,9 @@ def _sensitive_path(value):
 
 
 def _allowed(path, allowed_paths):
-    return any(path == prefix or (prefix.endswith("/") and path.startswith(prefix))
-               for prefix in allowed_paths)
+    return any(
+        path == prefix or (prefix.endswith("/") and path.startswith(prefix)) for prefix in allowed_paths
+    )
 
 
 def _walk_allowed(root, allowed_paths):
@@ -89,15 +105,18 @@ def _walk_allowed(root, allowed_paths):
                     if _sensitive_path(rel_parent + "/" + name):
                         continue
                     if (current_path / name).is_symlink():
-                        raise WorkflowError("Symlink in builder source directory: "
-                                            + (current_path / name).relative_to(root).as_posix())
+                        raise WorkflowError(
+                            "Symlink in builder source directory: "
+                            + (current_path / name).relative_to(root).as_posix()
+                        )
                     kept_dirs.append(name)
                 dirs[:] = kept_dirs
                 for name in sorted(files):
                     file_path = current_path / name
                     if file_path.is_symlink():
-                        raise WorkflowError("Symlink in builder source directory: "
-                                            + file_path.relative_to(root).as_posix())
+                        raise WorkflowError(
+                            "Symlink in builder source directory: " + file_path.relative_to(root).as_posix()
+                        )
                     if not file_path.is_file():
                         continue
                     relative = file_path.relative_to(root).as_posix()
@@ -126,7 +145,9 @@ def _read_source_file(root, relative_path, max_file_bytes):
                 next_fd = os.open(part, flags, dir_fd=fd)
             except OSError as exc:
                 if exc.errno in (errno.ELOOP, errno.ENOTDIR):
-                    raise WorkflowError("Symlink or non-directory in builder source path: " + relative_path) from None
+                    raise WorkflowError(
+                        "Symlink or non-directory in builder source path: " + relative_path
+                    ) from None
                 raise WorkflowError("Builder source path cannot be opened: " + relative_path) from exc
             os.close(fd)
             fd = next_fd
@@ -142,14 +163,19 @@ def _read_source_file(root, relative_path, max_file_bytes):
         os.close(fd)
 
 
-def build_builder_source_packet(source_root, allowed_paths, *, max_files=MAX_SOURCE_FILES,
-                                max_file_bytes=MAX_SOURCE_FILE_BYTES,
-                                max_total_bytes=MAX_SOURCE_TOTAL_BYTES):
+def build_builder_source_packet(
+    source_root,
+    allowed_paths,
+    *,
+    max_files=MAX_SOURCE_FILES,
+    max_file_bytes=MAX_SOURCE_FILE_BYTES,
+    max_total_bytes=MAX_SOURCE_TOTAL_BYTES,
+):
     """Capture bounded UTF-8 files and their base hashes for one builder job."""
     root = Path(source_root).resolve(strict=True)
     if not root.is_dir():
         raise WorkflowError("Builder source root must be a directory")
-    if not isinstance(allowed_paths, (list, tuple)) or not allowed_paths:
+    if not isinstance(allowed_paths, list | tuple) or not allowed_paths:
         raise WorkflowError("Builder source packet requires explicit allowed paths")
     normalized = []
     for item in allowed_paths:
@@ -258,10 +284,12 @@ def build_bound_builder_bundle(files_json, job, source_packet):
             raise WorkflowError("Builder source packet entry is malformed")
         path = _relative(item["path"])
         absent = item["content"] is None and item["base_sha256"] is None
-        valid_existing = (isinstance(item["content"], str)
-                          and isinstance(item["base_sha256"], str)
-                          and _HEX.fullmatch(item["base_sha256"]) is not None
-                          and _sha(item["content"].encode("utf-8")) == item["base_sha256"])
+        valid_existing = (
+            isinstance(item["content"], str)
+            and isinstance(item["base_sha256"], str)
+            and _HEX.fullmatch(item["base_sha256"]) is not None
+            and _sha(item["content"].encode("utf-8")) == item["base_sha256"]
+        )
         if (not absent and not valid_existing) or path in bases:
             raise WorkflowError("Builder source packet hash mismatch or duplicate path: " + path)
         bases[path] = item["base_sha256"]
@@ -291,20 +319,23 @@ def build_bound_builder_bundle(files_json, job, source_packet):
         total += len(content)
         if total > MAX_RETURN_TOTAL_BYTES:
             raise WorkflowError("Builder returned files exceed total size bound")
-        bound.append({
-            "path": path,
-            "base_sha256": bases[path],
-            "content_base64": base64.b64encode(content).decode("ascii"),
-            "content_sha256": _sha(content),
-        })
+        bound.append(
+            {
+                "path": path,
+                "base_sha256": bases[path],
+                "content_base64": base64.b64encode(content).decode("ascii"),
+                "content_sha256": _sha(content),
+            }
+        )
     bundle = {
         "schema": "engine-builder-bundle/v1",
         "job_id": envelope.get("job_id"),
         "candidate_id": envelope.get("candidate_id"),
         "plan_revision_hash": envelope.get("plan_revision_hash"),
         "files": bound,
-        "bundle_sha256": _sha(json.dumps(bound, sort_keys=True, separators=(",", ":"),
-                                           ensure_ascii=False).encode("utf-8")),
+        "bundle_sha256": _sha(
+            json.dumps(bound, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        ),
     }
     encoded = json.dumps(bundle, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     if len(encoded) > MAX_RETURN_JSON_CHARS:
@@ -339,15 +370,17 @@ def normalize_builder_artifact_wire(assistant_text, job, source_packet):
             offset += 1
             continue
         offset = end
-        if (isinstance(value, dict)
-                and set(value) == {"result_json", "explanation", "plan_text", BUILDER_BUNDLE_KEY}
-                and all(isinstance(value.get(key), str)
-                        for key in ("result_json", "explanation", "plan_text", BUILDER_BUNDLE_KEY))):
+        if (
+            isinstance(value, dict)
+            and set(value) == {"result_json", "explanation", "plan_text", BUILDER_BUNDLE_KEY}
+            and all(
+                isinstance(value.get(key), str)
+                for key in ("result_json", "explanation", "plan_text", BUILDER_BUNDLE_KEY)
+            )
+        ):
             wire = value
             break
     if wire is None:
         raise WorkflowError("T3 builder response has no complete artifact result wire")
-    wire[BUILDER_BUNDLE_KEY] = build_bound_builder_bundle(
-        wire[BUILDER_BUNDLE_KEY], job, source_packet
-    )
+    wire[BUILDER_BUNDLE_KEY] = build_bound_builder_bundle(wire[BUILDER_BUNDLE_KEY], job, source_packet)
     return marker + "\n" + json.dumps(wire, separators=(",", ":"), ensure_ascii=False)

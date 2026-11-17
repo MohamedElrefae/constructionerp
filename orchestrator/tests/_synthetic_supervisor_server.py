@@ -1,9 +1,10 @@
 """Test-owned supervisor process used only with the local MCP simulator."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from t3_supervisor import Supervisor, serve  # noqa: E402
+from t3_supervisor import Supervisor, serve
 
 
 class SyntheticWorkflowSupervisor(Supervisor):
@@ -21,10 +22,15 @@ def main():
     parser.add_argument("--peer-uid", type=int, default=None)
     args = parser.parse_args()
     supervisor = SyntheticWorkflowSupervisor(
-        socket_path=Path(args.socket), state_path=Path(args.state),
-        token=Path(args.token_file).read_text().strip(), base_url=args.base_url,
-        mcp_token=Path(args.mcp_token_file).read_text().strip(), model=args.model,
-        allowed_models=args.allowed_model or [args.model], peer_uid=args.peer_uid)
+        socket_path=Path(args.socket),
+        state_path=Path(args.state),
+        token=Path(args.token_file).read_text().strip(),
+        base_url=args.base_url,
+        mcp_token=Path(args.mcp_token_file).read_text().strip(),
+        model=args.model,
+        allowed_models=args.allowed_model or [args.model],
+        peer_uid=args.peer_uid,
+    )
     serve(supervisor)
 
 

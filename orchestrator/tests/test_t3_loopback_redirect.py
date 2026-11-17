@@ -1,8 +1,9 @@
 """Loopback MCP credentials must not follow HTTP redirects."""
+
 import threading
 import unittest
-from unittest import mock
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from unittest import mock
 
 from t3_transport import HttpT3Client, TransportRefusal, obtain_mcp_token, require_loopback
 
@@ -16,19 +17,28 @@ class LoopbackRedirectTests(unittest.TestCase):
             return result
 
         opener = mock.Mock()
-        opener.open.side_effect = [response(b'{"client_id":"synthetic"}'),
-                                   response(b'{}'), OSError("synthetic failure")]
+        opener.open.side_effect = [
+            response(b'{"client_id":"synthetic"}'),
+            response(b"{}"),
+            OSError("synthetic failure"),
+        ]
         pairing = mock.Mock(returncode=0, stdout='{"id":"pair-id","credential":"synthetic-code"}')
-        with mock.patch("t3_transport._loopback_opener", return_value=opener), \
-                mock.patch("subprocess.run", side_effect=[pairing, mock.Mock(returncode=0)]) as run:
+        with (
+            mock.patch("t3_transport._loopback_opener", return_value=opener),
+            mock.patch("subprocess.run", side_effect=[pairing, mock.Mock(returncode=0)]) as run,
+        ):
             with self.assertRaises(OSError):
                 obtain_mcp_token(base_url="http://127.0.0.1:12345", t3_cli="/synthetic/t3")
         self.assertEqual(run.call_count, 2)
         self.assertEqual(run.call_args_list[-1].args[0][-2:], ["revoke", "pair-id"])
 
     def test_origin_requires_literal_loopback_and_no_extra_components(self):
-        for value in ("http://localhost:1234", "http://127.0.0.1.example:12",
-                      "http://127.0.0.1:1234/path", "http://127.0.0.1:99999"):
+        for value in (
+            "http://localhost:1234",
+            "http://127.0.0.1.example:12",
+            "http://127.0.0.1:1234/path",
+            "http://127.0.0.1:99999",
+        ):
             with self.subTest(value=value), self.assertRaises(TransportRefusal):
                 require_loopback(value)
 

@@ -41,7 +41,7 @@ def _wait_for(pred, timeout=40.0, interval=0.05):
 class DashboardProcessRestartTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        import httpx  # noqa: F401  (dependency check)
+        import httpx
 
         cls._tmp = tempfile.TemporaryDirectory(prefix="proc-restart-")
         cls.dir = Path(cls._tmp.name)
@@ -64,9 +64,7 @@ class DashboardProcessRestartTests(unittest.TestCase):
             ORCHESTRATOR_PYTHON="/usr/bin/python3.12",
             DASHBOARD_RUN_POLL_BASE="0.05",
             DASHBOARD_RUN_POLL_CAP="0.1",
-            PYTHONPATH=":".join(
-                [str(ORCH.parent), str(ORCH), "/opt/py312-site-packages", "/opt/dash-deps"]
-            ),
+            PYTHONPATH=":".join([str(ORCH.parent), str(ORCH), "/opt/py312-site-packages", "/opt/dash-deps"]),
         )
         for key in ("ENGINE_NATIVE_DISPATCH", "ENGINE_T3_BACKEND"):
             cls.env.pop(key, None)
@@ -87,7 +85,8 @@ class DashboardProcessRestartTests(unittest.TestCase):
     def tearDownClass(cls):
         for proc in reversed(getattr(cls, "_procs", [])):
             try:
-                proc.kill(); proc.wait(timeout=5)
+                proc.kill()
+                proc.wait(timeout=5)
             except Exception:
                 pass
         cls._tmp.cleanup()
@@ -99,25 +98,52 @@ class DashboardProcessRestartTests(unittest.TestCase):
         os.chmod(cls.dir / "mcp.token", 0o600)
         cls.events = cls.dir / "launches.jsonl"
         sim = subprocess.Popen(
-            [sys.executable, str(TESTS / "_mcp_sim_server.py"), "--token", mcp,
-             "--events", str(cls.events), "--delay", str(delay)],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-            cwd=str(ORCH), env=cls.env)
+            [
+                sys.executable,
+                str(TESTS / "_mcp_sim_server.py"),
+                "--token",
+                mcp,
+                "--events",
+                str(cls.events),
+                "--delay",
+                str(delay),
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+            env=cls.env,
+        )
         cls._procs.append(sim)
         cls.url = json.loads(sim.stdout.readline())["url"]
         peer = "synthetic-peer-token-0123456789"
         (cls.dir / "peer.token").write_text(peer)
         os.chmod(cls.dir / "peer.token", 0o600)
         sup = subprocess.Popen(
-            [sys.executable, str(TESTS / "_synthetic_supervisor_server.py"),
-             "--socket", str(cls.dir / "sup.sock"),
-             "--state", str(cls.dir / "state.json"),
-             "--token-file", str(cls.dir / "peer.token"),
-             "--base-url", cls.url,
-             "--mcp-token-file", str(cls.dir / "mcp.token"),
-             "--model", MODEL, "--allowed-model", MODEL],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-            cwd=str(ORCH), env=cls.env)
+            [
+                sys.executable,
+                str(TESTS / "_synthetic_supervisor_server.py"),
+                "--socket",
+                str(cls.dir / "sup.sock"),
+                "--state",
+                str(cls.dir / "state.json"),
+                "--token-file",
+                str(cls.dir / "peer.token"),
+                "--base-url",
+                cls.url,
+                "--mcp-token-file",
+                str(cls.dir / "mcp.token"),
+                "--model",
+                MODEL,
+                "--allowed-model",
+                MODEL,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+            env=cls.env,
+        )
         cls._procs.append(sup)
         assert _wait_for(lambda: (cls.dir / "sup.sock").exists())
         assert sup.stdout.readline()
@@ -126,8 +152,12 @@ class DashboardProcessRestartTests(unittest.TestCase):
     def _start_server(cls):
         proc = subprocess.Popen(
             [sys.executable, "-m", "dashboard.app"],
-            cwd=str(ORCH.parent), env=cls.env,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            cwd=str(ORCH.parent),
+            env=cls.env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
         cls._procs.append(proc)
         cls.server = proc
         import httpx
@@ -150,9 +180,9 @@ class DashboardProcessRestartTests(unittest.TestCase):
         cls.client = httpx.Client(base_url=BASE_URL, timeout=60.0)
         r = cls.client.get("/api/auth/csrf-token")
         csrf = r.json()["csrf_token"]
-        cls.client.headers.update({"Cookie": f"dashboard_csrf={csrf}",
-                                   "X-CSRF-Token": csrf,
-                                   "Origin": ORIGIN})
+        cls.client.headers.update(
+            {"Cookie": f"dashboard_csrf={csrf}", "X-CSRF-Token": csrf, "Origin": ORIGIN}
+        )
         if not getattr(cls, "user", None):
             from dashboard import auth as auth_mod
 
@@ -167,12 +197,11 @@ class DashboardProcessRestartTests(unittest.TestCase):
                     pw = line.split(": ", 1)[1]
             cls.user = user
             cls.password = pw
-        r = cls.client.post("/api/auth/login",
-                            json={"username": cls.user, "password": cls.password})
+        r = cls.client.post("/api/auth/login", json={"username": cls.user, "password": cls.password})
         if r.status_code == 401 and not getattr(cls, "password_setup", False):
-            r = cls.client.post("/api/auth/login",
-                                json={"username": cls.user,
-                                      "password": "NewPermanentPass123!"})
+            r = cls.client.post(
+                "/api/auth/login", json={"username": cls.user, "password": "NewPermanentPass123!"}
+            )
             if r.status_code == 200:
                 cls.password = "NewPermanentPass123!"
                 cls.password_setup = True
@@ -184,13 +213,17 @@ class DashboardProcessRestartTests(unittest.TestCase):
                 session = header.split(";", 1)[0].split("=", 1)[1]
         assert session, r.headers
         cls.client.headers.update(
-            {"Cookie": f"dashboard_session={session}; dashboard_csrf={csrf}",
-             "X-CSRF-Token": csrf, "Origin": ORIGIN})
+            {
+                "Cookie": f"dashboard_session={session}; dashboard_csrf={csrf}",
+                "X-CSRF-Token": csrf,
+                "Origin": ORIGIN,
+            }
+        )
         if not getattr(cls, "password_setup", False):
             r2 = cls.client.post(
                 "/api/auth/setup-password",
-                json={"current_password": cls.password,
-                      "new_password": "NewPermanentPass123!"})
+                json={"current_password": cls.password, "new_password": "NewPermanentPass123!"},
+            )
             assert r2.status_code == 200, r2.text
             cls.password = "NewPermanentPass123!"
             cls.password_setup = True
@@ -199,8 +232,12 @@ class DashboardProcessRestartTests(unittest.TestCase):
                 if header.startswith("dashboard_session="):
                     session = header.split(";", 1)[0].split("=", 1)[1]
             cls.client.headers.update(
-                {"Cookie": f"dashboard_session={session}; dashboard_csrf={csrf}",
-                 "X-CSRF-Token": csrf, "Origin": ORIGIN})
+                {
+                    "Cookie": f"dashboard_session={session}; dashboard_csrf={csrf}",
+                    "X-CSRF-Token": csrf,
+                    "Origin": ORIGIN,
+                }
+            )
         cls.csrf = csrf
 
     def _reset_services(self, delay=1.5):
@@ -209,10 +246,13 @@ class DashboardProcessRestartTests(unittest.TestCase):
             if proc is server:
                 continue
             try:
-                proc.terminate(); proc.wait(timeout=5)
+                proc.terminate()
+                proc.wait(timeout=5)
             except Exception:
-                try: proc.kill()
-                except Exception: pass
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
         self._procs = [server] if server else []
         for name in ("state.json", "sup.sock"):
             try:
@@ -231,7 +271,8 @@ class DashboardProcessRestartTests(unittest.TestCase):
         cfg = json.loads(row[0].replace(OLD_ROOT, str(root)))
         cfg["root"] = str(root)
         conn.execute("update workflow_meta set value=? where key='config'", (json.dumps(cfg),))
-        conn.commit(); conn.close()
+        conn.commit()
+        conn.close()
         for p in root.rglob("*"):
             if p.is_file() and p.suffix in (".json", ".md", ".txt") and p.stat().st_size < 2_000_000:
                 try:
@@ -259,8 +300,7 @@ class DashboardProcessRestartTests(unittest.TestCase):
             conn.execute(
                 "INSERT OR REPLACE INTO registered_tasks (task_id, work_item, worktree_path, "
                 "task_branch, registered_utc, cached_status, cached_stage) VALUES (?,?,?,?,?,?,?)",
-                (task_id, "pilot-loop", str(root), "pilot",
-                 "2026-11-15T00:00:00Z", "DRAFT", "1"),
+                (task_id, "pilot-loop", str(root), "pilot", "2026-11-15T00:00:00Z", "DRAFT", "1"),
             )
         conn.close()
         return root, job_id, task_id
@@ -334,9 +374,12 @@ class DashboardProcessRestartTests(unittest.TestCase):
             finally:
                 conn.close()
 
-        self.assertTrue(_wait_for(
-            lambda: pass_in_flight() and self._job_status(root, job_id) in ("LAUNCH_INTENT", "RUNNING"),
-            timeout=20))
+        self.assertTrue(
+            _wait_for(
+                lambda: pass_in_flight() and self._job_status(root, job_id) in ("LAUNCH_INTENT", "RUNNING"),
+                timeout=20,
+            )
+        )
         self._kill_server()
         self.assertTrue(
             _wait_for(lambda: not self._engine_children(root), timeout=10),
@@ -372,8 +415,9 @@ class DashboardProcessRestartTests(unittest.TestCase):
             time.sleep(0.5)
         self.assertNotEqual(resolved["state"], "RECONCILIATION_REQUIRED", resolved)
         events = self._launch_events()
-        self.assertEqual(len({e["threadId"] for e in events}), len(events),
-                         f"a job was launched twice: {events}")
+        self.assertEqual(
+            len({e["threadId"] for e in events}), len(events), f"a job was launched twice: {events}"
+        )
         self.assertLessEqual(len(events), 2, events)
         conn = sqlite3.connect(str(db))
         try:
@@ -400,9 +444,12 @@ class DashboardProcessRestartTests(unittest.TestCase):
             finally:
                 conn.close()
 
-        self.assertTrue(_wait_for(
-            lambda: pass_in_flight() and self._job_status(root, job_id) in ("LAUNCH_INTENT", "RUNNING"),
-            timeout=20))
+        self.assertTrue(
+            _wait_for(
+                lambda: pass_in_flight() and self._job_status(root, job_id) in ("LAUNCH_INTENT", "RUNNING"),
+                timeout=20,
+            )
+        )
         self._kill_server()
         self.assertTrue(_wait_for(lambda: not self._engine_children(root), timeout=10))
         self._start_server()
@@ -416,8 +463,9 @@ class DashboardProcessRestartTests(unittest.TestCase):
         still = self._status(task_id)
         self.assertEqual(still["state"], "RECONCILIATION_REQUIRED", still)
         self.assertTrue(still["stop_requested"])
-        refused = self.client.delete(f"/api/tasks/{task_id}",
-                                     headers={"Origin": ORIGIN, "X-CSRF-Token": self.csrf})
+        refused = self.client.delete(
+            f"/api/tasks/{task_id}", headers={"Origin": ORIGIN, "X-CSRF-Token": self.csrf}
+        )
         self.assertEqual(refused.status_code, 409, refused.text)
         # Authoritative reconciliation waits for the supervisor ledger and then
         # accepts the late result; it never launches a second time.

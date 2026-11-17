@@ -81,9 +81,8 @@ from pathlib import Path
 
 _UNSET = object()
 
-_HERE = Path(__file__).resolve().parent          # orchestrator/
-from core import WorkflowError, atomic_write, utc  # noqa: E402  (orchestrator flat import)
-
+_HERE = Path(__file__).resolve().parent  # orchestrator/
+from core import WorkflowError, atomic_write, utc
 from engine_t3_dispatch import (
     L_CANCELLED,
     L_COLLECTED,
@@ -130,7 +129,7 @@ def _extract_wire(raw, *, allow_builder_bundle=False) -> dict:
     by the marker line, or the envelope embedded in surrounding prose.
     """
     text = raw if isinstance(raw, str) else raw.decode("utf-8", "replace")
-    for line in reversed(text.splitlines()):      # final message first
+    for line in reversed(text.splitlines()):  # final message first
         line = line.strip()
         if not line.startswith("{"):
             continue
@@ -142,7 +141,7 @@ def _extract_wire(raw, *, allow_builder_bundle=False) -> dict:
             return obj
     decoder = json.JSONDecoder()
     idx = 0
-    while True:                                   # balanced scan fallback
+    while True:  # balanced scan fallback
         idx = text.find("{", idx)
         if idx < 0:
             break
@@ -168,8 +167,15 @@ class T3DispatchLauncher:
 
     allow_builder_for_tests = False
 
-    def __init__(self, root, *, transport_factory=None, allow_dispatch=True,
-                 hard_timeout_s=None, min_poll_interval_s=5.0):
+    def __init__(
+        self,
+        root,
+        *,
+        transport_factory=None,
+        allow_dispatch=True,
+        hard_timeout_s=None,
+        min_poll_interval_s=5.0,
+    ):
         self.root = str(Path(root).resolve())
         self.transport_factory = transport_factory
         self.allow_dispatch = bool(allow_dispatch)
@@ -195,9 +201,7 @@ class T3DispatchLauncher:
                 raise WorkflowError("T3 backend: engine store absent")
             conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
             try:
-                row = conn.execute(
-                    "SELECT value FROM workflow_meta WHERE key='config'"
-                ).fetchone()
+                row = conn.execute("SELECT value FROM workflow_meta WHERE key='config'").fetchone()
             finally:
                 conn.close()
             if not row:
@@ -214,23 +218,22 @@ class T3DispatchLauncher:
                 try:
                     doc = json.loads(path.read_text())
                 except (OSError, ValueError) as exc:
-                    raise WorkflowError(
-                        f"T3 backend: launch policy unreadable: {exc}") from exc
+                    raise WorkflowError(f"T3 backend: launch policy unreadable: {exc}") from exc
             if not isinstance(doc, dict):
-                raise WorkflowError(
-                    "T3 backend requires a valid orchestrator/launch_policy.json")
+                raise WorkflowError("T3 backend requires a valid orchestrator/launch_policy.json")
             models = doc.get("allowed_models")
             if (
-                not isinstance(models, list) or not models
+                not isinstance(models, list)
+                or not models
                 or not all(isinstance(m, str) and m for m in models)
             ):
                 raise WorkflowError(
-                    "T3 backend: launch policy allowed_models must be a "
-                    "non-empty list of strings")
+                    "T3 backend: launch policy allowed_models must be a " "non-empty list of strings"
+                )
             self._policy = doc
         return self._policy
 
-    def dispatcher(self) -> "EngineT3Dispatcher":
+    def dispatcher(self) -> EngineT3Dispatcher:
         if self._dispatcher is None:
             config = self.engine_config()
             work_item = config.get("work_item")
@@ -239,8 +242,8 @@ class T3DispatchLauncher:
             allowed = list(self.policy()["allowed_models"])
             if self.transport_factory is not None:
                 transport = self.transport_factory(
-                    root=self.root, allowed_models=allowed,
-                    allow_send=self.allow_dispatch)
+                    root=self.root, allowed_models=allowed, allow_send=self.allow_dispatch
+                )
             else:
                 transport = self._real_transport(allowed_models=allowed)
             var = Path(self.root) / "orchestrator" / "var"
@@ -280,34 +283,28 @@ class T3DispatchLauncher:
                 "flag, sealed marker or namespace grants it."
             )
         if not self.allow_dispatch:
-            raise WorkflowError(
-                "T3 launch authorization not granted "
-                "(ENGINE_T3_LAUNCH_AUTH is not true)")
+            raise WorkflowError("T3 launch authorization not granted " "(ENGINE_T3_LAUNCH_AUTH is not true)")
         spec = job.get("spec") or {}
         role = job.get("role") or spec.get("role")
         if role == "builder":
-            raise WorkflowError(
-                "T3 backend refuses builder dispatch (read-only transport)")
+            raise WorkflowError("T3 backend refuses builder dispatch (read-only transport)")
         envelope = spec.get("envelope") or {}
         if envelope.get("candidate_kind") == "stage4-proposal":
-            raise WorkflowError(
-                "T3 backend refuses stage4-proposal dispatch (private stage)")
+            raise WorkflowError("T3 backend refuses stage4-proposal dispatch (private stage)")
         job_root = spec.get("root")
         if job_root and str(Path(job_root).resolve()) != self.root:
-            raise WorkflowError(
-                "T3 backend refuses cross-root dispatch "
-                f"({job_root} != {self.root})")
+            raise WorkflowError("T3 backend refuses cross-root dispatch " f"({job_root} != {self.root})")
         policy = self.policy()
         if spec.get("model") not in policy["allowed_models"]:
             raise WorkflowError(
-                f"T3 backend refuses model {spec.get('model')!r} "
-                "not in launch policy allowed_models")
+                f"T3 backend refuses model {spec.get('model')!r} " "not in launch policy allowed_models"
+            )
         config = self.engine_config()
         expected_wi = config.get("work_item")
         if expected_wi and envelope.get("work_item") != expected_wi:
             raise WorkflowError(
-                "T3 backend refuses job work_item "
-                f"{envelope.get('work_item')!r} != engine {expected_wi!r}")
+                "T3 backend refuses job work_item " f"{envelope.get('work_item')!r} != engine {expected_wi!r}"
+            )
 
     # ------------------------------------------------------------------ #
     # engine hook 2: dispatch (called post-gates, post-LAUNCH_INTENT)
@@ -342,8 +339,7 @@ class T3DispatchLauncher:
             "role": job.get("role") or spec.get("role"),
             # job-<hex24> satisfies IDEM_RE; deterministic per engine job.
             "idempotency_key": job["job_id"],
-            "work_item": envelope.get("work_item")
-            or self.engine_config().get("work_item"),
+            "work_item": envelope.get("work_item") or self.engine_config().get("work_item"),
             "root": self.root,
             "model": spec["model"],
             "brief": spec["prompt"],
@@ -369,8 +365,7 @@ class T3DispatchLauncher:
         if rec is not None and rec["state"] == L_RECONCILIATION:
             # Durable owner gate: no transport contact ever; the engine maps
             # the WorkflowError code to a RECONCILIATION_REQUIRED pause.
-            raise WorkflowError(
-                f"RECONCILIATION_REQUIRED: {rec.get('error') or job_id}")
+            raise WorkflowError(f"RECONCILIATION_REQUIRED: {rec.get('error') or job_id}")
         if (
             rec is not None
             and rec["state"] in (L_PENDING, L_DISPATCHING, L_DISPATCHED)
@@ -393,8 +388,7 @@ class T3DispatchLauncher:
         except TransportReconciliationRequired as exc:
             # Never re-sent, never guessed: the engine parks the job as
             # RECONCILIATION_REQUIRED for explicit owner reconciliation.
-            raise WorkflowError(
-                f"RECONCILIATION_REQUIRED: {exc}") from exc
+            raise WorkflowError(f"RECONCILIATION_REQUIRED: {exc}") from exc
         except TransportRefusal as exc:
             self._write_denial(job, exc)
             return
@@ -408,8 +402,7 @@ class T3DispatchLauncher:
         except TransportReconciliationRequired as exc:
             # Terminal-completed but projection missing/empty: never a false
             # accept, never a hidden malformed result — owner reconciles.
-            raise WorkflowError(
-                f"RECONCILIATION_REQUIRED: {exc}") from exc
+            raise WorkflowError(f"RECONCILIATION_REQUIRED: {exc}") from exc
         except TransportRefusal as exc:
             # collect() refusal: transport validation or integrity divergence —
             # raw text feeds the engine's own classifier (MALFORMED_RESULT).
@@ -425,8 +418,7 @@ class T3DispatchLauncher:
         elif state == L_CANCELLED:
             self._write_failure(job, rec, "T3 dispatch cancelled")
         elif state == L_RECONCILIATION:
-            raise WorkflowError(
-                f"RECONCILIATION_REQUIRED: {rec.get('error') or job_id}")
+            raise WorkflowError(f"RECONCILIATION_REQUIRED: {rec.get('error') or job_id}")
         elif state == L_DISPATCHED:
             # In flight: record the contact for the durable poll floor, then
             # only a wall-clock bound may end it.
@@ -466,8 +458,7 @@ class T3DispatchLauncher:
             "T3 dispatch exceeded its hard timeout; no terminal result was "
             "ever observed from the T3 task.\n",
         )
-        self._write_terminal(job, rec, exit_code=124, timeout=True,
-                             started=started)
+        self._write_terminal(job, rec, exit_code=124, timeout=True, started=started)
 
     def _expired(self, job: dict, rec) -> bool:
         limit = self.hard_timeout_s
@@ -492,8 +483,7 @@ class T3DispatchLauncher:
         try:
             body = json.loads(wire["result_json"])
         except ValueError as exc:
-            raise WorkflowError(
-                "MALFORMED_RESULT: invalid wire envelope") from exc
+            raise WorkflowError("MALFORMED_RESULT: invalid wire envelope") from exc
         if not isinstance(body, dict):
             raise WorkflowError("MALFORMED_RESULT: invalid wire envelope")
         rec = self.dispatcher().ledger.get(job["job_id"])
@@ -501,8 +491,7 @@ class T3DispatchLauncher:
         # COMPLETE results must carry a schema-valid session identity; the
         # T3 task id is that identity (fail closed, never guess one).
         if not isinstance(session, str) or not _ID_RE.match(session):
-            raise WorkflowError(
-                "MALFORMED_RESULT: missing T3 task identity")
+            raise WorkflowError("MALFORMED_RESULT: missing T3 task identity")
         return session, body, wire, []
 
     # ------------------------------------------------------------------ #
@@ -511,8 +500,7 @@ class T3DispatchLauncher:
     # ------------------------------------------------------------------ #
     def _write_denial(self, job: dict, exc: Exception) -> None:
         # "denied action" is the engine classifier's DENIED_ACTION keyword.
-        self._write_stdout(
-            job, f"T3 dispatch denied action: {type(exc).__name__}: {exc}\n")
+        self._write_stdout(job, f"T3 dispatch denied action: {type(exc).__name__}: {exc}\n")
         self._write_terminal(job, None, exit_code=1)
 
     def _write_failure(self, job: dict, rec, text: str) -> None:
@@ -527,8 +515,9 @@ class T3DispatchLauncher:
     def _write_stdout(self, job: dict, text: str) -> None:
         atomic_write(Path(job["runtime"]) / "stdout.jsonl", text.encode("utf-8"))
 
-    def _write_terminal(self, job: dict, rec, *, exit_code: int,
-                        timeout: bool = False, started: str | None = None) -> None:
+    def _write_terminal(
+        self, job: dict, rec, *, exit_code: int, timeout: bool = False, started: str | None = None
+    ) -> None:
         observation = {
             "job_id": job["job_id"],
             "phase": "TERMINAL",

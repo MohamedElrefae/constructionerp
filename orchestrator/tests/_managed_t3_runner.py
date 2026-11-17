@@ -14,12 +14,10 @@ import subprocess
 import threading
 from pathlib import Path
 
-from managed_supervisor_service import ExperimentalManagedDispatcher
-from t3_supervisor import Supervisor
-from t3_server_lifecycle import T3ServerProcess
-
 from _mcp_sim import SimServer, SimState
-
+from managed_supervisor_service import ExperimentalManagedDispatcher
+from t3_server_lifecycle import T3ServerProcess
+from t3_supervisor import Supervisor
 
 SYNTHETIC_MODEL = "opencode/synthetic-managed-runner"
 SYNTHETIC_PROTOCOL_TOKEN = "synthetic-managed-protocol-token-0123456789"
@@ -36,7 +34,8 @@ def _cgroup_membership(pid: int) -> tuple[str, ...]:
         rows = Path(f"/proc/{pid}/cgroup").read_text(encoding="ascii").splitlines()
     except OSError as exc:
         raise IsolatedManagedT3RunnerError(
-            f"cannot inspect process cgroup membership: {type(exc).__name__}") from None
+            f"cannot inspect process cgroup membership: {type(exc).__name__}"
+        ) from None
     if not rows:
         raise IsolatedManagedT3RunnerError("process has no inspectable cgroup membership")
     return tuple(rows)
@@ -52,8 +51,7 @@ class IsolatedManagedT3Runner:
     This is a test harness, not an OS sandbox or production service manager.
     """
 
-    def __init__(self, *, server: T3ServerProcess, runtime_dir: str | Path,
-                 simulator_factory=SimServer):
+    def __init__(self, *, server: T3ServerProcess, runtime_dir: str | Path, simulator_factory=SimServer):
         self.server = server
         self.runtime_dir = Path(runtime_dir)
         self.sim_state = SimState(token=SYNTHETIC_MCP_TOKEN)
@@ -94,7 +92,7 @@ class IsolatedManagedT3Runner:
             raise IsolatedManagedT3RunnerError("test socket directory ownership mismatch")
         return state_dir, socket_dir
 
-    def start(self) -> "IsolatedManagedT3Runner":
+    def start(self) -> IsolatedManagedT3Runner:
         if self._started:
             raise IsolatedManagedT3RunnerError("combined runner is already started")
         try:
@@ -194,13 +192,14 @@ class IsolatedManagedT3Runner:
         self._started = False
         if errors and not suppress_errors:
             raise IsolatedManagedT3RunnerError(
-                "combined runner cleanup had failures: " + ", ".join(type(err).__name__ for err in errors))
+                "combined runner cleanup had failures: " + ", ".join(type(err).__name__ for err in errors)
+            )
 
     def close(self) -> None:
         """Stop the managed service, T3 process group, and simulator."""
         self._cleanup(suppress_errors=False)
 
-    def __enter__(self) -> "IsolatedManagedT3Runner":
+    def __enter__(self) -> IsolatedManagedT3Runner:
         return self.start()
 
     def __exit__(self, exc_type, exc, traceback) -> None:

@@ -63,14 +63,22 @@ def synthetic_managed_supervisor():
             [
                 sys.executable,
                 str(TESTS / "_synthetic_managed_supervisor_server.py"),
-                "--socket", str(socket_path),
-                "--state", str(state_dir / "state.json"),
-                "--token-file", str(token_path),
-                "--base-url", "http://127.0.0.1:1",
-                "--mcp-token-file", str(mcp_path),
-                "--model", "opencode-go/deepseek-v4.1-flash",
-                "--allowed-model", "opencode-go/deepseek-v4.1-flash",
-                "--peer-uid", str(os.geteuid()),
+                "--socket",
+                str(socket_path),
+                "--state",
+                str(state_dir / "state.json"),
+                "--token-file",
+                str(token_path),
+                "--base-url",
+                "http://127.0.0.1:1",
+                "--mcp-token-file",
+                str(mcp_path),
+                "--model",
+                "opencode-go/deepseek-v4.1-flash",
+                "--allowed-model",
+                "opencode-go/deepseek-v4.1-flash",
+                "--peer-uid",
+                str(os.geteuid()),
             ],
             cwd=ORCH,
             stdout=subprocess.PIPE,
@@ -106,22 +114,31 @@ def test_dashboard_cli_reports_same_uid_peer_as_not_managed(synthetic_managed_su
     assert health["protocol"] == "experimental-managed-supervisor/v1"
 
     config_path = root / "dashboard-supervisor.json"
-    config_path.write_text(json.dumps({
-        "schema": "dashboard-managed-supervisor/v1",
-        "dispatch_enabled": False,
-        "socket_path": str(socket_path),
-        "token_file": str(token_path),
-        "expected_uid": os.geteuid() + 1,
-        "socket_group_gid": os.getegid(),
-        "allowed_models": ["opencode-go/deepseek-v4.1-flash"],
-    }))
+    config_path.write_text(
+        json.dumps(
+            {
+                "schema": "dashboard-managed-supervisor/v1",
+                "dispatch_enabled": False,
+                "socket_path": str(socket_path),
+                "token_file": str(token_path),
+                "expected_uid": os.geteuid() + 1,
+                "socket_group_gid": os.getegid(),
+                "allowed_models": ["opencode-go/deepseek-v4.1-flash"],
+            }
+        )
+    )
     config_path.chmod(0o600)
     result = subprocess.run(
         [
-            sys.executable, "-m", "orchestrator.dashboard_api",
-            "--root", str(root),
-            "--action", "supervisor_health",
-            "--managed-supervisor-config", str(config_path),
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "supervisor_health",
+            "--managed-supervisor-config",
+            str(config_path),
         ],
         cwd=ORCH.parent,
         text=True,
@@ -137,20 +154,32 @@ def test_dashboard_cli_reports_same_uid_peer_as_not_managed(synthetic_managed_su
 def test_distinct_peer_uid_config_refuses_dashboard_uid(synthetic_managed_supervisor):
     root, socket_path, token_path, _proc = synthetic_managed_supervisor
     config_path = root / "same-uid.json"
-    config_path.write_text(json.dumps({
-        "schema": "dashboard-managed-supervisor/v1",
-        "dispatch_enabled": False,
-        "socket_path": str(socket_path),
-        "token_file": str(token_path),
-        "expected_uid": os.geteuid(),
-        "socket_group_gid": os.getegid(),
-        "allowed_models": ["opencode-go/deepseek-v4.1-flash"],
-    }))
+    config_path.write_text(
+        json.dumps(
+            {
+                "schema": "dashboard-managed-supervisor/v1",
+                "dispatch_enabled": False,
+                "socket_path": str(socket_path),
+                "token_file": str(token_path),
+                "expected_uid": os.geteuid(),
+                "socket_group_gid": os.getegid(),
+                "allowed_models": ["opencode-go/deepseek-v4.1-flash"],
+            }
+        )
+    )
     config_path.chmod(0o600)
     result = subprocess.run(
-        [sys.executable, "-m", "orchestrator.dashboard_api",
-         "--root", str(root), "--action", "supervisor_health",
-         "--managed-supervisor-config", str(config_path)],
+        [
+            sys.executable,
+            "-m",
+            "orchestrator.dashboard_api",
+            "--root",
+            str(root),
+            "--action",
+            "supervisor_health",
+            "--managed-supervisor-config",
+            str(config_path),
+        ],
         cwd=ORCH.parent,
         text=True,
         capture_output=True,

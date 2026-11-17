@@ -13,26 +13,33 @@ import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
 import secrets
 import shutil
 import sys
-
+from pathlib import Path
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
 SYSTEMD_SOURCE = SOURCE_ROOT / "systemd"
 ALLOWED_FILES = (
-    "managed_supervisor_service.py", "managed_supervisor_attestation.py",
-    "t3_supervisor.py", "t3_supervisor_client.py", "t3_transport.py",
+    "managed_supervisor_service.py",
+    "managed_supervisor_attestation.py",
+    "t3_supervisor.py",
+    "t3_supervisor_client.py",
+    "t3_transport.py",
 )
 UNIT_FILES = (
     "managed-attestation-verifier.service",
-    "managed-t3-netns.service", "managed-t3-egress.service",
-    "managed-t3.service", "managed-supervisor.service",
+    "managed-t3-netns.service",
+    "managed-t3-egress.service",
+    "managed-t3.service",
+    "managed-supervisor.service",
 )
 SYSTEMD_SUPPORT_FILES = (
-    "managed_netns.py", "https_connect_broker.py", "t3_private_proxy_runner.py",
-    "verify_managed_host.py", "managed_supervisor_attestation_hook.py",
+    "managed_netns.py",
+    "https_connect_broker.py",
+    "t3_private_proxy_runner.py",
+    "verify_managed_host.py",
+    "managed_supervisor_attestation_hook.py",
     "managed_attestation_verifier.py",
 )
 TMPFILES_FILES = (
@@ -65,23 +72,35 @@ def _write_new(path: Path, data: bytes, mode: int) -> None:
     os.chmod(path, mode)
 
 
-def stage_candidate(output: str | Path, *, dashboard_uid: int, dashboard_gid: int,
-                    allowed_models: list[str], model: str) -> Path:
+def stage_candidate(
+    output: str | Path, *, dashboard_uid: int, dashboard_gid: int, allowed_models: list[str], model: str
+) -> Path:
     """Create a new private staging tree; do not overwrite any existing path."""
     output_path = Path(output)
-    if (not output_path.is_absolute() or output_path == Path("/")
-            or output_path.name in ("", ".", "..")):
+    if not output_path.is_absolute() or output_path == Path("/") or output_path.name in ("", ".", ".."):
         raise StagingError("--output must be a new absolute directory")
-    if (isinstance(dashboard_uid, bool) or not isinstance(dashboard_uid, int) or dashboard_uid <= 0
-            or isinstance(dashboard_gid, bool) or not isinstance(dashboard_gid, int) or dashboard_gid < 0):
+    if (
+        isinstance(dashboard_uid, bool)
+        or not isinstance(dashboard_uid, int)
+        or dashboard_uid <= 0
+        or isinstance(dashboard_gid, bool)
+        or not isinstance(dashboard_gid, int)
+        or dashboard_gid < 0
+    ):
         raise StagingError("dashboard UID/GID values are invalid")
-    if (not isinstance(allowed_models, list) or not allowed_models
-            or any(not isinstance(item, str) or not item.strip() for item in allowed_models)
-            or len(set(allowed_models)) != len(allowed_models) or model not in allowed_models):
+    if (
+        not isinstance(allowed_models, list)
+        or not allowed_models
+        or any(not isinstance(item, str) or not item.strip() for item in allowed_models)
+        or len(set(allowed_models)) != len(allowed_models)
+        or model not in allowed_models
+    ):
         raise StagingError("model must be in a nonempty unique allowed model list")
     supported_prefixes = ("opencode/", "opencode-go/")
-    if any(not any(item.startswith(prefix) and len(item) > len(prefix)
-                   for prefix in supported_prefixes) for item in allowed_models):
+    if any(
+        not any(item.startswith(prefix) and len(item) > len(prefix) for prefix in supported_prefixes)
+        for item in allowed_models
+    ):
         raise StagingError(
             "this candidate supports only OpenCode/OpenCode Go model IDs because its egress broker allows opencode.ai"
         )
@@ -105,7 +124,9 @@ def stage_candidate(output: str | Path, *, dashboard_uid: int, dashboard_gid: in
                 raise StagingError(f"required source file is missing or unsafe: {filename}")
             data = source.read_bytes()
             _write_new(target_root / filename, data, 0o644)
-            staged_hashes[f"opt/managed-supervisor/orchestrator/{filename}"] = hashlib.sha256(data).hexdigest()
+            staged_hashes[f"opt/managed-supervisor/orchestrator/{filename}"] = hashlib.sha256(
+                data
+            ).hexdigest()
         target_systemd = target_root / "systemd"
         target_systemd.mkdir(mode=0o755)
         for filename in SYSTEMD_SUPPORT_FILES:
@@ -114,9 +135,9 @@ def stage_candidate(output: str | Path, *, dashboard_uid: int, dashboard_gid: in
                 raise StagingError(f"required systemd helper is missing or unsafe: {filename}")
             data = source.read_bytes()
             _write_new(target_systemd / filename, data, 0o755 if filename.endswith(".py") else 0o644)
-            staged_hashes[
-                f"opt/managed-supervisor/orchestrator/systemd/{filename}"
-            ] = hashlib.sha256(data).hexdigest()
+            staged_hashes[f"opt/managed-supervisor/orchestrator/systemd/{filename}"] = hashlib.sha256(
+                data
+            ).hexdigest()
 
         units_dir = output_path / "etc" / "systemd" / "system"
         units_dir.mkdir(parents=True, mode=0o755)
@@ -129,8 +150,7 @@ def stage_candidate(output: str | Path, *, dashboard_uid: int, dashboard_gid: in
             dest_name = tmpfiles_name.replace(".tmpfiles", ".conf")
             tmpfiles_dest = output_path / "etc/tmpfiles.d" / dest_name
             _write_new(tmpfiles_dest, tmpfiles_data, 0o644)
-            staged_hashes[f"etc/tmpfiles.d/{dest_name}"] = hashlib.sha256(
-                tmpfiles_data).hexdigest()
+            staged_hashes[f"etc/tmpfiles.d/{dest_name}"] = hashlib.sha256(tmpfiles_data).hexdigest()
 
         # This shared token is generated once, stored as two private staged
         # copies, and never returned or written into the manifest/stdout.
@@ -161,7 +181,8 @@ def stage_candidate(output: str | Path, *, dashboard_uid: int, dashboard_gid: in
         ownership = {
             "root:root": ["/opt/managed-supervisor/**", "/etc/systemd/system/managed-*.service"],
             "root:managed-supervisor mode 0750": [
-                "/etc/managed-supervisor", "/etc/managed-supervisor/credentials",
+                "/etc/managed-supervisor",
+                "/etc/managed-supervisor/credentials",
             ],
             "managed-supervisor:managed-supervisor mode 0600": [
                 "/etc/managed-supervisor/service.json",
@@ -209,9 +230,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--allowed-model", action="append", required=True)
     args = parser.parse_args(argv)
     try:
-        stage_candidate(args.output, dashboard_uid=args.dashboard_uid,
-                        dashboard_gid=args.dashboard_gid,
-                        allowed_models=args.allowed_model, model=args.model)
+        stage_candidate(
+            args.output,
+            dashboard_uid=args.dashboard_uid,
+            dashboard_gid=args.dashboard_gid,
+            allowed_models=args.allowed_model,
+            model=args.model,
+        )
     except (OSError, StagingError) as exc:
         parser.error(str(exc))
     print("staging tree created with mode 0700; no host users, files, units, or services were changed")

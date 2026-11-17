@@ -34,13 +34,21 @@ import struct
 from dataclasses import dataclass
 from pathlib import Path
 
-
 SCHEMA = "managed-supervisor-attestation/v1"
 MAX_CONFIG_BYTES = 64 * 1024
 _FIELDS = {
-    "schema", "socket_path", "supervisor_pid", "supervisor_uid",
-    "supervisor_start_ticks", "t3_pid", "t3_uid", "t3_start_ticks",
-    "supervisor_cgroup_membership", "t3_cgroup_membership", "t3_listener_host", "t3_listener_port",
+    "schema",
+    "socket_path",
+    "supervisor_pid",
+    "supervisor_uid",
+    "supervisor_start_ticks",
+    "t3_pid",
+    "t3_uid",
+    "t3_start_ticks",
+    "supervisor_cgroup_membership",
+    "t3_cgroup_membership",
+    "t3_listener_host",
+    "t3_listener_port",
 }
 
 
@@ -84,9 +92,12 @@ class AttestationConfig:
 
         def cgroups(name):
             groups = value[name]
-            if (not isinstance(groups, list) or not groups
-                    or any(not isinstance(line, str) or not line or "\n" in line for line in groups)
-                    or len(set(groups)) != len(groups)):
+            if (
+                not isinstance(groups, list)
+                or not groups
+                or any(not isinstance(line, str) or not line or "\n" in line for line in groups)
+                or len(set(groups)) != len(groups)
+            ):
                 raise AttestationError(f"{name} must be a nonempty unique list of exact proc lines")
             for line in groups:
                 parts = line.split(":", 2)
@@ -112,9 +123,17 @@ class AttestationConfig:
         if supervisor_uid == t3_uid:
             raise AttestationError("supervisor and T3 must use distinct UIDs")
         return cls(
-            socket_path, supervisor_pid, supervisor_uid,
-            positive_int("supervisor_start_ticks"), t3_pid, t3_uid,
-            positive_int("t3_start_ticks"), supervisor_cgroups, t3_cgroups, host, port,
+            socket_path,
+            supervisor_pid,
+            supervisor_uid,
+            positive_int("supervisor_start_ticks"),
+            t3_pid,
+            t3_uid,
+            positive_int("t3_start_ticks"),
+            supervisor_cgroups,
+            t3_cgroups,
+            host,
+            port,
         )
 
 
@@ -130,8 +149,12 @@ def _reject_duplicate_keys(pairs):
 def load_root_owned_config(path) -> AttestationConfig:
     """Open a root-owned record through root-controlled, no-follow directories."""
     config_path = Path(path)
-    if (not config_path.is_absolute() or not hasattr(os, "O_NOFOLLOW")
-            or ".." in config_path.parts or len(config_path.parts) < 2):
+    if (
+        not config_path.is_absolute()
+        or not hasattr(os, "O_NOFOLLOW")
+        or ".." in config_path.parts
+        or len(config_path.parts) < 2
+    ):
         raise AttestationError("config path must be absolute and no-follow capable")
     flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW
     directory_fd = None
@@ -140,7 +163,9 @@ def load_root_owned_config(path) -> AttestationConfig:
         for component in config_path.parts[1:-1]:
             metadata = os.fstat(directory_fd)
             if metadata.st_uid != 0 or metadata.st_mode & 0o022:
-                raise AttestationError("config parent directory must be root-owned and not group/world writable")
+                raise AttestationError(
+                    "config parent directory must be root-owned and not group/world writable"
+                )
             next_fd = os.open(component, flags | os.O_DIRECTORY, dir_fd=directory_fd)
             os.close(directory_fd)
             directory_fd = next_fd
@@ -155,8 +180,12 @@ def load_root_owned_config(path) -> AttestationConfig:
             os.close(directory_fd)
     try:
         metadata = os.fstat(fd)
-        if (not stat.S_ISREG(metadata.st_mode) or metadata.st_uid != 0
-                or metadata.st_mode & 0o222 or metadata.st_size > MAX_CONFIG_BYTES):
+        if (
+            not stat.S_ISREG(metadata.st_mode)
+            or metadata.st_uid != 0
+            or metadata.st_mode & 0o222
+            or metadata.st_size > MAX_CONFIG_BYTES
+        ):
             raise AttestationError("config must be a root-owned, non-writable regular file within size bound")
         with os.fdopen(fd, "r", encoding="utf-8", closefd=False) as stream:
             raw = stream.read(MAX_CONFIG_BYTES + 1)
@@ -170,8 +199,14 @@ def load_root_owned_config(path) -> AttestationConfig:
     return AttestationConfig.from_mapping(value)
 
 
-def _proc_process(pid: int, proc_root: Path, *, expected_uid: int,
-                  expected_start_ticks: int, expected_cgroup: tuple[str, ...]) -> None:
+def _proc_process(
+    pid: int,
+    proc_root: Path,
+    *,
+    expected_uid: int,
+    expected_start_ticks: int,
+    expected_cgroup: tuple[str, ...],
+) -> None:
     process_dir = proc_root / str(pid)
     try:
         stat_line = (process_dir / "stat").read_text(encoding="ascii")
@@ -251,7 +286,7 @@ def verify_peer_and_processes(conn, config: AttestationConfig, *, proc_root="/pr
         raise AttestationError("platform does not expose Unix peer credentials")
     try:
         peer_path = conn.getpeername()
-        if not isinstance(peer_path, (str, bytes)) or os.fsdecode(peer_path) != str(config.socket_path):
+        if not isinstance(peer_path, str | bytes) or os.fsdecode(peer_path) != str(config.socket_path):
             raise AttestationError("connected supervisor socket differs from the trusted path")
         credentials = conn.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i"))
         peer_pid, peer_uid, _peer_gid = struct.unpack("3i", credentials)
@@ -260,12 +295,20 @@ def verify_peer_and_processes(conn, config: AttestationConfig, *, proc_root="/pr
     if peer_pid != config.supervisor_pid or peer_uid != config.supervisor_uid:
         raise AttestationError("Unix peer PID/UID differs from the trusted supervisor identity")
 
-    _proc_process(peer_pid, proc_root, expected_uid=config.supervisor_uid,
-                  expected_start_ticks=config.supervisor_start_ticks,
-                  expected_cgroup=config.supervisor_cgroup_membership)
-    _proc_process(config.t3_pid, proc_root, expected_uid=config.t3_uid,
-                  expected_start_ticks=config.t3_start_ticks,
-                  expected_cgroup=config.t3_cgroup_membership)
+    _proc_process(
+        peer_pid,
+        proc_root,
+        expected_uid=config.supervisor_uid,
+        expected_start_ticks=config.supervisor_start_ticks,
+        expected_cgroup=config.supervisor_cgroup_membership,
+    )
+    _proc_process(
+        config.t3_pid,
+        proc_root,
+        expected_uid=config.t3_uid,
+        expected_start_ticks=config.t3_start_ticks,
+        expected_cgroup=config.t3_cgroup_membership,
+    )
     try:
         supervisor_net = (proc_root / str(peer_pid) / "ns" / "net").stat()
         t3_net = (proc_root / str(config.t3_pid) / "ns" / "net").stat()
@@ -276,12 +319,20 @@ def verify_peer_and_processes(conn, config: AttestationConfig, *, proc_root="/pr
     inode = _listener_inode(config.t3_pid, config.t3_listener_port, proc_root)
     _process_owns_socket(config.t3_pid, inode, proc_root)
     # Detect common exit/reuse or cgroup movement during the observations.
-    _proc_process(peer_pid, proc_root, expected_uid=config.supervisor_uid,
-                  expected_start_ticks=config.supervisor_start_ticks,
-                  expected_cgroup=config.supervisor_cgroup_membership)
-    _proc_process(config.t3_pid, proc_root, expected_uid=config.t3_uid,
-                  expected_start_ticks=config.t3_start_ticks,
-                  expected_cgroup=config.t3_cgroup_membership)
+    _proc_process(
+        peer_pid,
+        proc_root,
+        expected_uid=config.supervisor_uid,
+        expected_start_ticks=config.supervisor_start_ticks,
+        expected_cgroup=config.supervisor_cgroup_membership,
+    )
+    _proc_process(
+        config.t3_pid,
+        proc_root,
+        expected_uid=config.t3_uid,
+        expected_start_ticks=config.t3_start_ticks,
+        expected_cgroup=config.t3_cgroup_membership,
+    )
     return {
         "identity_observed": True,
         "supervisor_pid": peer_pid,
@@ -296,8 +347,9 @@ def verify_peer_and_processes(conn, config: AttestationConfig, *, proc_root="/pr
     }
 
 
-def verify_local_service_attestation(config_path, *, supervisor_pid=None, supervisor_uid=None,
-                                     proc_root="/proc") -> AttestationConfig:
+def verify_local_service_attestation(
+    config_path, *, supervisor_pid=None, supervisor_uid=None, proc_root="/proc"
+) -> AttestationConfig:
     """Revalidate a root-published record from inside the pinned supervisor.
 
     This does not create trust in the record: it checks that the record is
@@ -312,12 +364,20 @@ def verify_local_service_attestation(config_path, *, supervisor_pid=None, superv
     if config.supervisor_pid != current_pid or config.supervisor_uid != current_uid:
         raise AttestationError("root record does not identify this supervisor process")
     proc_root = Path(proc_root)
-    _proc_process(current_pid, proc_root, expected_uid=config.supervisor_uid,
-                  expected_start_ticks=config.supervisor_start_ticks,
-                  expected_cgroup=config.supervisor_cgroup_membership)
-    _proc_process(config.t3_pid, proc_root, expected_uid=config.t3_uid,
-                  expected_start_ticks=config.t3_start_ticks,
-                  expected_cgroup=config.t3_cgroup_membership)
+    _proc_process(
+        current_pid,
+        proc_root,
+        expected_uid=config.supervisor_uid,
+        expected_start_ticks=config.supervisor_start_ticks,
+        expected_cgroup=config.supervisor_cgroup_membership,
+    )
+    _proc_process(
+        config.t3_pid,
+        proc_root,
+        expected_uid=config.t3_uid,
+        expected_start_ticks=config.t3_start_ticks,
+        expected_cgroup=config.t3_cgroup_membership,
+    )
     try:
         supervisor_net = (proc_root / str(current_pid) / "ns" / "net").stat()
         t3_net = (proc_root / str(config.t3_pid) / "ns" / "net").stat()
@@ -327,12 +387,20 @@ def verify_local_service_attestation(config_path, *, supervisor_pid=None, superv
         raise AttestationError("supervisor and T3 must share a network namespace")
     inode = _listener_inode(config.t3_pid, config.t3_listener_port, proc_root)
     _process_owns_socket(config.t3_pid, inode, proc_root)
-    _proc_process(current_pid, proc_root, expected_uid=config.supervisor_uid,
-                  expected_start_ticks=config.supervisor_start_ticks,
-                  expected_cgroup=config.supervisor_cgroup_membership)
-    _proc_process(config.t3_pid, proc_root, expected_uid=config.t3_uid,
-                  expected_start_ticks=config.t3_start_ticks,
-                  expected_cgroup=config.t3_cgroup_membership)
+    _proc_process(
+        current_pid,
+        proc_root,
+        expected_uid=config.supervisor_uid,
+        expected_start_ticks=config.supervisor_start_ticks,
+        expected_cgroup=config.supervisor_cgroup_membership,
+    )
+    _proc_process(
+        config.t3_pid,
+        proc_root,
+        expected_uid=config.t3_uid,
+        expected_start_ticks=config.t3_start_ticks,
+        expected_cgroup=config.t3_cgroup_membership,
+    )
     return config
 
 
@@ -357,8 +425,12 @@ def attest_managed_supervisor(config_path, *, timeout: float = 1.0) -> dict:
 VERIFIER_SOCKET = Path("/run/managed-attestation-verifier/verify.sock")
 
 
-def verify_via_root_service(config_path=Path("/run/managed-supervisor-attestation/record.json"),
-                            *, socket_path=VERIFIER_SOCKET, timeout: float = 1.0) -> bool:
+def verify_via_root_service(
+    config_path=Path("/run/managed-supervisor-attestation/record.json"),
+    *,
+    socket_path=VERIFIER_SOCKET,
+    timeout: float = 1.0,
+) -> bool:
     """Ask the fixed root verifier to inspect cross-UID process state.
 
     The request has one fixed version token and no caller-selected paths or

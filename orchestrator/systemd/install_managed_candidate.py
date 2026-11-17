@@ -15,46 +15,49 @@ been reviewed.
 from __future__ import annotations
 
 import argparse
+import grp
 import hashlib
 import json
 import os
-from pathlib import Path
 import pwd
-import grp
 import shutil
 import stat
 import subprocess
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 
-
-EXPECTED_FILES = frozenset({
-    "opt/managed-supervisor/orchestrator/managed_supervisor_service.py",
-    "opt/managed-supervisor/orchestrator/managed_supervisor_attestation.py",
-    "opt/managed-supervisor/orchestrator/t3_supervisor.py",
-    "opt/managed-supervisor/orchestrator/t3_supervisor_client.py",
-    "opt/managed-supervisor/orchestrator/t3_transport.py",
-    "opt/managed-supervisor/orchestrator/systemd/managed_netns.py",
-    "opt/managed-supervisor/orchestrator/systemd/https_connect_broker.py",
-    "opt/managed-supervisor/orchestrator/systemd/t3_private_proxy_runner.py",
-    "opt/managed-supervisor/orchestrator/systemd/verify_managed_host.py",
-    "opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py",
-    "opt/managed-supervisor/orchestrator/systemd/managed_attestation_verifier.py",
-    "etc/systemd/system/managed-attestation-verifier.service",
-    "etc/systemd/system/managed-t3-netns.service",
-    "etc/systemd/system/managed-t3-egress.service",
-    "etc/systemd/system/managed-t3.service",
-    "etc/systemd/system/managed-supervisor.service",
-    "etc/tmpfiles.d/managed-supervisor-attestation.conf",
-    "etc/tmpfiles.d/managed-attestation-verifier.conf",
-})
+EXPECTED_FILES = frozenset(
+    {
+        "opt/managed-supervisor/orchestrator/managed_supervisor_service.py",
+        "opt/managed-supervisor/orchestrator/managed_supervisor_attestation.py",
+        "opt/managed-supervisor/orchestrator/t3_supervisor.py",
+        "opt/managed-supervisor/orchestrator/t3_supervisor_client.py",
+        "opt/managed-supervisor/orchestrator/t3_transport.py",
+        "opt/managed-supervisor/orchestrator/systemd/managed_netns.py",
+        "opt/managed-supervisor/orchestrator/systemd/https_connect_broker.py",
+        "opt/managed-supervisor/orchestrator/systemd/t3_private_proxy_runner.py",
+        "opt/managed-supervisor/orchestrator/systemd/verify_managed_host.py",
+        "opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py",
+        "opt/managed-supervisor/orchestrator/systemd/managed_attestation_verifier.py",
+        "etc/systemd/system/managed-attestation-verifier.service",
+        "etc/systemd/system/managed-t3-netns.service",
+        "etc/systemd/system/managed-t3-egress.service",
+        "etc/systemd/system/managed-t3.service",
+        "etc/systemd/system/managed-supervisor.service",
+        "etc/tmpfiles.d/managed-supervisor-attestation.conf",
+        "etc/tmpfiles.d/managed-attestation-verifier.conf",
+    }
+)
 MIN_FREE_BYTES = 16 * 1024 * 1024
 INSTALLATION_ENABLED = False
-STAGE_PRIVATE_FILES = frozenset({
-    "etc/managed-supervisor/service.json",
-    "etc/managed-supervisor/credentials/protocol-token",
-    "etc/managed-dashboard/credentials/supervisor-token",
-})
+STAGE_PRIVATE_FILES = frozenset(
+    {
+        "etc/managed-supervisor/service.json",
+        "etc/managed-supervisor/credentials/protocol-token",
+        "etc/managed-dashboard/credentials/supervisor-token",
+    }
+)
 
 
 class InstallError(RuntimeError):
@@ -88,18 +91,21 @@ def _read_protected_json(path: Path, *, require_root: bool, max_bytes=64 * 1024)
         raise InstallError("approval manifest path must be absolute and no-follow capable")
     directory_fd = _open_absolute_directory(path.parent, require_root=require_root)
     try:
-        fd = os.open(path.name, os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW,
-                     dir_fd=directory_fd)
+        fd = os.open(
+            path.name, os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW, dir_fd=directory_fd
+        )
     except OSError:
         raise InstallError("approval manifest cannot be opened safely") from None
     finally:
         os.close(directory_fd)
     try:
         metadata = os.fstat(fd)
-        if (not stat.S_ISREG(metadata.st_mode)
-                or (require_root and metadata.st_uid != 0)
-                or metadata.st_mode & 0o022
-                or metadata.st_size > max_bytes):
+        if (
+            not stat.S_ISREG(metadata.st_mode)
+            or (require_root and metadata.st_uid != 0)
+            or metadata.st_mode & 0o022
+            or metadata.st_size > max_bytes
+        ):
             raise InstallError("approval manifest ownership, mode, or size is unsafe")
         with os.fdopen(fd, "r", encoding="utf-8", closefd=False) as stream:
             raw = stream.read(max_bytes + 1)
@@ -153,9 +159,11 @@ def _open_absolute_directory(path: Path, *, require_root: bool) -> int:
             except OSError:
                 raise InstallError("trusted directory path is missing or contains a symlink") from None
             metadata = os.fstat(next_fd)
-            if (not stat.S_ISDIR(metadata.st_mode)
-                    or (require_root and metadata.st_uid != 0)
-                    or metadata.st_mode & 0o022):
+            if (
+                not stat.S_ISDIR(metadata.st_mode)
+                or (require_root and metadata.st_uid != 0)
+                or metadata.st_mode & 0o022
+            ):
                 os.close(next_fd)
                 raise InstallError("trusted directory path has unsafe ownership or permissions")
             os.close(current_fd)
@@ -166,10 +174,12 @@ def _open_absolute_directory(path: Path, *, require_root: bool) -> int:
         raise
 
 
-def _read_stage_file(stage: Path, relative: str, *, require_root=True,
-                     private: bool = False) -> bytes:
-    if (relative not in EXPECTED_FILES | STAGE_PRIVATE_FILES
-            or Path(relative).is_absolute() or ".." in Path(relative).parts):
+def _read_stage_file(stage: Path, relative: str, *, require_root=True, private: bool = False) -> bytes:
+    if (
+        relative not in EXPECTED_FILES | STAGE_PRIVATE_FILES
+        or Path(relative).is_absolute()
+        or ".." in Path(relative).parts
+    ):
         raise InstallError("requested stage path is outside the approved file set")
     directory_fd = _open_absolute_directory(stage, require_root=require_root)
     stage_metadata = os.fstat(directory_fd)
@@ -180,19 +190,23 @@ def _read_stage_file(stage: Path, relative: str, *, require_root=True,
         parts = Path(relative).parts
         for component in parts[:-1]:
             try:
-                child_fd = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW |
-                                   getattr(os, "O_CLOEXEC", 0), dir_fd=directory_fd)
+                child_fd = os.open(
+                    component,
+                    os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0),
+                    dir_fd=directory_fd,
+                )
             except OSError:
                 raise InstallError("staged package contains an unsafe directory component") from None
             metadata = os.fstat(child_fd)
-            if ((require_root and metadata.st_uid != 0) or metadata.st_mode & 0o022):
+            if (require_root and metadata.st_uid != 0) or metadata.st_mode & 0o022:
                 os.close(child_fd)
                 raise InstallError("staged package directory ownership or mode is unsafe")
             os.close(directory_fd)
             directory_fd = child_fd
         try:
-            fd = os.open(parts[-1], os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW,
-                         dir_fd=directory_fd)
+            fd = os.open(
+                parts[-1], os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW, dir_fd=directory_fd
+            )
         except OSError:
             raise InstallError("staged package file cannot be opened safely") from None
     except OSError:
@@ -201,9 +215,12 @@ def _read_stage_file(stage: Path, relative: str, *, require_root=True,
         os.close(directory_fd)
     try:
         metadata = os.fstat(fd)
-        if (not stat.S_ISREG(metadata.st_mode) or (require_root and metadata.st_uid != 0)
-                or metadata.st_mode & (0o077 if private else 0o022)
-                or metadata.st_size > 4 * 1024 * 1024):
+        if (
+            not stat.S_ISREG(metadata.st_mode)
+            or (require_root and metadata.st_uid != 0)
+            or metadata.st_mode & (0o077 if private else 0o022)
+            or metadata.st_size > 4 * 1024 * 1024
+        ):
             raise InstallError("staged package file ownership, mode, or size is unsafe")
         chunks = []
         remaining = 4 * 1024 * 1024 + 1
@@ -245,21 +262,31 @@ def approved_payload(stage: Path, manifest_path: Path, *, require_root=True) -> 
     return payload
 
 
-def verify_accounts(*, dashboard_user: str, dashboard_group: str,
-                    dashboard_uid: int, dashboard_gid: int,
-                    lookup_user=pwd.getpwnam, lookup_group=grp.getgrnam) -> dict:
+def verify_accounts(
+    *,
+    dashboard_user: str,
+    dashboard_group: str,
+    dashboard_uid: int,
+    dashboard_gid: int,
+    lookup_user=pwd.getpwnam,
+    lookup_group=grp.getgrnam,
+) -> dict:
     names = (dashboard_user, "managed-supervisor", "managed-t3", "managed-egress")
     try:
         users = {name: lookup_user(name) for name in names}
-        groups = {name: lookup_group(name) for name in (
-            dashboard_group, "managed-dashboard", "managed-supervisor", "managed-t3-egress")}
+        groups = {
+            name: lookup_group(name)
+            for name in (dashboard_group, "managed-dashboard", "managed-supervisor", "managed-t3-egress")
+        }
     except KeyError as exc:
         raise InstallError(f"required pre-provisioned account/group is missing: {exc.args[0]}") from None
     if users[dashboard_user].pw_uid != dashboard_uid or groups[dashboard_group].gr_gid != dashboard_gid:
         raise InstallError("dashboard UID/GID differs from the staged configuration")
     if groups["managed-dashboard"].gr_gid != dashboard_gid:
         raise InstallError("managed-dashboard socket group must use the staged dashboard GID")
-    service_uids = [users[name].pw_uid for name in (dashboard_user, "managed-supervisor", "managed-t3", "managed-egress")]
+    service_uids = [
+        users[name].pw_uid for name in (dashboard_user, "managed-supervisor", "managed-t3", "managed-egress")
+    ]
     if any(uid <= 0 for uid in service_uids) or len(set(service_uids)) != len(service_uids):
         raise InstallError("dashboard and service UIDs must be distinct, non-root identities")
     if users["managed-t3"].pw_gid != groups["managed-t3-egress"].gr_gid:
@@ -268,7 +295,9 @@ def verify_accounts(*, dashboard_user: str, dashboard_group: str,
             raise InstallError("managed-t3 must be a member of the broker socket group")
     if users[dashboard_user].pw_gid != groups["managed-dashboard"].gr_gid:
         if dashboard_user not in groups["managed-dashboard"].gr_mem:
-            raise InstallError("dashboard must already be a member of managed-dashboard; installer will not edit it")
+            raise InstallError(
+                "dashboard must already be a member of managed-dashboard; installer will not edit it"
+            )
     return {
         "dashboard_uid": users[dashboard_user].pw_uid,
         "dashboard_gid": groups[dashboard_group].gr_gid,
@@ -280,11 +309,11 @@ def verify_accounts(*, dashboard_user: str, dashboard_group: str,
     }
 
 
-def _directory_policy(relative: Path, *, supervisor_gid: int,
-                      dashboard_uid: int, dashboard_gid: int) -> tuple[int, int, int]:
+def _directory_policy(
+    relative: Path, *, supervisor_gid: int, dashboard_uid: int, dashboard_gid: int
+) -> tuple[int, int, int]:
     parts = relative.parts
-    if parts in (("etc", "managed-supervisor"),
-                 ("etc", "managed-supervisor", "credentials")):
+    if parts in (("etc", "managed-supervisor"), ("etc", "managed-supervisor", "credentials")):
         return 0, supervisor_gid, 0o750
     if parts == ("etc", "managed-dashboard", "credentials"):
         return dashboard_uid, dashboard_gid, 0o700
@@ -300,17 +329,26 @@ def _open_root_fd(root: Path, *, require_root: bool) -> int:
     except OSError:
         raise InstallError("installation root cannot be opened safely") from None
     metadata = os.fstat(fd)
-    if (not stat.S_ISDIR(metadata.st_mode)
-            or (require_root and metadata.st_uid != 0)
-            or metadata.st_mode & 0o022):
+    if (
+        not stat.S_ISDIR(metadata.st_mode)
+        or (require_root and metadata.st_uid != 0)
+        or metadata.st_mode & 0o022
+    ):
         os.close(fd)
         raise InstallError("installation root ownership or mode is unsafe")
     return fd
 
 
-def _ensure_directory_at_root(root: Path, relative: Path, *, supervisor_gid: int,
-                              dashboard_uid: int, dashboard_gid: int,
-                              require_root: bool, created_dirs: list[CreatedPath]) -> None:
+def _ensure_directory_at_root(
+    root: Path,
+    relative: Path,
+    *,
+    supervisor_gid: int,
+    dashboard_uid: int,
+    dashboard_gid: int,
+    require_root: bool,
+    created_dirs: list[CreatedPath],
+) -> None:
     """Create/check path components using dirfds and O_NOFOLLOW throughout."""
     if relative.is_absolute() or not relative.parts or ".." in relative.parts:
         raise InstallError("installation directory is outside target root")
@@ -320,25 +358,41 @@ def _ensure_directory_at_root(root: Path, relative: Path, *, supervisor_gid: int
         for part in relative.parts:
             current = current / part
             expected_uid, expected_gid, expected_mode = _directory_policy(
-                current, supervisor_gid=supervisor_gid,
-                dashboard_uid=dashboard_uid, dashboard_gid=dashboard_gid,
+                current,
+                supervisor_gid=supervisor_gid,
+                dashboard_uid=dashboard_uid,
+                dashboard_gid=dashboard_gid,
             )
             try:
-                child_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW |
-                                   getattr(os, "O_CLOEXEC", 0), dir_fd=parent_fd)
+                child_fd = os.open(
+                    part,
+                    os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0),
+                    dir_fd=parent_fd,
+                )
             except FileNotFoundError:
                 created = False
                 recorded = False
                 try:
                     os.mkdir(part, expected_mode, dir_fd=parent_fd)
                     created = True
-                    child_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW |
-                                       getattr(os, "O_CLOEXEC", 0), dir_fd=parent_fd)
+                    child_fd = os.open(
+                        part,
+                        os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0),
+                        dir_fd=parent_fd,
+                    )
                     metadata = os.fstat(child_fd)
                     if created:
-                        created_dirs.append(CreatedPath(
-                            root / current, metadata.st_dev, metadata.st_ino, True,
-                            mode=expected_mode, uid=expected_uid, gid=expected_gid))
+                        created_dirs.append(
+                            CreatedPath(
+                                root / current,
+                                metadata.st_dev,
+                                metadata.st_ino,
+                                True,
+                                mode=expected_mode,
+                                uid=expected_uid,
+                                gid=expected_gid,
+                            )
+                        )
                         recorded = True
                     os.fchown(child_fd, expected_uid, expected_gid)
                     os.fchmod(child_fd, expected_mode)
@@ -352,11 +406,13 @@ def _ensure_directory_at_root(root: Path, relative: Path, *, supervisor_gid: int
             except OSError:
                 raise InstallError("installation path contains an unsafe directory") from None
             metadata = os.fstat(child_fd)
-            if (not stat.S_ISDIR(metadata.st_mode)
-                    or (require_root and metadata.st_uid != expected_uid)
-                    or metadata.st_gid != expected_gid
-                    or stat.S_IMODE(metadata.st_mode) != expected_mode
-                    or metadata.st_mode & 0o022):
+            if (
+                not stat.S_ISDIR(metadata.st_mode)
+                or (require_root and metadata.st_uid != expected_uid)
+                or metadata.st_gid != expected_gid
+                or stat.S_IMODE(metadata.st_mode) != expected_mode
+                or metadata.st_mode & 0o022
+            ):
                 os.close(child_fd)
                 raise InstallError("installation directory ownership or mode is unsafe")
             os.close(parent_fd)
@@ -365,10 +421,20 @@ def _ensure_directory_at_root(root: Path, relative: Path, *, supervisor_gid: int
         os.close(parent_fd)
 
 
-def _create_file_at_root(root: Path, relative: Path, data: bytes, *, uid: int, gid: int,
-                         mode: int, require_root: bool, supervisor_gid: int,
-                         dashboard_uid: int, dashboard_gid: int,
-                         created_files: list[CreatedPath] | None = None) -> Path:
+def _create_file_at_root(
+    root: Path,
+    relative: Path,
+    data: bytes,
+    *,
+    uid: int,
+    gid: int,
+    mode: int,
+    require_root: bool,
+    supervisor_gid: int,
+    dashboard_uid: int,
+    dashboard_gid: int,
+    created_files: list[CreatedPath] | None = None,
+) -> Path:
     if relative.is_absolute() or not relative.parts or ".." in relative.parts:
         raise InstallError("installation file is outside target root")
     parent = relative.parent
@@ -377,19 +443,26 @@ def _create_file_at_root(root: Path, relative: Path, data: bytes, *, uid: int, g
     try:
         for part in parent.parts:
             current = current / part
-            child_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW |
-                               getattr(os, "O_CLOEXEC", 0), dir_fd=parent_fd)
+            child_fd = os.open(
+                part,
+                os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=parent_fd,
+            )
             metadata = os.fstat(child_fd)
             expected_uid, expected_gid, expected_mode = _directory_policy(
-                current, supervisor_gid=supervisor_gid,
-                dashboard_uid=dashboard_uid, dashboard_gid=dashboard_gid,
+                current,
+                supervisor_gid=supervisor_gid,
+                dashboard_uid=dashboard_uid,
+                dashboard_gid=dashboard_gid,
             )
             if not stat.S_ISDIR(metadata.st_mode) or metadata.st_mode & 0o022:
                 os.close(child_fd)
                 raise InstallError("installation parent changed or is unsafe")
-            if ((require_root and metadata.st_uid != expected_uid)
-                    or metadata.st_gid != expected_gid
-                    or stat.S_IMODE(metadata.st_mode) != expected_mode):
+            if (
+                (require_root and metadata.st_uid != expected_uid)
+                or metadata.st_gid != expected_gid
+                or stat.S_IMODE(metadata.st_mode) != expected_mode
+            ):
                 os.close(child_fd)
                 raise InstallError("installation parent ownership or mode changed")
             os.close(parent_fd)
@@ -412,9 +485,15 @@ def _create_file_at_root(root: Path, relative: Path, data: bytes, *, uid: int, g
             os.fsync(fd)
             metadata = os.fstat(fd)
             identity = CreatedPath(
-                root / relative, metadata.st_dev, metadata.st_ino, False,
-                metadata.st_ctime_ns, metadata.st_size, stat.S_IMODE(metadata.st_mode),
-                metadata.st_uid, metadata.st_gid,
+                root / relative,
+                metadata.st_dev,
+                metadata.st_ino,
+                False,
+                metadata.st_ctime_ns,
+                metadata.st_size,
+                stat.S_IMODE(metadata.st_mode),
+                metadata.st_uid,
+                metadata.st_gid,
             )
             complete = True
         finally:
@@ -441,22 +520,30 @@ def _remove_at_root(root: Path, created: CreatedPath) -> bool:
         parent_fd = _open_root_fd(root, require_root=(os.geteuid() == 0))
         try:
             for part in relative.parent.parts:
-                next_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW |
-                                  getattr(os, "O_CLOEXEC", 0), dir_fd=parent_fd)
+                next_fd = os.open(
+                    part,
+                    os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0),
+                    dir_fd=parent_fd,
+                )
                 os.close(parent_fd)
                 parent_fd = next_fd
             metadata = os.stat(relative.name, dir_fd=parent_fd, follow_symlinks=False)
             if (metadata.st_dev, metadata.st_ino) != (created.device, created.inode):
                 return False
             if created.directory and (
-                    not stat.S_ISDIR(metadata.st_mode)
-                    or stat.S_IMODE(metadata.st_mode) != created.mode
-                    or metadata.st_uid != created.uid or metadata.st_gid != created.gid):
+                not stat.S_ISDIR(metadata.st_mode)
+                or stat.S_IMODE(metadata.st_mode) != created.mode
+                or metadata.st_uid != created.uid
+                or metadata.st_gid != created.gid
+            ):
                 return False
-            if (not created.directory and
-                    (metadata.st_ctime_ns, metadata.st_size, stat.S_IMODE(metadata.st_mode),
-                     metadata.st_uid, metadata.st_gid) !=
-                    (created.ctime_ns, created.size, created.mode, created.uid, created.gid)):
+            if not created.directory and (
+                metadata.st_ctime_ns,
+                metadata.st_size,
+                stat.S_IMODE(metadata.st_mode),
+                metadata.st_uid,
+                metadata.st_gid,
+            ) != (created.ctime_ns, created.size, created.mode, created.uid, created.gid):
                 return False
             if created.directory:
                 os.rmdir(relative.name, dir_fd=parent_fd)
@@ -475,16 +562,21 @@ def _safe_token(path: Path, *, require_root=True) -> bytes:
         raise InstallError("MCP token source must be absolute and no-follow capable")
     directory_fd = _open_absolute_directory(path.parent, require_root=require_root)
     try:
-        fd = os.open(path.name, os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW,
-                     dir_fd=directory_fd)
+        fd = os.open(
+            path.name, os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW, dir_fd=directory_fd
+        )
     except OSError:
         raise InstallError("MCP token source cannot be opened safely") from None
     finally:
         os.close(directory_fd)
     try:
         metadata = os.fstat(fd)
-        if (not stat.S_ISREG(metadata.st_mode) or (require_root and metadata.st_uid != 0)
-                or metadata.st_mode & 0o077 or metadata.st_size > 4096):
+        if (
+            not stat.S_ISREG(metadata.st_mode)
+            or (require_root and metadata.st_uid != 0)
+            or metadata.st_mode & 0o077
+            or metadata.st_size > 4096
+        ):
             raise InstallError("MCP token source ownership, mode, or size is unsafe")
         data = os.read(fd, 4097).strip()
         if len(data) < 20 or not data.isascii():
@@ -494,12 +586,19 @@ def _safe_token(path: Path, *, require_root=True) -> bytes:
         os.close(fd)
 
 
-def install_candidate(stage: Path, manifest: Path, mcp_token_file: Path, *,
-                      dashboard_user: str, dashboard_group: str,
-                      target_root: Path = Path("/"), require_root=True,
-                      account_lookup_user=pwd.getpwnam,
-                      account_lookup_group=grp.getgrnam,
-                      disk_usage=shutil.disk_usage) -> list[str]:
+def install_candidate(
+    stage: Path,
+    manifest: Path,
+    mcp_token_file: Path,
+    *,
+    dashboard_user: str,
+    dashboard_group: str,
+    target_root: Path = Path("/"),
+    require_root=True,
+    account_lookup_user=pwd.getpwnam,
+    account_lookup_group=grp.getgrnam,
+    disk_usage=shutil.disk_usage,
+) -> list[str]:
     """Install files only; never enable/start/reload units or modify dashboard config."""
     if not INSTALLATION_ENABLED:
         raise InstallError(
@@ -516,21 +615,29 @@ def install_candidate(stage: Path, manifest: Path, mcp_token_file: Path, *,
     payload = approved_payload(stage, manifest, require_root=require_root)
     mcp = _safe_token(mcp_token_file, require_root=require_root)
     identities = verify_accounts(
-        dashboard_user=dashboard_user, dashboard_group=dashboard_group,
+        dashboard_user=dashboard_user,
+        dashboard_group=dashboard_group,
         dashboard_uid=_read_stage_config(stage)["client_uid"],
         dashboard_gid=_read_stage_config(stage)["socket_group_gid"],
-        lookup_user=account_lookup_user, lookup_group=account_lookup_group,
+        lookup_user=account_lookup_user,
+        lookup_group=account_lookup_group,
     )
     service_config = _read_stage_config(stage)
     sup_uid, sup_gid = identities["supervisor_uid"], identities["supervisor_gid"]
     dashboard_uid = identities["dashboard_uid"]
     dashboard_group_gid = identities["dashboard_gid"]
-    token = _read_stage_token(stage / "etc/managed-supervisor/credentials/protocol-token",
-                              stage=stage, relative="etc/managed-supervisor/credentials/protocol-token",
-                              require_root=require_root)
-    dashboard_token = _read_stage_token(stage / "etc/managed-dashboard/credentials/supervisor-token",
-                                        stage=stage, relative="etc/managed-dashboard/credentials/supervisor-token",
-                                        require_root=require_root)
+    token = _read_stage_token(
+        stage / "etc/managed-supervisor/credentials/protocol-token",
+        stage=stage,
+        relative="etc/managed-supervisor/credentials/protocol-token",
+        require_root=require_root,
+    )
+    dashboard_token = _read_stage_token(
+        stage / "etc/managed-dashboard/credentials/supervisor-token",
+        stage=stage,
+        relative="etc/managed-dashboard/credentials/supervisor-token",
+        require_root=require_root,
+    )
     if token != dashboard_token:
         raise InstallError("staged dashboard and supervisor protocol tokens differ")
     required_bytes = sum(len(value) for value in payload.values()) + len(mcp) + len(token) * 2
@@ -548,29 +655,46 @@ def install_candidate(stage: Path, manifest: Path, mcp_token_file: Path, *,
         for relative, data in payload.items():
             relpath = Path(relative)
             _ensure_directory_at_root(
-                target_root, relpath.parent, supervisor_gid=sup_gid,
-                dashboard_uid=dashboard_uid, dashboard_gid=dashboard_group_gid,
-                require_root=require_root, created_dirs=created_dirs,
+                target_root,
+                relpath.parent,
+                supervisor_gid=sup_gid,
+                dashboard_uid=dashboard_uid,
+                dashboard_gid=dashboard_group_gid,
+                require_root=require_root,
+                created_dirs=created_dirs,
             )
             mode = 0o755 if relative.endswith(".py") and "/orchestrator/" in relative else 0o644
             dest = _create_file_at_root(
-                target_root, relpath, data, uid=uid_root, gid=gid_root, mode=mode,
-                require_root=require_root, supervisor_gid=sup_gid,
-                dashboard_uid=dashboard_uid, dashboard_gid=dashboard_group_gid,
+                target_root,
+                relpath,
+                data,
+                uid=uid_root,
+                gid=gid_root,
+                mode=mode,
+                require_root=require_root,
+                supervisor_gid=sup_gid,
+                dashboard_uid=dashboard_uid,
+                dashboard_gid=dashboard_group_gid,
                 created_files=created_files,
             )
             installed.append(str(dest))
 
         _ensure_directory_at_root(
-            target_root, Path("etc/managed-supervisor/credentials"),
-            supervisor_gid=sup_gid, dashboard_uid=dashboard_uid,
-            dashboard_gid=dashboard_group_gid, require_root=require_root,
+            target_root,
+            Path("etc/managed-supervisor/credentials"),
+            supervisor_gid=sup_gid,
+            dashboard_uid=dashboard_uid,
+            dashboard_gid=dashboard_group_gid,
+            require_root=require_root,
             created_dirs=created_dirs,
         )
         _ensure_directory_at_root(
-            target_root, Path("etc/managed-dashboard/credentials"),
-            supervisor_gid=sup_gid, dashboard_uid=dashboard_uid,
-            dashboard_gid=dashboard_group_gid, require_root=require_root,
+            target_root,
+            Path("etc/managed-dashboard/credentials"),
+            supervisor_gid=sup_gid,
+            dashboard_uid=dashboard_uid,
+            dashboard_gid=dashboard_group_gid,
+            require_root=require_root,
             created_dirs=created_dirs,
         )
         for rel in (
@@ -588,16 +712,29 @@ def install_candidate(stage: Path, manifest: Path, mcp_token_file: Path, *,
             else:
                 uid, gid = sup_uid, sup_gid
             dest = _create_file_at_root(
-                target_root, Path(rel), data, uid=uid, gid=gid, mode=0o600,
-                require_root=require_root, supervisor_gid=sup_gid,
-                dashboard_uid=dashboard_uid, dashboard_gid=dashboard_group_gid,
+                target_root,
+                Path(rel),
+                data,
+                uid=uid,
+                gid=gid,
+                mode=0o600,
+                require_root=require_root,
+                supervisor_gid=sup_gid,
+                dashboard_uid=dashboard_uid,
+                dashboard_gid=dashboard_group_gid,
                 created_files=created_files,
             )
             installed.append(str(dest))
         dest = _create_file_at_root(
-            target_root, Path("etc/managed-supervisor/credentials/mcp-token"),
-            mcp, uid=sup_uid, gid=sup_gid, mode=0o600, require_root=require_root,
-            supervisor_gid=sup_gid, dashboard_uid=dashboard_uid,
+            target_root,
+            Path("etc/managed-supervisor/credentials/mcp-token"),
+            mcp,
+            uid=sup_uid,
+            gid=sup_gid,
+            mode=0o600,
+            require_root=require_root,
+            supervisor_gid=sup_gid,
+            dashboard_uid=dashboard_uid,
             dashboard_gid=dashboard_group_gid,
             created_files=created_files,
         )
@@ -624,19 +761,31 @@ def _read_stage_config(stage: Path) -> dict:
         data = json.loads(raw.decode("utf-8"))
     except (OSError, ValueError, UnicodeDecodeError, InstallError):
         raise InstallError("staged service config is missing or invalid") from None
-    if (not isinstance(data, dict) or data.get("schema") != "managed-supervisor-service/v1"
-            or data.get("provider") != "opencode"
-            or data.get("socket_path") != "/run/managed-supervisor/managed.sock"
-            or data.get("state_path") != "/var/lib/managed-supervisor/state.json"
-            or data.get("token_file") != "/etc/managed-supervisor/credentials/protocol-token"
-            or data.get("mcp_token_file") != "/etc/managed-supervisor/credentials/mcp-token"
-            or data.get("base_url") != "http://127.0.0.1:46687"):
+    if (
+        not isinstance(data, dict)
+        or data.get("schema") != "managed-supervisor-service/v1"
+        or data.get("provider") != "opencode"
+        or data.get("socket_path") != "/run/managed-supervisor/managed.sock"
+        or data.get("state_path") != "/var/lib/managed-supervisor/state.json"
+        or data.get("token_file") != "/etc/managed-supervisor/credentials/protocol-token"
+        or data.get("mcp_token_file") != "/etc/managed-supervisor/credentials/mcp-token"
+        or data.get("base_url") != "http://127.0.0.1:46687"
+    ):
         raise InstallError("staged service config differs from the fixed candidate service contract")
     models = data.get("allowed_models")
-    if (not isinstance(models, list) or not models or data.get("model") not in models
-            or any(not isinstance(item, str) or not any(
+    if (
+        not isinstance(models, list)
+        or not models
+        or data.get("model") not in models
+        or any(
+            not isinstance(item, str)
+            or not any(
                 item.startswith(prefix) and len(item) > len(prefix)
-                for prefix in ("opencode/", "opencode-go/")) for item in models)):
+                for prefix in ("opencode/", "opencode-go/")
+            )
+            for item in models
+        )
+    ):
         raise InstallError("staged models do not match the supported OpenCode route")
     return data
 
@@ -655,24 +804,41 @@ def _read_stage_token(path: Path, *, stage: Path, relative: str, require_root=Tr
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", required=True, type=Path)
-    parser.add_argument("--approved-manifest", required=True, type=Path,
-                        help="root-owned SHA-256 allowlist approved independently")
-    parser.add_argument("--mcp-token-file", required=True, type=Path,
-                        help="root-owned private token source; value is never printed")
+    parser.add_argument(
+        "--approved-manifest",
+        required=True,
+        type=Path,
+        help="root-owned SHA-256 allowlist approved independently",
+    )
+    parser.add_argument(
+        "--mcp-token-file",
+        required=True,
+        type=Path,
+        help="root-owned private token source; value is never printed",
+    )
     parser.add_argument("--dashboard-user", required=True)
     parser.add_argument("--dashboard-group", required=True)
     args = parser.parse_args(argv)
     try:
         installed = install_candidate(
-            args.stage, args.approved_manifest, args.mcp_token_file,
-            dashboard_user=args.dashboard_user, dashboard_group=args.dashboard_group,
+            args.stage,
+            args.approved_manifest,
+            args.mcp_token_file,
+            dashboard_user=args.dashboard_user,
+            dashboard_group=args.dashboard_group,
         )
     except (InstallError, OSError) as exc:
         print(f"managed candidate install refused: {type(exc).__name__}", file=sys.stderr)
         return 1
-    print(json.dumps({"installed_files": installed,
-                      "services_enabled_or_started": False,
-                      "dashboard_configuration_changed": False}))
+    print(
+        json.dumps(
+            {
+                "installed_files": installed,
+                "services_enabled_or_started": False,
+                "dashboard_configuration_changed": False,
+            }
+        )
+    )
     return 0
 
 

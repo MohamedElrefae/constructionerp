@@ -22,7 +22,7 @@ TESTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(ORCH))
 sys.path.insert(0, str(TESTS))
 
-from t3_supervisor_client import (  # noqa: E402
+from t3_supervisor_client import (
     SupervisorClient,
     SupervisorLauncher,
     SupervisorRefusal,
@@ -32,6 +32,7 @@ from t3_supervisor_client import (  # noqa: E402
 
 class SyntheticWorkflowLauncher(SupervisorLauncher):
     allow_builder_for_tests = True
+
 
 MODEL = "opencode/deepseek-v4.1-flash-free"
 BASE_FIXTURE = Path(os.environ.get("T3_SEAM_BASE_FIXTURE", "/opt/base-fixture"))
@@ -77,11 +78,20 @@ class SupervisorTests(unittest.TestCase):
 
     def _start_sim(self, fail=None, legacy_marker_mode=True):
         self.sim = subprocess.Popen(
-            [sys.executable, str(TESTS / "_mcp_sim_server.py"),
-             "--token", self.mcp_token, "--events", str(self.events)] +
-            (["--fail", fail] if fail else []) +
-            (["--legacy-marker-mode"] if legacy_marker_mode else []),
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH),
+            [
+                sys.executable,
+                str(TESTS / "_mcp_sim_server.py"),
+                "--token",
+                self.mcp_token,
+                "--events",
+                str(self.events),
+            ]
+            + (["--fail", fail] if fail else [])
+            + (["--legacy-marker-mode"] if legacy_marker_mode else []),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
         )
         self.procs.append(self.sim)
         line = self.sim.stdout.readline()
@@ -93,15 +103,36 @@ class SupervisorTests(unittest.TestCase):
         if managed:
             os.chmod(self.dir, 0o2750)
         self.sup = subprocess.Popen(
-            [sys.executable, str(TESTS / ("_synthetic_managed_supervisor_server.py" if managed else "_synthetic_supervisor_server.py")),
-             "--socket", str(self.sock_path),
-             "--state", str(self.dir / state_name),
-             "--token-file", str(self.dir / "peer.token"),
-             "--base-url", self.url,
-             "--mcp-token-file", str(self.dir / "mcp.token"),
-             "--model", MODEL, "--allowed-model", MODEL] +
-            (["--peer-uid", str(peer_uid)] if peer_uid is not None else []),
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH),
+            [
+                sys.executable,
+                str(
+                    TESTS
+                    / (
+                        "_synthetic_managed_supervisor_server.py"
+                        if managed
+                        else "_synthetic_supervisor_server.py"
+                    )
+                ),
+                "--socket",
+                str(self.sock_path),
+                "--state",
+                str(self.dir / state_name),
+                "--token-file",
+                str(self.dir / "peer.token"),
+                "--base-url",
+                self.url,
+                "--mcp-token-file",
+                str(self.dir / "mcp.token"),
+                "--model",
+                MODEL,
+                "--allowed-model",
+                MODEL,
+            ]
+            + (["--peer-uid", str(peer_uid)] if peer_uid is not None else []),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
         )
         self.procs.append(self.sup)
         self.assertTrue(_wait_for(lambda: self.sock_path.exists()), "socket not created")
@@ -120,9 +151,14 @@ class SupervisorTests(unittest.TestCase):
         return len(lines)
 
     def _job(self, job_id="job-" + "a" * 24):
-        return {"job_id": job_id, "client_request_id": "wp1-engine-job-" + "b" * 32,
-                "model": MODEL, "brief": "Compute 6 * 7.", "role": "reviewer",
-                "expect_marker": f"ENGINE-T3-RESULT {job_id}"}
+        return {
+            "job_id": job_id,
+            "client_request_id": "wp1-engine-job-" + "b" * 32,
+            "model": MODEL,
+            "brief": "Compute 6 * 7.",
+            "role": "reviewer",
+            "expect_marker": f"ENGINE-T3-RESULT {job_id}",
+        }
 
     # ------------------------------------------------------------------ #
     def test_socket_mode_and_peer_auth(self):
@@ -142,6 +178,7 @@ class SupervisorTests(unittest.TestCase):
             conn = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             conn.connect(str(self.dir / "sup.sock"))
             conn.sendall(payload_bytes)
+
             def recv_exact(n):
                 buf = b""
                 while len(buf) < n:
@@ -201,8 +238,7 @@ class SupervisorTests(unittest.TestCase):
         self._start_sim()
         self._start_sup()
         client = self._client()
-        for bad in (["not-an-object"], dict(self._job(), role=[]),
-                    dict(self._job(), timeout_ms="invalid")):
+        for bad in (["not-an-object"], dict(self._job(), role=[]), dict(self._job(), timeout_ms="invalid")):
             with self.subTest(job=bad):
                 with self.assertRaises(SupervisorRefusal):
                     client.call("dispatch", {"job": bad})
@@ -212,9 +248,11 @@ class SupervisorTests(unittest.TestCase):
         self._start_sim()
         self._start_sup()
         launcher = SupervisorLauncher(self.dir, self.sock_path, self.token, allowed_models=[MODEL])
-        job = {"job_id": "job-" + "a" * 24, "role": "reviewer",
-               "spec": {"model": MODEL, "prompt": "Review this synthetic text.",
-                        "hard_timeout": 3601}}
+        job = {
+            "job_id": "job-" + "a" * 24,
+            "role": "reviewer",
+            "spec": {"model": MODEL, "prompt": "Review this synthetic text.", "hard_timeout": 3601},
+        }
         with self.assertRaisesRegex(SupervisorRefusal, "timeout"):
             launcher.preflight(job)
         job["spec"]["hard_timeout"] = 60
@@ -233,7 +271,9 @@ class SupervisorTests(unittest.TestCase):
         self._start_sup(state_name="state.json")
         second = self._client().call("dispatch", {"job": self._job()})
         self.assertEqual(second["state"], "uncertain")
-        self.assertEqual(self._launch_count("engine job " + self._job()["job_id"]), 1, "lost reply must not be re-sent")
+        self.assertEqual(
+            self._launch_count("engine job " + self._job()["job_id"]), 1, "lost reply must not be re-sent"
+        )
 
     def test_secret_redaction(self):
         self._start_sim(fail="echo_token")
@@ -253,7 +293,7 @@ class SupervisorTests(unittest.TestCase):
         conn = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         conn.connect(str(self.dir / "sup.sock"))
         conn.sendall(struct.pack(">I", len(body)) + body)
-        conn.close()                      # disconnect before reading
+        conn.close()  # disconnect before reading
         time.sleep(0.2)
         self.assertEqual(self._client().call("health")["pid"], self.sup.pid)
 
@@ -268,9 +308,13 @@ class SupervisorTests(unittest.TestCase):
         # kernel-observed identities: read /proc directly, not a self-report
         self.assertEqual(os.stat(f"/proc/{self.sup.pid}/ns/net").st_ino, test_inode)
         self.assertEqual(os.stat(f"/proc/{self.sim.pid}/ns/net").st_ino, test_inode)
-        child = subprocess.run([sys.executable, str(TESTS / "_synthetic_child.py")],
-                               capture_output=True, text=True, timeout=30,
-                               env={**os.environ, "REHEARSAL_HOST_HOME": str(Path.home())})
+        child = subprocess.run(
+            [sys.executable, str(TESTS / "_synthetic_child.py")],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            env={**os.environ, "REHEARSAL_HOST_HOME": str(Path.home())},
+        )
         info = json.loads(child.stdout.strip().splitlines()[-1])
         self.assertEqual(info["child_netns_inode"], test_inode)
         self.assertEqual(info["egress"], "DENIED")
@@ -303,7 +347,7 @@ class SupervisorTests(unittest.TestCase):
 
     def test_peer_uid_mismatch_is_rejected(self):
         self._start_sim()
-        self._start_sup(peer_uid=1)     # current uid is not 1
+        self._start_sup(peer_uid=1)  # current uid is not 1
         with self.assertRaises(SupervisorRefusal) as ctx:
             self._client().call("health")
         self.assertIn("PEER_REJECTED", str(ctx.exception))
@@ -340,6 +384,7 @@ class SupervisorTests(unittest.TestCase):
         # prepare the job through the native gate (refusal leaves it CREATED)
         from cli import make_engine
         from core import WorkflowError
+
         with unittest.mock.patch.dict(os.environ, {}, clear=False):
             os.environ.pop("ENGINE_T3_BACKEND", None)
             os.environ.pop("ENGINE_NATIVE_DISPATCH", None)
@@ -351,9 +396,9 @@ class SupervisorTests(unittest.TestCase):
         conn.close()
         self._start_sim(legacy_marker_mode=False)
         self._start_sup(managed=managed)
-        launcher = SyntheticWorkflowLauncher(root, self.dir / "sup.sock", self.token,
-                                             allowed_models=[MODEL])
+        launcher = SyntheticWorkflowLauncher(root, self.dir / "sup.sock", self.token, allowed_models=[MODEL])
         from engine import Engine
+
         engine = Engine(root, launcher=launcher)
         for _ in range(4):
             view = engine.run()
@@ -362,12 +407,19 @@ class SupervisorTests(unittest.TestCase):
             conn.close()
             if status == "ACCEPTED":
                 break
-            engine = Engine(root, launcher=SyntheticWorkflowLauncher(
-                root, self.dir / "sup.sock", self.token, allowed_models=[MODEL]))
+            engine = Engine(
+                root,
+                launcher=SyntheticWorkflowLauncher(
+                    root, self.dir / "sup.sock", self.token, allowed_models=[MODEL]
+                ),
+            )
         self.assertEqual(status, "ACCEPTED", view)
         self.assertEqual(self._launch_count("engine job " + job_id), 1)
-        results = [entry["payload"] for entry in engine.store.events()
-                   if entry["kind"] == "result" and entry["payload"]["job_id"] == job_id]
+        results = [
+            entry["payload"]
+            for entry in engine.store.events()
+            if entry["kind"] == "result" and entry["payload"]["job_id"] == job_id
+        ]
         self.assertEqual(results[-1]["model_evidence"], "executed")
 
 

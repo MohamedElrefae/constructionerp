@@ -49,8 +49,12 @@ class FakeServerLifecycle:
             code = "import time; time.sleep(60)"
         self.process = subprocess.Popen(
             [sys.executable, "-c", code],
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            close_fds=True, start_new_session=True)
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            close_fds=True,
+            start_new_session=True,
+        )
         if self.exit_immediately:
             self.process.wait(timeout=2)
         return self.process
@@ -100,10 +104,11 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
             return service
 
         start_patch = mock.patch(
-            "_managed_t3_runner.ExperimentalManagedDispatcher.start", autospec=True,
-            side_effect=fake_start)
+            "_managed_t3_runner.ExperimentalManagedDispatcher.start", autospec=True, side_effect=fake_start
+        )
         serve_patch = mock.patch(
-            "_managed_t3_runner.ExperimentalManagedDispatcher.serve_forever", autospec=True)
+            "_managed_t3_runner.ExperimentalManagedDispatcher.serve_forever", autospec=True
+        )
         start_patch.start()
         serve_patch.start()
         self.addCleanup(start_patch.stop)
@@ -115,9 +120,11 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
             runner = IsolatedManagedT3Runner(
                 server=FakeServerLifecycle(
                     repository_root=Path(__file__).resolve().parents[2],
-                    descendant_pid_file=Path(raw) / "grandchild.pid"),
+                    descendant_pid_file=Path(raw) / "grandchild.pid",
+                ),
                 runtime_dir=Path(raw) / "runner-private",
-                simulator_factory=FakeSimulator)
+                simulator_factory=FakeSimulator,
+            )
             listener = self._patch_network_edges()
             try:
                 runner.start()
@@ -134,7 +141,8 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
                 provider = mock.Mock()
                 provider.delegate.return_value = {"taskId": "synthetic-thread"}
                 provider.status.return_value = {
-                    "status": "completed", "summary": "safe result ENGINE-T3-RESULT job-" + "a" * 24,
+                    "status": "completed",
+                    "summary": "safe result ENGINE-T3-RESULT job-" + "a" * 24,
                     "model": SYNTHETIC_MODEL,
                 }
                 runner.supervisor_core._client = lambda: provider
@@ -147,8 +155,11 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
                     "role": "reviewer",
                     "expect_marker": marker,
                 }
-                request = {"op": "dispatch", "token": runner.supervisor_service.token,
-                           "payload": {"job": job}}
+                request = {
+                    "op": "dispatch",
+                    "token": runner.supervisor_service.token,
+                    "payload": {"job": job},
+                }
                 # A same-user fixture cannot supply production root attestation.
                 # Verify refusal before installing the explicit test-only verifier.
                 refused = runner.supervisor_service._respond(request)
@@ -159,8 +170,12 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
                 dispatched = runner.supervisor_service._respond(request)
                 self.assertEqual(dispatched["result"]["state"], "dispatched")
                 collected = runner.supervisor_service._respond(
-                    {"op": "collect", "token": runner.supervisor_service.token,
-                     "payload": {"job_id": job["job_id"]}})
+                    {
+                        "op": "collect",
+                        "token": runner.supervisor_service.token,
+                        "payload": {"job_id": job["job_id"]},
+                    }
+                )
                 self.assertEqual(collected["result"]["state"], "completed")
                 provider.delegate.assert_called_once()
                 provider.status.assert_called_once_with("synthetic-thread")
@@ -178,7 +193,8 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
             runner = IsolatedManagedT3Runner(
                 server=FakeServerLifecycle(repository_root=Path(__file__).resolve().parents[2]),
                 runtime_dir=Path(raw) / "runner-private",
-                simulator_factory=FakeSimulator)
+                simulator_factory=FakeSimulator,
+            )
             self._patch_network_edges(fail_service_start=True)
             with self.assertRaisesRegex(RuntimeError, "synthetic bind failure"):
                 runner.start()
@@ -190,8 +206,11 @@ class IsolatedManagedT3RunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-runner-child-fail-") as raw:
             runner = IsolatedManagedT3Runner(
                 server=FakeServerLifecycle(
-                    repository_root=Path(__file__).resolve().parents[2], exit_immediately=True),
-                runtime_dir=Path(raw) / "runner-private", simulator_factory=FakeSimulator)
+                    repository_root=Path(__file__).resolve().parents[2], exit_immediately=True
+                ),
+                runtime_dir=Path(raw) / "runner-private",
+                simulator_factory=FakeSimulator,
+            )
             self._patch_network_edges()
             with self.assertRaisesRegex(RuntimeError, "exited before ready"):
                 runner.start()

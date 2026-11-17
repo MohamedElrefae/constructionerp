@@ -43,8 +43,11 @@ class VerifierProtocolTests(unittest.TestCase):
                 check.assert_not_called()
 
     def test_fail_closed_on_attestation_error(self):
-        self.assertFalse(verifier.verify_request(
-            FakeConn(), verifier=mock.Mock(side_effect=AttestationError("no proc access"))))
+        self.assertFalse(
+            verifier.verify_request(
+                FakeConn(), verifier=mock.Mock(side_effect=AttestationError("no proc access"))
+            )
+        )
 
 
 class ClientTests(unittest.TestCase):
@@ -73,6 +76,7 @@ class ClientTests(unittest.TestCase):
             verify_via_root_service(socket_path="/tmp/alternate.sock")
         with self.assertRaises(AttestationError):
             verify_via_root_service(timeout=10)
+
 
 if __name__ == "__main__":
     unittest.main()

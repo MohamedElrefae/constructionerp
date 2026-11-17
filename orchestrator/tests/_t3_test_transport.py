@@ -23,8 +23,7 @@ class SyntheticT3Client:
         self.tasks: dict[str, dict] = {}
         self._next = 0
 
-    def delegate(self, *, task, model, role, client_request_id, timeout_ms,
-                 expect_marker, project_id=None):
+    def delegate(self, *, task, model, role, client_request_id, timeout_ms, expect_marker, project_id=None):
         self.calls.append(("delegate", client_request_id))
         self._next += 1
         task_id = f"task-synthetic-{self._next:04d}"
@@ -88,6 +87,7 @@ def make_synthetic_factory(mode: str = "ok") -> tuple[SyntheticTransportFactory,
     client = SyntheticT3Client(mode=mode)
     return SyntheticTransportFactory(client), client
 
+
 def _wire(task: dict) -> str:
     """Schema-valid wire envelope for the synthetic result."""
     import json as _json
@@ -102,10 +102,12 @@ def _wire(task: dict) -> str:
         evidence_paths=[],
         session_id=task.get("client_request_id", "synthetic"),
     )
-    return _json.dumps({
-        "result_json": _json.dumps(body),
-        "explanation": "synthetic seam result",
-        # The architect result must carry a plan; the engine adopts it as the
-        # plan artifact. Synthetic, no-op content for the seam test only.
-        "plan_text": "# Synthetic plan\n\nSeam test plan; no project content.\n",
-    })
+    return _json.dumps(
+        {
+            "result_json": _json.dumps(body),
+            "explanation": "synthetic seam result",
+            # The architect result must carry a plan; the engine adopts it as the
+            # plan artifact. Synthetic, no-op content for the seam test only.
+            "plan_text": "# Synthetic plan\n\nSeam test plan; no project content.\n",
+        }
+    )

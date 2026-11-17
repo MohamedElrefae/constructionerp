@@ -156,14 +156,14 @@ def assert_commit_identity(app_dir, identity, boundary):
 
 
 def assert_transport_files(identity_file, identity):
-	patch_path = str((_identity_dir(identity_file) / identity["patch_file"]))
+	patch_path = str(_identity_dir(identity_file) / identity["patch_file"])
 	try:
 		digest = sha256_file(patch_path)
 	except OSError as exc:
 		fail(f"cannot read transport patch {patch_path}: {exc}")
 	if digest != identity["patch_sha256"]:
 		fail(f"transport patch digest {digest} != pinned {identity['patch_sha256']}")
-	object_path = str((_identity_dir(identity_file) / identity["commit_object_file"]))
+	object_path = str(_identity_dir(identity_file) / identity["commit_object_file"])
 	try:
 		object_digest = sha256_file(object_path)
 	except OSError as exc:

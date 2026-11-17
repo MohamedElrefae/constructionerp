@@ -141,9 +141,18 @@ class T3ServerProcess:
         """Return the fixed T3 desktop-server invocation for review/testing."""
         executable, entry, base_dir, _ = self._validate()
         return [
-            str(executable), str(entry), "serve", "--mode", "desktop",
-            "--base-dir", str(base_dir), "--port", str(self.port),
-            "--host", self.host, "--no-browser",
+            str(executable),
+            str(entry),
+            "serve",
+            "--mode",
+            "desktop",
+            "--base-dir",
+            str(base_dir),
+            "--port",
+            str(self.port),
+            "--host",
+            self.host,
+            "--no-browser",
         ]
 
     def start(self) -> subprocess.Popen:
@@ -241,7 +250,7 @@ class T3ServerProcess:
                 self._log.close()
                 self._log = None
 
-    def __enter__(self) -> "T3ServerProcess":
+    def __enter__(self) -> T3ServerProcess:
         self.start()
         return self
 

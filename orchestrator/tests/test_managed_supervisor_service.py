@@ -15,15 +15,15 @@ from unittest import mock
 ORCH = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ORCH))
 
-from managed_supervisor_service import (  # noqa: E402
+from managed_supervisor_service import (
     ExperimentalManagedDispatcher,
-    ManagedSupervisorServiceError,
     ManagedSupervisorServiceConfig,
+    ManagedSupervisorServiceError,
     ReadOnlyManagedSupervisor,
     _frame,
     build_managed_dispatcher,
 )
-from t3_supervisor import Supervisor  # noqa: E402
+from t3_supervisor import Supervisor
 
 
 class FakeListener:
@@ -78,12 +78,17 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
             fake_socket = FakeListener()
             socket_stat = SimpleNamespace(
                 st_mode=stat.S_IFSOCK | 0o660,
-                st_uid=os.geteuid(), st_gid=os.getegid(), st_dev=1, st_ino=2,
+                st_uid=os.geteuid(),
+                st_gid=os.getegid(),
+                st_dev=1,
+                st_ino=2,
             )
-            with mock.patch("managed_supervisor_service.socket.socket", return_value=fake_socket), \
-                    mock.patch("managed_supervisor_service.os.chmod"), \
-                    mock.patch("pathlib.Path.lstat", return_value=socket_stat), \
-                    mock.patch("managed_supervisor_service.os.unlink") as unlink:
+            with (
+                mock.patch("managed_supervisor_service.socket.socket", return_value=fake_socket),
+                mock.patch("managed_supervisor_service.os.chmod"),
+                mock.patch("pathlib.Path.lstat", return_value=socket_stat),
+                mock.patch("managed_supervisor_service.os.unlink") as unlink,
+            ):
                 service.start()
                 self.assertIs(service.listener, fake_socket)
                 self.assertEqual(fake_socket.bound, str(service.socket_path))
@@ -94,36 +99,48 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
     def test_health_is_authenticated_read_only_and_dispatch_is_refused(self):
         with tempfile.TemporaryDirectory(prefix="managed-sup-protocol-") as tmp:
             service = self.make_service(Path(tmp))
-            health_conn = FakeConnection(service.client_uid, {
-                "op": "health", "token": service.token, "payload": {},
-            })
+            health_conn = FakeConnection(
+                service.client_uid,
+                {
+                    "op": "health",
+                    "token": service.token,
+                    "payload": {},
+                },
+            )
             service._handle(health_conn)
             (size,) = struct.unpack(">I", health_conn.output[:4])
-            health = json.loads(health_conn.output[4:4 + size])
+            health = json.loads(health_conn.output[4 : 4 + size])
             self.assertTrue(health["ok"])
             self.assertTrue(health["result"]["read_only"])
             self.assertFalse(health["result"]["builder_enabled"])
             self.assertEqual(health["result"]["protocol"], "managed-supervisor-health/v1")
 
-            dispatch_conn = FakeConnection(service.client_uid, {
-                "op": "dispatch", "token": service.token, "payload": {"job": {"job_id": "job-1"}},
-            })
+            dispatch_conn = FakeConnection(
+                service.client_uid,
+                {
+                    "op": "dispatch",
+                    "token": service.token,
+                    "payload": {"job": {"job_id": "job-1"}},
+                },
+            )
             service._handle(dispatch_conn)
             (size,) = struct.unpack(">I", dispatch_conn.output[:4])
-            refused = json.loads(dispatch_conn.output[4:4 + size])
+            refused = json.loads(dispatch_conn.output[4 : 4 + size])
             self.assertEqual(refused["error"]["code"], "DISPATCH_DISABLED")
 
     def test_failed_socket_setup_removes_only_the_bound_inode(self):
         with tempfile.TemporaryDirectory(prefix="managed-sup-bind-failure-") as tmp:
             service = self.make_service(Path(tmp))
             fake_socket = FakeListener()
-            socket_stat = SimpleNamespace(st_mode=stat.S_IFSOCK | 0o600,
-                                          st_uid=os.geteuid(), st_gid=os.getegid(),
-                                          st_dev=1, st_ino=2)
-            with mock.patch("managed_supervisor_service.socket.socket", return_value=fake_socket), \
-                    mock.patch("managed_supervisor_service.os.chmod", side_effect=PermissionError), \
-                    mock.patch("pathlib.Path.lstat", return_value=socket_stat), \
-                    mock.patch("os.unlink") as unlink:
+            socket_stat = SimpleNamespace(
+                st_mode=stat.S_IFSOCK | 0o600, st_uid=os.geteuid(), st_gid=os.getegid(), st_dev=1, st_ino=2
+            )
+            with (
+                mock.patch("managed_supervisor_service.socket.socket", return_value=fake_socket),
+                mock.patch("managed_supervisor_service.os.chmod", side_effect=PermissionError),
+                mock.patch("pathlib.Path.lstat", return_value=socket_stat),
+                mock.patch("os.unlink") as unlink,
+            ):
                 with self.assertRaises(PermissionError):
                     service.start()
                 unlink.assert_called_once_with(service.socket_path)
@@ -135,7 +152,7 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
             conn = FakeConnection(os.geteuid(), None)
             service._handle(conn)
             (size,) = struct.unpack(">I", conn.output[:4])
-            rejected = json.loads(conn.output[4:4 + size])
+            rejected = json.loads(conn.output[4 : 4 + size])
             self.assertEqual(rejected["error"]["code"], "PEER_REJECTED")
             self.assertEqual(conn.input, bytearray())
 
@@ -146,37 +163,50 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
             model = "opencode/deepseek-v4.1-flash-free"
             job_id = "job-" + "a" * 24
             marker = "ENGINE-T3-RESULT " + job_id
-            core = Supervisor(socket_path=base.socket_path, state_path=directory / "state.json",
-                              token=base.token, base_url="http://127.0.0.1:1",
-                              mcp_token="synthetic-mcp-token", model=model,
-                              allowed_models=[model], peer_uid=base.client_uid)
+            core = Supervisor(
+                socket_path=base.socket_path,
+                state_path=directory / "state.json",
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-mcp-token",
+                model=model,
+                allowed_models=[model],
+                peer_uid=base.client_uid,
+            )
             provider = mock.Mock()
             provider.delegate.return_value = {"taskId": "synthetic-thread"}
-            provider.status.return_value = {"status": "completed", "summary": marker,
-                                            "model": model}
+            provider.status.return_value = {"status": "completed", "summary": marker, "model": model}
             core._client = lambda: provider
             service = ExperimentalManagedDispatcher(
-                core=core, socket_path=base.socket_path, token=base.token,
-                client_uid=base.client_uid, socket_group_gid=base.socket_group_gid,
-                attestation_verifier=lambda _path: True)
+                core=core,
+                socket_path=base.socket_path,
+                token=base.token,
+                client_uid=base.client_uid,
+                socket_group_gid=base.socket_group_gid,
+                attestation_verifier=lambda _path: True,
+            )
 
             def call(request, uid=None):
                 conn = FakeConnection(base.client_uid if uid is None else uid, request)
                 service._handle(conn)
                 (size,) = struct.unpack(">I", conn.output[:4])
-                return json.loads(conn.output[4:4 + size])
+                return json.loads(conn.output[4 : 4 + size])
 
-            job = {"job_id": job_id, "client_request_id": "wp1-engine-job-" + "b" * 32,
-                   "model": model, "brief": "Compute 6 * 7.", "role": "reviewer",
-                   "expect_marker": marker}
+            job = {
+                "job_id": job_id,
+                "client_request_id": "wp1-engine-job-" + "b" * 32,
+                "model": model,
+                "brief": "Compute 6 * 7.",
+                "role": "reviewer",
+                "expect_marker": marker,
+            }
             request = {"op": "dispatch", "token": base.token, "payload": {"job": job}}
             self.assertEqual(call(request, uid=os.geteuid())["error"]["code"], "PEER_REJECTED")
             self.assertEqual(call(dict(request, token="bad"))["error"]["code"], "UNAUTHORIZED")
             self.assertEqual(call(dict(request, token="\u00e9"))["error"]["code"], "UNAUTHORIZED")
             self.assertEqual(call(request)["result"]["state"], "dispatched")
             self.assertEqual(call(request)["result"]["state"], "dispatched")
-            result = call({"op": "collect", "token": base.token,
-                           "payload": {"job_id": job_id}})
+            result = call({"op": "collect", "token": base.token, "payload": {"job_id": job_id}})
             self.assertEqual(result["result"]["state"], "completed")
             provider.delegate.assert_called_once()
 
@@ -184,24 +214,38 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-attest-gate-") as tmp:
             directory = Path(tmp)
             base = self.make_service(directory)
-            core = Supervisor(socket_path=base.socket_path, state_path=directory / "state.json",
-                              token=base.token, base_url="http://127.0.0.1:1",
-                              mcp_token="synthetic-mcp-token", model="model",
-                              allowed_models=["model"], peer_uid=base.client_uid,
-                              builder_enabled=True)
+            core = Supervisor(
+                socket_path=base.socket_path,
+                state_path=directory / "state.json",
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-mcp-token",
+                model="model",
+                allowed_models=["model"],
+                peer_uid=base.client_uid,
+                builder_enabled=True,
+            )
             core.handle = mock.Mock(side_effect=AssertionError("core must not be reached"))
             service = ExperimentalManagedDispatcher(
-                core=core, socket_path=base.socket_path, token=base.token,
-                client_uid=base.client_uid, socket_group_gid=base.socket_group_gid,
+                core=core,
+                socket_path=base.socket_path,
+                token=base.token,
+                client_uid=base.client_uid,
+                socket_group_gid=base.socket_group_gid,
                 attestation_verifier=mock.Mock(side_effect=RuntimeError("missing record")),
             )
             for operation in ("health", "dispatch"):
-                conn = FakeConnection(base.client_uid, {
-                    "op": operation, "token": base.token, "payload": {},
-                })
+                conn = FakeConnection(
+                    base.client_uid,
+                    {
+                        "op": operation,
+                        "token": base.token,
+                        "payload": {},
+                    },
+                )
                 service._handle(conn)
                 (size,) = struct.unpack(">I", conn.output[:4])
-                response = json.loads(conn.output[4:4 + size])
+                response = json.loads(conn.output[4 : 4 + size])
                 self.assertEqual(response["error"]["code"], "SERVICE_ATTESTATION_FAILED")
             core.handle.assert_not_called()
 
@@ -216,16 +260,27 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-default-root-check-") as tmp:
             directory = Path(tmp)
             base = self.make_service(directory)
-            core = Supervisor(socket_path=base.socket_path, state_path=directory / "state.json",
-                              token=base.token, base_url="http://127.0.0.1:1",
-                              mcp_token="synthetic-mcp-token", model="model",
-                              allowed_models=["model"], peer_uid=base.client_uid,
-                              builder_enabled=True)
-            with mock.patch("managed_supervisor_attestation.verify_via_root_service",
-                            return_value=True) as verify:
+            core = Supervisor(
+                socket_path=base.socket_path,
+                state_path=directory / "state.json",
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-mcp-token",
+                model="model",
+                allowed_models=["model"],
+                peer_uid=base.client_uid,
+                builder_enabled=True,
+            )
+            with mock.patch(
+                "managed_supervisor_attestation.verify_via_root_service", return_value=True
+            ) as verify:
                 service = ExperimentalManagedDispatcher(
-                    core=core, socket_path=base.socket_path, token=base.token,
-                    client_uid=base.client_uid, socket_group_gid=base.socket_group_gid)
+                    core=core,
+                    socket_path=base.socket_path,
+                    token=base.token,
+                    client_uid=base.client_uid,
+                    socket_group_gid=base.socket_group_gid,
+                )
                 response = service._respond({"op": "health"})
             verify.assert_called_once_with(service.attestation_path)
             self.assertTrue(response["ok"])
@@ -236,14 +291,27 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-legacy-") as tmp:
             directory = Path(tmp)
             base = self.make_service(directory)
-            core = Supervisor(socket_path=base.socket_path, state_path=directory / "state.json",
-                              token=base.token, base_url="http://127.0.0.1:1",
-                              mcp_token="synthetic-mcp-token", model="model",
-                              allowed_models=["model"], peer_uid=base.client_uid)
-            job = {"job_id": "job-1", "client_request_id": "request-1", "model": "model",
-                   "role": "reviewer", "brief": "test", "expect_marker": "marker"}
-            core.state.put("job-1", {"state": "dispatched", "task_id": "old-thread",
-                                     "client_request_id": "request-1"})
+            core = Supervisor(
+                socket_path=base.socket_path,
+                state_path=directory / "state.json",
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-mcp-token",
+                model="model",
+                allowed_models=["model"],
+                peer_uid=base.client_uid,
+            )
+            job = {
+                "job_id": "job-1",
+                "client_request_id": "request-1",
+                "model": "model",
+                "role": "reviewer",
+                "brief": "test",
+                "expect_marker": "marker",
+            }
+            core.state.put(
+                "job-1", {"state": "dispatched", "task_id": "old-thread", "client_request_id": "request-1"}
+            )
             provider = mock.Mock()
             core._client = lambda: provider
             result = core._dispatch(job)
@@ -255,10 +323,16 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-state-") as tmp:
             directory = Path(tmp)
             base = self.make_service(directory)
-            core = Supervisor(socket_path=base.socket_path, state_path=directory / "state.json",
-                              token=base.token, base_url="http://127.0.0.1:1",
-                              mcp_token="synthetic-mcp-token", model="model",
-                              allowed_models=["model"], peer_uid=base.client_uid)
+            core = Supervisor(
+                socket_path=base.socket_path,
+                state_path=directory / "state.json",
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-mcp-token",
+                model="model",
+                allowed_models=["model"],
+                peer_uid=base.client_uid,
+            )
             core.state.put("job-1", {"state": "launching"})
             self.assertEqual(stat.S_IMODE(core.state.path.stat().st_mode), 0o600)
             core.state.put("job-1", {"state": "uncertain"})
@@ -274,9 +348,16 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
             target.write_text('{"jobs": {}}')
             os.chmod(target, 0o600)
             path.symlink_to(target)
-            kwargs = dict(socket_path=base.socket_path, state_path=path, token=base.token,
-                          base_url="http://127.0.0.1:1", mcp_token="synthetic-token",
-                          model="model", allowed_models=["model"], peer_uid=base.client_uid)
+            kwargs = dict(
+                socket_path=base.socket_path,
+                state_path=path,
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-token",
+                model="model",
+                allowed_models=["model"],
+                peer_uid=base.client_uid,
+            )
             with self.assertRaises(SystemExit):
                 Supervisor(**kwargs)
             path.unlink()
@@ -289,13 +370,25 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-init-") as tmp:
             directory = Path(tmp)
             base = self.make_service(directory)
-            core = Supervisor(socket_path=base.socket_path, state_path=directory / "state.json",
-                              token=base.token, base_url="http://127.0.0.1:1",
-                              mcp_token="synthetic-mcp-token", model="model",
-                              allowed_models=["model"], peer_uid=base.client_uid)
+            core = Supervisor(
+                socket_path=base.socket_path,
+                state_path=directory / "state.json",
+                token=base.token,
+                base_url="http://127.0.0.1:1",
+                mcp_token="synthetic-mcp-token",
+                model="model",
+                allowed_models=["model"],
+                peer_uid=base.client_uid,
+            )
             core._client = mock.Mock(side_effect=RuntimeError("test initialization failure"))
-            job = {"job_id": "job-1", "client_request_id": "request-1", "model": "model",
-                   "role": "reviewer", "brief": "test", "expect_marker": "marker"}
+            job = {
+                "job_id": "job-1",
+                "client_request_id": "request-1",
+                "model": "model",
+                "role": "reviewer",
+                "brief": "test",
+                "expect_marker": "marker",
+            }
             result = core._dispatch(job)
             self.assertEqual(result["state"], "prelaunch_failed")
             self.assertIsNone(core.state.get("job-1"))
@@ -306,8 +399,11 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
             os.chmod(directory, 0o700)
             with self.assertRaisesRegex(ManagedSupervisorServiceError, "distinct"):
                 ReadOnlyManagedSupervisor(
-                    socket_path=directory / "sup.sock", token="synthetic-service-token-0123456789",
-                    client_uid=os.geteuid(), socket_group_gid=os.getegid())._validate()
+                    socket_path=directory / "sup.sock",
+                    token="synthetic-service-token-0123456789",
+                    client_uid=os.geteuid(),
+                    socket_group_gid=os.getegid(),
+                )._validate()
             service = self.make_service(directory)
             os.chmod(directory, 0o2777)
             with self.assertRaisesRegex(ManagedSupervisorServiceError, "not group/world writable"):
@@ -321,20 +417,24 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         mcp_token_file.write_text("synthetic-mcp-token-0123456789")
         os.chmod(token_file, 0o600)
         os.chmod(mcp_token_file, 0o600)
-        config_file.write_text(json.dumps({
-            "schema": "managed-supervisor-service/v1",
-            "socket_path": str(directory / "supervisor.sock"),
-            "state_path": str(directory / "state.json"),
-            "token_file": str(token_file),
-            "mcp_token_file": str(mcp_token_file),
-            "client_uid": os.geteuid() + 1,
-            "socket_group_gid": os.getegid(),
-            "base_url": "http://127.0.0.1:18080",
-            "provider": "codex",
-            "model": "synthetic/model",
-            "allowed_models": ["synthetic/model"],
-            "builder_enabled": builder_enabled,
-        }))
+        config_file.write_text(
+            json.dumps(
+                {
+                    "schema": "managed-supervisor-service/v1",
+                    "socket_path": str(directory / "supervisor.sock"),
+                    "state_path": str(directory / "state.json"),
+                    "token_file": str(token_file),
+                    "mcp_token_file": str(mcp_token_file),
+                    "client_uid": os.geteuid() + 1,
+                    "socket_group_gid": os.getegid(),
+                    "base_url": "http://127.0.0.1:18080",
+                    "provider": "codex",
+                    "model": "synthetic/model",
+                    "allowed_models": ["synthetic/model"],
+                    "builder_enabled": builder_enabled,
+                }
+            )
+        )
         os.chmod(config_file, 0o600)
         return config_file
 
@@ -399,9 +499,14 @@ class ManagedSupervisorServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="managed-sup-url-") as tmp:
             config_file = self.write_dispatch_config(Path(tmp))
             value = json.loads(config_file.read_text())
-            for url in ("http://127.0.0.1.example.invalid", "http://localhost.example.invalid",
-                        "http://user@localhost:1234", "https://mcp.example.invalid",
-                        "http://127.0.0.1:99999", "http://localhost/path"):
+            for url in (
+                "http://127.0.0.1.example.invalid",
+                "http://localhost.example.invalid",
+                "http://user@localhost:1234",
+                "https://mcp.example.invalid",
+                "http://127.0.0.1:99999",
+                "http://localhost/path",
+            ):
                 with self.subTest(url=url):
                     value["base_url"] = url
                     config_file.write_text(json.dumps(value))

@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 import pytest
-
 from t3_provider_setup import T3ProviderSetupError, prepare_opencode_go_deepseek
 
 
@@ -42,7 +41,12 @@ def test_writes_minimal_nonsecret_settings_and_isolated_login_plan(tmp_path):
     assert plan.login_environment["HOME"] == str(plan.settings_path.parents[1])
     assert plan.login_environment["PATH"] == str(Path(sys.executable).resolve().parent)
     assert set(plan.login_environment) == {
-        "HOME", "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "TMPDIR", "PATH"
+        "HOME",
+        "XDG_CONFIG_HOME",
+        "XDG_DATA_HOME",
+        "XDG_CACHE_HOME",
+        "TMPDIR",
+        "PATH",
     }
     assert plan.settings_path.stat().st_mode & 0o777 == 0o600
     assert plan.settings_path.parent.stat().st_mode & 0o777 == 0o700

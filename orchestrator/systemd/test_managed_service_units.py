@@ -2,20 +2,19 @@ import asyncio
 import json
 import os
 import socket
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
-import managed_netns
 import https_connect_broker
 import install_managed_candidate
+import managed_netns
 import managed_supervisor_attestation_hook
 import preflight_managed_candidate
 import stage_managed_candidate
 import verify_managed_host
-
 
 SYSTEMD = Path(__file__).parent
 
@@ -34,10 +33,19 @@ class ManagedSystemdUnitTests(unittest.TestCase):
         self.assertIn("NoNewPrivileges=yes", supervisor)
         self.assertIn("ConditionPathExists=/etc/managed-supervisor/dispatch-reviewed.enable", supervisor)
         self.assertIn("UnsetEnvironment=HTTP_PROXY HTTPS_PROXY ALL_PROXY", supervisor)
-        self.assertIn("ExecStartPost=+/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py --publish", supervisor)
-        self.assertIn("ExecStopPost=+/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py --remove", supervisor)
+        self.assertIn(
+            "ExecStartPost=+/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py --publish",
+            supervisor,
+        )
+        self.assertIn(
+            "ExecStopPost=+/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py --remove",
+            supervisor,
+        )
         self.assertIn("systemd-tmpfiles-setup.service", supervisor)
-        self.assertIn("Requires=managed-t3-netns.service managed-t3.service managed-attestation-verifier.service", supervisor)
+        self.assertIn(
+            "Requires=managed-t3-netns.service managed-t3.service managed-attestation-verifier.service",
+            supervisor,
+        )
         self.assertIn("SupplementaryGroups=managed-supervisor", supervisor)
         verifier = (SYSTEMD / "managed-attestation-verifier.service").read_text()
         self.assertIn("User=root", verifier)
@@ -68,9 +76,11 @@ class NamespaceLifecycleTests(unittest.TestCase):
                 if args[:3] == ["netns", "add", "managed-t3"]:
                     path.touch()
 
-            with mock.patch.object(managed_netns, "NAMESPACE_PATH", path), \
-                    mock.patch.object(managed_netns.os, "geteuid", return_value=0), \
-                    mock.patch.object(managed_netns, "_run", side_effect=run):
+            with (
+                mock.patch.object(managed_netns, "NAMESPACE_PATH", path),
+                mock.patch.object(managed_netns.os, "geteuid", return_value=0),
+                mock.patch.object(managed_netns, "_run", side_effect=run),
+            ):
                 managed_netns.create()
             self.assertEqual(calls[0], ["netns", "add", "managed-t3"])
             self.assertEqual(calls[1][-4:], ["link", "set", "lo", "up"])
@@ -80,9 +90,11 @@ class NamespaceLifecycleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "managed-t3"
             path.touch()
-            with mock.patch.object(managed_netns, "NAMESPACE_PATH", path), \
-                    mock.patch.object(managed_netns.os, "geteuid", return_value=0), \
-                    mock.patch.object(managed_netns, "_run") as run:
+            with (
+                mock.patch.object(managed_netns, "NAMESPACE_PATH", path),
+                mock.patch.object(managed_netns.os, "geteuid", return_value=0),
+                mock.patch.object(managed_netns, "_run") as run,
+            ):
                 with self.assertRaises(managed_netns.NamespaceError):
                     managed_netns.create()
                 run.assert_not_called()
@@ -99,9 +111,11 @@ class NamespaceLifecycleTests(unittest.TestCase):
                 elif args[0:3] == ["netns", "exec", "managed-t3"]:
                     raise managed_netns.NamespaceError("synthetic failure")
 
-            with mock.patch.object(managed_netns, "NAMESPACE_PATH", path), \
-                    mock.patch.object(managed_netns.os, "geteuid", return_value=0), \
-                    mock.patch.object(managed_netns, "_run", side_effect=run):
+            with (
+                mock.patch.object(managed_netns, "NAMESPACE_PATH", path),
+                mock.patch.object(managed_netns.os, "geteuid", return_value=0),
+                mock.patch.object(managed_netns, "_run", side_effect=run),
+            ):
                 with self.assertRaises(managed_netns.NamespaceError):
                     managed_netns.create()
             self.assertEqual(calls[-1], ["netns", "del", "managed-t3"])
@@ -132,9 +146,12 @@ class BrokerSocketPermissionTests(unittest.IsolatedAsyncioTestCase):
                 path.touch()
                 return FakeServer()
 
-            with mock.patch.object(https_connect_broker.asyncio, "start_unix_server",
-                                   side_effect=fake_start_server), \
-                    mock.patch.object(https_connect_broker.os, "chown") as chown:
+            with (
+                mock.patch.object(
+                    https_connect_broker.asyncio, "start_unix_server", side_effect=fake_start_server
+                ),
+                mock.patch.object(https_connect_broker.os, "chown") as chown,
+            ):
                 with self.assertRaises(asyncio.CancelledError):
                     await https_connect_broker.serve(path, {"opencode.ai"}, socket_gid=1234)
             chown.assert_called_once_with(path, -1, 1234)
@@ -154,8 +171,11 @@ class StagingProvisionerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "candidate"
             created = stage_managed_candidate.stage_candidate(
-                output, dashboard_uid=1500, dashboard_gid=1600,
-                allowed_models=["opencode/model-a"], model="opencode/model-a",
+                output,
+                dashboard_uid=1500,
+                dashboard_gid=1600,
+                allowed_models=["opencode/model-a"],
+                model="opencode/model-a",
             )
             self.assertEqual(created.stat().st_mode & 0o777, 0o700)
             config = json.loads((created / "etc/managed-supervisor/service.json").read_text())
@@ -167,9 +187,15 @@ class StagingProvisionerTests(unittest.TestCase):
             service_token = (created / "etc/managed-supervisor/credentials/protocol-token").read_bytes()
             self.assertEqual(dashboard_token, service_token)
             self.assertEqual(len(service_token.strip()), 64)
-            self.assertEqual((created / "etc/managed-supervisor/credentials/protocol-token").stat().st_mode & 0o777, 0o600)
+            self.assertEqual(
+                (created / "etc/managed-supervisor/credentials/protocol-token").stat().st_mode & 0o777, 0o600
+            )
             self.assertTrue((created / "etc/systemd/system/managed-attestation-verifier.service").is_file())
-            self.assertTrue((created / "opt/managed-supervisor/orchestrator/systemd/managed_attestation_verifier.py").is_file())
+            self.assertTrue(
+                (
+                    created / "opt/managed-supervisor/orchestrator/systemd/managed_attestation_verifier.py"
+                ).is_file()
+            )
             self.assertTrue((created / "etc/tmpfiles.d/managed-attestation-verifier.conf").is_file())
 
     def test_stager_refuses_existing_destination_without_modifying_it(self):
@@ -180,8 +206,11 @@ class StagingProvisionerTests(unittest.TestCase):
             sentinel.write_text("preserve")
             with self.assertRaises(stage_managed_candidate.StagingError):
                 stage_managed_candidate.stage_candidate(
-                    output, dashboard_uid=1500, dashboard_gid=1600,
-                    allowed_models=["opencode/model-a"], model="opencode/model-a",
+                    output,
+                    dashboard_uid=1500,
+                    dashboard_gid=1600,
+                    allowed_models=["opencode/model-a"],
+                    model="opencode/model-a",
                 )
             self.assertEqual(sentinel.read_text(), "preserve")
 
@@ -189,28 +218,37 @@ class StagingProvisionerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             with self.assertRaises(stage_managed_candidate.StagingError):
                 stage_managed_candidate.stage_candidate(
-                    Path(temporary) / "candidate", dashboard_uid=1500, dashboard_gid=1600,
-                    allowed_models=["opencode/model-a"], model="opencode/model-b",
+                    Path(temporary) / "candidate",
+                    dashboard_uid=1500,
+                    dashboard_gid=1600,
+                    allowed_models=["opencode/model-a"],
+                    model="opencode/model-b",
                 )
 
     def test_stager_rejects_models_without_an_opencode_route(self):
         with tempfile.TemporaryDirectory() as temporary:
             for model in ("codex/gpt-5", "gpt-6-luna"):
-                with self.subTest(model=model), self.assertRaisesRegex(
-                    stage_managed_candidate.StagingError, "OpenCode"
+                with (
+                    self.subTest(model=model),
+                    self.assertRaisesRegex(stage_managed_candidate.StagingError, "OpenCode"),
                 ):
                     stage_managed_candidate.stage_candidate(
                         Path(temporary) / model.replace("/", "-"),
-                        dashboard_uid=1500, dashboard_gid=1600,
-                        allowed_models=[model], model=model,
+                        dashboard_uid=1500,
+                        dashboard_gid=1600,
+                        allowed_models=[model],
+                        model=model,
                     )
 
     def test_stager_allows_known_opencode_go_model_on_opencode_instance(self):
         model = "opencode-go/deepseek-v4.1-flash"
         with tempfile.TemporaryDirectory() as temporary:
             created = stage_managed_candidate.stage_candidate(
-                Path(temporary) / "candidate", dashboard_uid=1500, dashboard_gid=1600,
-                allowed_models=[model], model=model,
+                Path(temporary) / "candidate",
+                dashboard_uid=1500,
+                dashboard_gid=1600,
+                allowed_models=[model],
+                model=model,
             )
             config = json.loads((created / "etc/managed-supervisor/service.json").read_text())
             self.assertEqual(config["provider"], "opencode")
@@ -221,8 +259,11 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
     def test_installer_has_hard_stop_before_any_host_or_stage_access(self):
         with self.assertRaisesRegex(install_managed_candidate.InstallError, "installation disabled"):
             install_managed_candidate.install_candidate(
-                Path("/missing-stage"), Path("/missing-approval"), Path("/missing-token"),
-                dashboard_user="missing", dashboard_group="missing",
+                Path("/missing-stage"),
+                Path("/missing-approval"),
+                Path("/missing-token"),
+                dashboard_user="missing",
+                dashboard_group="missing",
             )
 
     def test_privileged_input_path_rejects_world_writable_ancestor(self):
@@ -250,22 +291,31 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
             config.write_text("{}")
             config.chmod(0o600)
             stage.chmod(0o700)
-            stage_opener = lambda _path, **_kwargs: os.open(
-                stage, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-            with mock.patch.object(install_managed_candidate, "_open_absolute_directory",
-                                   side_effect=stage_opener), \
-                    mock.patch.object(Path, "lstat", side_effect=AssertionError("pathname lstat used")):
-                self.assertEqual(install_managed_candidate._read_stage_file(
-                    stage, "etc/managed-supervisor/service.json", require_root=False,
-                    private=True), b"{}")
+
+            def stage_opener(_path, **_kwargs):
+                return os.open(stage, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+
+            with (
+                mock.patch.object(
+                    install_managed_candidate, "_open_absolute_directory", side_effect=stage_opener
+                ),
+                mock.patch.object(Path, "lstat", side_effect=AssertionError("pathname lstat used")),
+            ):
+                self.assertEqual(
+                    install_managed_candidate._read_stage_file(
+                        stage, "etc/managed-supervisor/service.json", require_root=False, private=True
+                    ),
+                    b"{}",
+                )
 
             (stage / "etc/managed-supervisor").rename(stage / "etc/managed-supervisor.saved")
             (stage / "etc/managed-supervisor").symlink_to(
-                stage / "etc/managed-supervisor.saved", target_is_directory=True)
+                stage / "etc/managed-supervisor.saved", target_is_directory=True
+            )
             with self.assertRaises(install_managed_candidate.InstallError):
                 install_managed_candidate._read_stage_file(
-                    stage, "etc/managed-supervisor/service.json", require_root=False,
-                    private=True)
+                    stage, "etc/managed-supervisor/service.json", require_root=False, private=True
+                )
 
     def test_mcp_secret_source_open_is_relative_to_trusted_directory_fd(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -273,17 +323,21 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
             secret = root / "mcp-token"
             secret.write_text("synthetic-token-value-long-enough\n")
             secret.chmod(0o600)
-            opener = lambda _path, **_kwargs: os.open(
-                root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-            with mock.patch.object(install_managed_candidate, "_open_absolute_directory",
-                                   side_effect=opener), \
-                    mock.patch.object(Path, "lstat", side_effect=AssertionError("pathname lstat used")):
-                self.assertEqual(install_managed_candidate._safe_token(
-                    secret, require_root=False), b"synthetic-token-value-long-enough\n")
+
+            def opener(_path, **_kwargs):
+                return os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+
+            with (
+                mock.patch.object(install_managed_candidate, "_open_absolute_directory", side_effect=opener),
+                mock.patch.object(Path, "lstat", side_effect=AssertionError("pathname lstat used")),
+            ):
+                self.assertEqual(
+                    install_managed_candidate._safe_token(secret, require_root=False),
+                    b"synthetic-token-value-long-enough\n",
+                )
             secret.unlink()
             secret.symlink_to("/etc/passwd")
-            with mock.patch.object(install_managed_candidate, "_open_absolute_directory",
-                                   side_effect=opener):
+            with mock.patch.object(install_managed_candidate, "_open_absolute_directory", side_effect=opener):
                 with self.assertRaises(install_managed_candidate.InstallError):
                     install_managed_candidate._safe_token(secret, require_root=False)
 
@@ -295,9 +349,13 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
             (root / "opt").symlink_to(outside, target_is_directory=True)
             with self.assertRaises(install_managed_candidate.InstallError):
                 install_managed_candidate._ensure_directory_at_root(
-                    root, Path("opt/managed-supervisor"), supervisor_gid=0,
-                    dashboard_uid=os.getuid(), dashboard_gid=0,
-                    require_root=False, created_dirs=[],
+                    root,
+                    Path("opt/managed-supervisor"),
+                    supervisor_gid=0,
+                    dashboard_uid=os.getuid(),
+                    dashboard_gid=0,
+                    require_root=False,
+                    created_dirs=[],
                 )
             self.assertEqual(list(outside.iterdir()), [])
 
@@ -309,9 +367,13 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
             unsafe.chmod(0o777)
             with self.assertRaises(install_managed_candidate.InstallError):
                 install_managed_candidate._ensure_directory_at_root(
-                    root, Path("opt/managed-supervisor"), supervisor_gid=0,
-                    dashboard_uid=os.getuid(), dashboard_gid=0,
-                    require_root=False, created_dirs=[],
+                    root,
+                    Path("opt/managed-supervisor"),
+                    supervisor_gid=0,
+                    dashboard_uid=os.getuid(),
+                    dashboard_gid=0,
+                    require_root=False,
+                    created_dirs=[],
                 )
 
     def test_dirfd_file_creation_is_exclusive_and_writes_under_open_parent(self):
@@ -321,20 +383,37 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
             parent.mkdir(parents=True, mode=0o755)
             for directory in (root / "opt", root / "opt/managed-supervisor", parent):
                 directory.chmod(0o755)
-            policy = lambda *_args, **_kwargs: (os.getuid(), os.getgid(), 0o755)
+
+            def policy(*_args, **_kwargs):
+                return os.getuid(), os.getgid(), 493
+
             relative = Path("opt/managed-supervisor/orchestrator/entry.py")
             with mock.patch.object(install_managed_candidate, "_directory_policy", side_effect=policy):
                 created = install_managed_candidate._create_file_at_root(
-                    root, relative, b"safe payload", uid=os.getuid(), gid=os.getgid(),
-                    mode=0o644, require_root=False, supervisor_gid=os.getgid(),
-                    dashboard_uid=os.getuid(), dashboard_gid=os.getgid(),
+                    root,
+                    relative,
+                    b"safe payload",
+                    uid=os.getuid(),
+                    gid=os.getgid(),
+                    mode=0o644,
+                    require_root=False,
+                    supervisor_gid=os.getgid(),
+                    dashboard_uid=os.getuid(),
+                    dashboard_gid=os.getgid(),
                 )
                 self.assertEqual(created.read_bytes(), b"safe payload")
                 with self.assertRaises(install_managed_candidate.InstallError):
                     install_managed_candidate._create_file_at_root(
-                        root, relative, b"replacement", uid=os.getuid(), gid=os.getgid(),
-                        mode=0o644, require_root=False, supervisor_gid=os.getgid(),
-                        dashboard_uid=os.getuid(), dashboard_gid=os.getgid(),
+                        root,
+                        relative,
+                        b"replacement",
+                        uid=os.getuid(),
+                        gid=os.getgid(),
+                        mode=0o644,
+                        require_root=False,
+                        supervisor_gid=os.getgid(),
+                        dashboard_uid=os.getuid(),
+                        dashboard_gid=os.getgid(),
                     )
             self.assertEqual(created.read_bytes(), b"safe payload")
 
@@ -345,22 +424,43 @@ class InstallerTrustBoundaryTests(unittest.TestCase):
             parent.mkdir(parents=True, mode=0o755)
             for directory in (root / "opt", root / "opt/managed-supervisor", parent):
                 directory.chmod(0o755)
-            policy = lambda *_args, **_kwargs: (os.getuid(), os.getgid(), 0o755)
+
+            def policy(*_args, **_kwargs):
+                return os.getuid(), os.getgid(), 493
+
             relative = Path("opt/managed-supervisor/orchestrator/entry.py")
             receipts = []
             with mock.patch.object(install_managed_candidate, "_directory_policy", side_effect=policy):
                 path = install_managed_candidate._create_file_at_root(
-                    root, relative, b"installed", uid=os.getuid(), gid=os.getgid(),
-                    mode=0o644, require_root=False, supervisor_gid=os.getgid(),
-                    dashboard_uid=os.getuid(), dashboard_gid=os.getgid(), created_files=receipts)
+                    root,
+                    relative,
+                    b"installed",
+                    uid=os.getuid(),
+                    gid=os.getgid(),
+                    mode=0o644,
+                    require_root=False,
+                    supervisor_gid=os.getgid(),
+                    dashboard_uid=os.getuid(),
+                    dashboard_gid=os.getgid(),
+                    created_files=receipts,
+                )
                 self.assertEqual(len(receipts), 1)
                 original = receipts[0]
                 self.assertTrue(install_managed_candidate._remove_at_root(root, original))
                 self.assertFalse(path.exists())
                 path = install_managed_candidate._create_file_at_root(
-                    root, relative, b"installed", uid=os.getuid(), gid=os.getgid(),
-                    mode=0o644, require_root=False, supervisor_gid=os.getgid(),
-                    dashboard_uid=os.getuid(), dashboard_gid=os.getgid(), created_files=receipts)
+                    root,
+                    relative,
+                    b"installed",
+                    uid=os.getuid(),
+                    gid=os.getgid(),
+                    mode=0o644,
+                    require_root=False,
+                    supervisor_gid=os.getgid(),
+                    dashboard_uid=os.getuid(),
+                    dashboard_gid=os.getgid(),
+                    created_files=receipts,
+                )
                 original = receipts[-1]
                 path.unlink()
                 path.write_bytes(b"replacement")
@@ -394,16 +494,25 @@ class AttestationLifecycleHookTests(unittest.TestCase):
             (proc / "223" / "fd").mkdir()
             (proc / "223" / "fd" / "7").symlink_to("socket:[54321]")
             unit_values = {
-                "managed-supervisor.service": ("activating", 111, "managed-supervisor", "managed-dashboard", sup_cgroup),
+                "managed-supervisor.service": (
+                    "activating",
+                    111,
+                    "managed-supervisor",
+                    "managed-dashboard",
+                    sup_cgroup,
+                ),
                 "managed-t3.service": ("active", 222, "managed-t3", "managed-t3-egress", t3_cgroup),
             }
 
             def runner(argv, **_kwargs):
                 unit = argv[-1]
                 active, pid, user, group, cgroup = unit_values[unit]
-                return mock.Mock(returncode=0, stdout=(
-                    f"ActiveState={active}\nMainPID={pid}\nUser={user}\nGroup={group}\nControlGroup={cgroup}\n"
-                ))
+                return mock.Mock(
+                    returncode=0,
+                    stdout=(
+                        f"ActiveState={active}\nMainPID={pid}\nUser={user}\nGroup={group}\nControlGroup={cgroup}\n"
+                    ),
+                )
 
             class FakeConnection:
                 def settimeout(self, _timeout):
@@ -415,20 +524,36 @@ class AttestationLifecycleHookTests(unittest.TestCase):
                 def close(self):
                     pass
 
-            with mock.patch.object(managed_supervisor_attestation_hook.pwd, "getpwnam",
-                                   side_effect=lambda name: mock.Mock(pw_uid={
-                                       "managed-supervisor": 1201, "managed-t3": 1202,
-                                   }[name])), \
-                    mock.patch.object(managed_supervisor_attestation_hook.socket, "socket",
-                                      return_value=FakeConnection()), \
-                    mock.patch.object(managed_supervisor_attestation_hook, "_listener_inode",
-                                      return_value="54321"), \
-                    mock.patch.object(managed_supervisor_attestation_hook, "verify_peer_and_processes",
-                                      return_value={"identity_observed": True}) as verify, \
-                    mock.patch.object(managed_supervisor_attestation_hook.os, "geteuid", return_value=0), \
-                    mock.patch.object(managed_supervisor_attestation_hook.os, "fchown"):
+            with (
+                mock.patch.object(
+                    managed_supervisor_attestation_hook.pwd,
+                    "getpwnam",
+                    side_effect=lambda name: mock.Mock(
+                        pw_uid={
+                            "managed-supervisor": 1201,
+                            "managed-t3": 1202,
+                        }[name]
+                    ),
+                ),
+                mock.patch.object(
+                    managed_supervisor_attestation_hook.socket, "socket", return_value=FakeConnection()
+                ),
+                mock.patch.object(
+                    managed_supervisor_attestation_hook, "_listener_inode", return_value="54321"
+                ),
+                mock.patch.object(
+                    managed_supervisor_attestation_hook,
+                    "verify_peer_and_processes",
+                    return_value={"identity_observed": True},
+                ) as verify,
+                mock.patch.object(managed_supervisor_attestation_hook.os, "geteuid", return_value=0),
+                mock.patch.object(managed_supervisor_attestation_hook.os, "fchown"),
+            ):
                 result = managed_supervisor_attestation_hook.publish_attestation(
-                    path=record, runner=runner, proc_root=proc, require_root=False,
+                    path=record,
+                    runner=runner,
+                    proc_root=proc,
+                    require_root=False,
                 )
             self.assertTrue(result["identity_observed"])
             verify.assert_called_once()
@@ -447,12 +572,19 @@ class AttestationLifecycleHookTests(unittest.TestCase):
             record_dir.mkdir(mode=0o700)
             record = record_dir / "record.json"
             record.write_text("stale")
-            with mock.patch.object(managed_supervisor_attestation_hook.os, "geteuid", return_value=0), \
-                    mock.patch.object(managed_supervisor_attestation_hook, "_run_systemctl",
-                                      side_effect=managed_supervisor_attestation_hook.HookError("bad unit")):
+            with (
+                mock.patch.object(managed_supervisor_attestation_hook.os, "geteuid", return_value=0),
+                mock.patch.object(
+                    managed_supervisor_attestation_hook,
+                    "_run_systemctl",
+                    side_effect=managed_supervisor_attestation_hook.HookError("bad unit"),
+                ),
+            ):
                 with self.assertRaises(managed_supervisor_attestation_hook.HookError):
                     managed_supervisor_attestation_hook.publish_attestation(
-                        path=record, proc_root=Path(temporary), require_root=False,
+                        path=record,
+                        proc_root=Path(temporary),
+                        require_root=False,
                     )
             self.assertFalse(record.exists())
 
@@ -471,7 +603,10 @@ class AttestationLifecycleHookTests(unittest.TestCase):
             self._proc_process(proc, 303, 1203, 999, "/system.slice/other.service")
             with self.assertRaisesRegex(managed_supervisor_attestation_hook.HookError, "exact unified"):
                 managed_supervisor_attestation_hook._proc_identity(
-                    303, 1203, "/system.slice/managed-t3.service", proc_root=proc,
+                    303,
+                    1203,
+                    "/system.slice/managed-t3.service",
+                    proc_root=proc,
                 )
 
     def test_real_nested_runner_child_fd_identifies_actual_listener_owner(self):
@@ -502,20 +637,22 @@ class AttestationLifecycleHookTests(unittest.TestCase):
                 self.skipTest("requires a unified cgroup v2 hierarchy")
             cgroup = unified[0].split("::", 1)[1]
             fd_entries = list(Path(f"/proc/{child_pid}/fd").iterdir())
-            child_socket_fd = next(
-                entry for entry in fd_entries
-                if os.readlink(entry).startswith("socket:[")
-            )
+            child_socket_fd = next(entry for entry in fd_entries if os.readlink(entry).startswith("socket:["))
             inode = os.readlink(child_socket_fd).removeprefix("socket:[").removesuffix("]")
             with tempfile.TemporaryDirectory() as temporary:
                 fixture_proc = Path(temporary) / "proc"
                 fixture_proc.mkdir(mode=0o700)
                 (fixture_proc / str(os.getpid())).symlink_to(f"/proc/{os.getpid()}")
                 (fixture_proc / str(child_pid)).symlink_to(f"/proc/{child_pid}")
-                with mock.patch.object(managed_supervisor_attestation_hook, "_listener_inode",
-                                       return_value=inode):
+                with mock.patch.object(
+                    managed_supervisor_attestation_hook, "_listener_inode", return_value=inode
+                ):
                     owner_pid, _ticks, memberships = managed_supervisor_attestation_hook._listener_owner_pid(
-                        os.getpid(), os.getuid(), cgroup, proc_root=fixture_proc, port=46687,
+                        os.getpid(),
+                        os.getuid(),
+                        cgroup,
+                        proc_root=fixture_proc,
+                        port=46687,
                     )
             self.assertEqual(owner_pid, child_pid)
             self.assertEqual(memberships, (f"0::{cgroup}",))
@@ -542,8 +679,9 @@ class HostVerificationContractTests(unittest.TestCase):
         groups = {
             "managed-dashboard": SimpleNamespace(gr_name="managed-dashboard", gr_gid=2001, gr_mem=["dash"]),
             "managed-supervisor": SimpleNamespace(gr_name="managed-supervisor", gr_gid=2002, gr_mem=[]),
-            "managed-t3-egress": SimpleNamespace(gr_name="managed-t3-egress", gr_gid=2003,
-                                                   gr_mem=["managed-t3", "managed-egress"]),
+            "managed-t3-egress": SimpleNamespace(
+                gr_name="managed-t3-egress", gr_gid=2003, gr_mem=["managed-t3", "managed-egress"]
+            ),
         }
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -557,18 +695,26 @@ class HostVerificationContractTests(unittest.TestCase):
             cgroup.mkdir()
             (cgroup / "cgroup.controllers").touch()
             (cgroup / "cgroup.procs").touch()
-            with mock.patch.object(preflight_managed_candidate.pwd, "getpwnam",
-                                   side_effect=lambda name: users[name]), \
-                    mock.patch.object(preflight_managed_candidate.grp, "getgrnam",
-                                      side_effect=lambda name: groups[name]), \
-                    mock.patch.object(preflight_managed_candidate, "_systemd_manager",
-                                      return_value=(True, "255")), \
-                    mock.patch.object(preflight_managed_candidate.os, "geteuid", return_value=0), \
-                    mock.patch.object(preflight_managed_candidate.shutil, "which", return_value="/usr/sbin/ip"):
+            with (
+                mock.patch.object(
+                    preflight_managed_candidate.pwd, "getpwnam", side_effect=lambda name: users[name]
+                ),
+                mock.patch.object(
+                    preflight_managed_candidate.grp, "getgrnam", side_effect=lambda name: groups[name]
+                ),
+                mock.patch.object(
+                    preflight_managed_candidate, "_systemd_manager", return_value=(True, "255")
+                ),
+                mock.patch.object(preflight_managed_candidate.os, "geteuid", return_value=0),
+                mock.patch.object(preflight_managed_candidate.shutil, "which", return_value="/usr/sbin/ip"),
+            ):
                 result = preflight_managed_candidate.collect_preflight(
-                    dashboard_user="dash", dashboard_group="managed-dashboard",
+                    dashboard_user="dash",
+                    dashboard_group="managed-dashboard",
                     disk_usage=lambda _path: SimpleNamespace(free=64 * 1024 * 1024),
-                    proc_root=root, t3_executable=t3, cgroup_root=cgroup,
+                    proc_root=root,
+                    t3_executable=t3,
+                    cgroup_root=cgroup,
                 )
         self.assertEqual(result["blocking_checks"], [])
         self.assertTrue(result["preflight_only"])
@@ -596,7 +742,9 @@ class HostVerificationContractTests(unittest.TestCase):
         wrong_peer = dict(valid, supervisor_pid=999)
         with self.assertRaisesRegex(verify_managed_host.HostVerificationError, "MainPID"):
             verify_managed_host.verify_attested_cgroups(
-                wrong_peer, supervisor_unit=sup_unit, t3_unit=t3_unit,
+                wrong_peer,
+                supervisor_unit=sup_unit,
+                t3_unit=t3_unit,
             )
         valid["t3_cgroup_membership"] = ["0::/system.slice/other.service"]
         with self.assertRaises(verify_managed_host.HostVerificationError):
@@ -612,13 +760,17 @@ class HostVerificationContractTests(unittest.TestCase):
             )
 
         verify_managed_host.verify_unit(
-            "managed-t3.service", user="managed-t3", group="managed-t3-egress",
+            "managed-t3.service",
+            user="managed-t3",
+            group="managed-t3-egress",
             runner=lambda *_args, **_kwargs: Result(),
         )
         Result.stdout = Result.stdout.replace("KillMode=control-group", "KillMode=process")
         with self.assertRaises(verify_managed_host.HostVerificationError):
             verify_managed_host.verify_unit(
-                "managed-t3.service", user="managed-t3", group="managed-t3-egress",
+                "managed-t3.service",
+                user="managed-t3",
+                group="managed-t3-egress",
                 runner=lambda *_args, **_kwargs: Result(),
             )
 
@@ -632,18 +784,24 @@ class HostVerificationContractTests(unittest.TestCase):
                 "CapabilityBoundingSet=cap_sys_ptrace\nRestrictAddressFamilies=AF_UNIX\n"
             )
 
-        required = {"CapabilityBoundingSet": "CAP_SYS_PTRACE",
-                    "RestrictAddressFamilies": "AF_UNIX"}
+        required = {"CapabilityBoundingSet": "CAP_SYS_PTRACE", "RestrictAddressFamilies": "AF_UNIX"}
         verify_managed_host.verify_unit(
-            "managed-attestation-verifier.service", user="root", group="managed-supervisor",
-            required_properties=required, runner=lambda *_args, **_kwargs: Result(),
+            "managed-attestation-verifier.service",
+            user="root",
+            group="managed-supervisor",
+            required_properties=required,
+            runner=lambda *_args, **_kwargs: Result(),
         )
         Result.stdout = Result.stdout.replace(
-            "CapabilityBoundingSet=cap_sys_ptrace", "CapabilityBoundingSet=cap_sys_ptrace cap_net_raw")
+            "CapabilityBoundingSet=cap_sys_ptrace", "CapabilityBoundingSet=cap_sys_ptrace cap_net_raw"
+        )
         with self.assertRaisesRegex(verify_managed_host.HostVerificationError, "capability"):
             verify_managed_host.verify_unit(
-                "managed-attestation-verifier.service", user="root", group="managed-supervisor",
-                required_properties=required, runner=lambda *_args, **_kwargs: Result(),
+                "managed-attestation-verifier.service",
+                user="root",
+                group="managed-supervisor",
+                required_properties=required,
+                runner=lambda *_args, **_kwargs: Result(),
             )
 
     def test_root_verifier_process_identity_and_ptrace_capability_fail_closed(self):
@@ -652,19 +810,21 @@ class HostVerificationContractTests(unittest.TestCase):
             proc.mkdir()
             (proc / "status").write_text(
                 "Uid:\t0\t0\t0\t0\nGid:\t1600\t1600\t1600\t1600\n"
-                f"CapBnd:\t{1 << 19:016x}\nCapEff:\t{1 << 19:016x}\n")
-            (proc / "cgroup").write_text(
-                "0::/system.slice/managed-attestation-verifier.service\n")
-            with mock.patch.object(verify_managed_host.grp, "getgrnam",
-                                   return_value=mock.Mock(gr_gid=1600)):
+                f"CapBnd:\t{1 << 19:016x}\nCapEff:\t{1 << 19:016x}\n"
+            )
+            (proc / "cgroup").write_text("0::/system.slice/managed-attestation-verifier.service\n")
+            with mock.patch.object(verify_managed_host.grp, "getgrnam", return_value=mock.Mock(gr_gid=1600)):
                 verify_managed_host.verify_verifier_process(
-                    303, "/system.slice/managed-attestation-verifier.service", proc_root=Path(temporary))
+                    303, "/system.slice/managed-attestation-verifier.service", proc_root=Path(temporary)
+                )
                 (proc / "status").write_text(
                     "Uid:\t0\t0\t0\t0\nGid:\t1600\t1600\t1600\t1600\n"
-                    f"CapBnd:\t{1 << 19:016x}\nCapEff:\t0\n")
+                    f"CapBnd:\t{1 << 19:016x}\nCapEff:\t0\n"
+                )
                 with self.assertRaisesRegex(verify_managed_host.HostVerificationError, "CAP_SYS_PTRACE"):
                     verify_managed_host.verify_verifier_process(
-                        303, "/system.slice/managed-attestation-verifier.service", proc_root=Path(temporary))
+                        303, "/system.slice/managed-attestation-verifier.service", proc_root=Path(temporary)
+                    )
 
     def test_staged_service_config_must_match_dashboard_gid_and_endpoint(self):
         class Account:
@@ -685,16 +845,22 @@ class HostVerificationContractTests(unittest.TestCase):
         def group_lookup(name):
             return Group()
 
-        with mock.patch.object(verify_managed_host.pwd, "getpwnam", return_value=Account()), \
-                mock.patch.object(verify_managed_host.grp, "getgrnam", side_effect=group_lookup):
+        with (
+            mock.patch.object(verify_managed_host.pwd, "getpwnam", return_value=Account()),
+            mock.patch.object(verify_managed_host.grp, "getgrnam", side_effect=group_lookup),
+        ):
             verify_managed_host.verify_service_config(
-                config, dashboard_user="dash", dashboard_group="managed-dashboard",
+                config,
+                dashboard_user="dash",
+                dashboard_group="managed-dashboard",
                 socket_path="/run/managed-supervisor/managed.sock",
             )
             config["socket_group_gid"] = 999
             with self.assertRaises(verify_managed_host.HostVerificationError):
                 verify_managed_host.verify_service_config(
-                    config, dashboard_user="dash", dashboard_group="managed-dashboard",
+                    config,
+                    dashboard_user="dash",
+                    dashboard_group="managed-dashboard",
                     socket_path="/run/managed-supervisor/managed.sock",
                 )
 

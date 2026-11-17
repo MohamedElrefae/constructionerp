@@ -876,8 +876,7 @@ async function inspectTask(taskId) {
 	pollTimer = setInterval(refreshTaskDetail, 3000);
 
 	// Reflect durable run state for this task (resumes the viewer after reload).
-	runPollDelay = RUN_POLL_BASE_MS;
-	pollRunStatus(taskId);
+	document.dispatchEvent(new CustomEvent("dashboard:task-inspected", { detail: { taskId } }));
 }
 
 async function refreshTaskDetail() {
@@ -1310,6 +1309,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 	let runPollTaskId = null;
 	let lastRunActive = false;
 
+	document.addEventListener("dashboard:task-inspected", (event) => {
+		runPollDelay = RUN_POLL_BASE_MS;
+		pollRunStatus(event.detail.taskId);
+	});
+
 	function renderRunStatus(run) {
 		const msgDiv = document.getElementById("run-msg");
 		const startBtn = document.getElementById("run-start-btn");
@@ -1334,8 +1338,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 		if (run && run.abandoned) parts.push("(abandoned; remote state unknown)");
 		msgDiv.textContent = parts.join(" ");
 		startBtn.disabled = active || state === "RECONCILIATION_REQUIRED" || state === "ABANDONED";
-		startBtn.style.display = (state === "RECONCILIATION_REQUIRED" || state === "ABANDONED")
-			? "none" : "inline-block";
+		startBtn.style.display =
+			state === "RECONCILIATION_REQUIRED" || state === "ABANDONED" ? "none" : "inline-block";
 		startBtn.textContent = active ? "Running…" : "Start run";
 		if (!active && (state === "PAUSED" || state === "STOPPED")) {
 			startBtn.textContent = "Resume run";
@@ -1383,12 +1387,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	async function runCommand(path, taskId, body) {
-		const res = await apiFetch(
-			`/api/tasks/${encodeURIComponent(taskId)}/${path}`,
-			{ method: "POST", body: JSON.stringify(body || {}) }
-		);
+		const res = await apiFetch(`/api/tasks/${encodeURIComponent(taskId)}/${path}`, {
+			method: "POST",
+			body: JSON.stringify(body || {}),
+		});
 		let data = {};
-		try { data = await res.json(); } catch (err) { data = {}; }
+		try {
+			data = await res.json();
+		} catch (err) {
+			data = {};
+		}
 		if (!res.ok && res.status !== 409) {
 			throw new Error(data.detail || "request failed");
 		}
@@ -1411,7 +1419,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 				.then((d) => {
 					const q = d.requirements || {};
 					reqDiv.textContent = d.pending
-						? `Gate ${q.gate_id} · branch ${q.branch} · parent ${q.expected_parent_sha} · tree ${q.expected_tree_oid} · job ${q.job_id}. ${d.instructions || ""}`
+						? `Gate ${q.gate_id} · branch ${q.branch} · parent ${
+								q.expected_parent_sha
+						  } · tree ${q.expected_tree_oid} · job ${q.job_id}. ${
+								d.instructions || ""
+						  }`
 						: "No pending commit gate.";
 				})
 				.catch(() => {});
@@ -1451,14 +1463,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 			try {
 				token = JSON.parse(document.getElementById("commit-token").value || "{}");
 			} catch (err) {
-				if (msg) { msg.style.display = "block"; msg.className = "alert alert-error"; msg.textContent = "Token is not valid JSON"; }
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Token is not valid JSON";
+				}
 				return;
 			}
 			try {
-				const data = await runCommand("commit-arm", taskId, { token, action_id: `arm-${Date.now()}` });
-				if (msg) { msg.style.display = "block"; msg.className = "alert alert-info"; msg.textContent = "Owner token accepted; make the commit, then verify."; }
+				const data = await runCommand("commit-arm", taskId, {
+					token,
+					action_id: `arm-${Date.now()}`,
+				});
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-info";
+					msg.textContent = "Owner token accepted; make the commit, then verify.";
+				}
 			} catch (err) {
-				if (msg) { msg.style.display = "block"; msg.className = "alert alert-error"; msg.textContent = "Arm failed: " + (err.message || "error"); }
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Arm failed: " + (err.message || "error");
+				}
 			}
 		});
 	}
@@ -1473,10 +1500,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 				if (msg) {
 					msg.style.display = "block";
 					msg.className = data.verified ? "alert alert-info" : "alert alert-warning";
-					msg.textContent = data.verified ? `Verified commit ${data.commit}` : `Not verified: ${data.detail || "no commit"}`;
+					msg.textContent = data.verified
+						? `Verified commit ${data.commit}`
+						: `Not verified: ${data.detail || "no commit"}`;
 				}
 			} catch (err) {
-				if (msg) { msg.style.display = "block"; msg.className = "alert alert-error"; msg.textContent = "Verify failed"; }
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Verify failed";
+				}
 			}
 		});
 	}
@@ -1487,12 +1520,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 			const taskId = activeTaskId;
 			const msg = document.getElementById("commit-msg");
 			try {
-				const data = await runCommand("commit-record", taskId, { action_id: `commit-${Date.now()}` });
-				if (msg) { msg.style.display = "block"; msg.className = "alert alert-info"; msg.textContent = "Commit recorded; resuming."; }
+				const data = await runCommand("commit-record", taskId, {
+					action_id: `commit-${Date.now()}`,
+				});
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-info";
+					msg.textContent = "Commit recorded; resuming.";
+				}
 				if (data.run) renderRunStatus(data.run);
 				pollRunStatus(taskId);
 			} catch (err) {
-				if (msg) { msg.style.display = "block"; msg.className = "alert alert-error"; msg.textContent = "Record failed: " + (err.message || "error"); }
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Record failed: " + (err.message || "error");
+				}
 			}
 		});
 	}
@@ -1518,7 +1561,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 				if (msgDiv) {
 					msgDiv.style.display = "block";
 					msgDiv.className = "alert alert-error";
-					msgDiv.textContent = "Start failed: " + (err && err.message ? err.message : "server error");
+					msgDiv.textContent =
+						"Start failed: " + (err && err.message ? err.message : "server error");
 				}
 				runStartBtn.disabled = false;
 			}

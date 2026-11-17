@@ -35,13 +35,15 @@ class DashboardHttpRouteTests(unittest.TestCase):
         cls.root = Path(cls._tmp.name)
         _prepare_env(cls.root)
         try:
-            import dashboard.app  # noqa: F401
+            import dashboard.app
         except Exception as exc:  # missing deps/package: skip, never fail silently
             raise unittest.SkipTest(f"dashboard package unavailable: {type(exc).__name__}: {exc}")
-        from starlette.testclient import TestClient
         import importlib
-        import dashboard.config
+
+        from starlette.testclient import TestClient
+
         import dashboard.app
+        import dashboard.config
 
         importlib.reload(dashboard.config)
         importlib.reload(dashboard.app)
@@ -65,6 +67,7 @@ class DashboardHttpRouteTests(unittest.TestCase):
 
     def test_supervisor_health_requires_a_session(self):
         from starlette.testclient import TestClient
+
         import dashboard.app
 
         client = TestClient(dashboard.app.app, base_url="https://127.0.0.1:8080")
@@ -143,8 +146,7 @@ class DashboardHttpRouteTests(unittest.TestCase):
         # reaches the handler (empty body -> 400) without dispatching anything
         r_setup = self.client.post(
             "/api/auth/setup-password",
-            json={"current_password": password,
-                  "new_password": "NewPermanentPass123!"},
+            json={"current_password": password, "new_password": "NewPermanentPass123!"},
             headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": csrf or ""},
         )
         self.assertEqual(r_setup.status_code, 200, r_setup.text)

@@ -1,8 +1,9 @@
 """Engine may retry only when its launcher proves no task was started."""
+
 from pathlib import Path
 from unittest import mock
-import pytest
 
+import pytest
 from core import ProvenNoLaunch, WorkflowError, bytes_hash
 from engine import Engine
 from t3_supervisor_client import SupervisorUnavailable
@@ -13,11 +14,22 @@ def test_proven_prelaunch_failure_restores_created_job(tmp_path):
     plan.write_text("synthetic plan")
     revision = bytes_hash(plan.read_bytes())
     candidate = {"candidate_id": "synthetic"}
-    job = {"status": "CREATED", "role": "reviewer", "candidate_id": "synthetic",
-           "plan_revision_hash": revision, "launch_attempts": 0,
-           "spec": {"envelope": {"stage": "1"}}}
-    view = {"status": "ACTIVE", "gate": None, "active_jobs": ["job-1"],
-            "candidate": candidate, "plan_revision_hash": revision, "stage": "1"}
+    job = {
+        "status": "CREATED",
+        "role": "reviewer",
+        "candidate_id": "synthetic",
+        "plan_revision_hash": revision,
+        "launch_attempts": 0,
+        "spec": {"envelope": {"stage": "1"}},
+    }
+    view = {
+        "status": "ACTIVE",
+        "gate": None,
+        "active_jobs": ["job-1"],
+        "candidate": candidate,
+        "plan_revision_hash": revision,
+        "stage": "1",
+    }
 
     class NoLaunch:
         def __call__(self, _job):

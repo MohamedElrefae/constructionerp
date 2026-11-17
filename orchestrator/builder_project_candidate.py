@@ -17,11 +17,10 @@ import subprocess
 import time
 from pathlib import Path, PurePosixPath
 
-from builder_intake import stage_bundle
 from builder_candidate_prototype import _network_boundary_available
+from builder_intake import stage_bundle
 from core import WorkflowError
 from sandbox import command as sandbox_command
-
 
 SCHEMA = "engine-builder-project-baseline/v2"
 MAX_FILES = 20_000
@@ -31,41 +30,60 @@ MAX_COMMANDS = 32
 MAX_TIMEOUT = 600
 _HEX = re.compile(r"^[0-9a-f]{64}$")
 _UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
-_SECRET_NAMES = {".env", ".env.local", ".env.production", "id_rsa", "id_ed25519",
-                 "credentials.json", "token", "token.json", "auth.json"}
+_SECRET_NAMES = {
+    ".env",
+    ".env.local",
+    ".env.production",
+    "id_rsa",
+    "id_ed25519",
+    "credentials.json",
+    "token",
+    "token.json",
+    "auth.json",
+}
 _SECRET_SUFFIXES = (".pem", ".key", ".p12", ".pfx")
 
 
 def _canonical(value):
-    return json.dumps(value, sort_keys=True, separators=(",", ":"),
-                      ensure_ascii=False, allow_nan=False).encode("utf-8")
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+    ).encode("utf-8")
 
 
 def _relative(path):
-    if (not isinstance(path, str) or not path or "\\" in path or "\x00" in path
-            or PurePosixPath(path).is_absolute()
-            or any(p in ("", ".", "..") for p in path.split("/"))
-            or PurePosixPath(path).as_posix() != path):
+    if (
+        not isinstance(path, str)
+        or not path
+        or "\\" in path
+        or "\x00" in path
+        or PurePosixPath(path).is_absolute()
+        or any(p in ("", ".", "..") for p in path.split("/"))
+        or PurePosixPath(path).as_posix() != path
+    ):
         raise WorkflowError("Project snapshot contains a non-normalized path")
     return path
 
 
 def _excluded_path(rel, generated):
-    return any(rel == item.rstrip("/") or (item.endswith("/") and rel.startswith(item))
-               for item in generated)
+    return any(rel == item.rstrip("/") or (item.endswith("/") and rel.startswith(item)) for item in generated)
 
 
 def _normalize_generated(generated):
-    if not isinstance(generated, (list, tuple)):
+    if not isinstance(generated, list | tuple):
         raise WorkflowError("Generated path exclusions must be a bounded list")
     normalized = []
     for item in generated:
         trimmed = item.rstrip("/") if isinstance(item, str) else ""
         canonical_item = trimmed + ("/" if isinstance(item, str) and item.endswith("/") else "")
-        if (not isinstance(item, str) or not item or "\\" in item or "\x00" in item
-                or item != canonical_item
-                or PurePosixPath(item).is_absolute()
-                or any(part in ("", ".", "..") for part in trimmed.split("/"))):
+        if (
+            not isinstance(item, str)
+            or not item
+            or "\\" in item
+            or "\x00" in item
+            or item != canonical_item
+            or PurePosixPath(item).is_absolute()
+            or any(part in ("", ".", "..") for part in trimmed.split("/"))
+        ):
             raise WorkflowError("Generated path exclusion is not normalized")
         normalized.append(item)
     return sorted(set(normalized))
@@ -95,7 +113,9 @@ def _entries(root, generated=()):
                     raise WorkflowError("Linked or symlinked Git metadata is refused")
                 continue
             if not stat.S_ISDIR(info.st_mode):
-                raise WorkflowError("Project contains symlink or special directory: " + str(path.relative_to(root)))
+                raise WorkflowError(
+                    "Project contains symlink or special directory: " + str(path.relative_to(root))
+                )
             kept.append(name)
         dirs[:] = kept
         for name in files:
@@ -126,8 +146,10 @@ def _entries(root, generated=()):
                 raise WorkflowError("Project changed during snapshot: " + rel) from exc
             try:
                 opened = os.fstat(fd)
-                if (not stat.S_ISREG(opened.st_mode)
-                        or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino)):
+                if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (
+                    info.st_dev,
+                    info.st_ino,
+                ):
                     raise WorkflowError("Project changed during snapshot: " + rel)
                 with os.fdopen(fd, "rb", closefd=False) as stream:
                     data = stream.read(MAX_TOTAL_BYTES - total + 1)
@@ -141,8 +163,10 @@ def _entries(root, generated=()):
 
 
 def _tree_hash(entries):
-    payload = [{"path": p, "sha256": hashlib.sha256(data).hexdigest(),
-                "size": len(data), "mode": mode} for p, data, mode in entries]
+    payload = [
+        {"path": p, "sha256": hashlib.sha256(data).hexdigest(), "size": len(data), "mode": mode}
+        for p, data, mode in entries
+    ]
     return hashlib.sha256(_canonical(payload)).hexdigest(), payload
 
 
@@ -158,9 +182,13 @@ def capture_baseline(source_root, artifact_path, generated=()):
     target = parent / artifact.name
     if target.exists() or target.is_symlink() or target.is_relative_to(root):
         raise WorkflowError("Baseline artifact must be new and outside project source")
-    doc = {"schema": SCHEMA, "excluded_generated": generated,
-           "source_identity": {"device": info.st_dev, "inode": info.st_ino},
-           "tree_sha256": tree_sha, "entries": rows}
+    doc = {
+        "schema": SCHEMA,
+        "excluded_generated": generated,
+        "source_identity": {"device": info.st_dev, "inode": info.st_ino},
+        "tree_sha256": tree_sha,
+        "entries": rows,
+    }
     doc["manifest_sha256"] = hashlib.sha256(_canonical(doc)).hexdigest()
     encoded = _canonical(doc) + b"\n"
     if len(encoded) > MAX_MANIFEST_BYTES:
@@ -174,8 +202,12 @@ def capture_baseline(source_root, artifact_path, generated=()):
     except Exception:
         target.unlink(missing_ok=True)
         raise
-    return {"manifest_sha256": doc["manifest_sha256"], "tree_sha256": tree_sha,
-            "source_identity": doc["source_identity"], "artifact": str(target)}
+    return {
+        "manifest_sha256": doc["manifest_sha256"],
+        "tree_sha256": tree_sha,
+        "source_identity": doc["source_identity"],
+        "artifact": str(target),
+    }
 
 
 def _load_baseline(path, expected_digest):
@@ -186,15 +218,26 @@ def _load_baseline(path, expected_digest):
         doc = json.loads(p.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError) as exc:
         raise WorkflowError("Baseline artifact is malformed") from exc
-    if not isinstance(doc, dict) or set(doc) != {"schema", "excluded_generated", "source_identity", "tree_sha256", "entries", "manifest_sha256"}:
+    if not isinstance(doc, dict) or set(doc) != {
+        "schema",
+        "excluded_generated",
+        "source_identity",
+        "tree_sha256",
+        "entries",
+        "manifest_sha256",
+    }:
         raise WorkflowError("Baseline artifact schema mismatch")
     claimed = doc["manifest_sha256"]
     unsigned = dict(doc)
     del unsigned["manifest_sha256"]
-    if (doc["schema"] != SCHEMA or claimed != expected_digest
-            or hashlib.sha256(_canonical(unsigned)).hexdigest() != claimed
-            or not isinstance(doc["entries"], list) or not _HEX.fullmatch(doc["tree_sha256"])
-            or doc["excluded_generated"] != _normalize_generated(doc["excluded_generated"])):
+    if (
+        doc["schema"] != SCHEMA
+        or claimed != expected_digest
+        or hashlib.sha256(_canonical(unsigned)).hexdigest() != claimed
+        or not isinstance(doc["entries"], list)
+        or not _HEX.fullmatch(doc["tree_sha256"])
+        or doc["excluded_generated"] != _normalize_generated(doc["excluded_generated"])
+    ):
         raise WorkflowError("Baseline artifact digest or binding mismatch")
     return doc
 
@@ -202,8 +245,11 @@ def _load_baseline(path, expected_digest):
 def _recheck_source(root, baseline):
     actual_root, info, entries = _entries(root, baseline["excluded_generated"])
     tree_sha, rows = _tree_hash(entries)
-    if (baseline["source_identity"] != {"device": info.st_dev, "inode": info.st_ino}
-            or tree_sha != baseline["tree_sha256"] or rows != baseline["entries"]):
+    if (
+        baseline["source_identity"] != {"device": info.st_dev, "inode": info.st_ino}
+        or tree_sha != baseline["tree_sha256"]
+        or rows != baseline["entries"]
+    ):
         raise WorkflowError("Project source changed since trusted baseline")
     return actual_root, entries, tree_sha
 
@@ -224,9 +270,17 @@ def _candidate_hash(root):
     return _tree_hash(entries)[0]
 
 
-def prepare_and_validate(*, source_root, baseline_artifact, trusted_baseline_sha256,
-                         bundle, destination, allowed_paths, trusted_commands,
-                         timeout_seconds=120):
+def prepare_and_validate(
+    *,
+    source_root,
+    baseline_artifact,
+    trusted_baseline_sha256,
+    bundle,
+    destination,
+    allowed_paths,
+    trusted_commands,
+    timeout_seconds=120,
+):
     """Stage verified bundle into a copied project and run trusted offline checks.
 
     Commands never come from the builder bundle. The source remains untouched;
@@ -235,17 +289,24 @@ def prepare_and_validate(*, source_root, baseline_artifact, trusted_baseline_sha
     """
     baseline = _load_baseline(baseline_artifact, trusted_baseline_sha256)
     root, entries, source_hash = _recheck_source(source_root, baseline)
-    if not isinstance(timeout_seconds, (int, float)) or not 0 < timeout_seconds <= MAX_TIMEOUT:
+    if not isinstance(timeout_seconds, int | float) or not 0 < timeout_seconds <= MAX_TIMEOUT:
         raise WorkflowError("Validation timeout outside bounds")
-    if (not isinstance(trusted_commands, (list, tuple)) or not trusted_commands
-            or len(trusted_commands) > MAX_COMMANDS):
+    if (
+        not isinstance(trusted_commands, list | tuple)
+        or not trusted_commands
+        or len(trusted_commands) > MAX_COMMANDS
+    ):
         raise WorkflowError("A bounded trusted validation command list is required")
     commands = []
     for argv in trusted_commands:
-        if (not isinstance(argv, (list, tuple)) or not argv
-                or not all(isinstance(part, str) and part and "\x00" not in part for part in argv)
-                or not Path(argv[0]).is_absolute() or not Path(argv[0]).is_file()
-                or not os.access(argv[0], os.X_OK)):
+        if (
+            not isinstance(argv, list | tuple)
+            or not argv
+            or not all(isinstance(part, str) and part and "\x00" not in part for part in argv)
+            or not Path(argv[0]).is_absolute()
+            or not Path(argv[0]).is_file()
+            or not os.access(argv[0], os.X_OK)
+        ):
             raise WorkflowError("Validation commands must use available absolute executables")
         commands.append(list(argv))
     dest_input = Path(destination)
@@ -279,43 +340,65 @@ def prepare_and_validate(*, source_root, baseline_artifact, trusted_baseline_sha
         shutil.rmtree(overlay, ignore_errors=True)
 
     candidate_sha = _candidate_hash(dest)
-    evidence = {"schema": "engine-builder-project-validation/v1",
-                "workspace": str(dest),
-                "source_snapshot_sha256": source_hash,
-                "candidate_snapshot_sha256": candidate_sha,
-                "baseline_manifest_sha256": baseline["manifest_sha256"],
-                "staged_paths": staged["staged_paths"], "records": [],
-                "validation_status": "refused", "validation_complete": False,
-                "validation_passed": False}
+    evidence = {
+        "schema": "engine-builder-project-validation/v1",
+        "workspace": str(dest),
+        "source_snapshot_sha256": source_hash,
+        "candidate_snapshot_sha256": candidate_sha,
+        "baseline_manifest_sha256": baseline["manifest_sha256"],
+        "staged_paths": staged["staged_paths"],
+        "records": [],
+        "validation_status": "refused",
+        "validation_complete": False,
+        "validation_passed": False,
+    }
     # Verify real network isolation before running any command.
     if not _network_boundary_available():
         evidence["refusal_reason"] = "bubblewrap network namespace unavailable"
         return evidence
-    safe_env = {"PATH": "/usr/bin:/bin", "HOME": "/tmp", "LANG": "C.UTF-8",
-                "LC_ALL": "C.UTF-8", "PYTHONNOUSERSITE": "1"}
+    safe_env = {
+        "PATH": "/usr/bin:/bin",
+        "HOME": "/tmp",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PYTHONNOUSERSITE": "1",
+    }
     deadline = time.monotonic() + timeout_seconds
     for argv in commands:
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             evidence["refusal_reason"] = "validation deadline expired"
             return evidence
-        wrapped = sandbox_command(argv, dest, dest / "__no_work_item__",
-                                  hidden_roots=[Path.home(), Path("/run/user")],
-                                  writable_source=False)
+        wrapped = sandbox_command(
+            argv,
+            dest,
+            dest / "__no_work_item__",
+            hidden_roots=[Path.home(), Path("/run/user")],
+            writable_source=False,
+        )
         wrapped.insert(1, "--unshare-net")
         try:
-            completed = subprocess.run(wrapped, cwd=dest, stdin=subprocess.DEVNULL,
-                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                       timeout=remaining, env=safe_env, check=False)
+            completed = subprocess.run(
+                wrapped,
+                cwd=dest,
+                stdin=subprocess.DEVNULL,
+                capture_output=True,
+                timeout=remaining,
+                env=safe_env,
+                check=False,
+            )
         except subprocess.TimeoutExpired:
             evidence["records"].append({"argv": argv, "exit_code": None, "timed_out": True})
             evidence["refusal_reason"] = "validation command timed out"
             return evidence
-        evidence["records"].append({
-            "argv": argv, "exit_code": completed.returncode,
-            "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
-            "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
-        })
+        evidence["records"].append(
+            {
+                "argv": argv,
+                "exit_code": completed.returncode,
+                "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+                "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
+            }
+        )
         if completed.returncode != 0:
             evidence["validation_status"] = "failed"
             evidence["validation_complete"] = True
@@ -329,38 +412,59 @@ def prepare_and_validate(*, source_root, baseline_artifact, trusted_baseline_sha
     return evidence
 
 
-def recheck_validation(*, source_root, baseline_artifact, trusted_baseline_sha256,
-                       candidate_root, evidence):
+def recheck_validation(*, source_root, baseline_artifact, trusted_baseline_sha256, candidate_root, evidence):
     """Recompute source/candidate bindings after validation; no Engine authority."""
     baseline = _load_baseline(baseline_artifact, trusted_baseline_sha256)
     _root, _entries0, source_sha = _recheck_source(source_root, baseline)
     candidate_sha = _candidate_hash(candidate_root)
-    if (not isinstance(evidence, dict)
-            or evidence.get("source_snapshot_sha256") != source_sha
-            or evidence.get("candidate_snapshot_sha256") != candidate_sha
-            or evidence.get("baseline_manifest_sha256") != baseline["manifest_sha256"]
-            or evidence.get("validation_status") != "complete"
-            or evidence.get("validation_complete") is not True
-            or evidence.get("validation_passed") is not True
-            or not isinstance(evidence.get("records"), list)
-            or not evidence["records"]
-            or any(not isinstance(r, dict) or r.get("exit_code") != 0 or r.get("timed_out") is True
-                   or not isinstance(r.get("argv"), list)
-                   or any(not isinstance(r.get(field), str) or not _HEX.fullmatch(r[field])
-                          for field in ("stdout_sha256", "stderr_sha256"))
-                   for r in evidence["records"])):
+    if (
+        not isinstance(evidence, dict)
+        or evidence.get("source_snapshot_sha256") != source_sha
+        or evidence.get("candidate_snapshot_sha256") != candidate_sha
+        or evidence.get("baseline_manifest_sha256") != baseline["manifest_sha256"]
+        or evidence.get("validation_status") != "complete"
+        or evidence.get("validation_complete") is not True
+        or evidence.get("validation_passed") is not True
+        or not isinstance(evidence.get("records"), list)
+        or not evidence["records"]
+        or any(
+            not isinstance(r, dict)
+            or r.get("exit_code") != 0
+            or r.get("timed_out") is True
+            or not isinstance(r.get("argv"), list)
+            or any(
+                not isinstance(r.get(field), str) or not _HEX.fullmatch(r[field])
+                for field in ("stdout_sha256", "stderr_sha256")
+            )
+            for r in evidence["records"]
+        )
+    ):
         raise WorkflowError("Validation evidence does not bind to current source and candidate")
-    return {"baseline_manifest_sha256": baseline["manifest_sha256"],
-            "source_snapshot_sha256": source_sha,
-            "candidate_snapshot_sha256": candidate_sha,
-            "validation_records": len(evidence["records"]),
-            "validation_status": "complete", "validation_passed": True}
+    return {
+        "baseline_manifest_sha256": baseline["manifest_sha256"],
+        "source_snapshot_sha256": source_sha,
+        "candidate_snapshot_sha256": candidate_sha,
+        "validation_records": len(evidence["records"]),
+        "validation_status": "complete",
+        "validation_passed": True,
+    }
 
 
-def accept_t3_builder_return(*, assistant_text, job, task_id, supervisor_receipt,
-                             source_root, baseline_artifact, trusted_baseline_sha256,
-                             destination, allowed_paths, trusted_commands,
-                             timeout_seconds=120, allow_configured_only=False):
+def accept_t3_builder_return(
+    *,
+    assistant_text,
+    job,
+    task_id,
+    supervisor_receipt,
+    source_root,
+    baseline_artifact,
+    trusted_baseline_sha256,
+    destination,
+    allowed_paths,
+    trusted_commands,
+    timeout_seconds=120,
+    allow_configured_only=False,
+):
     """Bind a received T3 builder bundle to a baseline and isolated validation.
 
     The receipt must come independently from the managed supervisor. A
@@ -374,21 +478,27 @@ def accept_t3_builder_return(*, assistant_text, job, task_id, supervisor_receipt
 
     spec = job.get("spec", {}) if isinstance(job, dict) else {}
     evidence_kind = supervisor_receipt.get("model_evidence") if isinstance(supervisor_receipt, dict) else None
-    configured_model = supervisor_receipt.get("configured_model") if isinstance(supervisor_receipt, dict) else None
-    executed_model = supervisor_receipt.get("executed_model") if isinstance(supervisor_receipt, dict) else None
+    configured_model = (
+        supervisor_receipt.get("configured_model") if isinstance(supervisor_receipt, dict) else None
+    )
+    executed_model = (
+        supervisor_receipt.get("executed_model") if isinstance(supervisor_receipt, dict) else None
+    )
     model_for_wire = executed_model if evidence_kind == "executed" else configured_model
-    if (not isinstance(job, dict)
-            or not isinstance(supervisor_receipt, dict)
-            or supervisor_receipt.get("state") != "completed"
-            or supervisor_receipt.get("job_id") != job.get("job_id")
-            or supervisor_receipt.get("task_id") != task_id
-            or supervisor_receipt.get("configured_model") != spec.get("model")
-            or not isinstance(supervisor_receipt.get("validated_utc"), str)
-            or not _UTC.fullmatch(supervisor_receipt["validated_utc"])
-            or supervisor_receipt.get("summary") != assistant_text
-            or evidence_kind not in ("executed", "configured_only")
-            or (evidence_kind == "executed" and executed_model != spec.get("model"))
-            or (evidence_kind == "configured_only" and (executed_model is not None or not allow_configured_only))):
+    if (
+        not isinstance(job, dict)
+        or not isinstance(supervisor_receipt, dict)
+        or supervisor_receipt.get("state") != "completed"
+        or supervisor_receipt.get("job_id") != job.get("job_id")
+        or supervisor_receipt.get("task_id") != task_id
+        or supervisor_receipt.get("configured_model") != spec.get("model")
+        or not isinstance(supervisor_receipt.get("validated_utc"), str)
+        or not _UTC.fullmatch(supervisor_receipt["validated_utc"])
+        or supervisor_receipt.get("summary") != assistant_text
+        or evidence_kind not in ("executed", "configured_only")
+        or (evidence_kind == "executed" and executed_model != spec.get("model"))
+        or (evidence_kind == "configured_only" and (executed_model is not None or not allow_configured_only))
+    ):
         raise WorkflowError("T3 model evidence is missing, inconsistent, or not permitted by policy")
     source_packet = spec.get("builder_source_packet")
     if source_packet is not None:
@@ -399,7 +509,9 @@ def accept_t3_builder_return(*, assistant_text, job, task_id, supervisor_receipt
 
         assistant_text = normalize_builder_artifact_wire(assistant_text, job, source_packet)
     decoded = decode_builder_artifact_return(
-        assistant_text=assistant_text, job=job, task_id=task_id,
+        assistant_text=assistant_text,
+        job=job,
+        task_id=task_id,
         executed_model=model_for_wire,
     )
     if decoded["verdict"] != "PASS":
@@ -414,9 +526,11 @@ def accept_t3_builder_return(*, assistant_text, job, task_id, supervisor_receipt
         trusted_commands=trusted_commands,
         timeout_seconds=timeout_seconds,
     )
-    if (evidence.get("validation_status") != "complete"
-            or evidence.get("validation_complete") is not True
-            or evidence.get("validation_passed") is not True):
+    if (
+        evidence.get("validation_status") != "complete"
+        or evidence.get("validation_complete") is not True
+        or evidence.get("validation_passed") is not True
+    ):
         raise WorkflowError("Builder candidate validation did not complete successfully")
     binding = {
         "schema": "engine-t3-builder-candidate-binding/v1",
@@ -439,22 +553,28 @@ def accept_t3_builder_return(*, assistant_text, job, task_id, supervisor_receipt
     return evidence
 
 
-def recheck_t3_builder_return(*, source_root, baseline_artifact,
-                              trusted_baseline_sha256, candidate_root,
-                              evidence, expected_binding):
+def recheck_t3_builder_return(
+    *, source_root, baseline_artifact, trusted_baseline_sha256, candidate_root, evidence, expected_binding
+):
     """Recheck artifact, source, candidate and caller-supplied T3 job identity."""
     binding = evidence.get("builder_binding") if isinstance(evidence, dict) else None
-    if (not isinstance(binding, dict) or binding != expected_binding
-            or evidence.get("builder_binding_sha256")
-            != hashlib.sha256(_canonical(binding)).hexdigest()):
+    if (
+        not isinstance(binding, dict)
+        or binding != expected_binding
+        or evidence.get("builder_binding_sha256") != hashlib.sha256(_canonical(binding)).hexdigest()
+    ):
         raise WorkflowError("T3 builder artifact provenance binding mismatch")
     result = recheck_validation(
-        source_root=source_root, baseline_artifact=baseline_artifact,
+        source_root=source_root,
+        baseline_artifact=baseline_artifact,
         trusted_baseline_sha256=trusted_baseline_sha256,
-        candidate_root=candidate_root, evidence=evidence,
+        candidate_root=candidate_root,
+        evidence=evidence,
     )
-    if (result["baseline_manifest_sha256"] != binding.get("baseline_manifest_sha256")
-            or result["source_snapshot_sha256"] != binding.get("source_snapshot_sha256")
-            or result["candidate_snapshot_sha256"] != binding.get("candidate_snapshot_sha256")):
+    if (
+        result["baseline_manifest_sha256"] != binding.get("baseline_manifest_sha256")
+        or result["source_snapshot_sha256"] != binding.get("source_snapshot_sha256")
+        or result["candidate_snapshot_sha256"] != binding.get("candidate_snapshot_sha256")
+    ):
         raise WorkflowError("T3 builder artifact no longer matches validated snapshot")
     return {**result, "builder_binding_sha256": evidence["builder_binding_sha256"]}

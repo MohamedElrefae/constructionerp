@@ -20,7 +20,7 @@ class _FalsyLauncher(_TruthyLauncher):
 
 
 def _engine_with(launcher):
-    engine = Engine.__new__(Engine)   # gate is a pure predicate; no store/graph needed
+    engine = Engine.__new__(Engine)  # gate is a pure predicate; no store/graph needed
     engine.launcher = launcher
     return engine
 

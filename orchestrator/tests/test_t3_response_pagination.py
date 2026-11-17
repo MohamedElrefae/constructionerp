@@ -1,7 +1,6 @@
 """Do not treat an incomplete T3 message projection as a complete result."""
 
 import pytest
-
 from t3_transport import HttpT3Client, TransportRefusal, TransportUncertain
 
 
@@ -28,10 +27,12 @@ def page(text, **extra):
 
 
 def test_status_reads_all_message_pages():
-    client, calls = client_for([
-        page("first", hasMore=True, nextPosition=5),
-        page("second", hasMore=False),
-    ])
+    client, calls = client_for(
+        [
+            page("first", hasMore=True, nextPosition=5),
+            page("second", hasMore=False),
+        ]
+    )
     assert client.status("thread-a")["summary"] == "first\nsecond"
     assert calls[1]["afterPosition"] == 5
 
@@ -49,10 +50,12 @@ def test_status_uses_current_run_and_ignores_truncated_user_prompt():
 
 
 def test_status_refuses_repeated_pagination_cursor():
-    client, calls = client_for([
-        page("first", hasMore=True, nextPosition=5),
-        page("second", hasMore=True, nextPosition=5),
-    ])
+    client, calls = client_for(
+        [
+            page("first", hasMore=True, nextPosition=5),
+            page("second", hasMore=True, nextPosition=5),
+        ]
+    )
     with pytest.raises(TransportUncertain):
         client.status("thread-a")
     assert len(calls) == 2
@@ -80,11 +83,17 @@ def test_tool_error_does_not_expose_mcp_credential(is_tool_error):
     assert token not in str(exc.value)
 
 
-@pytest.mark.parametrize("response", [
-    page("partial", hasMore=True, nextPosition=None),
-    {**page("partial"), "items": [{"type": "assistant_message", "text": "partial", "textTruncated": True}]},
-    page("x" * 50_001),
-])
+@pytest.mark.parametrize(
+    "response",
+    [
+        page("partial", hasMore=True, nextPosition=None),
+        {
+            **page("partial"),
+            "items": [{"type": "assistant_message", "text": "partial", "textTruncated": True}],
+        },
+        page("x" * 50_001),
+    ],
+)
 def test_status_refuses_incomplete_or_overlong_messages(response):
     client, _ = client_for([response])
     with pytest.raises(TransportUncertain):

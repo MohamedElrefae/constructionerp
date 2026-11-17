@@ -14,8 +14,9 @@ Read-only projections plus explicit, fenced mutating actions:
 import fcntl
 import hashlib
 import json
-import re
+import logging
 import os
+import re
 import secrets
 import uuid
 from contextlib import asynccontextmanager
@@ -58,14 +59,13 @@ from dashboard.config import (
     SESSION_MAX_AGE_SECONDS,
 )
 from dashboard.coordinator import TaskCoordinator
-from dashboard.run_coordinator import PASS_ACTION_PREFIX, RunBusy, RunCoordinator
 from dashboard.process import get_process_start_time, is_process_alive_with_start_time
 from dashboard.registry import TaskRegistry, validate_and_bind_canonical_registry
+from dashboard.run_coordinator import PASS_ACTION_PREFIX, RunBusy, RunCoordinator
 from dashboard.security import SecurityError, read_authoritative_stage4_manifest
 from dashboard.subprocess_client import (
     SubprocessClientError,
     adopt_scope,
-    run_action,
     approve_plan,
     get_ai_context,
     get_plan_projection,
@@ -78,6 +78,7 @@ from dashboard.subprocess_client import (
     query_findings,
     query_settings,
     query_supervisor_health,
+    run_action,
 )
 
 SERVER_INSTANCE_ID = f"inst-srv-{uuid.uuid4().hex[:8]}"
@@ -381,8 +382,7 @@ async def unregister_task(request: Request) -> Response:
     run = run_coordinator.status(task_id)
     if run["state"] in ("STARTING", "RUNNING", "RECONCILIATION_REQUIRED", "ABANDONED"):
         return JSONResponse(
-            {"detail": f"Run is {run['state']}; resolve or stop it before unregistering",
-             "run": run},
+            {"detail": f"Run is {run['state']}; resolve or stop it before unregistering", "run": run},
             status_code=409,
         )
     try:
@@ -756,15 +756,15 @@ async def run_task_endpoint(request: Request) -> Response:
                 return JSONResponse({"ok": True, "result": json.loads(ex_resp) if ex_resp else {}})
             if ex_state == "FAILED":
                 return JSONResponse({"detail": f"Action previously failed: {ex_err}"}, status_code=500)
-            return JSONResponse(
-                {"detail": f"Action {action_id} is currently in progress"}, status_code=409
-            )
+            return JSONResponse({"detail": f"Action {action_id} is currently in progress"}, status_code=409)
 
         lease = run_coordinator.acquire_direct(task_id)
         if not lease.get("ok"):
             return JSONResponse(
-                {"detail": lease.get("detail") or "Run is active or awaiting reconciliation",
-                 "run": lease.get("run")},
+                {
+                    "detail": lease.get("detail") or "Run is active or awaiting reconciliation",
+                    "run": lease.get("run"),
+                },
                 status_code=409,
             )
         generation = int(lease["generation"])
@@ -778,20 +778,38 @@ async def run_task_endpoint(request: Request) -> Response:
                     "executor_pid, executor_start_time, child_pid, child_pgid, child_start_time, "
                     "fencing_token, heartbeat_utc, error_message, session_memory_entry, created_utc, updated_utc) "
                     "VALUES (?,?,'run_direct','EXECUTING',?,?,?,NULL,?,?,?,?,NULL,NULL,NULL,?,?,NULL,NULL,?,?)",
-                    (action_id, task_id, action_id, request_hash, json.dumps({}), action_id,
-                     SERVER_INSTANCE_ID, os.getpid(), get_process_start_time(os.getpid()) or 0,
-                     generation, now_iso, now_iso, now_iso),
+                    (
+                        action_id,
+                        task_id,
+                        action_id,
+                        request_hash,
+                        json.dumps({}),
+                        action_id,
+                        SERVER_INSTANCE_ID,
+                        os.getpid(),
+                        get_process_start_time(os.getpid()) or 0,
+                        generation,
+                        now_iso,
+                        now_iso,
+                        now_iso,
+                    ),
                 )
         finally:
             conn.close()
 
         try:
             res = await run_action(
-                task["worktree_path"], "run",
-                payload={"action_id": action_id, "fencing_token": generation,
-                         "executor_instance_id": SERVER_INSTANCE_ID},
-                action_id=action_id, fencing_token=generation,
-                executor_instance_id=SERVER_INSTANCE_ID, lock_fd=lock_fd,
+                task["worktree_path"],
+                "run",
+                payload={
+                    "action_id": action_id,
+                    "fencing_token": generation,
+                    "executor_instance_id": SERVER_INSTANCE_ID,
+                },
+                action_id=action_id,
+                fencing_token=generation,
+                executor_instance_id=SERVER_INSTANCE_ID,
+                lock_fd=lock_fd,
             )
             result = {
                 "view": res.get("view"),
@@ -805,13 +823,11 @@ async def run_task_endpoint(request: Request) -> Response:
                     conn.execute(
                         "UPDATE action_log SET state='COMPLETE', response_json=?, updated_utc=? "
                         "WHERE action_id=? AND state='EXECUTING' AND fencing_token=?",
-                        (json.dumps(result), datetime.now(timezone.utc).isoformat(),
-                         action_id, generation),
+                        (json.dumps(result), datetime.now(timezone.utc).isoformat(), action_id, generation),
                     )
             finally:
                 conn.close()
-            return JSONResponse({"ok": True, "result": result,
-                                 "run": run_coordinator.status(task_id)})
+            return JSONResponse({"ok": True, "result": result, "run": run_coordinator.status(task_id)})
         except Exception as exc:
             run_coordinator.finalize_direct(task_id, generation, error=str(exc))
             conn = task_registry._get_connection()
@@ -820,8 +836,7 @@ async def run_task_endpoint(request: Request) -> Response:
                     conn.execute(
                         "UPDATE action_log SET state='FAILED', error_message=?, updated_utc=? "
                         "WHERE action_id=? AND state='EXECUTING' AND fencing_token=?",
-                        (str(exc)[:500], datetime.now(timezone.utc).isoformat(),
-                         action_id, generation),
+                        (str(exc)[:500], datetime.now(timezone.utc).isoformat(), action_id, generation),
                     )
             finally:
                 conn.close()
@@ -895,8 +910,10 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
     if invalid:
         return invalid
     request_hash = hashlib.sha256(
-        json.dumps({"token": token, "action_id": action_id} if include_token
-                   else {"action_id": action_id}, sort_keys=True).encode()
+        json.dumps(
+            {"token": token, "action_id": action_id} if include_token else {"action_id": action_id},
+            sort_keys=True,
+        ).encode()
     ).hexdigest()
     executor_instance_id = SERVER_INSTANCE_ID
     fencing_token = 1
@@ -907,22 +924,26 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
         try:
             fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            return JSONResponse({"detail": f"Action {action_id} is currently executing"},
-                                status_code=409)
+            return JSONResponse({"detail": f"Action {action_id} is currently executing"}, status_code=409)
         conn = task_registry._get_connection()
         try:
             existing = conn.execute(
-                "SELECT state, request_hash, response_json FROM action_log WHERE action_id = ?",
+                "SELECT state, request_hash, response_json, task_id, action_type "
+                "FROM action_log WHERE action_id = ?",
                 (action_id,),
             ).fetchone()
         finally:
             conn.close()
         if existing:
+            if existing[3] != task_id or existing[4] != action:
+                return JSONResponse(
+                    {"detail": "action_id belongs to another task or action"}, status_code=409
+                )
             if existing[0] == "COMPLETE" and existing[1] == request_hash:
-                return JSONResponse({"ok": True, "result": json.loads(existing[2] or "{}"),
-                                     "replayed": True})
-            return JSONResponse({"detail": "action_id already used with a different payload"},
-                                status_code=409)
+                return JSONResponse({"ok": True, "result": json.loads(existing[2] or "{}"), "replayed": True})
+            return JSONResponse(
+                {"detail": "action_id already used with a different payload"}, status_code=409
+            )
         now_iso = datetime.now(timezone.utc).isoformat()
         conn = task_registry._get_connection()
         try:
@@ -934,21 +955,41 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
                     "child_start_time, fencing_token, heartbeat_utc, error_message, "
                     "session_memory_entry, created_utc, updated_utc) "
                     "VALUES (?,?,?,'EXECUTING',?,?,?,NULL,?,?,?,?,NULL,NULL,NULL,?,?,NULL,NULL,?,?)",
-                    (action_id, task_id, action, action_id, request_hash, json.dumps({}), action_id,
-                     executor_instance_id, os.getpid(), get_process_start_time(os.getpid()) or 0,
-                     fencing_token, now_iso, now_iso, now_iso),
+                    (
+                        action_id,
+                        task_id,
+                        action,
+                        action_id,
+                        request_hash,
+                        json.dumps({}),
+                        action_id,
+                        executor_instance_id,
+                        os.getpid(),
+                        get_process_start_time(os.getpid()) or 0,
+                        fencing_token,
+                        now_iso,
+                        now_iso,
+                        now_iso,
+                    ),
                 )
         finally:
             conn.close()
-        payload = {"action_id": action_id, "fencing_token": fencing_token,
-                   "executor_instance_id": executor_instance_id}
+        payload = {
+            "action_id": action_id,
+            "fencing_token": fencing_token,
+            "executor_instance_id": executor_instance_id,
+        }
         if include_token:
             payload["token"] = token
         try:
             res = await run_action(
-                task["worktree_path"], action, payload=payload,
-                action_id=action_id, fencing_token=fencing_token,
-                executor_instance_id=executor_instance_id, lock_fd=lock_fd,
+                task["worktree_path"],
+                action,
+                payload=payload,
+                action_id=action_id,
+                fencing_token=fencing_token,
+                executor_instance_id=executor_instance_id,
+                lock_fd=lock_fd,
             )
             conn = task_registry._get_connection()
             try:
@@ -956,8 +997,13 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
                     conn.execute(
                         "UPDATE action_log SET state='COMPLETE', response_json=?, updated_utc=? "
                         "WHERE action_id=? AND state='EXECUTING' AND fencing_token=? AND executor_instance_id=?",
-                        (json.dumps(res), datetime.now(timezone.utc).isoformat(),
-                         action_id, fencing_token, executor_instance_id),
+                        (
+                            json.dumps(res),
+                            datetime.now(timezone.utc).isoformat(),
+                            action_id,
+                            fencing_token,
+                            executor_instance_id,
+                        ),
                     )
             finally:
                 conn.close()
@@ -972,8 +1018,13 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
                     conn.execute(
                         "UPDATE action_log SET state='FAILED', error_message=?, updated_utc=? "
                         "WHERE action_id=? AND state='EXECUTING' AND fencing_token=? AND executor_instance_id=?",
-                        (str(exc)[:500], datetime.now(timezone.utc).isoformat(),
-                         action_id, fencing_token, executor_instance_id),
+                        (
+                            str(exc)[:500],
+                            datetime.now(timezone.utc).isoformat(),
+                            action_id,
+                            fencing_token,
+                            executor_instance_id,
+                        ),
                     )
             finally:
                 conn.close()
@@ -1039,7 +1090,8 @@ async def run_start_endpoint(request: Request) -> Response:
     if existing:
         if existing[3] != task_id or existing[4] != "run_start":
             return JSONResponse(
-                {"detail": "action_id belongs to another task or action type"}, status_code=409,
+                {"detail": "action_id belongs to another task or action type"},
+                status_code=409,
             )
         ex_state, ex_hash, ex_resp = existing[0], existing[1], existing[2]
         if ex_state == "COMPLETE":
@@ -1104,11 +1156,13 @@ async def run_status_endpoint(request: Request) -> Response:
     task_id = request.path_params["task_id"]
     if not task_registry.get_task(task_id):
         return JSONResponse({"detail": "Task not found"}, status_code=404)
-    return JSONResponse({
-        "ok": True,
-        "run": run_coordinator.status(task_id),
-        "events": run_coordinator.events(task_id),
-    })
+    return JSONResponse(
+        {
+            "ok": True,
+            "run": run_coordinator.status(task_id),
+            "events": run_coordinator.events(task_id),
+        }
+    )
 
 
 async def run_resolve_endpoint(request: Request) -> Response:
@@ -1345,7 +1399,18 @@ async def approve_plan_endpoint(request: Request) -> Response:
         "issued_utc": now_iso.replace("+00:00", "Z"),
     }
 
-    request_hash = hashlib.sha256(json.dumps(token, sort_keys=True).encode()).hexdigest()
+    # Bind retries to the reviewed approval, excluding freshly generated token
+    # IDs and timestamps so an identical request has a stable identity.
+    request_hash = hashlib.sha256(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "review_id": review_record["review_id"],
+                "token": {k: v for k, v in token.items() if k not in ("token_id", "issued_utc")},
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
     executor_instance_id = SERVER_INSTANCE_ID
     executor_pid = os.getpid()
     executor_start_time = get_process_start_time(executor_pid) or 0
@@ -1369,17 +1434,21 @@ async def approve_plan_endpoint(request: Request) -> Response:
         conn = task_registry._get_connection()
         try:
             existing = conn.execute(
-                "SELECT state, request_hash, response_json, error_message, task_id "
+                "SELECT state, request_hash, response_json, error_message, task_id, action_type "
                 "FROM action_log WHERE action_id = ?",
                 (action_id,),
             ).fetchone()
         finally:
             conn.close()
-        if existing and existing[4] != task_id:
-            return JSONResponse({"detail": "action_id belongs to another task"}, status_code=409)
+        if existing and (existing[4] != task_id or existing[5] != "approve_plan"):
+            return JSONResponse({"detail": "action_id belongs to another task or action"}, status_code=409)
 
         if existing:
             ex_state, ex_req_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
+            if ex_req_hash != request_hash:
+                return JSONResponse(
+                    {"detail": "action_id already used with a different payload"}, status_code=409
+                )
             if ex_state == "COMPLETE":
                 cached_res = json.loads(ex_resp) if ex_resp else {}
                 return JSONResponse({"ok": True, "result": cached_res})

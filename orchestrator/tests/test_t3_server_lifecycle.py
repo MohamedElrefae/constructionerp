@@ -5,7 +5,6 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from t3_server_lifecycle import T3ServerLifecycleError, T3ServerProcess
 
 
@@ -45,8 +44,16 @@ def test_synthetic_child_gets_fixed_loopback_command_and_clean_private_environme
         assert child_record.exists()
         observed = json.loads(child_record.read_text())
         assert observed["argv"] == [
-            "serve", "--mode", "desktop", "--base-dir", str(server.base_dir),
-            "--port", "43127", "--host", "127.0.0.1", "--no-browser",
+            "serve",
+            "--mode",
+            "desktop",
+            "--base-dir",
+            str(server.base_dir),
+            "--port",
+            "43127",
+            "--host",
+            "127.0.0.1",
+            "--no-browser",
         ]
         child_env = observed["env"]
         assert child_env["HOME"] == str(server.base_dir)
@@ -88,6 +95,7 @@ def test_readiness_probe_uses_only_configured_loopback_and_requires_started_chil
     with pytest.raises(T3ServerLifecycleError, match=r"start\(\)"):
         server.wait_ready()
     process = server.start()
+
     class ReadySocket:
         def __enter__(self):
             return self

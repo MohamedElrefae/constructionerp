@@ -5,9 +5,9 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-from pathlib import Path
 import signal
 import sys
+from pathlib import Path
 
 from https_connect_broker import pipe_stream
 
@@ -60,7 +60,9 @@ async def run(state_dir: str, socket_path: Path, proxy_port: int, command: list[
         raise ValueError("T3 command is required after --")
     server = await asyncio.start_server(
         lambda reader, writer: bridge_client(reader, writer, socket_path),
-        host="127.0.0.1", port=proxy_port, limit=8192,
+        host="127.0.0.1",
+        port=proxy_port,
+        limit=8192,
     )
     child = await asyncio.create_subprocess_exec(
         *command,

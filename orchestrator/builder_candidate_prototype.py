@@ -20,7 +20,6 @@ from builder_intake import stage_bundle
 from core import WorkflowError
 from sandbox import command as sandbox_command
 
-
 SYNTHETIC_MARKER = ".builder-intake-synthetic-source"
 SYNTHETIC_MARKER_VALUE = b"builder-intake-test-source/v1\n"
 MAX_SOURCE_FILES = 10_000
@@ -31,8 +30,10 @@ SANDBOX_BINARY = Path("/usr/bin/bwrap")
 
 
 def _digest_snapshot(entries):
-    payload = [{"path": path, "sha256": hashlib.sha256(data).hexdigest(), "mode": mode}
-               for path, data, mode in entries]
+    payload = [
+        {"path": path, "sha256": hashlib.sha256(data).hexdigest(), "mode": mode}
+        for path, data, mode in entries
+    ]
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
 
@@ -63,8 +64,10 @@ def _snapshot(root):
                 raise WorkflowError("Synthetic source changed during snapshot: " + relative) from None
             try:
                 opened = os.fstat(fd)
-                if (not stat.S_ISREG(opened.st_mode)
-                        or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino)):
+                if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (
+                    info.st_dev,
+                    info.st_ino,
+                ):
                     raise WorkflowError("Synthetic source changed during snapshot: " + relative)
                 with os.fdopen(fd, "rb", closefd=False) as stream:
                     data = stream.read(MAX_SOURCE_BYTES - total + 1)
@@ -96,13 +99,16 @@ def _network_boundary_available():
 
 
 def _command_argv(commands):
-    if not isinstance(commands, (list, tuple)) or not commands or len(commands) > MAX_COMMANDS:
+    if not isinstance(commands, list | tuple) or not commands or len(commands) > MAX_COMMANDS:
         raise WorkflowError("A bounded trusted validation command list is required")
     result = []
     for command in commands:
-        if (not isinstance(command, (list, tuple)) or not command
-                or not all(isinstance(part, str) and part and "\x00" not in part for part in command)
-                or not Path(command[0]).is_absolute()):
+        if (
+            not isinstance(command, list | tuple)
+            or not command
+            or not all(isinstance(part, str) and part and "\x00" not in part for part in command)
+            or not Path(command[0]).is_absolute()
+        ):
             raise WorkflowError("Validation commands must be explicit absolute argv arrays")
         executable = Path(command[0])
         if not executable.is_file() or not os.access(executable, os.X_OK):
@@ -111,8 +117,9 @@ def _command_argv(commands):
     return result
 
 
-def prepare_and_validate(base_root, bundle, destination, allowed_paths, trusted_commands,
-                         *, timeout_seconds=60):
+def prepare_and_validate(
+    base_root, bundle, destination, allowed_paths, trusted_commands, *, timeout_seconds=60
+):
     """Build a disposable full copy and run supplied trusted commands offline.
 
     The source must contain the prototype's test-only marker. The bundle itself
@@ -128,7 +135,7 @@ def prepare_and_validate(base_root, bundle, destination, allowed_paths, trusted_
     if (root / ".git").exists():
         raise WorkflowError("Synthetic prototype refuses repository roots")
     commands = _command_argv(trusted_commands)
-    if not isinstance(timeout_seconds, (int, float)) or not 0 < timeout_seconds <= MAX_TIMEOUT_SECONDS:
+    if not isinstance(timeout_seconds, int | float) or not 0 < timeout_seconds <= MAX_TIMEOUT_SECONDS:
         raise WorkflowError("Validation timeout outside bounds")
 
     dest_input = Path(destination)
@@ -183,8 +190,13 @@ def prepare_and_validate(base_root, bundle, destination, allowed_paths, trusted_
         result["refusal_reason"] = "bubblewrap network namespace unavailable"
         return result
 
-    safe_env = {"PATH": "/usr/bin:/bin", "HOME": "/tmp", "LANG": "C.UTF-8",
-                "LC_ALL": "C.UTF-8", "PYTHONNOUSERSITE": "1"}
+    safe_env = {
+        "PATH": "/usr/bin:/bin",
+        "HOME": "/tmp",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PYTHONNOUSERSITE": "1",
+    }
     bwrap = SANDBOX_BINARY
     deadline = time.monotonic() + timeout_seconds
     for index, argv in enumerate(commands):
@@ -209,8 +221,7 @@ def prepare_and_validate(base_root, bundle, destination, allowed_paths, trusted_
                 wrapped,
                 cwd=dest,
                 stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                capture_output=True,
                 timeout=remaining,
                 env=safe_env,
                 check=False,
@@ -219,12 +230,14 @@ def prepare_and_validate(base_root, bundle, destination, allowed_paths, trusted_
             result["records"].append({"argv": argv, "exit_code": None, "timed_out": True})
             result["refusal_reason"] = "validation command timed out"
             return result
-        result["records"].append({
-            "argv": argv,
-            "exit_code": completed.returncode,
-            "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
-            "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
-        })
+        result["records"].append(
+            {
+                "argv": argv,
+                "exit_code": completed.returncode,
+                "stdout_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+                "stderr_sha256": hashlib.sha256(completed.stderr).hexdigest(),
+            }
+        )
         if completed.returncode != 0:
             result["validation_status"] = "failed"
             result["validation_complete"] = True

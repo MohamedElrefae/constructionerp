@@ -57,7 +57,11 @@ def prepare_opencode_go_deepseek(
     root_arg = Path(base_dir)
     repo_arg = Path(repository_root)
     binary_arg = Path(opencode_binary)
-    for label, path in (("base_dir", root_arg), ("repository_root", repo_arg), ("opencode_binary", binary_arg)):
+    for label, path in (
+        ("base_dir", root_arg),
+        ("repository_root", repo_arg),
+        ("opencode_binary", binary_arg),
+    ):
         if not path.is_absolute():
             raise T3ProviderSetupError(f"{label} must be an absolute path")
 

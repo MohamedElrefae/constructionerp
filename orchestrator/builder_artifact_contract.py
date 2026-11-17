@@ -7,18 +7,16 @@ the workspace validator accepts only marked synthetic roots and requires a
 working OS-enforced no-network boundary.
 """
 
+import base64
+import binascii
 import hashlib
 import json
 import re
-import base64
-import binascii
 from pathlib import Path, PurePosixPath
 
 from builder_candidate_prototype import prepare_and_validate
 from core import WorkflowError
-from t3_result import (BUILDER_BUNDLE_KEY, MAX_BUILDER_ASSISTANT_CHARS,
-                       T3ResultError, decode_t3_result)
-
+from t3_result import BUILDER_BUNDLE_KEY, MAX_BUILDER_ASSISTANT_CHARS, T3ResultError, decode_t3_result
 
 BUNDLE_SCHEMA = "engine-builder-bundle/v1"
 MAX_BUNDLE_JSON_CHARS = 50_000
@@ -64,12 +62,17 @@ def _validate_bundle_object(bundle, body):
         if not isinstance(item, dict) or set(item) != _FILE_KEYS:
             raise BuilderArtifactError("builder bundle file entry has an invalid shape")
         path = item.get("path")
-        if (not isinstance(path, str) or not path or len(path) > 240
-                or "\\" in path or "\x00" in path
-                or PurePosixPath(path).is_absolute()
-                or any(part in ("", ".", "..") for part in path.split("/"))
-                or PurePosixPath(path).as_posix() != path
-                or path in seen):
+        if (
+            not isinstance(path, str)
+            or not path
+            or len(path) > 240
+            or "\\" in path
+            or "\x00" in path
+            or PurePosixPath(path).is_absolute()
+            or any(part in ("", ".", "..") for part in path.split("/"))
+            or PurePosixPath(path).as_posix() != path
+            or path in seen
+        ):
             raise BuilderArtifactError("builder bundle path is empty or duplicated")
         seen.add(path)
         base_hash = item.get("base_sha256")
@@ -101,8 +104,7 @@ def decode_builder_artifact_return(*, assistant_text, job, task_id, executed_mod
     separate ``builder_bundle_json`` member carries only small file changes;
     source hashes and allowed paths are rechecked by bundle intake later.
     """
-    if (not isinstance(assistant_text, str)
-            or len(assistant_text) > MAX_BUILDER_ASSISTANT_CHARS):
+    if not isinstance(assistant_text, str) or len(assistant_text) > MAX_BUILDER_ASSISTANT_CHARS:
         raise BuilderArtifactError("builder response exceeds T3 summary bound")
     try:
         session, body, wire, _events = decode_t3_result(
@@ -136,9 +138,18 @@ def decode_builder_artifact_return(*, assistant_text, job, task_id, executed_mod
     }
 
 
-def intake_and_validate_builder_return(*, assistant_text, job, task_id, executed_model,
-                                       base_root, destination, allowed_paths,
-                                       trusted_validation_commands, timeout_seconds=60):
+def intake_and_validate_builder_return(
+    *,
+    assistant_text,
+    job,
+    task_id,
+    executed_model,
+    base_root,
+    destination,
+    allowed_paths,
+    trusted_validation_commands,
+    timeout_seconds=60,
+):
     """Decode and pass an actual builder text bundle to the isolated prototype.
 
     On unavailable network isolation, the returned candidate remains staged
@@ -159,16 +170,28 @@ def intake_and_validate_builder_return(*, assistant_text, job, task_id, executed
         trusted_validation_commands,
         timeout_seconds=timeout_seconds,
     )
-    result.update({key: decoded[key] for key in (
-        "task_id", "job_id", "candidate_id", "plan_revision_hash", "bundle_sha256"
-    )})
+    result.update(
+        {
+            key: decoded[key]
+            for key in ("task_id", "job_id", "candidate_id", "plan_revision_hash", "bundle_sha256")
+        }
+    )
     return result
 
 
-def accept_synthetic_t3_builder_candidate(*, launcher, assistant_text, job, task_id,
-                                          executed_model, base_root, destination,
-                                          allowed_paths, trusted_validation_commands,
-                                          timeout_seconds=60):
+def accept_synthetic_t3_builder_candidate(
+    *,
+    launcher,
+    assistant_text,
+    job,
+    task_id,
+    executed_model,
+    base_root,
+    destination,
+    allowed_paths,
+    trusted_validation_commands,
+    timeout_seconds=60,
+):
     """Test-only synthetic T3-to-Engine artifact candidate acceptance path.
 
     The launcher class must explicitly opt into the test seam. Production T3
@@ -180,11 +203,13 @@ def accept_synthetic_t3_builder_candidate(*, launcher, assistant_text, job, task
         capture_baseline_snapshot,
         create_engine_candidate_binding,
     )
-
     from t3_supervisor_client import SupervisorLauncher
-    if (not isinstance(launcher, SupervisorLauncher)
-            or getattr(type(launcher), "allow_builder_for_tests", None) is not True
-            or getattr(type(launcher), "accept_builder_artifacts_for_tests", None) is not True):
+
+    if (
+        not isinstance(launcher, SupervisorLauncher)
+        or getattr(type(launcher), "allow_builder_for_tests", None) is not True
+        or getattr(type(launcher), "accept_builder_artifacts_for_tests", None) is not True
+    ):
         raise WorkflowError("T3 builder artifact acceptance requires an opted-in test supervisor fixture")
     if not isinstance(job, dict) or job.get("role") != "builder":
         raise WorkflowError("T3 builder artifact acceptance requires a builder job")
@@ -204,9 +229,11 @@ def accept_synthetic_t3_builder_candidate(*, launcher, assistant_text, job, task
         trusted_validation_commands=trusted_validation_commands,
         timeout_seconds=timeout_seconds,
     )
-    if (validation.get("validation_status") != "complete"
-            or validation.get("validation_complete") is not True
-            or validation.get("validation_passed") is not True):
+    if (
+        validation.get("validation_status") != "complete"
+        or validation.get("validation_complete") is not True
+        or validation.get("validation_passed") is not True
+    ):
         raise WorkflowError("Builder candidate validation did not complete successfully")
     candidate = create_engine_candidate_binding(
         source_root=base_root,

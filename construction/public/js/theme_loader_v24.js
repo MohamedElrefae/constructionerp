@@ -940,7 +940,6 @@
 
 	setInterval(colorTreeToolbarButtons, 500);
 
-
 	function installChartGuard() {
 		if (typeof frappe === "undefined") return;
 
@@ -1042,8 +1041,7 @@
 
 	if (typeof jQuery !== "undefined") {
 		try {
-			$(document).on("page-change", function () {
-			});
+			$(document).on("page-change", function () {});
 		} catch (e) {}
 	}
 

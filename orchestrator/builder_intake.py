@@ -15,7 +15,6 @@ from pathlib import Path, PurePosixPath
 
 from core import WorkflowError
 
-
 MAX_FILES = 128
 MAX_FILE_BYTES = 1_000_000
 MAX_TOTAL_BYTES = 4_000_000
@@ -30,11 +29,7 @@ def _sha256(data):
 def _valid_hash(value, *, nullable=False):
     if nullable and value is None:
         return True
-    return (
-        isinstance(value, str)
-        and len(value) == 64
-        and all(character in _HEX for character in value)
-    )
+    return isinstance(value, str) and len(value) == 64 and all(character in _HEX for character in value)
 
 
 def _normalize_relative_path(value):
@@ -108,7 +103,7 @@ def stage_bundle(base_root, bundle, destination, allowed_paths):
     files = bundle["files"]
     if not isinstance(files, list) or not files or len(files) > MAX_FILES:
         raise WorkflowError("Bundle file count outside limits")
-    if not isinstance(allowed_paths, (list, tuple)) or not allowed_paths:
+    if not isinstance(allowed_paths, list | tuple) or not allowed_paths:
         raise WorkflowError("Explicit allowed paths are required")
     allowed = tuple(_normalize_relative_path_prefix(item) for item in allowed_paths)
 
@@ -117,14 +112,19 @@ def stage_bundle(base_root, bundle, destination, allowed_paths):
     total = 0
     for item in files:
         if not isinstance(item, dict) or set(item) != {
-            "path", "base_sha256", "content_base64", "content_sha256"
+            "path",
+            "base_sha256",
+            "content_base64",
+            "content_sha256",
         }:
             raise WorkflowError("Malformed bundle file entry")
         path = _normalize_relative_path(item["path"])
         if path in seen:
             raise WorkflowError("Duplicate bundle path: " + path)
         seen.add(path)
-        if not any(path == prefix or (prefix.endswith("/") and path.startswith(prefix)) for prefix in allowed):
+        if not any(
+            path == prefix or (prefix.endswith("/") and path.startswith(prefix)) for prefix in allowed
+        ):
             raise WorkflowError("Bundle path is outside allowed paths: " + path)
         expected_base = item["base_sha256"]
         if not _valid_hash(expected_base, nullable=True):

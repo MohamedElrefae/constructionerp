@@ -1000,8 +1000,7 @@
 						// frozen pending re-collection on the authorized site, so this
 						// change introduces no new translatable strings.
 						const pinned =
-							result &&
-							(result.status === "created" || result.status === "updated");
+							result && (result.status === "created" || result.status === "updated");
 						frappe.show_alert({
 							message: pinned
 								? __("VFC preferences reset and personal layout removed")

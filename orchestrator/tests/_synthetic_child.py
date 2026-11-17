@@ -1,4 +1,5 @@
 """Synthetic worker descendant: reports kernel-observed identity and egress."""
+
 import json
 import os
 import socket
@@ -10,12 +11,16 @@ def main():
         egress = "ALLOWED"
     except OSError:
         egress = "DENIED"
-    print(json.dumps({
-        "child_pid": os.getpid(),
-        "child_netns_inode": os.stat("/proc/self/ns/net").st_ino,
-        "egress": egress,
-        "host_home_visible": os.path.exists(os.environ["REHEARSAL_HOST_HOME"]),
-    }))
+    print(
+        json.dumps(
+            {
+                "child_pid": os.getpid(),
+                "child_netns_inode": os.stat("/proc/self/ns/net").st_ino,
+                "egress": egress,
+                "host_home_visible": os.path.exists(os.environ["REHEARSAL_HOST_HOME"]),
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

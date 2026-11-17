@@ -56,13 +56,18 @@ class ManagedSupervisorServiceConfig:
             fd = os.open(str(config_path), os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW)
         except OSError as exc:
             raise ManagedSupervisorServiceError(
-                f"service config cannot be opened: {type(exc).__name__}") from None
+                f"service config cannot be opened: {type(exc).__name__}"
+            ) from None
         try:
             metadata = os.fstat(fd)
-            if (not stat.S_ISREG(metadata.st_mode) or metadata.st_uid != os.geteuid()
-                    or metadata.st_mode & 0o077):
+            if (
+                not stat.S_ISREG(metadata.st_mode)
+                or metadata.st_uid != os.geteuid()
+                or metadata.st_mode & 0o077
+            ):
                 raise ManagedSupervisorServiceError(
-                    "service config must be a service-owned regular file with mode 0600 or stricter")
+                    "service config must be a service-owned regular file with mode 0600 or stricter"
+                )
             with os.fdopen(fd, "r", encoding="utf-8", closefd=False) as stream:
                 raw = stream.read(65537)
             if len(raw) > 65536:
@@ -74,11 +79,23 @@ class ManagedSupervisorServiceConfig:
             os.close(fd)
 
         expected = {
-            "schema", "socket_path", "state_path", "token_file", "mcp_token_file",
-            "client_uid", "socket_group_gid", "base_url", "provider", "model", "allowed_models",
+            "schema",
+            "socket_path",
+            "state_path",
+            "token_file",
+            "mcp_token_file",
+            "client_uid",
+            "socket_group_gid",
+            "base_url",
+            "provider",
+            "model",
+            "allowed_models",
         }
-        if (not isinstance(value, dict) or set(value) not in (expected, expected | {"builder_enabled"})
-                or value.get("schema") != "managed-supervisor-service/v1"):
+        if (
+            not isinstance(value, dict)
+            or set(value) not in (expected, expected | {"builder_enabled"})
+            or value.get("schema") != "managed-supervisor-service/v1"
+        ):
             raise ManagedSupervisorServiceError("unsupported service config schema or fields")
         builder_enabled = value.get("builder_enabled", False)
         if not isinstance(builder_enabled, bool):
@@ -104,9 +121,15 @@ class ManagedSupervisorServiceConfig:
         model, allowed = value["model"], value["allowed_models"]
         if value["provider"] not in ("opencode", "codex"):
             raise ManagedSupervisorServiceError("unsupported T3 provider")
-        if (not isinstance(model, str) or not model.strip() or not isinstance(allowed, list) or not allowed
-                or any(not isinstance(item, str) or not item.strip() for item in allowed)
-                or len(set(allowed)) != len(allowed) or model not in allowed):
+        if (
+            not isinstance(model, str)
+            or not model.strip()
+            or not isinstance(allowed, list)
+            or not allowed
+            or any(not isinstance(item, str) or not item.strip() for item in allowed)
+            or len(set(allowed)) != len(allowed)
+            or model not in allowed
+        ):
             raise ManagedSupervisorServiceError("model and allowed_models must be nonempty and consistent")
         base_url = value["base_url"]
         if not isinstance(base_url, str):
@@ -116,17 +139,33 @@ class ManagedSupervisorServiceConfig:
             port = parts.port
         except ValueError:
             raise ManagedSupervisorServiceError("base_url must be a loopback origin") from None
-        if (parts.scheme not in ("http", "https") or parts.hostname not in ("127.0.0.1", "::1")
-                or parts.username is not None or parts.password is not None
-                or parts.path not in ("", "/") or parts.query or parts.fragment
-                or (port is not None and not 1 <= port <= 65535)):
+        if (
+            parts.scheme not in ("http", "https")
+            or parts.hostname not in ("127.0.0.1", "::1")
+            or parts.username is not None
+            or parts.password is not None
+            or parts.path not in ("", "/")
+            or parts.query
+            or parts.fragment
+            or (port is not None and not 1 <= port <= 65535)
+        ):
             raise ManagedSupervisorServiceError("base_url must be a loopback origin")
         socket_path = absolute_path("socket_path")
         if len(os.fsencode(str(socket_path))) >= 104:
             raise ManagedSupervisorServiceError("socket_path exceeds the local Unix socket path bound")
-        return cls(socket_path, absolute_path("state_path"), absolute_path("token_file"),
-                   absolute_path("mcp_token_file"), client_uid, group_gid, base_url, value["provider"],
-                   model, tuple(allowed), builder_enabled)
+        return cls(
+            socket_path,
+            absolute_path("state_path"),
+            absolute_path("token_file"),
+            absolute_path("mcp_token_file"),
+            client_uid,
+            group_gid,
+            base_url,
+            value["provider"],
+            model,
+            tuple(allowed),
+            builder_enabled,
+        )
 
     def validate_state_location(self):
         """Require a private service-owned directory and a safe existing state file."""
@@ -139,14 +178,17 @@ class ManagedSupervisorServiceConfig:
                 parent = self.state_path.parent.stat()
             except OSError as exc:
                 raise ManagedSupervisorServiceError(
-                    f"state directory unavailable: {type(exc).__name__}") from None
+                    f"state directory unavailable: {type(exc).__name__}"
+                ) from None
         except OSError as exc:
             raise ManagedSupervisorServiceError(f"state location unavailable: {type(exc).__name__}") from None
-        if (not stat.S_ISDIR(parent.st_mode) or parent.st_uid != os.geteuid()
-                or parent.st_mode & 0o077):
-            raise ManagedSupervisorServiceError("state directory must be service-owned and private (mode 0700)")
-        if current is not None and (not stat.S_ISREG(current.st_mode) or current.st_uid != os.geteuid()
-                                     or current.st_mode & 0o077):
+        if not stat.S_ISDIR(parent.st_mode) or parent.st_uid != os.geteuid() or parent.st_mode & 0o077:
+            raise ManagedSupervisorServiceError(
+                "state directory must be service-owned and private (mode 0700)"
+            )
+        if current is not None and (
+            not stat.S_ISREG(current.st_mode) or current.st_uid != os.geteuid() or current.st_mode & 0o077
+        ):
             raise ManagedSupervisorServiceError("state file must be a service-owned private regular file")
 
 
@@ -170,21 +212,35 @@ def build_managed_dispatcher(config_path):
         raise ManagedSupervisorServiceError(f"state lock unavailable: {type(exc).__name__}") from None
     try:
         lock_stat = os.fstat(lock_fd)
-        if (not stat.S_ISREG(lock_stat.st_mode) or lock_stat.st_uid != os.geteuid()
-                or lock_stat.st_mode & 0o077):
+        if (
+            not stat.S_ISREG(lock_stat.st_mode)
+            or lock_stat.st_uid != os.geteuid()
+            or lock_stat.st_mode & 0o077
+        ):
             raise ManagedSupervisorServiceError("state lock must be a private service-owned regular file")
         try:
             fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError:
             raise ManagedSupervisorServiceError("supervisor state is already in use") from None
-        core = Supervisor(socket_path=config.socket_path, state_path=config.state_path,
-                          token=protocol_token, base_url=config.base_url, mcp_token=mcp_token,
-                          model=config.model, allowed_models=config.allowed_models,
-                          peer_uid=config.client_uid, provider=config.provider,
-                          builder_enabled=config.builder_enabled)
+        core = Supervisor(
+            socket_path=config.socket_path,
+            state_path=config.state_path,
+            token=protocol_token,
+            base_url=config.base_url,
+            mcp_token=mcp_token,
+            model=config.model,
+            allowed_models=config.allowed_models,
+            peer_uid=config.client_uid,
+            provider=config.provider,
+            builder_enabled=config.builder_enabled,
+        )
         service = ExperimentalManagedDispatcher(
-            core=core, socket_path=config.socket_path, token=protocol_token,
-            client_uid=config.client_uid, socket_group_gid=config.socket_group_gid)
+            core=core,
+            socket_path=config.socket_path,
+            token=protocol_token,
+            client_uid=config.client_uid,
+            socket_group_gid=config.socket_group_gid,
+        )
         service._state_lock_fd = lock_fd
         service._state_lock_required = True
         return service
@@ -215,8 +271,9 @@ def _recv_exact(conn, length: int) -> bytes:
 class ReadOnlyManagedSupervisor:
     """A dedicated-UID health endpoint with strict socket cleanup ownership."""
 
-    def __init__(self, *, socket_path, token: str, client_uid: int,
-                 socket_group_gid: int, timeout: float = 0.5):
+    def __init__(
+        self, *, socket_path, token: str, client_uid: int, socket_group_gid: int, timeout: float = 0.5
+    ):
         self.socket_path = Path(socket_path)
         self.token = token
         self.client_uid = client_uid
@@ -235,14 +292,27 @@ class ReadOnlyManagedSupervisor:
             raise ManagedSupervisorServiceError("socket_path exceeds local Unix socket path bound")
         if not hasattr(socket, "SO_PEERCRED"):
             raise ManagedSupervisorServiceError("platform lacks Unix peer credential authentication")
-        if self.uid <= 0 or isinstance(self.client_uid, bool) or not isinstance(self.client_uid, int) or self.client_uid <= 0:
+        if (
+            self.uid <= 0
+            or isinstance(self.client_uid, bool)
+            or not isinstance(self.client_uid, int)
+            or self.client_uid <= 0
+        ):
             raise ManagedSupervisorServiceError("service and dashboard must use explicit non-root UIDs")
         if self.client_uid == self.uid:
             raise ManagedSupervisorServiceError("dashboard peer must use a UID distinct from the supervisor")
-        if isinstance(self.socket_group_gid, bool) or not isinstance(self.socket_group_gid, int) or self.socket_group_gid < 0:
+        if (
+            isinstance(self.socket_group_gid, bool)
+            or not isinstance(self.socket_group_gid, int)
+            or self.socket_group_gid < 0
+        ):
             raise ManagedSupervisorServiceError("socket_group_gid must be a nonnegative GID")
-        if (not isinstance(self.token, str) or not self.token.isascii()
-                or len(self.token) < 32 or len(self.token) > 4096):
+        if (
+            not isinstance(self.token, str)
+            or not self.token.isascii()
+            or len(self.token) < 32
+            or len(self.token) > 4096
+        ):
             raise ManagedSupervisorServiceError("service token must be a bounded, high-entropy string")
         if self.timeout <= 0:
             raise ManagedSupervisorServiceError("socket timeout must be positive")
@@ -251,15 +321,18 @@ class ReadOnlyManagedSupervisor:
             parent = self.socket_path.parent.stat()
         except OSError as exc:
             raise ManagedSupervisorServiceError(f"socket parent unavailable: {type(exc).__name__}") from None
-        if (not stat.S_ISDIR(parent.st_mode)
-                or parent.st_uid not in (0, self.uid)
-                or parent.st_gid != self.socket_group_gid
-                or not (parent.st_mode & stat.S_ISGID)
-                or not (parent.st_mode & 0o010)
-                or parent.st_mode & (0o020 | 0o002)
-                or not os.access(self.socket_path.parent, os.W_OK | os.X_OK)):
+        if (
+            not stat.S_ISDIR(parent.st_mode)
+            or parent.st_uid not in (0, self.uid)
+            or parent.st_gid != self.socket_group_gid
+            or not (parent.st_mode & stat.S_ISGID)
+            or not (parent.st_mode & 0o010)
+            or parent.st_mode & (0o020 | 0o002)
+            or not os.access(self.socket_path.parent, os.W_OK | os.X_OK)
+        ):
             raise ManagedSupervisorServiceError(
-                "socket parent must be service/root-owned, setgid to the shared group, group-traversable, and not group/world writable")
+                "socket parent must be service/root-owned, setgid to the shared group, group-traversable, and not group/world writable"
+            )
 
     def start(self):
         """Acquire a service lock and bind a new 0660 Unix socket; never unlink stale paths."""
@@ -268,16 +341,20 @@ class ReadOnlyManagedSupervisor:
         if not hasattr(os, "O_NOFOLLOW"):
             raise ManagedSupervisorServiceError("platform cannot safely open the socket lock")
         try:
-            self._lock_fd = os.open(
-                lock_path, os.O_CREAT | os.O_RDWR | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600)
+            self._lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600)
             lock_stat = os.fstat(self._lock_fd)
-            if (not stat.S_ISREG(lock_stat.st_mode) or lock_stat.st_uid != self.uid
-                    or lock_stat.st_mode & 0o077):
+            if (
+                not stat.S_ISREG(lock_stat.st_mode)
+                or lock_stat.st_uid != self.uid
+                or lock_stat.st_mode & 0o077
+            ):
                 raise ManagedSupervisorServiceError("socket lock file ownership/mode is unsafe")
             fcntl.flock(self._lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError as exc:
             self.close()
-            raise ManagedSupervisorServiceError(f"supervisor socket lock unavailable: {type(exc).__name__}") from None
+            raise ManagedSupervisorServiceError(
+                f"supervisor socket lock unavailable: {type(exc).__name__}"
+            ) from None
         except ManagedSupervisorServiceError:
             self.close()
             raise
@@ -297,9 +374,12 @@ class ReadOnlyManagedSupervisor:
             if current.st_gid != self.socket_group_gid:
                 os.chown(self.socket_path, -1, self.socket_group_gid)
                 current = self.socket_path.lstat()
-            if (not stat.S_ISSOCK(current.st_mode) or current.st_uid != self.uid
-                    or current.st_gid != self.socket_group_gid
-                    or (current.st_mode & 0o777) != 0o660):
+            if (
+                not stat.S_ISSOCK(current.st_mode)
+                or current.st_uid != self.uid
+                or current.st_gid != self.socket_group_gid
+                or (current.st_mode & 0o777) != 0o660
+            ):
                 raise ManagedSupervisorServiceError("bound socket ownership/mode does not match contract")
             listener.listen(8)
             listener.settimeout(self.timeout)
@@ -329,8 +409,11 @@ class ReadOnlyManagedSupervisor:
             conn.sendall(_frame({"ok": False, "error": {"code": "BAD_REQUEST"}}))
             return
         candidate = request.get("token") if isinstance(request, dict) else None
-        if (not isinstance(candidate, str) or not candidate.isascii()
-                or not hmac.compare_digest(candidate, self.token)):
+        if (
+            not isinstance(candidate, str)
+            or not candidate.isascii()
+            or not hmac.compare_digest(candidate, self.token)
+        ):
             conn.sendall(_frame({"ok": False, "error": {"code": "UNAUTHORIZED"}}))
             return
         conn.sendall(_frame(self._respond(request)))
@@ -338,15 +421,18 @@ class ReadOnlyManagedSupervisor:
     def _respond(self, request):
         if request.get("op") != "health":
             return {"ok": False, "error": {"code": "DISPATCH_DISABLED"}}
-        return {"ok": True, "result": {
-            "ready": True,
-            "pid": os.getpid(),
-            "uid": self.uid,
-            "protocol": "managed-supervisor-health/v1",
-            "read_only": True,
-            "builder_enabled": False,
-            "started_utc": self.started_utc,
-        }}
+        return {
+            "ok": True,
+            "result": {
+                "ready": True,
+                "pid": os.getpid(),
+                "uid": self.uid,
+                "protocol": "managed-supervisor-health/v1",
+                "read_only": True,
+                "builder_enabled": False,
+                "started_utc": self.started_utc,
+            },
+        }
 
     def serve_forever(self):
         if self.listener is None:
@@ -354,7 +440,7 @@ class ReadOnlyManagedSupervisor:
         while self.listener is not None:
             try:
                 conn, _ = self.listener.accept()
-            except socket.timeout:
+            except TimeoutError:
                 continue
             except OSError:
                 if self.listener is None:
@@ -373,8 +459,7 @@ class ReadOnlyManagedSupervisor:
             return
         try:
             current = self.socket_path.lstat()
-            if (stat.S_ISSOCK(current.st_mode)
-                    and (current.st_dev, current.st_ino) == self._socket_identity):
+            if stat.S_ISSOCK(current.st_mode) and (current.st_dev, current.st_ino) == self._socket_identity:
                 self.socket_path.unlink()
         except FileNotFoundError:
             pass
@@ -405,8 +490,7 @@ class ExperimentalManagedDispatcher(ReadOnlyManagedSupervisor):
     not contain T3 or its children and is not a production-hardened service.
     """
 
-    def __init__(self, *, core, attestation_path=ATTESTATION_RECORD,
-                 attestation_verifier=None, **kwargs):
+    def __init__(self, *, core, attestation_path=ATTESTATION_RECORD, attestation_verifier=None, **kwargs):
         super().__init__(**kwargs)
         self._state_lock_fd = None
         self._state_lock_required = False
@@ -440,11 +524,18 @@ class ExperimentalManagedDispatcher(ReadOnlyManagedSupervisor):
             # live process identity no longer matches kernel observations.
             return {"ok": False, "error": {"code": "SERVICE_ATTESTATION_FAILED"}}
         if request.get("op") == "health":
-            return {"ok": True, "result": {"ready": True, "uid": self.uid,
-                    "pid": os.getpid(), "read_only": False,
+            return {
+                "ok": True,
+                "result": {
+                    "ready": True,
+                    "uid": self.uid,
+                    "pid": os.getpid(),
+                    "read_only": False,
                     "builder_enabled": self.core.builder_enabled,
                     "attested": True,
-                    "protocol": "experimental-managed-supervisor/v1"}}
+                    "protocol": "experimental-managed-supervisor/v1",
+                },
+            }
         return self.core.handle(request)
 
     def close(self):
@@ -456,6 +547,7 @@ class ExperimentalManagedDispatcher(ReadOnlyManagedSupervisor):
 
 def main():
     import argparse
+
     try:
         from .t3_supervisor_client import load_private_supervisor_token
     except ImportError:
@@ -469,14 +561,19 @@ def main():
     parser.add_argument("--socket-group-gid", type=int, help="shared socket group GID")
     args = parser.parse_args()
     if args.dispatch_config:
-        if any(value is not None for value in
-               (args.socket, args.token_file, args.client_uid, args.socket_group_gid)):
+        if any(
+            value is not None
+            for value in (args.socket, args.token_file, args.client_uid, args.socket_group_gid)
+        ):
             parser.error("--dispatch-config cannot be combined with read-only socket options")
         service = build_managed_dispatcher(args.dispatch_config)
     else:
-        if any(value is None for value in
-               (args.socket, args.token_file, args.client_uid, args.socket_group_gid)):
-            parser.error("read-only mode requires --socket, --token-file, --client-uid and --socket-group-gid")
+        if any(
+            value is None for value in (args.socket, args.token_file, args.client_uid, args.socket_group_gid)
+        ):
+            parser.error(
+                "read-only mode requires --socket, --token-file, --client-uid and --socket-group-gid"
+            )
         service = ReadOnlyManagedSupervisor(
             socket_path=args.socket,
             token=load_private_supervisor_token(args.token_file),

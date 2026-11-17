@@ -4,8 +4,8 @@ The coordinator is exercised with an injected pass function (no subprocess) so
 the state machine, bounds, lease and recovery logic are tested directly.
 """
 
-import atexit
 import asyncio
+import atexit
 import os
 import shutil
 import sqlite3
@@ -195,6 +195,26 @@ class CoordinatorStateMachineTests(unittest.TestCase):
         conn.close()
         self.assertEqual((n_state, n_passes, n_log), (0, 0, 0))
 
+    def test_forget_clears_direct_run_actions_but_preserves_other_tasks(self):
+        coord = self._coordinator(self._fake(terminal_after=1))
+        conn = self.registry._get_connection()
+        with conn:
+            for task_id, action_id in (("t15", "old-direct"), ("other", "unrelated-direct")):
+                conn.execute(
+                    "INSERT INTO action_log (action_id, task_id, action_type, state, "
+                    "request_hash, manifest_json, executor_instance_id, executor_pid, executor_start_time, created_utc, updated_utc) "
+                    "VALUES (?,?,'run_direct','COMPLETE','synthetic-hash','{}','synthetic',1,1,?,?)",
+                    (action_id, task_id, "2026-11-17", "2026-11-17"),
+                )
+        conn.close()
+        self.loop.run_until_complete(coord.forget("t15"))
+        conn = self.registry._get_connection()
+        self.assertIsNone(conn.execute("SELECT 1 FROM action_log WHERE action_id='old-direct'").fetchone())
+        self.assertIsNotNone(
+            conn.execute("SELECT 1 FROM action_log WHERE action_id='unrelated-direct'").fetchone()
+        )
+        conn.close()
+
     def test_forget_refuses_while_active(self):
         async def slow(path, action_id, generation, lock_fd=None, action="run"):
             await asyncio.sleep(0.3)
@@ -212,10 +232,15 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_pid_reuse_is_not_mistaken_for_a_live_owner(self):
         import os as _os
+
         coord = self._coordinator(self._fake(terminal_after=1))
         self.registry.seed_run(
-            "t17", state="RUNNING", generation=1, owner_pid=_os.getpid(),
-            owner_start=_start_time(_os.getpid()) + 1, owner_instance="inst-old",
+            "t17",
+            state="RUNNING",
+            generation=1,
+            owner_pid=_os.getpid(),
+            owner_start=_start_time(_os.getpid()) + 1,
+            owner_instance="inst-old",
         )
         self.assertEqual(coord.status("t17")["state"], "RECONCILIATION_REQUIRED")
         self.assertEqual(self._call(coord.recover), ["t17"])
@@ -223,18 +248,19 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_recovery_race_has_exactly_one_winner(self):
         import threading
+
         a = self._coordinator(self._fake(terminal_after=1))
         b = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t18", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t18", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         results = [None, None]
 
         def run(coord, idx):
             loop = asyncio.new_event_loop()
             try:
+
                 async def invoke():
                     return coord.recover()
+
                 results[idx] = loop.run_until_complete(invoke())
             finally:
                 try:
@@ -243,18 +269,17 @@ class CoordinatorStateMachineTests(unittest.TestCase):
                     pass
                 loop.close()
 
-        threads = [threading.Thread(target=run, args=(a, 0)),
-                   threading.Thread(target=run, args=(b, 1))]
-        for t in threads: t.start()
-        for t in threads: t.join()
+        threads = [threading.Thread(target=run, args=(a, 0)), threading.Thread(target=run, args=(b, 1))]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
         winners = [r for r in results if r == ["t18"]]
         self.assertEqual(len(winners), 1, results)
 
     def test_unknown_pass_requires_resolution_before_operator_resume(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t19", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t19", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t19", 1, 0, "coord-t19-1-0", "IN_FLIGHT")
         conn = self.registry._get_connection()
         with conn:
@@ -273,9 +298,7 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_stop_request_does_not_resolve_reconciliation(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t20", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t20", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t20", 1, 0, "coord-t20-1-0", "IN_FLIGHT")
         self._call(coord.recover)
         self.assertEqual(coord.status("t20")["state"], "RECONCILIATION_REQUIRED")
@@ -327,16 +350,21 @@ class CoordinatorStateMachineTests(unittest.TestCase):
         res = self.loop.run_until_complete(coord.resolve("t28"))
         self.assertFalse(res["resolved"], res)
         self.assertTrue(res.get("conflict"), res)
-        coord.finalize_direct("t28", lease["generation"],
-                              result={"view": {"status": "DRAFT"}, "terminal": False,
-                                      "job_status": {}})
+        coord.finalize_direct(
+            "t28",
+            lease["generation"],
+            result={"view": {"status": "DRAFT"}, "terminal": False, "job_status": {}},
+        )
         self.assertEqual(coord.status("t28")["state"], "PAUSED")
 
     def test_start_cannot_bypass_required_reconciliation(self):
         coord = self._coordinator(self._fake(terminal_after=1))
         self.registry.seed_run(
-            "t28", state="RECONCILIATION_REQUIRED", generation=4,
-            owner_pid=_dead_pid(), owner_start=1,
+            "t28",
+            state="RECONCILIATION_REQUIRED",
+            generation=4,
+            owner_pid=_dead_pid(),
+            owner_start=1,
         )
         self.registry.seed_pass("t28", 4, 0, "coord-t28-4-0", "IN_FLIGHT")
         result = self._call(coord.start, "t28")
@@ -357,8 +385,9 @@ class CoordinatorStateMachineTests(unittest.TestCase):
         lease = coord.acquire_direct("t28")
         conn = self.registry._get_connection()
         with conn:
-            conn.execute("UPDATE run_state SET updated_utc=? WHERE task_id=?",
-                         ("2000-01-01T00:00:00Z", "t28"))
+            conn.execute(
+                "UPDATE run_state SET updated_utc=? WHERE task_id=?", ("2000-01-01T00:00:00Z", "t28")
+            )
         conn.close()
         result = self._call(coord.start, "t28")
         self.assertFalse(result["ok"], result)
@@ -370,8 +399,11 @@ class CoordinatorStateMachineTests(unittest.TestCase):
     def test_start_preserves_unknown_pass_of_dead_owner(self):
         coord = self._coordinator(self._fake(terminal_after=1))
         self.registry.seed_run(
-            "t28", state="RUNNING", generation=4,
-            owner_pid=_dead_pid(), owner_start=1,
+            "t28",
+            state="RUNNING",
+            generation=4,
+            owner_pid=_dead_pid(),
+            owner_start=1,
         )
         self.registry.seed_pass("t28", 4, 0, "coord-t28-4-0", "IN_FLIGHT")
         result = self._call(coord.start, "t28")
@@ -395,8 +427,9 @@ class CoordinatorStateMachineTests(unittest.TestCase):
             await entered.wait()
             conn = self.registry._get_connection()
             with conn:
-                conn.execute("UPDATE run_state SET updated_utc=? WHERE task_id=?",
-                             ("2000-01-01T00:00:00Z", "t28"))
+                conn.execute(
+                    "UPDATE run_state SET updated_utc=? WHERE task_id=?", ("2000-01-01T00:00:00Z", "t28")
+                )
             conn.close()
             refused = coord.start("t28")
             release.set()
@@ -430,9 +463,7 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_abandon_first_blocks_resolve(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t22", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t22", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t22", 1, 0, "coord-t22-1-0", "IN_FLIGHT")
         self._call(coord.recover)
         self.assertEqual(coord.status("t22")["state"], "RECONCILIATION_REQUIRED")
@@ -445,13 +476,14 @@ class CoordinatorStateMachineTests(unittest.TestCase):
     def test_abandon_during_resolve_is_refused(self):
         async def slow(path, action_id, generation, lock_fd=None, action="run"):
             await asyncio.sleep(0.3)
-            return {"view": {"status": "BUILD_IN_PROGRESS"}, "terminal": True,
-                    "job_status": {"j1": "ACCEPTED"}}
+            return {
+                "view": {"status": "BUILD_IN_PROGRESS"},
+                "terminal": True,
+                "job_status": {"j1": "ACCEPTED"},
+            }
 
         coord = self._coordinator(slow)
-        self.registry.seed_run(
-            "t23", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t23", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t23", 1, 0, "coord-t23-1-0", "IN_FLIGHT")
         _c = self.registry._get_connection()
         with _c:
@@ -471,13 +503,14 @@ class CoordinatorStateMachineTests(unittest.TestCase):
     def test_stop_during_resolve_is_recorded(self):
         async def slow(path, action_id, generation, lock_fd=None, action="run"):
             await asyncio.sleep(0.3)
-            return {"view": {"status": "BUILD_IN_PROGRESS"}, "terminal": True,
-                    "job_status": {"j1": "ACCEPTED"}}
+            return {
+                "view": {"status": "BUILD_IN_PROGRESS"},
+                "terminal": True,
+                "job_status": {"j1": "ACCEPTED"},
+            }
 
         coord = self._coordinator(slow)
-        self.registry.seed_run(
-            "t24", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t24", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t24", 1, 0, "coord-t24-1-0", "IN_FLIGHT")
         _c = self.registry._get_connection()
         with _c:
@@ -498,13 +531,13 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_stop_on_owner_lost_raw_row_records_only(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t25", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t25", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self._call(coord.request, "t25", "STOP")
-        raw = self.registry._get_connection().execute(
-            "SELECT state, desired, stop_requested_utc FROM run_state WHERE task_id='t25'"
-        ).fetchone()
+        raw = (
+            self.registry._get_connection()
+            .execute("SELECT state, desired, stop_requested_utc FROM run_state WHERE task_id='t25'")
+            .fetchone()
+        )
         self.assertEqual(raw["state"], "RUNNING", "the raw state must not be resolved by a click")
         self.assertEqual(raw["desired"], "STOP")
         self.assertTrue(raw["stop_requested_utc"])
@@ -515,9 +548,7 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_resolve_collects_a_late_result(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t21", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t21", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t21", 1, 0, "coord-t21-1-0", "IN_FLIGHT")
         conn = self.registry._get_connection()
         with conn:
@@ -544,10 +575,15 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_orphaned_same_instance_loop_can_be_restarted(self):
         import os as _os
+
         coord = self._coordinator(self._fake(terminal_after=1))
         self.registry.seed_run(
-            "t13", state="RUNNING", generation=1, owner_pid=_os.getpid(),
-            owner_start=_start_time(_os.getpid()), owner_instance="inst-test",
+            "t13",
+            state="RUNNING",
+            generation=1,
+            owner_pid=_os.getpid(),
+            owner_start=_start_time(_os.getpid()),
+            owner_instance="inst-test",
         )
         res = self._call(coord.start, "t13")
         self.assertTrue(res["ok"], res)
@@ -555,13 +591,16 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_direct_lease_races_coordinator_start(self):
         import threading
+
         results = {}
 
         def do_start(coord):
             loop = asyncio.new_event_loop()
             try:
+
                 async def invoke():
                     return coord.start("t26")
+
                 results["start"] = loop.run_until_complete(invoke())
             finally:
                 loop.run_until_complete(coord.shutdown())
@@ -576,10 +615,14 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
         a = self._coordinator(slow)
         b = self._coordinator(self._fake(terminal_after=1))
-        threads = [threading.Thread(target=do_start, args=(a,)),
-                   threading.Thread(target=do_direct, args=(b,))]
-        for t in threads: t.start()
-        for t in threads: t.join()
+        threads = [
+            threading.Thread(target=do_start, args=(a,)),
+            threading.Thread(target=do_direct, args=(b,)),
+        ]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
         wins = [k for k, v in results.items() if v.get("ok")]
         self.assertEqual(len(wins), 1, results)
 
@@ -598,18 +641,14 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_dead_owner_status_is_reconciliation_required(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t6", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t6", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1)
         run = coord.status("t6")
         self.assertEqual(run["state"], "RECONCILIATION_REQUIRED")
         self.assertEqual(run["pause_reason"], "owner_lost")
 
     def test_recovery_resumes_a_cleanly_interrupted_run(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t7", state="RUNNING", generation=3, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t7", state="RUNNING", generation=3, owner_pid=_dead_pid(), owner_start=1)
         self.assertEqual(self._call(coord.recover), ["t7"])
         self.assertTrue(self._wait(lambda: coord.status("t7")["state"] == "COMPLETED"))
         self.assertEqual(coord.status("t7")["generation"], 3, "same run generation")
@@ -617,9 +656,7 @@ class CoordinatorStateMachineTests(unittest.TestCase):
 
     def test_recovery_surfaces_an_unknown_pass(self):
         coord = self._coordinator(self._fake(terminal_after=1))
-        self.registry.seed_run(
-            "t8", state="RUNNING", generation=2, owner_pid=_dead_pid(), owner_start=1
-        )
+        self.registry.seed_run("t8", state="RUNNING", generation=2, owner_pid=_dead_pid(), owner_start=1)
         self.registry.seed_pass("t8", 2, 0, "coord-t8-2-0", "IN_FLIGHT")
         self._call(coord.recover)
         run = coord.status("t8")
@@ -643,9 +680,7 @@ class CoordinatorStateMachineTests(unittest.TestCase):
             conn.execute("UPDATE action_log SET fencing_token = fencing_token + 1")
         conn.close()
         self.assertFalse(
-            coord._complete_pass(
-                "t9", 1, 5, "coord-t9-1-5", {"view": {}, "terminal": True, "job_status": {}}
-            )
+            coord._complete_pass("t9", 1, 5, "coord-t9-1-5", {"view": {}, "terminal": True, "job_status": {}})
         )
 
 
@@ -680,8 +715,7 @@ class _FakeRegistry:
     def get_task(self, task_id):
         return self._tasks.get(task_id)
 
-    def seed_run(self, task_id, state, generation, owner_pid, owner_start,
-                 owner_instance="inst-old"):
+    def seed_run(self, task_id, state, generation, owner_pid, owner_start, owner_instance="inst-old"):
         now = "2026-11-15T00:00:00Z"
         conn = self._get_connection()
         with conn:

@@ -201,9 +201,7 @@
 				// iterates sections (data-vfc-hidden + display:none !important), so
 				// with no sections to build the form would be left blank.
 				const hasNothingToRender =
-					!profile ||
-					!Array.isArray(profile.sections) ||
-					profile.sections.length === 0;
+					!profile || !Array.isArray(profile.sections) || profile.sections.length === 0;
 
 				if (hasNothingToRender) {
 					if (layoutRoot) {

@@ -10,9 +10,9 @@ from types import SimpleNamespace
 from unittest import mock
 
 from managed_supervisor_attestation import (
+    SCHEMA,
     AttestationConfig,
     AttestationError,
-    SCHEMA,
     load_root_owned_config,
     verify_peer_and_processes,
 )
@@ -79,7 +79,11 @@ class ManagedSupervisorAttestationTests(unittest.TestCase):
     def _write_tcp_table(self, *, state="0A", inode="555", local=None):
         address = local or f"0100007F:{43000:04X}"
         row = f"  0: {address} 00000000:0000 {state} 00000000:00000000 00:00000000 00000000 1002 0 {inode}"
-        (self.proc / "202" / "net" / "tcp").write_text("  sl local_address rem_address st tx_queue rx_queue tr tm->when retrnsmt uid timeout inode\n" + row + "\n")
+        (self.proc / "202" / "net" / "tcp").write_text(
+            "  sl local_address rem_address st tx_queue rx_queue tr tm->when retrnsmt uid timeout inode\n"
+            + row
+            + "\n"
+        )
 
     def test_accepts_matching_peer_process_cgroup_and_listener_owner(self):
         result = verify_peer_and_processes(FakeConnection(), self.config, proc_root=self.proc)
@@ -89,10 +93,12 @@ class ManagedSupervisorAttestationTests(unittest.TestCase):
 
     def test_accepts_independently_pinned_service_cgroups(self):
         (self.proc / "202" / "cgroup").write_text("0::/system.slice/t3.service\n")
-        config = AttestationConfig.from_mapping(config_data(
-            t3_cgroup_membership=["0::/system.slice/t3.service"]))
-        self.assertTrue(verify_peer_and_processes(FakeConnection(), config,
-                                                  proc_root=self.proc)["identity_observed"])
+        config = AttestationConfig.from_mapping(
+            config_data(t3_cgroup_membership=["0::/system.slice/t3.service"])
+        )
+        self.assertTrue(
+            verify_peer_and_processes(FakeConnection(), config, proc_root=self.proc)["identity_observed"]
+        )
 
     def test_rejects_peer_pid_or_uid_mismatch(self):
         for connection in (FakeConnection(pid=303), FakeConnection(uid=3000)):
@@ -164,8 +170,12 @@ class ManagedSupervisorAttestationTests(unittest.TestCase):
     def test_config_rejects_ambiguous_or_invalid_records(self):
         duplicate = json.dumps(config_data())[:-1] + ',"schema":"managed-supervisor-attestation/v1"}'
         with self.assertRaises(AttestationError):
-            json.loads(duplicate, object_pairs_hook=lambda pairs: __import__(
-                "managed_supervisor_attestation")._reject_duplicate_keys(pairs))
+            json.loads(
+                duplicate,
+                object_pairs_hook=lambda pairs: __import__(
+                    "managed_supervisor_attestation"
+                )._reject_duplicate_keys(pairs),
+            )
         for updates in (
             {"supervisor_pid": True},
             {"t3_listener_port": True},
@@ -198,13 +208,17 @@ class ManagedSupervisorAttestationTests(unittest.TestCase):
                 opened_fd.append(fd)
                 return fd
 
-            with mock.patch("managed_supervisor_attestation.os.open", side_effect=track_open), \
-                    mock.patch("managed_supervisor_attestation.os.fstat", side_effect=fake_fstat):
+            with (
+                mock.patch("managed_supervisor_attestation.os.open", side_effect=track_open),
+                mock.patch("managed_supervisor_attestation.os.fstat", side_effect=fake_fstat),
+            ):
                 loaded = load_root_owned_config(path)
             self.assertEqual(loaded.supervisor_pid, 101)
 
-            with mock.patch("managed_supervisor_attestation.os.open", side_effect=track_open), \
-                    mock.patch("managed_supervisor_attestation.os.fstat", side_effect=lambda fd: real_fstat(fd)):
+            with (
+                mock.patch("managed_supervisor_attestation.os.open", side_effect=track_open),
+                mock.patch("managed_supervisor_attestation.os.fstat", side_effect=lambda fd: real_fstat(fd)),
+            ):
                 with self.assertRaises(AttestationError):
                     load_root_owned_config(path)
 
@@ -226,8 +240,7 @@ class ManagedSupervisorAttestationTests(unittest.TestCase):
 
             def trusted_metadata(fd):
                 result = real_fstat(fd)
-                return SimpleNamespace(st_mode=result.st_mode & ~0o022,
-                                       st_uid=0, st_size=result.st_size)
+                return SimpleNamespace(st_mode=result.st_mode & ~0o022, st_uid=0, st_size=result.st_size)
 
             with mock.patch("managed_supervisor_attestation.os.fstat", side_effect=trusted_metadata):
                 with self.assertRaises(AttestationError):

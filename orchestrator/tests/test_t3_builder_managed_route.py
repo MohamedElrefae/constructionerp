@@ -41,9 +41,13 @@ def test_builder_requires_explicit_managed_supervisor_capability(tmp_path):
     marker, job = _job()
     client = _Client(job["model"], marker)
     supervisor = Supervisor(
-        socket_path=tmp_path / "sup.sock", state_path=tmp_path / "state.json",
-        token="protocol-token-1234567890", base_url="http://127.0.0.1:8000",
-        mcp_token="mcp-secret-token", model=job["model"], allowed_models=[job["model"]],
+        socket_path=tmp_path / "sup.sock",
+        state_path=tmp_path / "state.json",
+        token="protocol-token-1234567890",
+        base_url="http://127.0.0.1:8000",
+        mcp_token="mcp-secret-token",
+        model=job["model"],
+        allowed_models=[job["model"]],
     )
     supervisor._client = lambda: client
 
@@ -58,9 +62,13 @@ def test_managed_builder_refuses_oversized_candidate_packet_before_launch(tmp_pa
     job["brief"] = "x" * 80_001
     client = _Client(job["model"], marker)
     supervisor = Supervisor(
-        socket_path=tmp_path / "sup.sock", state_path=tmp_path / "state.json",
-        token="protocol-token-1234567890", base_url="http://127.0.0.1:8000",
-        mcp_token="mcp-secret-token", model=job["model"], allowed_models=[job["model"]],
+        socket_path=tmp_path / "sup.sock",
+        state_path=tmp_path / "state.json",
+        token="protocol-token-1234567890",
+        base_url="http://127.0.0.1:8000",
+        mcp_token="mcp-secret-token",
+        model=job["model"],
+        allowed_models=[job["model"]],
         builder_enabled=True,
     )
     supervisor._client = lambda: client
@@ -76,9 +84,13 @@ def test_managed_builder_stays_single_launch_across_waiting_question_and_complet
     source_packet = json.dumps({"files": [{"path": "src/app.py", "content": "print(1)"}]})
     job["brief"] += "\n" + source_packet
     supervisor = Supervisor(
-        socket_path=tmp_path / "sup.sock", state_path=tmp_path / "state.json",
-        token="protocol-token-1234567890", base_url="http://127.0.0.1:8000",
-        mcp_token="mcp-secret-token", model=job["model"], allowed_models=[job["model"]],
+        socket_path=tmp_path / "sup.sock",
+        state_path=tmp_path / "state.json",
+        token="protocol-token-1234567890",
+        base_url="http://127.0.0.1:8000",
+        mcp_token="mcp-secret-token",
+        model=job["model"],
+        allowed_models=[job["model"]],
         builder_enabled=True,
     )
     supervisor._client = lambda: client
@@ -93,8 +105,9 @@ def test_managed_builder_stays_single_launch_across_waiting_question_and_complet
     assert "builder_bundle_json" in launch["task"]
 
     client.outcomes = [{"status": "waiting", "hasPendingQuestion": True}]
-    waiting = supervisor.handle({"op": "collect", "token": supervisor.token,
-                                 "payload": {"job_id": job["job_id"]}})
+    waiting = supervisor.handle(
+        {"op": "collect", "token": supervisor.token, "payload": {"job_id": job["job_id"]}}
+    )
     assert waiting["result"]["state"] == "waiting"
     assert "receipt" not in waiting["result"]
 
@@ -102,15 +115,20 @@ def test_managed_builder_stays_single_launch_across_waiting_question_and_complet
     assert retry["result"]["state"] == "waiting"
     assert len(client.launches) == 1
 
-    client.outcomes = [{
-        "status": "completed", "hasPendingQuestion": False,
-        "model": job["model"], "executedModel": job["model"],
-        "summary": marker + "\nmodel completed",
-    }]
+    client.outcomes = [
+        {
+            "status": "completed",
+            "hasPendingQuestion": False,
+            "model": job["model"],
+            "executedModel": job["model"],
+            "summary": marker + "\nmodel completed",
+        }
+    ]
     # The supervisor's transport receipt requires only marker and model pin;
     # Engine-side decoding still rejects malformed/incomplete builder output.
-    completed = supervisor.handle({"op": "collect", "token": supervisor.token,
-                                   "payload": {"job_id": job["job_id"]}})
+    completed = supervisor.handle(
+        {"op": "collect", "token": supervisor.token, "payload": {"job_id": job["job_id"]}}
+    )
     assert completed["result"]["state"] == "completed"
     assert completed["result"]["receipt"]["model_evidence"] == "executed"
     assert len(client.launches) == 1
@@ -120,18 +138,24 @@ def test_builder_receipt_preserves_large_output_and_refuses_secret_redaction(tmp
     marker, job = _job()
     client = _Client(job["model"], marker)
     supervisor = Supervisor(
-        socket_path=tmp_path / "sup.sock", state_path=tmp_path / "state.json",
-        token="protocol-token-1234567890", base_url="http://127.0.0.1:8000",
-        mcp_token="mcp-secret-token", model=job["model"], allowed_models=[job["model"]],
+        socket_path=tmp_path / "sup.sock",
+        state_path=tmp_path / "state.json",
+        token="protocol-token-1234567890",
+        base_url="http://127.0.0.1:8000",
+        mcp_token="mcp-secret-token",
+        model=job["model"],
+        allowed_models=[job["model"]],
         builder_enabled=True,
     )
     supervisor._client = lambda: client
     assert supervisor.handle(_request(job))["result"]["state"] == "dispatched"
     output = marker + "\n" + "x" * 12_000
-    client.outcomes = [{"status": "completed", "model": job["model"],
-                        "executedModel": job["model"], "summary": output}]
-    result = supervisor.handle({"op": "collect", "token": supervisor.token,
-                                "payload": {"job_id": job["job_id"]}})
+    client.outcomes = [
+        {"status": "completed", "model": job["model"], "executedModel": job["model"], "summary": output}
+    ]
+    result = supervisor.handle(
+        {"op": "collect", "token": supervisor.token, "payload": {"job_id": job["job_id"]}}
+    )
     assert result["result"]["receipt"]["summary"] == output
 
     _, second = _job()
@@ -139,10 +163,16 @@ def test_builder_receipt_preserves_large_output_and_refuses_secret_redaction(tmp
     second["expect_marker"] = "ENGINE-T3-RESULT " + second["job_id"]
     second["client_request_id"] += "-two"
     assert supervisor.handle(_request(second))["result"]["state"] == "dispatched"
-    client.outcomes = [{"status": "completed", "model": second["model"],
-                        "executedModel": second["model"],
-                        "summary": second["expect_marker"] + "\nBearer sensitive"}]
-    result = supervisor.handle({"op": "collect", "token": supervisor.token,
-                                "payload": {"job_id": second["job_id"]}})
+    client.outcomes = [
+        {
+            "status": "completed",
+            "model": second["model"],
+            "executedModel": second["model"],
+            "summary": second["expect_marker"] + "\nBearer sensitive",
+        }
+    ]
+    result = supervisor.handle(
+        {"op": "collect", "token": supervisor.token, "payload": {"job_id": second["job_id"]}}
+    )
     assert result["result"]["state"] == "failed"
     assert "receipt" not in result["result"]

@@ -13,9 +13,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _mcp_sim import SimServer, SimState  # noqa: E402
-from engine_t3_dispatch import DispatchLedger, EngineT3Dispatcher, L_COLLECTED  # noqa: E402
-from t3_transport import (  # noqa: E402
+from _mcp_sim import SimServer, SimState
+from engine_t3_dispatch import L_COLLECTED, DispatchLedger, EngineT3Dispatcher
+from t3_transport import (
     CorrelationStore,
     HttpT3Client,
     T3Transport,
@@ -54,8 +54,10 @@ def _dispatcher(root: Path, transport) -> EngineT3Dispatcher:
 
 def _transport(root: Path, client) -> T3Transport:
     return T3Transport(
-        CorrelationStore(root / "corr.json"), client,
-        allowed_models=[MODEL], allow_send=True,
+        CorrelationStore(root / "corr.json"),
+        client,
+        allowed_models=[MODEL],
+        allow_send=True,
     )
 
 
@@ -81,8 +83,10 @@ class HttpContractTests(unittest.TestCase):
     def test_go_flash_model_reaches_the_opencode_provider(self):
         model = "opencode-go/deepseek-v4.1-flash"
         transport = T3Transport(
-            CorrelationStore(self.root / "go-corr.json"), self.client,
-            allowed_models=[model], allow_send=True,
+            CorrelationStore(self.root / "go-corr.json"),
+            self.client,
+            allowed_models=[model],
+            allow_send=True,
         )
         job = _job(self.root)
         job["model"] = model
@@ -100,10 +104,14 @@ class HttpContractTests(unittest.TestCase):
 
     def test_codex_provider_instance_reaches_launch(self):
         client = HttpT3Client(self.server.url, self.state.token, provider="codex")
-        result = client.delegate(task="[engine job job-" + "a" * 24 + "] Test",
-                                 model="gpt-6-luna", role="reviewer",
-                                 client_request_id="synthetic-request-12345", timeout_ms=1000,
-                                 expect_marker="SYNTHETIC-MARKER")
+        result = client.delegate(
+            task="[engine job job-" + "a" * 24 + "] Test",
+            model="gpt-6-luna",
+            role="reviewer",
+            client_request_id="synthetic-request-12345",
+            timeout_ms=1000,
+            expect_marker="SYNTHETIC-MARKER",
+        )
         thread = self.state.threads[result["taskId"]]
         self.assertEqual(thread["provider"], "codex")
         self.assertEqual(thread["model"], "gpt-6-luna")
@@ -112,9 +120,11 @@ class HttpContractTests(unittest.TestCase):
         job = _job(self.root)
         out = self.client.delegate(
             task=f"[engine job {job['job_id']}] Compute. Last line: {job['expect_marker']}",
-            model=MODEL, role="research",
+            model=MODEL,
+            role="research",
             client_request_id="wp1-engine-job-" + "b" * 32,
-            timeout_ms=1000, expect_marker=job["expect_marker"],
+            timeout_ms=1000,
+            expect_marker=job["expect_marker"],
         )
         self.assertTrue(out["taskId"].startswith("thr-"))
         status = self.client.status(out["taskId"])
@@ -195,6 +205,7 @@ class HttpContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 
 class HttpRestartTests(unittest.TestCase):
     def setUp(self):

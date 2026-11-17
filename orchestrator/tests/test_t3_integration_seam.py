@@ -15,6 +15,7 @@ import os
 import shutil
 import sqlite3
 import sys
+import sys as _sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -23,7 +24,7 @@ from unittest import mock
 import dashboard_api
 from cli import make_engine
 from core import WorkflowError
-import sys as _sys
+
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _t3_test_transport import make_synthetic_factory
 
@@ -122,7 +123,9 @@ class T3SeamTests(unittest.TestCase):
         status = dict(_job_rows(self.root))[self.job_id]
         self.assertEqual(status, "ACCEPTED", view)
         self.assertEqual(self._delegates_for_prepared_job(client), 1)
-        terminal = json.loads((self.root / "orchestrator/var/jobs" / self.job_id / "terminal.json").read_text())
+        terminal = json.loads(
+            (self.root / "orchestrator/var/jobs" / self.job_id / "terminal.json").read_text()
+        )
         self.assertEqual(terminal["exit_code"], 0)
         ledger = json.loads((self.root / "orchestrator/var/t3-dispatch-ledger.json").read_text())
         rec = ledger["jobs"][self.job_id]
@@ -148,14 +151,17 @@ class T3SeamTests(unittest.TestCase):
 
     def test_production_backend_refused_even_with_forged_markers(self):
         var = self.root / "orchestrator/var"
-        for name in ("t3-isolated-boundary.json", "t3-sealed-launch.json",
-                     "sealed-launch-marker.json"):
+        for name in ("t3-isolated-boundary.json", "t3-sealed-launch.json", "sealed-launch-marker.json"):
             (var / name).write_text('{"armed": true, "netns": "forged"}')
-        with mock.patch.dict(os.environ, {
-            "ENGINE_T3_BACKEND": "t3",
-            "ENGINE_T3_LAUNCH_AUTH": "true",
-            "ENGINE_NATIVE_DISPATCH": "allow-native-host-access",
-        }, clear=False):
+        with mock.patch.dict(
+            os.environ,
+            {
+                "ENGINE_T3_BACKEND": "t3",
+                "ENGINE_T3_LAUNCH_AUTH": "true",
+                "ENGINE_NATIVE_DISPATCH": "allow-native-host-access",
+            },
+            clear=False,
+        ):
             with self.assertRaises(WorkflowError) as ctx:
                 make_engine(self.root).run()
         self.assertIn("refused unconditionally", str(ctx.exception))
@@ -205,7 +211,9 @@ class T3SeamTests(unittest.TestCase):
         }
         with mock.patch.dict(os.environ, env, clear=False):
             view = dashboard_api.execute_action(
-                self.root, "run", payload,
+                self.root,
+                "run",
+                payload,
                 engine_factory=lambda r: make_engine(r, transport_factory=factory, min_poll_interval_s=0),
             )
         for _ in range(3):
@@ -213,7 +221,9 @@ class T3SeamTests(unittest.TestCase):
                 break
             with mock.patch.dict(os.environ, env, clear=False):
                 view = dashboard_api.execute_action(
-                    self.root, "run", payload,
+                    self.root,
+                    "run",
+                    payload,
                     engine_factory=lambda r: make_engine(r, transport_factory=factory, min_poll_interval_s=0),
                 )
         self.assertEqual(dict(_job_rows(self.root))[self.job_id], "ACCEPTED", view)
@@ -222,6 +232,7 @@ class T3SeamTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 
 class ShippedPathSelectionTests(unittest.TestCase):
     """The shipped entry paths must not be able to select the test double."""
@@ -249,17 +260,20 @@ class ShippedPathSelectionTests(unittest.TestCase):
             "CREATE TABLE action_log (action_id TEXT, fencing_token INTEGER, "
             "executor_instance_id TEXT, state TEXT, request_hash TEXT, created_utc TEXT)"
         )
-        conn.execute("INSERT INTO action_log VALUES (?,?,?,?,?,?)",
-                     ("act-ship", 11, "executor-ship", "EXECUTING", "", "2026-11-15T00:00:00Z"))
+        conn.execute(
+            "INSERT INTO action_log VALUES (?,?,?,?,?,?)",
+            ("act-ship", 11, "executor-ship", "EXECUTING", "", "2026-11-15T00:00:00Z"),
+        )
         conn.commit()
         conn.close()
         db.chmod(0o600)
         return db
 
     def test_cli_cannot_select_fake_via_env(self):
-        import cli
         import io
         from contextlib import redirect_stdout
+
+        import cli
 
         argv = ["cli.py", "--root", str(self.root), "run", "--once"]
         env = {
@@ -334,12 +348,16 @@ class ShippedPathSelectionTests(unittest.TestCase):
         self.assertFalse((shipped / "t3_test_transport.py").exists())
         self.assertTrue((shipped / "tests/_t3_test_transport.py").exists())
 
+
 class DashboardFenceTests(T3SeamTests):
     """Dashboard production fence: invalid/unauthorized input is refused."""
 
     def _env(self):
-        return {"ENGINE_T3_BACKEND": "t3", "DASHBOARD_TEST_MODE": "1",
-                "DASHBOARD_REGISTRY_DB": str(self._dashboard_registry())}
+        return {
+            "ENGINE_T3_BACKEND": "t3",
+            "DASHBOARD_TEST_MODE": "1",
+            "DASHBOARD_REGISTRY_DB": str(self._dashboard_registry()),
+        }
 
     def test_dashboard_missing_fence_parameters_refused(self):
         with mock.patch.dict(os.environ, self._env(), clear=False):
@@ -348,8 +366,11 @@ class DashboardFenceTests(T3SeamTests):
         self.assertIn("Fencing parameters", str(ctx.exception))
 
     def test_dashboard_wrong_fence_token_refused(self):
-        payload = {"action_id": "act-t3-seam", "fencing_token": 999,
-                   "executor_instance_id": "executor-t3-seam"}
+        payload = {
+            "action_id": "act-t3-seam",
+            "fencing_token": 999,
+            "executor_instance_id": "executor-t3-seam",
+        }
         with mock.patch.dict(os.environ, self._env(), clear=False):
             with self.assertRaises(Exception) as ctx:
                 dashboard_api.execute_action(self.root, "run", payload)
@@ -357,8 +378,7 @@ class DashboardFenceTests(T3SeamTests):
 
     def test_dashboard_lost_reply_parks(self):
         factory, client = _factory("lost_reply", self.envelope)
-        payload = {"action_id": "act-t3-seam", "fencing_token": 7,
-                   "executor_instance_id": "executor-t3-seam"}
+        payload = {"action_id": "act-t3-seam", "fencing_token": 7, "executor_instance_id": "executor-t3-seam"}
         env = self._env()
         with mock.patch.dict(os.environ, env, clear=False):
             for _ in range(6):
@@ -366,7 +386,9 @@ class DashboardFenceTests(T3SeamTests):
                 if status in ("RECONCILIATION_REQUIRED", "ACCEPTED"):
                     break
                 dashboard_api.execute_action(
-                    self.root, "run", payload,
+                    self.root,
+                    "run",
+                    payload,
                     engine_factory=lambda r: make_engine(r, transport_factory=factory, min_poll_interval_s=0),
                 )
         self.assertEqual(dict(_job_rows(self.root))[self.job_id], "RECONCILIATION_REQUIRED")
@@ -374,20 +396,23 @@ class DashboardFenceTests(T3SeamTests):
 
     def test_dashboard_restart_never_resends(self):
         factory, client = _factory("ok", self.envelope)
-        payload = {"action_id": "act-t3-seam", "fencing_token": 7,
-                   "executor_instance_id": "executor-t3-seam"}
+        payload = {"action_id": "act-t3-seam", "fencing_token": 7, "executor_instance_id": "executor-t3-seam"}
         env = self._env()
         with mock.patch.dict(os.environ, env, clear=False):
             for _ in range(3):
                 if dict(_job_rows(self.root))[self.job_id] == "ACCEPTED":
                     break
                 dashboard_api.execute_action(
-                    self.root, "run", payload,
+                    self.root,
+                    "run",
+                    payload,
                     engine_factory=lambda r: make_engine(r, transport_factory=factory, min_poll_interval_s=0),
                 )
             before = self._delegates_for_prepared_job(client)
             dashboard_api.execute_action(
-                self.root, "run", payload,
+                self.root,
+                "run",
+                payload,
                 engine_factory=lambda r: make_engine(r, transport_factory=factory, min_poll_interval_s=0),
             )
         self.assertEqual(self._delegates_for_prepared_job(client), before)

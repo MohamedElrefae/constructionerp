@@ -120,7 +120,7 @@ def apply_builder_artifact(*, artifact, checkout, expected_base_commit,
     files = artifact.get("files")
     if not isinstance(files, list) or not files:
         raise WorkflowError("Builder artifact contains no file changes")
-    if (not isinstance(validation_commands, (list, tuple)) or not validation_commands
+    if (not isinstance(validation_commands, list | tuple) or not validation_commands
             or len(validation_commands) > 32):
         raise WorkflowError("Trusted native validation commands are required")
     if generated:
@@ -156,7 +156,7 @@ def apply_builder_artifact(*, artifact, checkout, expected_base_commit,
         "work_item_root": str(Path(work_item_root).resolve(strict=True)),
         "control_root": str(Path(control_root).resolve(strict=True)),
     }
-    if not isinstance(timeout_seconds, (int, float)) or not 0 < timeout_seconds <= 600:
+    if not isinstance(timeout_seconds, int | float) or not 0 < timeout_seconds <= 600:
         raise WorkflowError("Validation timeout outside bounds")
     validation = run_validation(spec, parent, time.monotonic() + timeout_seconds)
     binding_path = parent / "tested-candidate" / "binding.json"

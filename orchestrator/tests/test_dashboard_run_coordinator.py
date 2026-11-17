@@ -8,8 +8,8 @@ cannot select it (see dashboard/config.py test gate).
 
 import json
 import os
-import shutil
 import shlex
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -57,8 +57,7 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         test_python = cls.dir / "coordinator-test-python"
         helper = TESTS / "_coordinator_test_python.py"
         test_python.write_text(
-            "#!/bin/sh\nexec " + shlex.quote(sys.executable) + " "
-            + shlex.quote(str(helper)) + " \"$@\"\n"
+            "#!/bin/sh\nexec " + shlex.quote(sys.executable) + " " + shlex.quote(str(helper)) + ' "$@"\n'
         )
         test_python.chmod(0o700)
         os.environ["ORCHESTRATOR_PYTHON"] = str(test_python)
@@ -69,7 +68,7 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         os.environ["DASHBOARD_SUPERVISOR_SOCKET"] = str(cls.dir / "sup.sock")
         os.environ["DASHBOARD_SUPERVISOR_TOKEN_FILE"] = str(cls.dir / "peer.token")
         try:
-            import dashboard.app  # noqa: F401
+            import dashboard.app
             import dashboard.registry as registry_mod
             import dashboard.subprocess_client as subprocess_client
         except Exception as exc:
@@ -79,6 +78,7 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         subprocess_client.ORCHESTRATOR_PYTHON = test_python
         registry_mod.init_registry_db(dash_var / "registry.db")
         from starlette.testclient import TestClient
+
         import dashboard.app as appmod
 
         cls.appmod = appmod
@@ -94,10 +94,13 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         finally:
             for p in getattr(cls, "_procs", []):
                 try:
-                    p.terminate(); p.wait(timeout=5)
+                    p.terminate()
+                    p.wait(timeout=5)
                 except Exception:
-                    try: p.kill()
-                    except Exception: pass
+                    try:
+                        p.kill()
+                    except Exception:
+                        pass
             cls._tmp.cleanup()
 
     @classmethod
@@ -107,23 +110,41 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         os.chmod(cls.dir / "mcp.token", 0o600)
         cls.events = cls.dir / "launches.jsonl"
         sim = subprocess.Popen(
-            [sys.executable, str(TESTS / "_mcp_sim_server.py"), "--token", mcp,
-             "--events", str(cls.events)],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH))
+            [sys.executable, str(TESTS / "_mcp_sim_server.py"), "--token", mcp, "--events", str(cls.events)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+        )
         cls._procs.append(sim)
         cls.url = json.loads(sim.stdout.readline())["url"]
         peer = "synthetic-peer-token-0123456789"
         (cls.dir / "peer.token").write_text(peer)
         os.chmod(cls.dir / "peer.token", 0o600)
         sup = subprocess.Popen(
-            [sys.executable, str(TESTS / "_synthetic_supervisor_server.py"),
-             "--socket", str(cls.dir / "sup.sock"),
-             "--state", str(cls.dir / "state.json"),
-             "--token-file", str(cls.dir / "peer.token"),
-             "--base-url", cls.url,
-             "--mcp-token-file", str(cls.dir / "mcp.token"),
-             "--model", MODEL, "--allowed-model", MODEL],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=str(ORCH))
+            [
+                sys.executable,
+                str(TESTS / "_synthetic_supervisor_server.py"),
+                "--socket",
+                str(cls.dir / "sup.sock"),
+                "--state",
+                str(cls.dir / "state.json"),
+                "--token-file",
+                str(cls.dir / "peer.token"),
+                "--base-url",
+                cls.url,
+                "--mcp-token-file",
+                str(cls.dir / "mcp.token"),
+                "--model",
+                MODEL,
+                "--allowed-model",
+                MODEL,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=str(ORCH),
+        )
         cls._procs.append(sup)
         assert _wait_for(lambda: (cls.dir / "sup.sock").exists())
         assert sup.stdout.readline()
@@ -132,10 +153,13 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         """Fresh supervisor ledger so each task gets a real, countable launch."""
         for proc in self._procs:
             try:
-                proc.terminate(); proc.wait(timeout=5)
+                proc.terminate()
+                proc.wait(timeout=5)
             except Exception:
-                try: proc.kill()
-                except Exception: pass
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
         self._procs.clear()
         for name in ("state.json", "sup.sock"):
             try:
@@ -148,22 +172,30 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
     @classmethod
     def _login(cls):
         from dashboard import auth as auth_mod
+
         creds = auth_mod.auth_store.credentials_file_path
         if not creds.is_file():
             auth_mod.create_initial_credentials_file(file_path=creds)
         user = pw = None
         for line in creds.read_text().splitlines():
-            if line.startswith("Username: "): user = line.split(": ", 1)[1]
-            if line.startswith("Password: "): pw = line.split(": ", 1)[1]
+            if line.startswith("Username: "):
+                user = line.split(": ", 1)[1]
+            if line.startswith("Password: "):
+                pw = line.split(": ", 1)[1]
         cls.client.get("/api/auth/csrf-token")
         tok = cls.client.cookies.get("dashboard_csrf") or ""
-        r = cls.client.post("/api/auth/login", json={"username": user, "password": pw},
-                            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": tok})
+        r = cls.client.post(
+            "/api/auth/login",
+            json={"username": user, "password": pw},
+            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": tok},
+        )
         assert r.status_code == 200, r.text
         csrf = r.json()["csrf_token"]
-        r2 = cls.client.post("/api/auth/setup-password",
-                             json={"current_password": pw, "new_password": "NewPermanentPass123!"},
-                             headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": csrf})
+        r2 = cls.client.post(
+            "/api/auth/setup-password",
+            json={"current_password": pw, "new_password": "NewPermanentPass123!"},
+            headers={"origin": "https://127.0.0.1:8080", "x-csrf-token": csrf},
+        )
         assert r2.status_code == 200, r2.text
         cls.csrf = csrf
         cls.user = user
@@ -177,15 +209,19 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         cfg = json.loads(row[0].replace(OLD_ROOT, str(root)))
         cfg["root"] = str(root)
         conn.execute("update workflow_meta set value=? where key='config'", (json.dumps(cfg),))
-        conn.commit(); conn.close()
+        conn.commit()
+        conn.close()
         for p in root.rglob("*"):
             if p.is_file() and p.suffix in (".json", ".md", ".txt") and p.stat().st_size < 2_000_000:
-                try: text = p.read_text()
-                except (UnicodeDecodeError, OSError): continue
+                try:
+                    text = p.read_text()
+                except (UnicodeDecodeError, OSError):
+                    continue
                 if OLD_ROOT in text:
                     p.write_text(text.replace(OLD_ROOT, str(root)))
         from cli import make_engine
         from core import WorkflowError
+
         os.environ.pop("ENGINE_NATIVE_DISPATCH", None)
         os.environ.pop("ENGINE_T3_BACKEND", None)
         try:
@@ -202,8 +238,7 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
             conn.execute(
                 "INSERT OR REPLACE INTO registered_tasks (task_id, work_item, worktree_path, "
                 "task_branch, registered_utc, cached_status, cached_stage) VALUES (?,?,?,?,?,?,?)",
-                (task_id, "pilot-loop", str(root), "pilot",
-                 "2026-11-15T00:00:00Z", "DRAFT", "1"),
+                (task_id, "pilot-loop", str(root), "pilot", "2026-11-15T00:00:00Z", "DRAFT", "1"),
             )
         conn.close()
         return root, job_id, task_id
@@ -285,14 +320,17 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         root, job_id, task_id = self._make_task("race")
         before = self._launch_count(job_id)
         import threading
+
         results = []
 
         def start(action_id):
             results.append(self._post(f"/api/tasks/{task_id}/run-start", {"action_id": action_id}))
 
         threads = [threading.Thread(target=start, args=(f"start-race-{i}",)) for i in range(2)]
-        for t in threads: t.start()
-        for t in threads: t.join()
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
         codes = sorted(r.status_code for r in results)
         self.assertEqual(codes, [200, 409], [r.text for r in results])
         self.assertTrue(_wait_for(lambda: self._status(task_id)["terminal"]))
@@ -314,7 +352,8 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         self._reset_services()
         root, job_id, task_id = self._make_task("recover")
         before = self._launch_count(job_id)
-        dead = subprocess.Popen(["/bin/true"]); dead.wait(timeout=5)
+        dead = subprocess.Popen(["/bin/true"])
+        dead.wait(timeout=5)
         now = "2026-11-15T00:00:00Z"
         conn = self.registry_mod.TaskRegistry()._get_connection()
         with conn:
@@ -372,18 +411,46 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
                 "child_start_time, fencing_token, heartbeat_utc, error_message, "
                 "session_memory_entry, created_utc, updated_utc) "
                 "VALUES (?,?,'run','EXECUTING',?,?,?,NULL,?,?,?,?,NULL,NULL,NULL,1,?,NULL,NULL,?,?)",
-                ("stale-pass", task_id, "stale-pass", "h", "{}", "stale-pass",
-                 "inst-old", os.getpid(), 1, now, now, now),
+                (
+                    "stale-pass",
+                    task_id,
+                    "stale-pass",
+                    "h",
+                    "{}",
+                    "stale-pass",
+                    "inst-old",
+                    os.getpid(),
+                    1,
+                    now,
+                    now,
+                    now,
+                ),
             )
         conn.close()
         env = dict(os.environ)
         env["CANONICAL_DASHBOARD_REGISTRY"] = str(self.dir / "dashboard/var/registry.db")
         proc = subprocess.run(
-            [os.environ["ORCHESTRATOR_PYTHON"], "-m", "orchestrator.dashboard_api",
-             "--root", str(root), "--action", "run",
-             "--action-id", "stale-pass", "--fencing-token", "999",
-             "--executor-instance-id", "inst-stale"],
-            capture_output=True, text=True, cwd=str(ORCH), env=env, timeout=60)
+            [
+                os.environ["ORCHESTRATOR_PYTHON"],
+                "-m",
+                "orchestrator.dashboard_api",
+                "--root",
+                str(root),
+                "--action",
+                "run",
+                "--action-id",
+                "stale-pass",
+                "--fencing-token",
+                "999",
+                "--executor-instance-id",
+                "inst-stale",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(ORCH),
+            env=env,
+            timeout=60,
+        )
         self.assertNotEqual(proc.returncode, 0)
         self.assertIn("Fencing validation failed", proc.stdout + proc.stderr)
         self.assertEqual(self._launches_since(job_id, before), 0)
@@ -403,7 +470,8 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         second = self._status(task_id)
         self.assertEqual(second["generation"], first["generation"] + 1)
         self.assertEqual(
-            len(self._launch_events()), 2,
+            len(self._launch_events()),
+            2,
             "resume must not relaunch a settled job",
         )
 
@@ -468,6 +536,7 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         self.assertEqual(verify0.status_code, 200, verify0.text)
         self.assertFalse(verify0.json().get("verified"), verify0.text)
         import uuid as _uuid
+
         token = {
             "schema_version": 1,
             "token_id": f"tok-{_uuid.uuid4().hex[:12]}",
@@ -485,22 +554,33 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
             "expected_tree_oid": r["expected_tree_oid"],
             "job_id": r["job_id"],
         }
-        arm = self._post(f"/api/tasks/{task_id}/commit-arm",
-                         {"token": token, "action_id": "arm-full-1"})
+        arm = self._post(f"/api/tasks/{task_id}/commit-arm", {"token": token, "action_id": "arm-full-1"})
         self.assertEqual(arm.status_code, 200, arm.text)
         self.assertEqual(arm.json()["result"]["gate"]["scope"], "OWNER_COMMIT", arm.text)
         subprocess.run(
-            ["git", "-C", str(root),
-             "-c", "user.name=Synthetic Owner", "-c", "user.email=owner@example.invalid",
-             "commit", "--allow-empty",
-             "-m", "Synthetic owner commit",
-             "-m", f"Workflow-Job: {r['job_id']}"],
-            check=True, capture_output=True, text=True)
+            [
+                "git",
+                "-C",
+                str(root),
+                "-c",
+                "user.name=Synthetic Owner",
+                "-c",
+                "user.email=owner@example.invalid",
+                "commit",
+                "--allow-empty",
+                "-m",
+                "Synthetic owner commit",
+                "-m",
+                f"Workflow-Job: {r['job_id']}",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
         verify1 = self._post(f"/api/tasks/{task_id}/commit-verify")
         self.assertEqual(verify1.status_code, 200, verify1.text)
         self.assertTrue(verify1.json().get("verified"), verify1.text)
-        rec = self._post(f"/api/tasks/{task_id}/commit-record",
-                         {"action_id": "commit-full-1"})
+        rec = self._post(f"/api/tasks/{task_id}/commit-record", {"action_id": "commit-full-1"})
         self.assertEqual(rec.status_code, 200, rec.text)
         self.assertTrue(rec.json().get("run"))
         self.assertTrue(_wait_for(lambda: self._status(task_id)["state"] == "COMPLETED"))
@@ -511,10 +591,12 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         self.assertEqual(len(events), 4, events)
         self.assertEqual(len({e["threadId"] for e in events}), 4)
         return
+
     def test_13_stop_request_does_not_resolve_or_permit_deletion(self):
         self._reset_services()
         root, job_id, task_id = self._make_task("unreg")
-        dead = subprocess.Popen(["/bin/true"]); dead.wait(timeout=5)
+        dead = subprocess.Popen(["/bin/true"])
+        dead.wait(timeout=5)
         now = "2026-11-15T00:00:00Z"
         conn = self.registry_mod.TaskRegistry()._get_connection()
         with conn:
@@ -544,14 +626,15 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         after = self._status(task_id)
         self.assertEqual(after["state"], "RECONCILIATION_REQUIRED", after)
         self.assertTrue(after["stop_requested"])
-        self.assertIn("stop_requested", [e["event"] for e in
-                                         self.client.get(f"/api/tasks/{task_id}/run-status").json()["events"]])
+        self.assertIn(
+            "stop_requested",
+            [e["event"] for e in self.client.get(f"/api/tasks/{task_id}/run-status").json()["events"]],
+        )
         r2 = self.client.delete(f"/api/tasks/{task_id}", headers=delhdr)
         self.assertEqual(r2.status_code, 409, r2.text)
         bad = self._post(f"/api/tasks/{task_id}/run-abandon", {"acknowledge": "ok"})
         self.assertEqual(bad.status_code, 400, bad.text)
-        good = self._post(f"/api/tasks/{task_id}/run-abandon",
-                          {"acknowledge": "remote state unknown"})
+        good = self._post(f"/api/tasks/{task_id}/run-abandon", {"acknowledge": "remote state unknown"})
         self.assertEqual(good.status_code, 200, good.text)
         abandoned = self._status(task_id)
         self.assertEqual(abandoned["state"], "ABANDONED")
@@ -581,6 +664,7 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
 
     def _commit_token(self, task_id, req, branch=None, parent=None, tree=None):
         import uuid as _uuid
+
         return {
             "schema_version": 1,
             "token_id": f"tok-{_uuid.uuid4().hex[:12]}",
@@ -601,9 +685,20 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
 
     def _git(self, root, *args):
         return subprocess.run(
-            ["git", "-C", str(root), "-c", "user.name=Synthetic Owner",
-             "-c", "user.email=owner@example.invalid", *args],
-            check=True, capture_output=True, text=True).stdout.strip()
+            [
+                "git",
+                "-C",
+                str(root),
+                "-c",
+                "user.name=Synthetic Owner",
+                "-c",
+                "user.email=owner@example.invalid",
+                *args,
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
 
     def test_14_direct_run_refused_in_conflict_states(self):
         self._reset_services()
@@ -667,37 +762,37 @@ class DashboardRunCoordinatorTests(unittest.TestCase):
         req = self.client.get(f"/api/tasks/{task_id}/commit-requirements").json()
         r = req["requirements"]
         # Invalid token schema and wrong bindings are rejected before any change.
-        bad = self._post(f"/api/tasks/{task_id}/commit-arm",
-                         {"token": {"scope": "PLAN"}, "action_id": "arm-bad"})
+        bad = self._post(
+            f"/api/tasks/{task_id}/commit-arm", {"token": {"scope": "PLAN"}, "action_id": "arm-bad"}
+        )
         self.assertEqual(bad.status_code, 400, bad.text)
         wrong_branch = self._commit_token(task_id, r, branch="other")
-        bad2 = self._post(f"/api/tasks/{task_id}/commit-arm",
-                          {"token": wrong_branch, "action_id": "arm-branch"})
+        bad2 = self._post(
+            f"/api/tasks/{task_id}/commit-arm", {"token": wrong_branch, "action_id": "arm-branch"}
+        )
         self.assertEqual(bad2.status_code, 400, bad2.text)
         token = self._commit_token(task_id, r)
-        arm = self._post(f"/api/tasks/{task_id}/commit-arm",
-                         {"token": token, "action_id": "arm-ok"})
+        arm = self._post(f"/api/tasks/{task_id}/commit-arm", {"token": token, "action_id": "arm-ok"})
         self.assertEqual(arm.status_code, 200, arm.text)
         self.assertEqual(arm.json()["result"]["gate"]["scope"], "OWNER_COMMIT")
         # Replay is idempotent; a different token with the same id is a conflict.
-        replay = self._post(f"/api/tasks/{task_id}/commit-arm",
-                            {"token": token, "action_id": "arm-ok"})
+        replay = self._post(f"/api/tasks/{task_id}/commit-arm", {"token": token, "action_id": "arm-ok"})
         self.assertEqual(replay.status_code, 200, replay.text)
         self.assertTrue(replay.json().get("replayed"))
-        other = self._post(f"/api/tasks/{task_id}/commit-arm",
-                           {"token": self._commit_token(task_id, r), "action_id": "arm-ok"})
+        other = self._post(
+            f"/api/tasks/{task_id}/commit-arm",
+            {"token": self._commit_token(task_id, r), "action_id": "arm-ok"},
+        )
         self.assertEqual(other.status_code, 409, other.text)
         # Wrong trailer is not a valid owner commit.
-        self._git(root, "commit", "--allow-empty", "-m", "Wrong commit",
-                  "-m", "Workflow-Job: job-wrong")
+        self._git(root, "commit", "--allow-empty", "-m", "Wrong commit", "-m", "Workflow-Job: job-wrong")
         v0 = self._post(f"/api/tasks/{task_id}/commit-verify")
         self.assertFalse(v0.json().get("verified"), v0.text)
         rec0 = self._post(f"/api/tasks/{task_id}/commit-record", {"action_id": "record-wrong"})
         self.assertEqual(rec0.status_code, 400, rec0.text)
         # Reset, make the correct commit, then move HEAD again before recording.
         self._git(root, "reset", "--hard", r["expected_parent_sha"])
-        self._git(root, "commit", "--allow-empty", "-m", "Owner commit",
-                  "-m", f"Workflow-Job: {r['job_id']}")
+        self._git(root, "commit", "--allow-empty", "-m", "Owner commit", "-m", f"Workflow-Job: {r['job_id']}")
         first = self._git(root, "rev-parse", "HEAD")
         self._git(root, "commit", "--allow-empty", "-m", "Concurrent move")
         rec1 = self._post(f"/api/tasks/{task_id}/commit-record", {"action_id": "record-moved"})

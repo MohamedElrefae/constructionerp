@@ -67,7 +67,7 @@ def _reason(value: object) -> str:
 
 
 def _principal_collection(values: object, label: str) -> frozenset[str]:
-    if not isinstance(values, COLLECTION_TYPES) or isinstance(values, (str, bytes)):
+    if not isinstance(values, COLLECTION_TYPES) or isinstance(values, str | bytes):
         raise EnrollmentInvalid(f"Principal {label} must be an explicit collection")
     try:
         return frozenset(values)

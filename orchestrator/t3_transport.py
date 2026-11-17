@@ -67,10 +67,18 @@ IDEM_RE = re.compile(r"^[A-Za-z0-9_-]{16,128}$")
 # deterministic correlation key: same Engine job => same clientRequestId.
 # Installed T3 does not deduplicate this field; it is never a retry guarantee.
 CLIENT_REQ_PREFIX = "wp1-engine-job-"
-ENGINE_T3_ROLES = frozenset({
-    "architect", "reviewer", "builder", "verifier", "proposer",
-    "ai-a1", "ai-a2", "ai-a3",
-})
+ENGINE_T3_ROLES = frozenset(
+    {
+        "architect",
+        "reviewer",
+        "builder",
+        "verifier",
+        "proposer",
+        "ai-a1",
+        "ai-a2",
+        "ai-a3",
+    }
+)
 
 # ---- artifact-only input boundary (stage 6) ---------------------------- #
 # Absolute host paths never enter a T3 brief: the engine packet carries its
@@ -79,8 +87,7 @@ ENGINE_T3_ROLES = frozenset({
 # the provider permission layer (T3 -> opencode external_directory), and a
 # live demonstration of that fence is a separately gated step (T3_BACKEND.md).
 HOST_PATH_RE = re.compile(
-    r"/(?:home|root|var|etc|opt|usr|srv|private|proc|sys|boot|mnt|media|tmp)"
-    r"(?:/[A-Za-z0-9._@+~+-]+)+"
+    r"/(?:home|root|var|etc|opt|usr|srv|private|proc|sys|boot|mnt|media|tmp)" r"(?:/[A-Za-z0-9._@+~+-]+)+"
 )
 PATH_TOKEN = "<path-redacted>"
 
@@ -110,7 +117,8 @@ def require_loopback(base_url: str) -> str:
         or parts.username is not None
         or parts.password is not None
         or parts.path not in ("", "/")
-        or parts.query or parts.fragment
+        or parts.query
+        or parts.fragment
         or (port is not None and not 1 <= port <= 65535)
     ):
         raise TransportRefusal("refusing non-loopback or credentialed T3 endpoint")
@@ -127,12 +135,13 @@ def _loopback_opener():
 
     return urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
 
+
 # record states (linear where possible; uncertain is the only parked state)
-S_INTENT = "intent"        # durable, not yet contacting T3
-S_SENDING = "sending"      # durable marker written before the network call
-S_SENT = "sent"            # task_id correlated
+S_INTENT = "intent"  # durable, not yet contacting T3
+S_SENDING = "sending"  # durable marker written before the network call
+S_SENT = "sent"  # task_id correlated
 S_COMPLETED = "completed"  # terminal, validated
-S_FAILED = "failed"        # terminal, T3 reported failure/invalid result
+S_FAILED = "failed"  # terminal, T3 reported failure/invalid result
 S_UNCERTAIN = "uncertain"  # parked: outcome unknown, requires reconcile
 S_CANCELLED = "cancelled"  # terminal, cancelled through OUR correlation only
 MAX_ASSISTANT_ITEM_CHARS = 50_000
@@ -142,6 +151,7 @@ MAX_ASSISTANT_SUMMARY_CHARS = 50_000
 def scrub_secret(text: str, token: str | None = None) -> str:
     """Remove bearer material from any text that may be raised or persisted."""
     import re as _re
+
     out = str(text)
     if token:
         out = out.replace(token, "<redacted>")
@@ -180,8 +190,8 @@ def _assistant_text(out: dict) -> str:
     """
     parts = []
     if not isinstance(out, dict):
-        return ""                       # hostile wire: no content provable
-    for item in (out.get("items") or []):
+        return ""  # hostile wire: no content provable
+    for item in out.get("items") or []:
         if not isinstance(item, dict):
             continue
         if item.get("type") == "assistant_message":
@@ -272,7 +282,8 @@ def build_task_spec(job: dict, *, allowed_models: list[str]) -> dict:
     if job.get("access", "read-only") != "read-only":
         raise TransportRefusal(
             "only read-only delegations are transportable at this stage "
-            f"(got access={job.get('access')!r})")
+            f"(got access={job.get('access')!r})"
+        )
     role = job.get("role")
     if role not in ENGINE_T3_ROLES:
         raise TransportRefusal(f"unsupported or missing Engine role: {role!r}")
@@ -336,27 +347,24 @@ def validate_result(record: dict, spec: dict, outcome: dict) -> dict:
     status = outcome.get("status")
     terminal = outcome.get("latestTerminalStatus") or status
     if terminal != "completed" or status != "completed":
-        raise TransportRefusal(
-            f"task not completed (status={status!r} terminal={terminal!r})")
+        raise TransportRefusal(f"task not completed (status={status!r} terminal={terminal!r})")
     if outcome.get("hasPendingQuestion") or outcome.get("pendingApproval"):
         raise TransportRefusal(
             "task outcome carries a pending human question/approval — "
-            "an automated pipeline must not consume it")
+            "an automated pipeline must not consume it"
+        )
     executed = outcome.get("executedModel") or outcome.get("model")
     if not executed:
         # review F4: fail CLOSED — an outcome that cannot prove which model
         # ran must not validate (best-effort pinning was an inert arm).
-        raise TransportRefusal(
-            "model pin unverifiable: outcome carries no model/executedModel")
+        raise TransportRefusal("model pin unverifiable: outcome carries no model/executedModel")
     if executed != spec["model"]:
-        raise TransportRefusal(
-            f"model pin violation: executed {executed!r} != pinned {spec['model']!r}")
+        raise TransportRefusal(f"model pin violation: executed {executed!r} != pinned {spec['model']!r}")
     summary = outcome.get("summary")
     if not isinstance(summary, str) or not summary.strip():
         raise TransportRefusal("task summary missing/empty")
     if spec["expect_marker"] not in summary:
-        raise TransportRefusal(
-            f"result marker {spec['expect_marker']!r} absent from summary")
+        raise TransportRefusal(f"result marker {spec['expect_marker']!r} absent from summary")
     if len(summary) > MAX_ASSISTANT_SUMMARY_CHARS:
         raise TransportRefusal("task summary exceeds bounded size")
     return {
@@ -382,14 +390,20 @@ class T3Transport:
     HttpT3Client (live probe) implement it.
     """
 
-    def __init__(self, store: CorrelationStore, client, *,
-                 allowed_models: list[str], allow_send: bool = False,
-                 allow_cancel: bool = False,
-                 recovery_project: str | None = None):
+    def __init__(
+        self,
+        store: CorrelationStore,
+        client,
+        *,
+        allowed_models: list[str],
+        allow_send: bool = False,
+        allow_cancel: bool = False,
+        recovery_project: str | None = None,
+    ):
         self.store = store
         self.client = client
         self.allowed_models = list(allowed_models)
-        self.allow_send = bool(allow_send)      # least privilege (LAUNCH_AUTH-like)
+        self.allow_send = bool(allow_send)  # least privilege (LAUNCH_AUTH-like)
         self.allow_cancel = bool(allow_cancel)  # independent gate
         # Optional binding to the project threads launched for THIS
         # transport live in. The launch path uses it when set (instead
@@ -397,8 +411,7 @@ class T3Transport:
         # this project — never a wider set. Injected by the
         # launcher/config; never guessed. Legacy records without
         # project_id fall back to full enumeration.
-        self.recovery_project = (
-            str(recovery_project) if recovery_project else None)
+        self.recovery_project = str(recovery_project) if recovery_project else None
 
     # -- phase 1: durable intent (no network) ------------------------------- #
     def begin_intent(self, job: dict) -> dict:
@@ -406,9 +419,8 @@ class T3Transport:
         existing = self.store.get(spec["job_id"])
         if existing is not None:
             if existing.get("idempotency_key") != spec["idempotency_key"]:
-                raise TransportRefusal(
-                    "job_id reused with a divergent idempotency_key")
-            return existing                      # idempotent: never re-plan
+                raise TransportRefusal("job_id reused with a divergent idempotency_key")
+            return existing  # idempotent: never re-plan
         rec = {
             "job_id": spec["job_id"],
             "idempotency_key": spec["idempotency_key"],
@@ -432,20 +444,19 @@ class T3Transport:
             rec = self.begin_intent(job)
         elif rec.get("idempotency_key") != spec["idempotency_key"]:
             # review F3: enforce on the send() path too, not just begin_intent
-            raise TransportRefusal(
-                "job_id reused with a divergent idempotency_key")
+            raise TransportRefusal("job_id reused with a divergent idempotency_key")
         if rec["state"] in (S_SENT, S_COMPLETED, S_FAILED, S_CANCELLED):
-            return rec                            # idempotent: already sent/terminal
+            return rec  # idempotent: already sent/terminal
         if rec["state"] in (S_SENDING, S_UNCERTAIN):
             # a durable marker from an EARLIER send may have a child
             # already running at T3: sending again would orphan the
             # original reply. Both states mean "outcome unknown".
-            raise TransportUncertain(
-                "prior send outcome unknown; run reattach() before send()")
+            raise TransportUncertain("prior send outcome unknown; run reattach() before send()")
         if not self.allow_send:
             raise TransportRefusal(
                 "send gate closed (allow_send=False) — engine launch "
-                "authorization is required before any delegation")
+                "authorization is required before any delegation"
+            )
         # durable marker BEFORE network: a crash from here on is detectable.
         # The per-attempt token is minted here and written with the S_SENDING
         # marker — it exists only in the durable record and in the message
@@ -462,25 +473,34 @@ class T3Transport:
                 " Regardless of how many lines",
                 f" Include the exact line `Per-attempt token: {nonce}` "
                 "somewhere in your reply. Regardless of how many lines",
-                1) if " Regardless of how many lines" in spec["task"]
+                1,
+            )
+            if " Regardless of how many lines" in spec["task"]
             else spec["task"] + f" Include the exact line "
-                                f"`Per-attempt token: {nonce}` somewhere "
-                                "in your reply.")
+            f"`Per-attempt token: {nonce}` somewhere "
+            "in your reply."
+        )
         try:
             outcome = self.client.delegate(
-                task=outbound_task, model=spec["model"], role=spec["role"],
+                task=outbound_task,
+                model=spec["model"],
+                role=spec["role"],
                 client_request_id=rec["client_request_id"],
-                timeout_ms=spec["timeout_ms"], expect_marker=spec["expect_marker"],
+                timeout_ms=spec["timeout_ms"],
+                expect_marker=spec["expect_marker"],
                 project_id=rec.get("project_id"),
             )
-        except Exception as exc:                  # outcome unknown => parked
+        except Exception as exc:  # outcome unknown => parked
             rec["state"] = S_UNCERTAIN
-            rec["error"] = scrub_secret(f"{type(exc).__name__}: {exc}", getattr(self.client, "_token", None))[:300]
+            rec["error"] = scrub_secret(f"{type(exc).__name__}: {exc}", getattr(self.client, "_token", None))[
+                :300
+            ]
             rec["history"].append({"state": S_UNCERTAIN, "utc": _now()})
             self.store.put(rec)
             raise TransportUncertain(
                 f"send outcome unknown ({rec['error']}); record parked as "
-                "uncertain — reconcile via reattach()") from exc
+                "uncertain — reconcile via reattach()"
+            ) from exc
         task_id = outcome.get("taskId")
         if not task_id:
             rec["state"] = S_UNCERTAIN
@@ -544,21 +564,20 @@ class T3Transport:
             # so re-polling THAT specific task id is safe reconciliation
             # evidence (projection delays are handled by collect()).
             rec["state"] = S_SENT
-            rec["history"].append({"state": S_SENT, "task_id": rec["task_id"],
-                                   "via": "known-identity", "utc": _now()})
+            rec["history"].append(
+                {"state": S_SENT, "task_id": rec["task_id"], "via": "known-identity", "utc": _now()}
+            )
             self.store.put(rec)
             return rec
         marker = self._send_marker_utc(rec)
         if not marker:
-            return self._park_reconciliation(
-                rec, "missing S_SENDING marker; cannot scope lookup")
+            return self._park_reconciliation(rec, "missing S_SENDING marker; cannot scope lookup")
         try:
             outcome = self._lookup_own_thread(rec)
         except TransportReconciliationRequired:
             raise
         except Exception as exc:
-            outcome = {"candidates": [],
-                       "error": f"lookup raised: {type(exc).__name__}"}
+            outcome = {"candidates": [], "error": f"lookup raised: {type(exc).__name__}"}
         err = outcome.get("error")
         if err and outcome.get("permanent"):
             return self._park_reconciliation(rec, err)
@@ -567,13 +586,13 @@ class T3Transport:
             # Diagnostic evidence only. Adopting would be guessing — copied
             # tokens, delayed projection, foreign projects: ownership cannot be
             # proven locally. The owner reconciles.
-            hints = ", ".join(
-                f"{c.get('threadId')} createdAt={c.get('createdAt')}"
-                for c in candidates[:3])
+            hints = ", ".join(f"{c.get('threadId')} createdAt={c.get('createdAt')}" for c in candidates[:3])
             return self._park_reconciliation(
-                rec, f"identity not uniquely provable: {len(candidates)} "
-                     f"candidate(s) match title/marker window [{hints}]; "
-                     "resolve manually (never adopted automatically)")
+                rec,
+                f"identity not uniquely provable: {len(candidates)} "
+                f"candidate(s) match title/marker window [{hints}]; "
+                "resolve manually (never adopted automatically)",
+            )
         # zero verified candidates, enumeration complete: either projection
         # has not landed (eventual consistency) or it never will — retryable,
         # bounded by a durable per-record counter, then park for reconcile
@@ -583,12 +602,12 @@ class T3Transport:
         err_suffix = f" ({err})" if err else ""
         if pending > MAX_LOOKUP_UNVERIFIED:
             return self._park_reconciliation(
-                rec, f"thread identity never became verifiable after "
-                     f"{pending - 1} attempts{err_suffix}")
+                rec, f"thread identity never became verifiable after " f"{pending - 1} attempts{err_suffix}"
+            )
         self.store.put(rec)
         raise TransportUncertain(
-            f"identity not yet verifiable{err_suffix} "
-            f"(attempt {pending}); poll again")
+            f"identity not yet verifiable{err_suffix} " f"(attempt {pending}); poll again"
+        )
 
     def _send_marker_utc(self, rec: dict) -> str | None:
         """The UTC of THIS send — the durable S_SENDING marker.
@@ -604,10 +623,9 @@ class T3Transport:
         return None
 
     def _park_reconciliation(self, rec: dict, why: str) -> dict:
-        rec["state"] = S_UNCERTAIN          # no terminal, no guess
+        rec["state"] = S_UNCERTAIN  # no terminal, no guess
         rec["error"] = f"reconciliation required ({why})"
-        rec["history"].append({"state": S_UNCERTAIN, "error": rec["error"],
-                               "utc": _now()})
+        rec["history"].append({"state": S_UNCERTAIN, "error": rec["error"], "utc": _now()})
         self.store.put(rec)
         raise TransportReconciliationRequired(rec["error"])
 
@@ -622,7 +640,7 @@ class T3Transport:
         items: list[dict] = []
         cursor = None
         seen: set = set()
-        for _ in range(200):                      # hard ceiling, never unbounded
+        for _ in range(200):  # hard ceiling, never unbounded
             call = dict(args)
             if cursor is not None:
                 call["cursor"] = cursor
@@ -635,12 +653,11 @@ class T3Transport:
             for element in page:
                 if not isinstance(element, dict):
                     raise ValueError(
-                        f"{name}: non-dict page element "
-                        f"({type(element).__name__}); wire schema violated")
+                        f"{name}: non-dict page element " f"({type(element).__name__}); wire schema violated"
+                    )
             items.extend(page)
             if "nextCursor" not in out:
-                raise ValueError(f"{name}: missing nextCursor; "
-                                 "cannot prove completeness")
+                raise ValueError(f"{name}: missing nextCursor; " "cannot prove completeness")
             cursor = out["nextCursor"]
             if cursor is None:
                 return items
@@ -677,14 +694,19 @@ class T3Transport:
         expected = f"engine job {job_id}"
         marker = self._send_marker_utc(rec)
         if not marker:
-            return {"candidates": [], "permanent": True,
-                    "error": "missing S_SENDING marker; cannot scope lookup"}
+            return {
+                "candidates": [],
+                "permanent": True,
+                "error": "missing S_SENDING marker; cannot scope lookup",
+            }
         expect_marker = str(rec.get("expect_marker") or "")
         nonce = str(rec.get("dispatch_nonce") or "")
         if not nonce:
-            return {"candidates": [], "permanent": True,
-                    "error": ("record predates per-attempt token; "
-                              "cannot content-verify — park for reconcile")}
+            return {
+                "candidates": [],
+                "permanent": True,
+                "error": ("record predates per-attempt token; " "cannot content-verify — park for reconcile"),
+            }
         norm_after = _normalize_ts(marker)
 
         bound = str(rec.get("project_id") or "")
@@ -695,17 +717,19 @@ class T3Transport:
             pids = [bound]
         else:
             try:
-                projects = self._list_all("t3_project_list", {"limit": 100},
-                                          "projects")
+                projects = self._list_all("t3_project_list", {"limit": 100}, "projects")
             except Exception as exc:
                 return {"candidates": [], "error": f"project_list: {exc}"}
             pids = []
             for project in projects:
                 pid = (project or {}).get("projectId") or (project or {}).get("id")
                 if not pid:
-                    return {"candidates": [],
-                                "error": ("project_list incomplete: project missing "
-                                          "id — cannot bound the enumeration")}
+                    return {
+                        "candidates": [],
+                        "error": (
+                            "project_list incomplete: project missing " "id — cannot bound the enumeration"
+                        ),
+                    }
                 pids.append(str(pid))
 
         suspect_missing_time = 0
@@ -713,20 +737,17 @@ class T3Transport:
         for pid in pids:
             try:
                 threads = self._list_all(
-                    "t3_thread_list",
-                    {"projectId": pid, "titleContains": expected, "limit": 100},
-                    "threads")
+                    "t3_thread_list", {"projectId": pid, "titleContains": expected, "limit": 100}, "threads"
+                )
             except Exception as exc:
-                return {"candidates": [],
-                        "error": f"thread_list[{pid}]: {exc}"}
+                return {"candidates": [], "error": f"thread_list[{pid}]: {exc}"}
             for item in threads:
                 if not isinstance(item, dict):
                     # unreachable (page elements were checked), but keep the
                     # path retryable rather than raw on defense-in-depth
-                    return {"candidates": [],
-                            "error": "thread_list: non-dict thread element"}
+                    return {"candidates": [], "error": "thread_list: non-dict thread element"}
                 if str(item.get("title") or "") != expected:
-                    continue                    # substring search only narrows
+                    continue  # substring search only narrows
                 created = _normalize_ts(str((item or {}).get("createdAt") or ""))
                 if not created:
                     # title matches but we cannot order the send — safest is
@@ -734,13 +755,15 @@ class T3Transport:
                     suspect_missing_time += 1
                     continue
                 if created < norm_after:
-                    continue                      # pre-send thread: same job,
+                    continue  # pre-send thread: same job,
                     #                                 older attempt
                 candidates.append(item)
         if suspect_missing_time:
-            return {"candidates": [], "permanent": True,
-                    "error": ("exact-title candidate is missing createdAt; "
-                              "cannot prove send order — park")}
+            return {
+                "candidates": [],
+                "permanent": True,
+                "error": ("exact-title candidate is missing createdAt; " "cannot prove send order — park"),
+            }
         if not candidates:
             return {"candidates": [], "error": None}
 
@@ -750,34 +773,46 @@ class T3Transport:
         for item in candidates:
             tid = (item or {}).get("threadId")
             if not tid:
-                return {"candidates": [],
-                        "error": "candidate missing threadId; park"}
+                return {"candidates": [], "error": "candidate missing threadId; park"}
             try:
                 out = self.client._tool(
                     "t3_thread_read",
-                    {"threadId": tid, "view": "messages", "limit": 50,
-                     "runLimit": 2, "maxCharsPerItem": MAX_ASSISTANT_ITEM_CHARS})
+                    {
+                        "threadId": tid,
+                        "view": "messages",
+                        "limit": 50,
+                        "runLimit": 2,
+                        "maxCharsPerItem": MAX_ASSISTANT_ITEM_CHARS,
+                    },
+                )
             except Exception as exc:
                 return {"candidates": [], "error": f"thread_read: {exc}"}
             if "nextCursor" in out and out["nextCursor"] not in (None, 0):
                 # more pages of messages; cannot prove full content — park
-                return {"candidates": [], "permanent": True,
-                        "error": "thread messages paginated; cannot "
-                                 "prove content completeness — park"}
-            assistant_messages = [entry for entry in (out.get("items") or [])
-                                  if isinstance(entry, dict)
-                                  and entry.get("type") == "assistant_message"]
-            if any(entry.get("textTruncated")
-                   or (isinstance(entry.get("text"), str)
-                       and len(entry["text"]) >= MAX_ASSISTANT_ITEM_CHARS)
-                   for entry in assistant_messages):
-                return {"candidates": [], "permanent": True,
-                        "error": "thread assistant text truncated; cannot prove content completeness — park"}
+                return {
+                    "candidates": [],
+                    "permanent": True,
+                    "error": "thread messages paginated; cannot " "prove content completeness — park",
+                }
+            assistant_messages = [
+                entry
+                for entry in (out.get("items") or [])
+                if isinstance(entry, dict) and entry.get("type") == "assistant_message"
+            ]
+            if any(
+                entry.get("textTruncated")
+                or (isinstance(entry.get("text"), str) and len(entry["text"]) >= MAX_ASSISTANT_ITEM_CHARS)
+                for entry in assistant_messages
+            ):
+                return {
+                    "candidates": [],
+                    "permanent": True,
+                    "error": "thread assistant text truncated; cannot prove content completeness — park",
+                }
             text = _assistant_text(out)
             if expect_marker in text and f"Per-attempt token: {nonce}" in text:
                 verified.append(item)
         return {"candidates": verified, "error": None}
-
 
     # -- phase 4: collect + validate --------------------------------------- #
     def collect(self, job_id: str) -> dict:
@@ -787,18 +822,19 @@ class T3Transport:
         if rec["state"] == S_INTENT:
             raise TransportRefusal("job never sent; nothing to collect")
         if rec["state"] in (S_SENDING, S_UNCERTAIN) or not rec.get("task_id"):
-            raise TransportUncertain(
-                "outcome unknown; run reattach() before collect()")
+            raise TransportUncertain("outcome unknown; run reattach() before collect()")
         if rec["state"] in (S_COMPLETED, S_FAILED, S_CANCELLED):
             return rec
-        spec = {"job_id": rec["job_id"], "model": rec["model"],
-                "expect_marker": rec.get("expect_marker") or ""}
+        spec = {
+            "job_id": rec["job_id"],
+            "model": rec["model"],
+            "expect_marker": rec.get("expect_marker") or "",
+        }
         outcome = self.client.status(rec["task_id"])
         # IN-FLIGHT: the task exists but has not reached a terminal state.
         # Return the record unchanged (still sent) so the caller can poll —
         # marking it failed here would destroy a healthy delegation.
-        if outcome.get("status") in ("preparing", "queued", "starting",
-                                       "running", "waiting", "idle"):
+        if outcome.get("status") in ("preparing", "queued", "starting", "running", "waiting", "idle"):
             return rec
         # TERMINAL-BUT-PROJECTION-MISSING: T3 can report a completed run
         # before the assistant message is projected (observed once). Fail-
@@ -806,24 +842,22 @@ class T3Transport:
         # never hide a genuine malformed one (non-empty but invalid still
         # fails validation below). If the projection never lands, park with
         # an explicit reconciliation-required outcome.
-        if ((outcome.get("latestTerminalStatus") or outcome.get("status"))
-                == "completed"
-                and not str(outcome.get("summary") or "").strip()):
+        if (outcome.get("latestTerminalStatus") or outcome.get("status")) == "completed" and not str(
+            outcome.get("summary") or ""
+        ).strip():
             for _ in range(2):
                 time.sleep(2.0)
                 outcome = self.client.status(rec["task_id"])
-                if ((outcome.get("latestTerminalStatus") or outcome.get("status"))
-                        != "completed"
-                        or str(outcome.get("summary") or "").strip()):
+                if (outcome.get("latestTerminalStatus") or outcome.get("status")) != "completed" or str(
+                    outcome.get("summary") or ""
+                ).strip():
                     break
-            if ((outcome.get("latestTerminalStatus") or outcome.get("status"))
-                    == "completed"
-                    and not str(outcome.get("summary") or "").strip()):
+            if (outcome.get("latestTerminalStatus") or outcome.get("status")) == "completed" and not str(
+                outcome.get("summary") or ""
+            ).strip():
                 rec["state"] = S_UNCERTAIN
-                rec["error"] = ("terminal-completed but projection missing/empty "
-                                "after bounded retry")
-                rec["history"].append({"state": S_UNCERTAIN, "error": rec["error"],
-                                       "utc": _now()})
+                rec["error"] = "terminal-completed but projection missing/empty " "after bounded retry"
+                rec["history"].append({"state": S_UNCERTAIN, "error": rec["error"], "utc": _now()})
                 self.store.put(rec)
                 raise TransportReconciliationRequired(rec["error"])
         try:
@@ -834,9 +868,12 @@ class T3Transport:
             rec["history"].append({"state": S_FAILED, "utc": _now()})
             self.store.put(rec)
             raise
-        rec.update(state=S_COMPLETED, receipt=receipt,
-                   history=rec["history"] + [{"state": S_COMPLETED, "utc": _now()}])
-        rec.pop("error", None)          # stale send/reattach error no longer applies
+        rec.update(
+            state=S_COMPLETED,
+            receipt=receipt,
+            history=rec["history"] + [{"state": S_COMPLETED, "utc": _now()}],
+        )
+        rec.pop("error", None)  # stale send/reattach error no longer applies
         self.store.put(rec)
         return rec
 
@@ -846,20 +883,17 @@ class T3Transport:
         if rec is None:
             # SCOPED: we refuse to even name a task we do not correlate
             raise TransportRefusal(
-                f"cancel refused: job_id {job_id!r} is not in our correlation "
-                "store (scoped cancellation)")
+                f"cancel refused: job_id {job_id!r} is not in our correlation " "store (scoped cancellation)"
+            )
         if not self.allow_cancel:
-            raise TransportRefusal(
-                "cancel gate closed (allow_cancel=False)")
+            raise TransportRefusal("cancel gate closed (allow_cancel=False)")
         if rec["state"] in (S_COMPLETED, S_FAILED, S_CANCELLED):
             raise TransportRefusal(f"job already terminal ({rec['state']})")
         if not rec.get("task_id"):
-            raise TransportUncertain(
-                "no correlated task_id yet; reconcile before cancel()")
+            raise TransportUncertain("no correlated task_id yet; reconcile before cancel()")
         self.client.cancel(rec["task_id"], reason=str(reason)[:200])
         rec["state"] = S_CANCELLED
-        rec["history"].append({"state": S_CANCELLED, "reason": str(reason)[:200],
-                               "utc": _now()})
+        rec["history"].append({"state": S_CANCELLED, "reason": str(reason)[:200], "utc": _now()})
         self.store.put(rec)
         return rec
 
@@ -871,9 +905,15 @@ def _now() -> str:
 # --------------------------------------------------------------------------- #
 # live HTTP MCP client (used only by the env-gated real probe)
 # --------------------------------------------------------------------------- #
-def obtain_mcp_token(*, base_url: str, t3_cli: str, scopes: tuple[str, ...] = (
-        "orchestration:read", "orchestration:operate"), access: str = "read-only",
-        label: str = "wp1-engine-transport", env: dict | None = None) -> dict:
+def obtain_mcp_token(
+    *,
+    base_url: str,
+    t3_cli: str,
+    scopes: tuple[str, ...] = ("orchestration:read", "orchestration:operate"),
+    access: str = "read-only",
+    label: str = "wp1-engine-transport",
+    env: dict | None = None,
+) -> dict:
     """Headless MCP OAuth for the local T3 server (no browser, no human step).
 
     Flow recovered from the server's own API contract:
@@ -903,7 +943,6 @@ def obtain_mcp_token(*, base_url: str, t3_cli: str, scopes: tuple[str, ...] = (
     import base64
     import hashlib
     import subprocess
-
     import urllib.error
     import urllib.parse
     import urllib.request
@@ -911,16 +950,18 @@ def obtain_mcp_token(*, base_url: str, t3_cli: str, scopes: tuple[str, ...] = (
     # Network containment first: no request of any kind leaves loopback.
     require_loopback(base_url)
 
-    def post(path: str, payload: dict, headers: dict | None = None,
-             form: bool = False):
-        data = (urllib.parse.urlencode(payload) if form
-                else json.dumps(payload)).encode()
+    def post(path: str, payload: dict, headers: dict | None = None, form: bool = False):
+        data = (urllib.parse.urlencode(payload) if form else json.dumps(payload)).encode()
         req = urllib.request.Request(
-            base_url + path, data=data, method="POST",
-            headers={"Content-Type":
-                     "application/x-www-form-urlencoded" if form
-                     else "application/json",
-                     "Accept": "application/json", **(headers or {})})
+            base_url + path,
+            data=data,
+            method="POST",
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded" if form else "application/json",
+                "Accept": "application/json",
+                **(headers or {}),
+            },
+        )
         try:
             with _loopback_opener().open(req, timeout=15) as resp:
                 return resp.status, json.loads(resp.read().decode() or "{}")
@@ -933,62 +974,91 @@ def obtain_mcp_token(*, base_url: str, t3_cli: str, scopes: tuple[str, ...] = (
 
     redirect = "http://127.0.0.1:8765/cb"
     resource = base_url.rstrip("/") + "/mcp"
-    code_status, reg = post("/oauth/mcp/register", {
-        "client_name": label, "redirect_uris": [redirect],
-        "grant_types": ["authorization_code"], "response_types": ["code"],
-        "token_endpoint_auth_method": "none"})
+    code_status, reg = post(
+        "/oauth/mcp/register",
+        {
+            "client_name": label,
+            "redirect_uris": [redirect],
+            "grant_types": ["authorization_code"],
+            "response_types": ["code"],
+            "token_endpoint_auth_method": "none",
+        },
+    )
     if code_status not in (200, 201) or "client_id" not in reg:
         raise TransportRefusal(f"mcp client registration failed: {reg}")
     client_id = reg["client_id"]
     verifier = base64.urlsafe_b64encode(os.urandom(48)).decode().rstrip("=")
-    challenge = base64.urlsafe_b64encode(
-        hashlib.sha256(verifier.encode()).digest()).decode().rstrip("=")
+    challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).decode().rstrip("=")
     state = base64.urlsafe_b64encode(os.urandom(16)).decode().rstrip("=")
-    authz = {"response_type": "code", "client_id": client_id,
-             "redirect_uri": redirect, "code_challenge": challenge,
-             "code_challenge_method": "S256", "state": state,
-             "resource": resource}
-    st, appr = post("/oauth/mcp/approval", authz,
-                    headers={"authorization": json.dumps(authz)})
+    authz = {
+        "response_type": "code",
+        "client_id": client_id,
+        "redirect_uri": redirect,
+        "code_challenge": challenge,
+        "code_challenge_method": "S256",
+        "state": state,
+        "resource": resource,
+    }
+    st, appr = post("/oauth/mcp/approval", authz, headers={"authorization": json.dumps(authz)})
     if st != 200:
         raise TransportRefusal(f"mcp approval failed ({st}): {appr}")
     # one-time pairing credential via the local CLI (headless authorization)
     proc = subprocess.run(
-        [t3_cli, "auth", "pairing", "create",
-         *[f"--scope={sc}" for sc in scopes], "--ttl", "10m",
-         "--label", label, "--json"],
-        capture_output=True, text=True, timeout=30, env=env)
+        [
+            t3_cli,
+            "auth",
+            "pairing",
+            "create",
+            *[f"--scope={sc}" for sc in scopes],
+            "--ttl",
+            "10m",
+            "--label",
+            label,
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env=env,
+    )
     if proc.returncode != 0:
         raise TransportRefusal(f"pairing create failed: {proc.stderr[:300]}")
     pair = json.loads(proc.stdout)
     # discriminant MUST be `_tag` (server-side zod union on { _tag, ... });
     # a `type` key yields HTTP 400 with an empty body.
-    decision = {"authorization": authz,
-                "decision": {"_tag": "pairing-code", "access": access,
-                             "code": pair["credential"]}}
+    decision = {
+        "authorization": authz,
+        "decision": {"_tag": "pairing-code", "access": access, "code": pair["credential"]},
+    }
     try:
-        st, dec = post("/oauth/mcp/decision", decision,
-                       headers={"authorization": json.dumps(authz)})
+        st, dec = post("/oauth/mcp/decision", decision, headers={"authorization": json.dumps(authz)})
     finally:
         # Revoke even if the decision request times out or the connection is
         # lost; otherwise a still-valid pairing code could survive the caller.
-        subprocess.run([t3_cli, "auth", "pairing", "revoke", pair["id"]],
-                       capture_output=True, timeout=20, env=env)
+        subprocess.run(
+            [t3_cli, "auth", "pairing", "revoke", pair["id"]], capture_output=True, timeout=20, env=env
+        )
     if st != 200 or "redirectTo" not in dec:
         raise TransportRefusal(f"mcp decision failed ({st}): {dec}")
-    query = urllib.parse.parse_qs(
-        urllib.parse.urlparse(dec["redirectTo"]).query)
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(dec["redirectTo"]).query)
     auth_code = (query.get("code") or [""])[0]
     if not auth_code:
         raise TransportRefusal("decision produced no authorization code")
-    st, tok = post("/oauth/mcp/token", {
-        "grant_type": "authorization_code", "code": auth_code,
-        "redirect_uri": redirect, "client_id": client_id,
-        "code_verifier": verifier, "resource": resource}, form=True)
+    st, tok = post(
+        "/oauth/mcp/token",
+        {
+            "grant_type": "authorization_code",
+            "code": auth_code,
+            "redirect_uri": redirect,
+            "client_id": client_id,
+            "code_verifier": verifier,
+            "resource": resource,
+        },
+        form=True,
+    )
     if st != 200 or "access_token" not in tok:
         raise TransportRefusal(f"mcp token exchange failed ({st}): {tok}")
-    tok.update(client_id=client_id, verifier=verifier,
-               pairing_id=pair["id"], resource=resource)
+    tok.update(client_id=client_id, verifier=verifier, pairing_id=pair["id"], resource=resource)
     return tok
 
 
@@ -999,15 +1069,14 @@ class HttpT3Client:
     requests: it is never stored, logged, or embedded in task text.
     """
 
-    def __init__(self, base_url: str, token: str, *, timeout: float = 30.0,
-                 provider: str = "opencode"):
+    def __init__(self, base_url: str, token: str, *, timeout: float = 30.0, provider: str = "opencode"):
         if not token or len(token) < 20:
             raise TransportRefusal("refusing empty/short bearer token")
         if provider not in ("opencode", "codex"):
             raise TransportRefusal(f"unsupported provider: {provider!r}")
         self.provider = provider
         self.base_url = require_loopback(str(base_url)).rstrip("/")
-        self._token = token          # in-memory only
+        self._token = token  # in-memory only
         self.timeout = timeout
         self._session_id: str | None = None
         self._id = 0
@@ -1025,8 +1094,7 @@ class HttpT3Client:
                 "Content-Type": "application/json",
                 "Accept": "application/json, text/event-stream",
                 "Authorization": f"Bearer {self._token}",
-                **({"Mcp-Session-Id": self._session_id}
-                   if self._session_id else {}),
+                **({"Mcp-Session-Id": self._session_id} if self._session_id else {}),
             },
         )
         try:
@@ -1035,10 +1103,9 @@ class HttpT3Client:
                 if sid:
                     self._session_id = sid
                 raw = resp.read().decode()
-        except urllib.error.HTTPError as exc:      # never echo token material
+        except urllib.error.HTTPError as exc:  # never echo token material
             detail = scrub_secret(exc.read().decode(errors="replace")[:300], self._token)
-            raise TransportRefusal(
-                f"T3 /mcp HTTP {exc.code}: {detail}") from None
+            raise TransportRefusal(f"T3 /mcp HTTP {exc.code}: {detail}") from None
         if not raw.strip():
             return {}
         ctype = ""  # body may be JSON or SSE (streamable HTTP)
@@ -1046,9 +1113,8 @@ class HttpT3Client:
             try:
                 return json.loads(raw)
             except ValueError as exc:
-                raise TransportRefusal(
-                    "unparseable MCP JSON body") from exc
-        for line in raw.splitlines():              # SSE: data: {...}
+                raise TransportRefusal("unparseable MCP JSON body") from exc
+        for line in raw.splitlines():  # SSE: data: {...}
             if line.startswith("data:"):
                 payload = line[5:].strip()
                 if payload:
@@ -1057,39 +1123,44 @@ class HttpT3Client:
 
     def initialize(self) -> dict:
         self._id += 1
-        out = self._post({
-            "jsonrpc": "2.0", "id": self._id, "method": "initialize",
-            "params": {"protocolVersion": "2025-03-26", "capabilities": {},
-                       "clientInfo": {"name": "wp1-engine-transport",
-                                      "version": "1"}},
-        })
+        out = self._post(
+            {
+                "jsonrpc": "2.0",
+                "id": self._id,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2025-03-26",
+                    "capabilities": {},
+                    "clientInfo": {"name": "wp1-engine-transport", "version": "1"},
+                },
+            }
+        )
         self._post({"jsonrpc": "2.0", "method": "notifications/initialized"})
         return out
 
     def list_tools(self) -> list[str]:
         self._id += 1
-        out = self._post({"jsonrpc": "2.0", "id": self._id,
-                          "method": "tools/list", "params": {}})
+        out = self._post({"jsonrpc": "2.0", "id": self._id, "method": "tools/list", "params": {}})
         return [t["name"] for t in out.get("result", {}).get("tools", [])]
 
     def _tool(self, name: str, arguments: dict) -> dict:
         self._id += 1
-        out = self._post({
-            "jsonrpc": "2.0", "id": self._id, "method": "tools/call",
-            "params": {"name": name, "arguments": arguments},
-        })
+        out = self._post(
+            {
+                "jsonrpc": "2.0",
+                "id": self._id,
+                "method": "tools/call",
+                "params": {"name": name, "arguments": arguments},
+            }
+        )
         if "error" in out:
             detail = scrub_secret(json.dumps(out["error"]), self._token)[:300]
-            raise TransportRefusal(
-                f"T3 tool {name} error: {detail}")
+            raise TransportRefusal(f"T3 tool {name} error: {detail}")
         result = out.get("result", {})
         if result.get("isError"):
             detail = scrub_secret(json.dumps(result), self._token)[:300]
-            raise TransportRefusal(
-                f"T3 tool {name} reported error: "
-                f"{detail}")
-        texts = [c.get("text", "") for c in result.get("content", [])
-                 if c.get("type") == "text"]
+            raise TransportRefusal(f"T3 tool {name} reported error: " f"{detail}")
+        texts = [c.get("text", "") for c in result.get("content", []) if c.get("type") == "text"]
         return json.loads(texts[0]) if texts else {}
 
     # -- transport interface ---------------------------------------------- #
@@ -1101,19 +1172,19 @@ class HttpT3Client:
     # a non-read-only approval ceiling (`capability_denied` under read-only),
     # so the headless flow requests the LEAST-privilege non-read-only level:
     # `approval-required`. The child cannot take unaudited actions either.
-    def delegate(self, *, task, model, role, client_request_id, timeout_ms,
-                   expect_marker, project_id=None) -> dict:
+    def delegate(
+        self, *, task, model, role, client_request_id, timeout_ms, expect_marker, project_id=None
+    ) -> dict:
         # (titleContains) can reconcile an orphaned launch by hand, and the
         # server's own guidance ("inspect t3_thread_list before retrying")
         # becomes actionable for our exact job.
         match = re.match(r"\[engine job (job-[0-9a-f]+)\]", task)
-        title = (f"engine job {match.group(1)}" if match
-                 else f"engine transport: {role}")
+        title = f"engine job {match.group(1)}" if match else f"engine transport: {role}"
         launch = {
             "title": title,
             "message": task,
             "modelSelection": {"instanceId": self.provider, "model": model},
-            "runtimeMode": "approval-required",   # <= our approved ceiling
+            "runtimeMode": "approval-required",  # <= our approved ceiling
             # clientRequestId: NOT deduped on this build (stage-11);
             # reattach reconciles, never re-sends.
             "clientRequestId": client_request_id,
@@ -1131,8 +1202,11 @@ class HttpT3Client:
     def status(self, task_id: str) -> dict:
         """Normalize t3_thread_read into the transport outcome shape."""
         args = {
-            "threadId": task_id, "view": "messages", "limit": 5,
-            "runLimit": 2, "maxCharsPerItem": MAX_ASSISTANT_ITEM_CHARS,
+            "threadId": task_id,
+            "view": "messages",
+            "limit": 5,
+            "runLimit": 2,
+            "maxCharsPerItem": MAX_ASSISTANT_ITEM_CHARS,
         }
         out = self._tool("t3_thread_read", args)
         thread = out.get("thread") or {}
@@ -1157,41 +1231,39 @@ class HttpT3Client:
             if page.get("hasMore"):
                 raise TransportUncertain("T3 message pagination exceeded its limit")
         run_id = last_run.get("runId") or thread.get("latestRunId")
-        assistant_items = [i for i in items if isinstance(i, dict)
-                           and i.get("type") == "assistant_message"]
+        assistant_items = [i for i in items if isinstance(i, dict) and i.get("type") == "assistant_message"]
         if run_id:
             # Responses from prior runs cannot satisfy the current job. If an
             # assistant message lacks a run identity, it cannot be bound safely.
             if any(not i.get("runId") for i in assistant_items):
                 raise TransportUncertain("T3 assistant message lacks a run identity")
             assistant_items = [i for i in assistant_items if i["runId"] == run_id]
-        if any(i.get("textTruncated")
-               or (isinstance(i.get("text"), str)
-                   and len(i["text"]) >= MAX_ASSISTANT_ITEM_CHARS)
-               for i in assistant_items):
+        if any(
+            i.get("textTruncated")
+            or (isinstance(i.get("text"), str) and len(i["text"]) >= MAX_ASSISTANT_ITEM_CHARS)
+            for i in assistant_items
+        ):
             raise TransportUncertain("T3 message text is truncated")
         # capture the ASSISTANT's full answer (all assistant messages joined):
         # taking only the last fragment silently drops earlier result content
         # (observed live: arithmetic line lost, only the marker survived).
-        texts = [i.get("text") for i in assistant_items
-                 if isinstance(i.get("text"), str) and i.get("text").strip()]
+        texts = [
+            i.get("text") for i in assistant_items if isinstance(i.get("text"), str) and i.get("text").strip()
+        ]
         summary = "\n".join(texts)
         if len(summary) > MAX_ASSISTANT_SUMMARY_CHARS:
             raise TransportUncertain("T3 assistant response exceeds the result limit")
-        t_status = thread.get("status")     # observed: completed|failed|...
+        t_status = thread.get("status")  # observed: completed|failed|...
         run_status = last_run.get("status")  # observed: completed|failed|...
         pending = int(thread.get("pendingRequestCount") or 0) > 0
         # observed live shapes: thread.status in
         #   {completed, failed, cancelled, interrupted, running, ...};
         # executedModel may be null with the pin carried in thread/run model.
-        terminal = {"completed", "failed", "cancelled", "interrupted",
-                    "rolled_back"}
+        terminal = {"completed", "failed", "cancelled", "interrupted", "rolled_back"}
         # `idle` was never observed live; the host schema lists it, so treat
         # it as in-flight (never terminal) rather than failing a healthy thread.
-        in_flight = {"preparing", "queued", "starting", "running", "waiting",
-                     "idle"}
-        if run_status in in_flight or (t_status in in_flight
-                                       and run_status not in terminal):
+        in_flight = {"preparing", "queued", "starting", "running", "waiting", "idle"}
+        if run_status in in_flight or (t_status in in_flight and run_status not in terminal):
             status = t_status if t_status in in_flight else "running"
         elif t_status == "completed" or run_status == "completed":
             status = "completed"
@@ -1202,8 +1274,7 @@ class HttpT3Client:
         return {
             "taskId": task_id,
             "status": status,
-            "latestTerminalStatus": (run_status if status in (
-                "completed", "failed") else None),
+            "latestTerminalStatus": (run_status if status in ("completed", "failed") else None),
             "summary": summary,
             "model": configured,
             "executedModel": executed,
@@ -1216,5 +1287,4 @@ class HttpT3Client:
         }
 
     def cancel(self, task_id: str, reason: str) -> dict:
-        return self._tool("t3_thread_interrupt",
-                          {"threadId": task_id, "reason": reason})
+        return self._tool("t3_thread_interrupt", {"threadId": task_id, "reason": reason})

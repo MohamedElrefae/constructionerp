@@ -103,15 +103,16 @@ ORCHESTRATOR_ROOT = Path(os.environ.get("ORCHESTRATOR_ROOT", str(REPO_ROOT))).re
 # DASHBOARD_ALLOW_ENGINE_DISPATCH=1 to forward it to run subprocesses.
 FORWARD_ENGINE_DISPATCH_ENV = os.environ.get("DASHBOARD_ALLOW_ENGINE_DISPATCH") == "1"
 SUPERVISOR_SOCKET = (os.environ.get("DASHBOARD_SUPERVISOR_SOCKET") or None) if DASHBOARD_TEST_MODE else None
-SUPERVISOR_TOKEN_FILE = (os.environ.get("DASHBOARD_SUPERVISOR_TOKEN_FILE") or None) if DASHBOARD_TEST_MODE else None
+SUPERVISOR_TOKEN_FILE = (
+    (os.environ.get("DASHBOARD_SUPERVISOR_TOKEN_FILE") or None) if DASHBOARD_TEST_MODE else None
+)
 # Production may expose only the read-only health channel. Run/collect continue
 # to ignore this setting and the contract hard-requires dispatch_enabled=false.
 MANAGED_SUPERVISOR_CONFIG = os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_CONFIG") or None
 # Test-harness-only dispatch experiment. Production ignores both controls;
 # peer UID/cgroup checks do not attest the listener or service isolation.
 MANAGED_SUPERVISOR_DISPATCH_CONFIG = (
-    (os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None)
-    if DASHBOARD_TEST_MODE else None
+    (os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None) if DASHBOARD_TEST_MODE else None
 )
 MANAGED_SUPERVISOR_DISPATCH_ENABLED = (
     DASHBOARD_TEST_MODE and os.environ.get("DASHBOARD_ENABLE_MANAGED_DISPATCH") == "1"
