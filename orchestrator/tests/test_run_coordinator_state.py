@@ -6,6 +6,7 @@ the state machine, bounds, lease and recovery logic are tested directly.
 
 import asyncio
 import atexit
+import json
 import os
 import shutil
 import sqlite3
@@ -214,6 +215,58 @@ class CoordinatorStateMachineTests(unittest.TestCase):
             conn.execute("SELECT 1 FROM action_log WHERE action_id='unrelated-direct'").fetchone()
         )
         conn.close()
+
+    def _seed_commit_action(self, task_id="t15", action_id="commit-handoff"):
+        conn = self.registry._get_connection()
+        with conn:
+            conn.execute(
+                "INSERT INTO action_log (action_id, task_id, action_type, state, request_hash, manifest_json, "
+                "executor_instance_id, executor_pid, executor_start_time, created_utc, updated_utc) "
+                "VALUES (?,?,'record_commit','COMPLETE','hash','{}','synthetic',1,1,?,?)",
+                (action_id, task_id, "2026-11-17", "2026-11-17"),
+            )
+        conn.close()
+
+    def test_commit_handoff_is_atomic_with_recoverable_run(self):
+        self._seed_commit_action()
+        coord = self._coordinator(self._fake(terminal_after=1))
+        spawn = coord._spawn
+        coord._spawn = lambda task, generation: None  # exit between durable write and loop creation
+        result = self._call(lambda task: coord.start(task, handoff_action_id="commit-handoff"), "t15")
+        self.assertTrue(result["ok"])
+        conn = self.registry._get_connection()
+        manifest = json.loads(
+            conn.execute("SELECT manifest_json FROM action_log WHERE action_id='commit-handoff'").fetchone()[
+                0
+            ]
+        )
+        conn.close()
+        self.assertEqual(manifest["coordinator_handoff_generation"], 1)
+        self.assertEqual(coord.status("t15")["state"], "STARTING")
+        coord._spawn = spawn
+        self._call(coord.recover)
+        self.assertTrue(self._wait(lambda: coord.status("t15")["state"] == "COMPLETED"))
+        count = len(self.calls)
+        retry = self._call(lambda task: coord.start(task, handoff_action_id="commit-handoff"), "t15")
+        self.assertTrue(retry["ok"])
+        self.assertEqual(coord.status("t15")["generation"], 1)
+        self.assertEqual(len(self.calls), count)
+
+    def test_commit_handoff_preserves_uncertain_outcome_guard(self):
+        self._seed_commit_action()
+        self.registry.seed_run("t15", "RECONCILIATION_REQUIRED", 3, os.getpid(), _start_time(os.getpid()))
+        coord = self._coordinator(self._fake(terminal_after=1))
+        result = self._call(lambda task: coord.start(task, handoff_action_id="commit-handoff"), "t15")
+        self.assertFalse(result["ok"])
+        self.assertEqual(coord.status("t15")["generation"], 3)
+        self.assertEqual(self.calls, [])
+
+    def test_commit_handoff_rejects_another_tasks_commit(self):
+        self._seed_commit_action(task_id="t14")
+        coord = self._coordinator(self._fake(terminal_after=1))
+        with self.assertRaises(self.rc.RunBusy):
+            self._call(lambda task: coord.start(task, handoff_action_id="commit-handoff"), "t15")
+        self.assertEqual(coord.status("t15")["state"], "IDLE")
 
     def test_forget_refuses_while_active(self):
         async def slow(path, action_id, generation, lock_fd=None, action="run"):

@@ -343,12 +343,24 @@ class RunCoordinator:
             )
             raise
 
-    def start(self, task_id: str) -> dict[str, Any]:
+    def start(self, task_id: str, *, handoff_action_id: str | None = None) -> dict[str, Any]:
         """Acquire the run lease and start the loop. Idempotent per task."""
         now = _now()
         conn = self._conn()
         try:
             conn.execute("BEGIN IMMEDIATE")
+            handoff_manifest = None
+            if handoff_action_id:
+                action = conn.execute(
+                    "SELECT task_id, action_type, state, manifest_json FROM action_log WHERE action_id=?",
+                    (handoff_action_id,),
+                ).fetchone()
+                if not action or tuple(action[:3]) != (task_id, "record_commit", "COMPLETE"):
+                    raise RunBusy("coordinator handoff requires a completed commit for this task")
+                handoff_manifest = json.loads(action[3] or "{}")
+                if "coordinator_handoff_generation" in handoff_manifest:
+                    conn.rollback()
+                    return {"ok": True, "replayed": True, "run": self.status(task_id)}
             row = conn.execute("SELECT * FROM run_state WHERE task_id = ?", (task_id,)).fetchone()
             if row and row["state"] == "ABANDONED":
                 conn.rollback()
@@ -429,6 +441,12 @@ class RunCoordinator:
                         now,
                         now,
                     ),
+                )
+            if handoff_manifest is not None:
+                handoff_manifest["coordinator_handoff_generation"] = generation
+                conn.execute(
+                    "UPDATE action_log SET manifest_json=? WHERE action_id=?",
+                    (json.dumps(handoff_manifest), handoff_action_id),
                 )
             conn.commit()
         finally:

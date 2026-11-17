@@ -18,3 +18,7 @@ The dashboard and orchestrator remain integration work in progress. This lint co
 - Schema facts and all 12 context checks passed in the review checkout. Candidate namespace tests passed 14 cases using the system interpreter available inside their sandbox.
 - Broader module-by-module checks are supplemental. Some historical harnesses require `/opt/base-fixture`, `/opt/dash-deps` and additional import paths that are absent on this host; those invocations did not pass and are not release evidence. Combined collection also changes global environment, so focused modules were verified separately.
 - Local source-only localization checking reached only missing sibling Frappe/ERPNext checkouts in the temporary review directory; the hosted workflow supplies its pinned sibling trees. Hosted results must be checked on the pushed revision.
+
+## Follow-up hosted review
+
+The hosted review of `fb3a3a7` found two further retry gaps. Scope adoption now rejects cached actions from a different operation, including a matching-body run-start collision. A completed commit retry now ensures its coordinator handoff. The handoff generation is recorded in the existing action manifest in the same SQLite transaction that creates the run; a retry cannot start another generation after that handoff. A crash before spawning the loop leaves a durable STARTING row for normal recovery. Reconciliation guards remain enforced. Authenticated API tests now pass 25 cases; coordinator tests pass 38, including crash-window recovery and retry after completion.

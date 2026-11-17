@@ -517,14 +517,14 @@ async def adopt_scope_endpoint(request: Request) -> Response:
         conn = task_registry._get_connection()
         try:
             existing = conn.execute(
-                "SELECT state, request_hash, response_json, error_message, task_id "
+                "SELECT state, request_hash, response_json, error_message, task_id, action_type "
                 "FROM action_log WHERE action_id = ?",
                 (action_id,),
             ).fetchone()
         finally:
             conn.close()
-        if existing and existing[4] != task_id:
-            return JSONResponse({"detail": "action_id belongs to another task"}, status_code=409)
+        if existing and (existing[4] != task_id or existing[5] != "adopt_scope"):
+            return JSONResponse({"detail": "action_id belongs to another task or action"}, status_code=409)
 
         if existing:
             ex_state, ex_req_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
@@ -940,7 +940,16 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
                     {"detail": "action_id belongs to another task or action"}, status_code=409
                 )
             if existing[0] == "COMPLETE" and existing[1] == request_hash:
-                return JSONResponse({"ok": True, "result": json.loads(existing[2] or "{}"), "replayed": True})
+                response = {"ok": True, "result": json.loads(existing[2] or "{}"), "replayed": True}
+                if action == "record_commit":
+                    run = run_coordinator.start(task_id, handoff_action_id=action_id)
+                    response["run"] = run.get("run")
+                    if not run.get("ok"):
+                        response.update(
+                            ok=False, detail="Commit recorded; coordinator handoff requires attention"
+                        )
+                        return JSONResponse(response, status_code=409)
+                return JSONResponse(response)
             return JSONResponse(
                 {"detail": "action_id already used with a different payload"}, status_code=409
             )
@@ -1008,8 +1017,11 @@ async def _commit_action(request: Request, action: str, include_token: bool) -> 
             finally:
                 conn.close()
             if action == "record_commit":
-                run = run_coordinator.start(task_id)
-                return JSONResponse({"ok": True, "result": res, "run": run.get("run")})
+                run = run_coordinator.start(task_id, handoff_action_id=action_id)
+                return JSONResponse(
+                    {"ok": bool(run.get("ok")), "result": res, "run": run.get("run")},
+                    status_code=200 if run.get("ok") else 409,
+                )
             return JSONResponse({"ok": True, "result": res})
         except Exception as exc:
             conn = task_registry._get_connection()

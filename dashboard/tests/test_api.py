@@ -27,6 +27,9 @@ from dashboard.config import REPO_ROOT
         ("commit-record", "record_commit", "requested", 200),
         ("commit-record", "record_commit", "other", 409),
         ("commit-record", "run_direct", "requested", 409),
+        ("adopt-scope", "adopt_scope", "requested", 200),
+        ("adopt-scope", "run_start", "requested", 409),
+        ("adopt-scope", "adopt_scope", "other", 409),
     ],
 )
 async def test_cached_action_is_bound_to_task_and_action_type(
@@ -43,6 +46,8 @@ async def test_cached_action_is_bound_to_task_and_action_type(
 
     registry = TaskRegistry(tmp_path / "registry.db")
     payload = {"action_id": "review-cached-action"}
+    if endpoint == "adopt-scope":
+        payload.update(scope={"paths": ["src/"]}, implementation_stages=["1"])
     request_hash = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
     conn = registry._get_connection()
     with conn:
@@ -72,6 +77,12 @@ async def test_cached_action_is_bound_to_task_and_action_type(
         )
     conn.close()
     monkeypatch.setattr(appmod, "task_registry", registry)
+    from dashboard.run_coordinator import RunCoordinator
+
+    coordinator = RunCoordinator(registry, instance_id="synthetic-review", locks_dir=tmp_path / "locks")
+    launches = []
+    monkeypatch.setattr(coordinator, "_spawn", lambda task, generation: launches.append((task, generation)))
+    monkeypatch.setattr(appmod, "run_coordinator", coordinator)
     headers, cookies = auth_headers_and_cookies
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(
@@ -80,9 +91,14 @@ async def test_cached_action_is_bound_to_task_and_action_type(
         cookies=cookies,
     ) as client:
         response = await client.post(f"/api/tasks/requested/{endpoint}", json=payload, headers=headers)
+        if endpoint == "commit-record" and expected == 200:
+            retry = await client.post(f"/api/tasks/requested/{endpoint}", json=payload, headers=headers)
+            assert retry.status_code == 200, retry.text
     assert response.status_code == expected, response.text
+    handoff_expected = endpoint == "commit-record" and expected == 200
+    assert launches == ([("requested", 1)] if handoff_expected else [])
     conn = registry._get_connection()
-    assert conn.execute("SELECT COUNT(*) FROM run_state").fetchone()[0] == 0
+    assert conn.execute("SELECT COUNT(*) FROM run_state").fetchone()[0] == int(handoff_expected)
     assert conn.execute("SELECT COUNT(*) FROM action_log").fetchone()[0] == 1
     conn.close()
 
