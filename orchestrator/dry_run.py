@@ -14,7 +14,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from core import WorkflowError, canonical, utc, write_json
+from core import WorkflowError, canonical, require_host_execution, utc, write_json
 
 # Read-only Frappe script. Executed via `bench --site <site> console` with a here-doc.
 # It reads only; it never calls insert/save/rename/delete.
@@ -38,6 +38,8 @@ print("__DRYRUN_REPORT__" + json.dumps(report, ensure_ascii=False))
 
 def _run_read_console(bench_root, site, identities, timeout=300):
     """Execute the read-only Account query and return the parsed report."""
+    # Gate at the side effect, not only at the CLI: library callers are covered too.
+    require_host_execution("ERP dry-run")
     script = _READ_SCRIPT.replace("SITE_IDENTITIES", json.dumps(json.dumps(identities)))
     bench = str(Path(bench_root) / "env" / "bin" / "bench")
     if not Path(bench).exists():

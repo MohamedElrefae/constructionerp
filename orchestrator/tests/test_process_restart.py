@@ -37,7 +37,10 @@ def launch(job):
 e=Engine(config['root'],launcher=launch);e.initialize(config);e.run()
 os._exit(137)
 """)
-    env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[1]))
+    pythonpath = [str(Path(__file__).resolve().parents[1])]
+    if os.environ.get("PYTHONPATH"):
+        pythonpath.append(os.environ["PYTHONPATH"])
+    env = dict(os.environ, PYTHONPATH=os.pathsep.join(pythonpath))
     p = subprocess.run([sys.executable, str(driver), str(config_file), str(worker)], env=env, timeout=10)
     assert p.returncode == 137
     stub = Stub(delayed=True)

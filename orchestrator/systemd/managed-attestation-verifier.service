@@ -1,0 +1,33 @@
+[Unit]
+Description=Fixed-operation root verifier for managed supervisor process identity
+Requires=systemd-tmpfiles-setup.service
+After=local-fs.target systemd-tmpfiles-setup.service
+Before=managed-supervisor.service
+ConditionPathIsDirectory=/run/managed-attestation-verifier
+
+[Service]
+Type=exec
+User=root
+Group=managed-supervisor
+ExecStart=/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_attestation_verifier.py --serve
+Restart=on-failure
+RestartSec=2s
+TimeoutStopSec=5s
+KillMode=control-group
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX
+CapabilityBoundingSet=CAP_SYS_PTRACE
+RestrictSUIDSGID=yes
+LockPersonality=yes
+ReadOnlyPaths=/run/managed-supervisor-attestation
+ReadWritePaths=/run/managed-attestation-verifier
+
+[Install]
+WantedBy=multi-user.target

@@ -25,7 +25,7 @@ def invocation(spec):
     env = os.environ.copy()
     # Agents receive no owner token, DB path override, or trace-export settings.
     for key in list(env):
-        if key.startswith(("WORKFLOW_", "LANGSMITH_", "LANGCHAIN_")):
+        if key.startswith(("WORKFLOW_", "LANGSMITH_", "LANGCHAIN_", "ENGINE_")):
             env.pop(key)
     if tool == "codex":
         write_sandbox = spec["role"] == "builder" or bool(spec.get("neutral_mounts"))

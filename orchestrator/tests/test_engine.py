@@ -98,6 +98,96 @@ def test_happy_path_owner_gate_exports_not_authority(configured):
     e.close()
 
 
+def test_managed_builder_preparation_persists_scoped_source_packet(configured, monkeypatch):
+    """The prepared job carries the same bounded source the model will receive."""
+    from t3_supervisor_client import ManagedSupervisorLauncher
+
+    class RefusingManagedLauncher(ManagedSupervisorLauncher):
+        def __init__(self):
+            pass
+
+        def preflight(self, job):
+            raise WorkflowError("test stops before dispatch")
+
+    root, config = configured
+    (root / "AGENTS.md").write_text("Approved instruction snapshot for the test.\n")
+    (root / "SESSION_MEMORY.md").write_text("Approved memory snapshot for the test.\n")
+    git(root, "add", "AGENTS.md", "SESSION_MEMORY.md")
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "approved builder context")
+    config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+    config["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md"]
+    config["roles"]["builder"]["prompt_sha256"] = bytes_hash(
+        (root / "docs/ai/roles/builder.md").read_bytes()
+    )
+    engine = Engine(root, launcher=Stub())
+    try:
+        engine.initialize(config)
+        engine.run()
+        engine.launcher = RefusingManagedLauncher()
+        monkeypatch.setattr(engine, "_capture_builder_baseline", lambda job_id: {
+            "artifact": "/synthetic/baseline", "manifest_sha256": "a" * 64,
+        })
+        with pytest.raises(WorkflowError, match="test stops before dispatch"):
+            engine.approve(plan_token(engine))
+        rows = engine.store.conn.execute(
+            "SELECT job_id FROM workflow_jobs WHERE json_extract(data, '$.role') = 'builder'"
+        ).fetchall()
+        assert len(rows) == 1
+        spec = engine.store.job(rows[0][0])["spec"]
+        packet = spec["builder_source_packet"]
+        assert {item["path"] for item in packet["files"]} == {"old", "mode", "new"}
+        assert "BUILDER FILE RETURN CONTRACT" in spec["prompt"]
+        assert "Owner-approved plan text" in spec["prompt"]
+        assert "Synthetic plan with explicit requirements" in spec["prompt"]
+        assert "Owner-approved contract text (config plan_path; sha256=" in spec["prompt"]
+        assert "Approved bootstrap plan" in spec["prompt"]
+        assert "Frozen candidate binding (candidate metadata and manifest)" in spec["prompt"]
+        assert "Owner-approved read-only context snapshots" in spec["prompt"]
+        assert "Approved instruction snapshot for the test." in spec["prompt"]
+        assert "Approved memory snapshot for the test." in spec["prompt"]
+        assert "Do not claim to have read any path or external context that is not included" in spec["prompt"]
+        assert "Immutable builder source packet" in spec["prompt"]
+        packet_text = spec["prompt"].split("Immutable builder source packet (data):\n", 1)[1]
+        assert json.loads(packet_text) == packet
+    finally:
+        engine.close()
+
+
+def test_managed_builder_refuses_context_that_transport_would_rewrite(configured, monkeypatch):
+    """A snapshot that cannot be delivered byte-for-byte is not silently redacted."""
+    from t3_supervisor_client import ManagedSupervisorLauncher
+
+    class RefusingManagedLauncher(ManagedSupervisorLauncher):
+        def __init__(self):
+            pass
+
+        def preflight(self, job):
+            raise WorkflowError("unexpected dispatch")
+
+    root, config = configured
+    (root / "AGENTS.md").write_text('Use cache at "/home/user/private/cache".\n')
+    (root / "SESSION_MEMORY.md").write_text("No additional approved memory.\n")
+    git(root, "add", "AGENTS.md", "SESSION_MEMORY.md")
+    git(root, "-c", "core.hooksPath=/dev/null", "commit", "-m", "approved redacted context fixture")
+    config["base_commit"] = git(root, "rev-parse", "HEAD").decode().strip()
+    config["read_only_context_paths"] = ["AGENTS.md", "SESSION_MEMORY.md"]
+    config["roles"]["builder"]["prompt_sha256"] = bytes_hash(
+        (root / "docs/ai/roles/builder.md").read_bytes()
+    )
+    engine = Engine(root, launcher=Stub())
+    try:
+        engine.initialize(config)
+        engine.run()
+        engine.launcher = RefusingManagedLauncher()
+        monkeypatch.setattr(engine, "_capture_builder_baseline", lambda job_id: {
+            "artifact": "/synthetic/baseline", "manifest_sha256": "a" * 64,
+        })
+        with pytest.raises(WorkflowError, match="context would be altered by T3 path redaction"):
+            engine.approve(plan_token(engine))
+    finally:
+        engine.close()
+
+
 def test_restart_reattaches_without_redispatch_and_duplicate_result(configured):
     root, config = configured
     stub = Stub(delayed=True)

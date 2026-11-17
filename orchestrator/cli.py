@@ -3,13 +3,14 @@
 import argparse
 import importlib.metadata
 import json
+import os
 import subprocess
 import sys
 import time
 from pathlib import Path
 
 from candidates import git
-from core import WorkflowError, bytes_hash, canonical, execution_lock, within
+from core import WorkflowError, bytes_hash, canonical, execution_lock, require_host_execution, within
 from engine import Engine
 from packaging.requirements import Requirement
 from preflight import (
@@ -33,7 +34,7 @@ def doctor(root, expected_branch=None):
     root = Path(root).resolve()
     cfg = None
     if (root / "orchestrator/var/checkpoints.db").exists():
-        e = Engine(root)
+        e = make_engine(root)
         try:
             cfg = e.config
             if cfg:
@@ -76,6 +77,34 @@ def doctor(root, expected_branch=None):
         "checks": checks,
         "native_dispatch_requires_host_metadata_access": True,
     }
+
+
+def make_engine(root, *, transport_factory=None, min_poll_interval_s=5.0):
+    """Construct the engine. The T3 production backend is refused unconditionally.
+
+    No production T3 transport exists in this build: there is no real T3 or
+    provider access. The only way to obtain a T3 launcher is explicit,
+    in-process injection by tests (`transport_factory=`), which production
+    code never passes. Native construction is unchanged and stays behind the
+    dispatch gate.
+    """
+    backend = os.environ.get("ENGINE_T3_BACKEND", "")
+    if not backend:
+        return Engine(root)
+    if backend != "t3":
+        raise WorkflowError(f"Unsupported ENGINE_T3_BACKEND: {backend!r}")
+    from t3_dispatch import T3DispatchLauncher
+
+    if transport_factory is None:
+        # No production transport exists in this build. A refusing launcher is
+        # still constructed so read-only status/doctor keep working; dispatch
+        # (preflight) refuses unconditionally. No env, marker or namespace grants
+        # it, and injection is a test-only Python seam, not a boundary.
+        return Engine(root, launcher=T3DispatchLauncher(
+            root, transport_factory=None, allow_dispatch=False))
+    return Engine(root, launcher=T3DispatchLauncher(
+        root, transport_factory=transport_factory, allow_dispatch=True,
+        min_poll_interval_s=min_poll_interval_s))
 
 
 def main():
@@ -169,7 +198,7 @@ def main():
             if args.command == "doctor":
                 result = doctor(root)
             else:
-                e = Engine(root)
+                e = make_engine(root)
                 try:
                     if args.command == "init":
                         if args.adopt_historical:
@@ -208,6 +237,10 @@ def main():
                     elif args.command == "status":
                         result = e.view()
                     elif args.command == "run":
+                        if args.dry_run or args.import_erp:
+                            require_host_execution(
+                                "ERP dry-run" if args.dry_run else "ERP import"
+                            )
                         if args.backup_to:
                             e.store.backup(args.backup_to)
                             result = {"ok": True, "backup": str(args.backup_to.resolve())}
@@ -279,7 +312,7 @@ def main():
         ):
             time.sleep(0.5)
             with execution_lock(root / "orchestrator/var/execution.lock", timeout=10):
-                e = Engine(root)
+                e = make_engine(root)
                 try:
                     result = e.run()
                 finally:

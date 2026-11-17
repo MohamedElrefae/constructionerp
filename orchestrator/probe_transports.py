@@ -8,6 +8,12 @@ from pathlib import Path
 
 
 def main():
+    # Dispatch-class: this probe spawns a real worker. Fail closed unless the
+    # operator acknowledges native host dispatch (same token as the engine gate).
+    from core import require_native_dispatch
+
+    require_native_dispatch(None, "Native transport probe")
+
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)

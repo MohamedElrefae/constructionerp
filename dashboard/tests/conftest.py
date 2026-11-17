@@ -11,15 +11,42 @@ if str(REPO_ROOT) not in sys.path:
 
 import tempfile
 
+from dashboard.tests import _test_root_state
+
+_TEST_ROOT_PREFIX = "dashboard_test_root_"
+
+
+def _prepare_test_root() -> Path:
+    """Create one fresh isolated root per test process.
+
+    Pytest loads this file as ``conftest``, while some dashboard test modules
+    also import ``dashboard.tests.conftest`` directly. That executes this
+    module body a second time. The first execution creates a new
+    ``mkdtemp`` root and records it in a process-local module; duplicate
+    executions reuse that exact object. ``DASHBOARD_TEST_ROOT`` is never read
+    for reuse, so an inherited environment cannot redirect writes or chmod
+    into a pre-existing directory.
+    """
+    root = _test_root_state.ROOT
+    if root is not None:
+        return root
+
+    root = Path(tempfile.mkdtemp(prefix=_TEST_ROOT_PREFIX)).resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    os.chmod(root, 0o700)
+    var_dir = root / "dashboard" / "var"
+    var_dir.mkdir(parents=True, exist_ok=True)
+    os.chmod(root / "dashboard", 0o700)
+    os.chmod(var_dir, 0o700)
+    _test_root_state.ROOT = root
+    return root
+
+
 # Set test environment defaults with isolated runtime storage. These must use
 # the configuration module's supported test-mode contract before dashboard.app
 # is imported by test modules.
-TEST_ROOT = Path(tempfile.mkdtemp(prefix="dashboard_test_root_"))
-os.chmod(TEST_ROOT, 0o700)
+TEST_ROOT = _prepare_test_root()
 TEST_VAR_DIR = TEST_ROOT / "dashboard" / "var"
-TEST_VAR_DIR.mkdir(parents=True)
-os.chmod(TEST_ROOT / "dashboard", 0o700)
-os.chmod(TEST_VAR_DIR, 0o700)
 os.environ["DASHBOARD_TEST_MODE"] = "1"
 os.environ["DASHBOARD_TEST_ROOT"] = str(TEST_ROOT)
 os.environ["DASHBOARD_HOST"] = "127.0.0.1"

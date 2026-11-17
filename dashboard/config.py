@@ -96,6 +96,26 @@ BASE_ALLOWED_ROOTS = [
 
 # Orchestrator paths
 ORCHESTRATOR_ROOT = Path(os.environ.get("ORCHESTRATOR_ROOT", str(REPO_ROOT))).resolve()
+# Test-only until a real supervisor/arming launcher exists: production must not
+# select the synthetic supervisor through environment/config.
+# A dashboard click must not inherit a host-level dispatch ack implicitly: the
+# native ack was designed for an explicit CLI invocation. Set
+# DASHBOARD_ALLOW_ENGINE_DISPATCH=1 to forward it to run subprocesses.
+FORWARD_ENGINE_DISPATCH_ENV = os.environ.get("DASHBOARD_ALLOW_ENGINE_DISPATCH") == "1"
+SUPERVISOR_SOCKET = (os.environ.get("DASHBOARD_SUPERVISOR_SOCKET") or None) if DASHBOARD_TEST_MODE else None
+SUPERVISOR_TOKEN_FILE = (os.environ.get("DASHBOARD_SUPERVISOR_TOKEN_FILE") or None) if DASHBOARD_TEST_MODE else None
+# Production may expose only the read-only health channel. Run/collect continue
+# to ignore this setting and the contract hard-requires dispatch_enabled=false.
+MANAGED_SUPERVISOR_CONFIG = os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_CONFIG") or None
+# Test-harness-only dispatch experiment. Production ignores both controls;
+# peer UID/cgroup checks do not attest the listener or service isolation.
+MANAGED_SUPERVISOR_DISPATCH_CONFIG = (
+    (os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None)
+    if DASHBOARD_TEST_MODE else None
+)
+MANAGED_SUPERVISOR_DISPATCH_ENABLED = (
+    DASHBOARD_TEST_MODE and os.environ.get("DASHBOARD_ENABLE_MANAGED_DISPATCH") == "1"
+)
 ORCHESTRATOR_PYTHON = Path(
     os.environ.get(
         "ORCHESTRATOR_PYTHON", str(ORCHESTRATOR_ROOT / "orchestrator" / ".venv" / "bin" / "python")
@@ -115,6 +135,12 @@ LOGIN_RATE_LIMIT_WINDOW = 300  # 5 minutes
 # Subprocess client limits
 SUBPROCESS_TIMEOUT_SECONDS = 10.0
 MAX_CONCURRENT_SUBPROCESSES = 4
+
+# Durable run coordinator (server-side; the browser only observes)
+RUN_MAX_PASSES = int(os.environ.get("DASHBOARD_RUN_MAX_PASSES", "200"))
+RUN_MAX_SECONDS = float(os.environ.get("DASHBOARD_RUN_MAX_SECONDS", "3600"))
+RUN_POLL_BASE_SECONDS = float(os.environ.get("DASHBOARD_RUN_POLL_BASE", "0.5"))
+RUN_POLL_CAP_SECONDS = float(os.environ.get("DASHBOARD_RUN_POLL_CAP", "8.0"))
 
 # Scrypt parameters (explicit and robust)
 SCRYPT_N = 16384

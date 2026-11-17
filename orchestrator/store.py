@@ -28,6 +28,8 @@ class Store:
             CREATE TABLE IF NOT EXISTS workflow_grants (
                 token_id TEXT PRIMARY KEY, gate_id TEXT UNIQUE NOT NULL,
                 status TEXT NOT NULL, data TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS pending_builder_artifacts (
+                job_id TEXT PRIMARY KEY, data TEXT NOT NULL, created_utc TEXT NOT NULL);
         """)
         self.conn.commit()
 
@@ -79,6 +81,36 @@ class Store:
                     "SELECT * FROM workflow_events WHERE seq>? ORDER BY seq", (after,)
                 )
             ]
+
+    def put_pending_builder_artifact(self, job_id, payload):
+        """Persist detached artifact review metadata outside the foldable event log."""
+        body = canonical(payload).decode()
+        with self._lock:
+            row = self.conn.execute(
+                "SELECT data FROM pending_builder_artifacts WHERE job_id=?", (job_id,)
+            ).fetchone()
+            if row:
+                if row["data"] != body:
+                    raise WorkflowError("Pending builder artifact identity conflicts")
+                return
+            with self.conn:
+                self.conn.execute(
+                    "INSERT INTO pending_builder_artifacts VALUES (?,?,?)", (job_id, body, utc())
+                )
+
+    def pending_builder_artifact(self, job_id):
+        with self._lock:
+            row = self.conn.execute(
+                "SELECT data,created_utc FROM pending_builder_artifacts WHERE job_id=?", (job_id,)
+            ).fetchone()
+            return dict(json.loads(row["data"]), created_utc=row["created_utc"]) if row else None
+
+    def pending_builder_artifacts(self):
+        with self._lock:
+            return [dict(json.loads(row["data"]), created_utc=row["created_utc"])
+                    for row in self.conn.execute(
+                        "SELECT data,created_utc FROM pending_builder_artifacts ORDER BY created_utc,job_id"
+                    )]
 
     def job(self, job_id):
         with self._lock:

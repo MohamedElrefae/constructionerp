@@ -1,0 +1,33 @@
+[Unit]
+Description=Managed T3 worker in the restricted network namespace
+Requires=managed-t3-netns.service managed-t3-egress.service
+After=managed-t3-netns.service managed-t3-egress.service
+BindsTo=managed-t3-netns.service
+PartOf=managed-t3-netns.service
+
+[Service]
+Type=exec
+User=managed-t3
+Group=managed-t3-egress
+SupplementaryGroups=managed-t3-egress
+NetworkNamespacePath=/run/netns/managed-t3
+StateDirectory=managed-t3
+StateDirectoryMode=0700
+UMask=0077
+ExecStart=/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/t3_private_proxy_runner.py --state-dir=/var/lib/managed-t3 --upstream-socket=/run/managed-t3-egress/broker.sock --proxy-port=3128 -- /usr/local/bin/t3 serve --mode=desktop --base-dir=/var/lib/managed-t3 --host=127.0.0.1 --port=46687 --no-browser
+Restart=on-failure
+RestartSec=3s
+TimeoutStopSec=20s
+KillMode=control-group
+SendSIGKILL=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/managed-t3
+ReadOnlyPaths=/run/managed-t3-egress

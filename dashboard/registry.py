@@ -300,6 +300,72 @@ def init_registry_db(db_path: Path | str = REGISTRY_DB_PATH) -> None:
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_provenance_task_id ON task_context_provenance(task_id);"
             )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS run_state (
+                    task_id TEXT PRIMARY KEY,
+                    state TEXT NOT NULL,
+                    desired TEXT NOT NULL,
+                    generation INTEGER NOT NULL DEFAULT 0,
+                    owner_instance_id TEXT,
+                    owner_pid INTEGER,
+                    owner_start_time INTEGER,
+                    pass_count INTEGER NOT NULL DEFAULT 0,
+                    last_action_id TEXT,
+                    last_pass_index INTEGER,
+                    last_result_json TEXT,
+                    last_error TEXT,
+                    pause_reason TEXT,
+                    created_utc TEXT NOT NULL,
+                    updated_utc TEXT NOT NULL
+                );
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS run_passes (
+                    task_id TEXT NOT NULL,
+                    generation INTEGER NOT NULL,
+                    pass_index INTEGER NOT NULL,
+                    action_id TEXT NOT NULL,
+                    state TEXT NOT NULL,
+                    result_json TEXT,
+                    error TEXT,
+                    started_utc TEXT NOT NULL,
+                    updated_utc TEXT NOT NULL,
+                    PRIMARY KEY (task_id, generation, pass_index)
+                );
+                """
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_run_passes_task ON run_passes(task_id, generation);"
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS run_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id TEXT NOT NULL,
+                    generation INTEGER NOT NULL,
+                    event TEXT NOT NULL,
+                    detail TEXT,
+                    actor TEXT,
+                    created_utc TEXT NOT NULL
+                );
+                """
+            )
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_run_events_task ON run_events(task_id, id);"
+            )
+            for _col, _decl in (
+                ("stop_requested_utc", "TEXT"),
+                ("abandoned_utc", "TEXT"),
+                ("abandoned_by", "TEXT"),
+                ("remote_state", "TEXT"),
+            ):
+                try:
+                    conn.execute(f"ALTER TABLE run_state ADD COLUMN {_col} {_decl}")
+                except sqlite3.OperationalError:
+                    pass
     finally:
         conn.close()
 

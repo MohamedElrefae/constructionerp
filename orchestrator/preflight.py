@@ -111,13 +111,16 @@ def check_binary(role: str, pin: dict | None) -> CheckResult:
     if not bin_path.exists():
         return CheckResult(f"binary:{role}", False, f"Binary not found: {bin_path}")
     try:
+        # Bounded control: never execute a binary whose bytes differ from the pin.
+        # Re-hash after execution detects a swap; it is detection, not atomicity.
+        expected = pin.get("binary_sha256", "")
+        if bytes_hash(bin_path.read_bytes()) != expected:
+            return CheckResult(f"binary:{role}", False, "Binary hash mismatch (not executed)")
         r = subprocess.run([str(bin_path), "--version"], capture_output=True, text=True, timeout=20)
-        ok = (
-            r.returncode == 0
-            and pin.get("version", "") in r.stdout
-            and bytes_hash(bin_path.read_bytes()) == pin.get("binary_sha256", "")
-        )
-        return CheckResult(f"binary:{role}", ok, "Version or hash mismatch" if not ok else "")
+        if bytes_hash(bin_path.read_bytes()) != expected:
+            return CheckResult(f"binary:{role}", False, "Binary changed during execution")
+        ok = r.returncode == 0 and pin.get("version", "") in r.stdout
+        return CheckResult(f"binary:{role}", ok, "Version mismatch" if not ok else "")
     except Exception as exc:
         return CheckResult(f"binary:{role}", False, str(exc))
 
