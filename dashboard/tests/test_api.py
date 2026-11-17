@@ -1,6 +1,7 @@
 """API endpoint integration tests verifying read-only scope, auth, and contract."""
 
 import ast
+import hashlib
 import json
 from pathlib import Path
 
@@ -11,6 +12,55 @@ from dashboard.app import app
 from dashboard.auth import auth_store, session_manager
 from dashboard.bootstrap import ENGINEERING_CONTEXT_PATHS, ENGINEERING_STARTUP_POLICY
 from dashboard.config import REPO_ROOT
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("endpoint,stored_type,stored_task,expected", [
+    ("run-start", "run_start", "requested", 200),
+    ("run-start", "run_start", "other", 409),
+    ("run-start", "run_direct", "requested", 409),
+    ("run", "run_direct", "requested", 200),
+    ("run", "run_direct", "other", 409),
+    ("run", "run_start", "requested", 409),
+])
+async def test_cached_run_action_is_bound_to_task_and_action_type(
+    tmp_path, monkeypatch, auth_headers_and_cookies,
+    endpoint, stored_type, stored_task, expected,
+):
+    import dashboard.app as appmod
+    from dashboard.registry import TaskRegistry
+
+    registry = TaskRegistry(tmp_path / "registry.db")
+    payload = {"action_id": "review-cached-action"}
+    request_hash = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    conn = registry._get_connection()
+    with conn:
+        conn.execute(
+            "INSERT INTO registered_tasks (task_id, work_item, worktree_path, "
+            "task_branch, registered_utc) VALUES (?,?,?,?,?)",
+            ("requested", "synthetic-review", str(tmp_path / "root"), "test", "2026-11-17"),
+        )
+        conn.execute(
+            "INSERT INTO action_log (action_id, task_id, action_type, state, request_hash, "
+            "manifest_json, response_json, executor_instance_id, executor_pid, "
+            "executor_start_time, created_utc, updated_utc) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            (payload["action_id"], stored_task, stored_type, "COMPLETE", request_hash,
+             "{}", '{"generation":1}', "synthetic", 1, 1, "2026-11-17", "2026-11-17"),
+        )
+    conn.close()
+    monkeypatch.setattr(appmod, "task_registry", registry)
+    headers, cookies = auth_headers_and_cookies
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(
+        transport=transport, base_url="https://127.0.0.1:8080", cookies=cookies,
+    ) as client:
+        response = await client.post(f"/api/tasks/requested/{endpoint}",
+                                     json=payload, headers=headers)
+    assert response.status_code == expected, response.text
+    conn = registry._get_connection()
+    assert conn.execute("SELECT COUNT(*) FROM run_state").fetchone()[0] == 0
+    assert conn.execute("SELECT COUNT(*) FROM action_log").fetchone()[0] == 1
+    conn.close()
 
 
 def test_engineering_policy_constants_match_orchestrator_contract():

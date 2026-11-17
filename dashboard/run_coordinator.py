@@ -289,80 +289,42 @@ class RunCoordinator:
 
     def finalize_direct(self, task_id: str, generation: int,
                         result: dict | None = None, error: str | None = None) -> None:
-        self._direct.discard(task_id)
         if error:
             self._set_state(task_id, generation, "RECONCILIATION_REQUIRED",
                             reason="pass_failed", error=error[:1000])
-            return
-        if result and result.get("terminal"):
+        elif result and result.get("terminal"):
             state, reason = self._terminal_state(result)
             self._set_state(task_id, generation, state, reason=reason, result=result)
         else:
             self._set_state(task_id, generation, "PAUSED", reason="single_pass",
                             result=result or {})
+        self._direct.discard(task_id)
 
     async def run_single(self, task_id: str) -> dict[str, Any]:
-        """One engine pass through the same lease/fence as the coordinator.
-
-        Refuses while a run is active, awaiting reconciliation or abandoned, so
-        the legacy single-pass endpoint cannot race a coordinated run.
-        """
-        row = self._row(task_id)
-        if row and (row["state"] in ACTIVE_STATES
-                    or row["state"] in ("RECONCILIATION_REQUIRED", "ABANDONED")):
-            return {"ok": False, "conflict": True, "run": self.status(task_id),
-                    "detail": f"Run is {self.status(task_id)['state']}; use the coordinated path"}
-        now = _now()
-        conn = self._conn()
+        """Run one pass under the same tracked lease as a direct HTTP run."""
+        lease = self.acquire_direct(task_id)
+        if not lease.get("ok"):
+            return lease
+        generation = lease["generation"]
         try:
-            conn.execute("BEGIN IMMEDIATE")
-            row = conn.execute(
-                "SELECT * FROM run_state WHERE task_id = ?", (task_id,)
-            ).fetchone()
-            if row and (row["state"] in ACTIVE_STATES
-                        or row["state"] in ("RECONCILIATION_REQUIRED", "ABANDONED")):
-                conn.rollback()
-                return {"ok": False, "conflict": True, "run": self.status(task_id),
-                        "detail": f"Run is {self.status(task_id)['state']}; use the coordinated path"}
-            generation = (row["generation"] if row else 0) + 1
-            owner = self._owner_fields()
-            if row:
-                conn.execute(
-                    "UPDATE run_state SET state='STARTING', desired='RUN', generation=?, "
-                    "owner_instance_id=?, owner_pid=?, owner_start_time=?, pass_count=0, "
-                    "last_pass_index=NULL, last_result_json=NULL, last_error=NULL, "
-                    "pause_reason=NULL, updated_utc=? WHERE task_id=?",
-                    (generation, owner["owner_instance_id"], owner["owner_pid"],
-                     owner["owner_start_time"], now, task_id),
-                )
-            else:
-                conn.execute(
-                    "INSERT INTO run_state (task_id, state, desired, generation, "
-                    "owner_instance_id, owner_pid, owner_start_time, pass_count, "
-                    "last_pass_index, last_result_json, last_error, pause_reason, "
-                    "created_utc, updated_utc) VALUES (?,?,?,?,?,?,?,0,NULL,NULL,NULL,NULL,?,?)",
-                    (task_id, "STARTING", "RUN", generation, owner["owner_instance_id"],
-                     owner["owner_pid"], owner["owner_start_time"], now, now),
-                )
-            conn.commit()
-        finally:
-            conn.close()
-        result = await self._pass(task_id, generation, 0)
-        if result is None:
-            run = self.status(task_id)
-            return {"ok": False, "run": run, "detail": run.get("last_error") or "Run failed"}
-        if result.get("terminal"):
-            state, reason = self._terminal_state(result)
-            self._set_state(task_id, generation, state, reason=reason, result=result)
-        else:
-            self._set_state(task_id, generation, "PAUSED", reason="single_pass", result=result)
-        return {
-            "ok": True,
-            "view": result.get("view"),
-            "terminal": bool(result.get("terminal")),
-            "job_status": result.get("job_status"),
-            "run": self.status(task_id),
-        }
+            result = await self._pass(task_id, generation, 0)
+            if result is None:
+                self._direct.discard(task_id)
+                run = self.status(task_id)
+                return {"ok": False, "run": run,
+                        "detail": run.get("last_error") or "Run failed"}
+            self.finalize_direct(task_id, generation, result=result)
+            return {
+                "ok": True,
+                "view": result.get("view"),
+                "terminal": bool(result.get("terminal")),
+                "job_status": result.get("job_status"),
+                "run": self.status(task_id),
+            }
+        except asyncio.CancelledError:
+            self.finalize_direct(task_id, generation,
+                                 error="Single pass cancelled; outcome requires reconciliation")
+            raise
 
     def start(self, task_id: str) -> dict[str, Any]:
         """Acquire the run lease and start the loop. Idempotent per task."""
@@ -376,15 +338,20 @@ class RunCoordinator:
             if row and row["state"] == "ABANDONED":
                 conn.rollback()
                 return {"ok": False, "abandoned": True, "run": self.status(task_id)}
+            if row and row["state"] == "RECONCILIATION_REQUIRED":
+                conn.rollback()
+                return {"ok": False, "conflict": True, "run": self.status(task_id),
+                        "detail": "Resolve the uncertain outcome before starting another run"}
             if row and row["state"] in ACTIVE_STATES:
                 same_owner = (
                     row["owner_instance_id"] == self.instance_id
-                    and task_id in self._loops
-                    and not self._loops[task_id].done()
+                    and (task_id in self._direct or (
+                        task_id in self._loops and not self._loops[task_id].done()
+                    ))
                 )
-                # A same-instance ACTIVE row without a loop is either a crashed
-                # loop (old) or an in-flight direct pass (recent); only the
-                # recent one is treated as a live lease.
+                # Tracked passes retain their lease while queued or executing,
+                # regardless of heartbeat age. Recent untracked rows and other
+                # live owner instances also refuse takeover.
                 live_lease = self._owner_alive(row) and (
                     row["owner_instance_id"] != self.instance_id
                     or _recent(row["updated_utc"])
@@ -392,6 +359,20 @@ class RunCoordinator:
                 if same_owner or live_lease:
                     conn.rollback()
                     return {"ok": False, "conflict": True, "run": self.status(task_id)}
+                unknown_pass = conn.execute(
+                    "SELECT 1 FROM run_passes WHERE task_id=? AND generation=? "
+                    "AND state='IN_FLIGHT' LIMIT 1", (task_id, row["generation"]),
+                ).fetchone()
+                if unknown_pass:
+                    conn.execute(
+                        "UPDATE run_state SET state='RECONCILIATION_REQUIRED', "
+                        "pause_reason='pass_outcome_unknown', updated_utc=? "
+                        "WHERE task_id=? AND generation=?",
+                        (now, task_id, row["generation"]),
+                    )
+                    conn.commit()
+                    return {"ok": False, "conflict": True, "run": self.status(task_id),
+                            "detail": "Resolve the uncertain pass before starting another run"}
                 # Same instance but no live loop: a crashed loop, not a live owner.
                 logger.warning("taking over orphaned run loop for %s", task_id)
             generation = (row["generation"] if row else 0) + 1
@@ -785,7 +766,9 @@ class RunCoordinator:
                 "AND state NOT IN ('STARTING','RUNNING','RECONCILIATION_REQUIRED','ABANDONED')",
                 (task_id,),
             )
-            if cur.rowcount != 1:
+            if cur.rowcount != 1 and conn.execute(
+                "SELECT 1 FROM run_state WHERE task_id=?", (task_id,),
+            ).fetchone():
                 conn.rollback()
                 raise RunBusy(f"run {task_id} became active during unregister")
             conn.execute("DELETE FROM run_passes WHERE task_id = ?", (task_id,))

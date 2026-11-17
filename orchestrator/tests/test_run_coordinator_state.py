@@ -250,14 +250,22 @@ class CoordinatorStateMachineTests(unittest.TestCase):
         winners = [r for r in results if r == ["t18"]]
         self.assertEqual(len(winners), 1, results)
 
-    def test_unknown_pass_then_operator_resume(self):
+    def test_unknown_pass_requires_resolution_before_operator_resume(self):
         coord = self._coordinator(self._fake(terminal_after=1))
         self.registry.seed_run(
             "t19", state="RUNNING", generation=1, owner_pid=_dead_pid(), owner_start=1
         )
         self.registry.seed_pass("t19", 1, 0, "coord-t19-1-0", "IN_FLIGHT")
+        conn = self.registry._get_connection()
+        with conn:
+            conn.execute("UPDATE run_state SET pass_count=1 WHERE task_id=?", ("t19",))
+        conn.close()
         self._call(coord.recover)
         self.assertEqual(coord.status("t19")["state"], "RECONCILIATION_REQUIRED")
+        self.assertFalse(self._call(coord.start, "t19")["ok"])
+        resolved = self.loop.run_until_complete(coord.resolve("t19"))
+        self.assertTrue(resolved["resolved"], resolved)
+        self.assertEqual(coord.status("t19")["generation"], 1)
         res = self._call(coord.start, "t19")
         self.assertTrue(res["ok"])
         self.assertTrue(self._wait(lambda: coord.status("t19")["state"] == "COMPLETED"))
@@ -323,6 +331,102 @@ class CoordinatorStateMachineTests(unittest.TestCase):
                               result={"view": {"status": "DRAFT"}, "terminal": False,
                                       "job_status": {}})
         self.assertEqual(coord.status("t28")["state"], "PAUSED")
+
+    def test_start_cannot_bypass_required_reconciliation(self):
+        coord = self._coordinator(self._fake(terminal_after=1))
+        self.registry.seed_run(
+            "t28", state="RECONCILIATION_REQUIRED", generation=4,
+            owner_pid=_dead_pid(), owner_start=1,
+        )
+        self.registry.seed_pass("t28", 4, 0, "coord-t28-4-0", "IN_FLIGHT")
+        result = self._call(coord.start, "t28")
+        self.assertFalse(result["ok"], result)
+        self.assertEqual(coord.status("t28")["state"], "RECONCILIATION_REQUIRED")
+        self.assertEqual(coord.status("t28")["generation"], 4)
+        self.assertEqual(coord._last_pass("t28", 4)["state"], "IN_FLIGHT")
+        self.assertEqual(self.calls, [])
+
+    def test_never_started_task_can_be_forgotten(self):
+        coord = self._coordinator(self._fake(terminal_after=1))
+        self.loop.run_until_complete(coord.forget("t28"))
+        self.assertEqual(coord.status("t28")["state"], "IDLE")
+        self.assertEqual(self.calls, [])
+
+    def test_start_cannot_take_over_an_aged_live_direct_lease(self):
+        coord = self._coordinator(self._fake(terminal_after=1))
+        lease = coord.acquire_direct("t28")
+        conn = self.registry._get_connection()
+        with conn:
+            conn.execute("UPDATE run_state SET updated_utc=? WHERE task_id=?",
+                         ("2000-01-01T00:00:00Z", "t28"))
+        conn.close()
+        result = self._call(coord.start, "t28")
+        self.assertFalse(result["ok"], result)
+        self.assertEqual(coord.status("t28")["generation"], lease["generation"])
+        self.assertEqual(self.calls, [])
+        coord.finalize_direct("t28", lease["generation"], result={"terminal": False})
+        self.assertTrue(self._call(coord.start, "t28")["ok"])
+
+    def test_start_preserves_unknown_pass_of_dead_owner(self):
+        coord = self._coordinator(self._fake(terminal_after=1))
+        self.registry.seed_run(
+            "t28", state="RUNNING", generation=4,
+            owner_pid=_dead_pid(), owner_start=1,
+        )
+        self.registry.seed_pass("t28", 4, 0, "coord-t28-4-0", "IN_FLIGHT")
+        result = self._call(coord.start, "t28")
+        self.assertFalse(result["ok"], result)
+        self.assertEqual(coord.status("t28")["state"], "RECONCILIATION_REQUIRED")
+        self.assertEqual(coord.status("t28")["generation"], 4)
+        self.assertEqual(coord._last_pass("t28", 4)["state"], "IN_FLIGHT")
+        self.assertEqual(self.calls, [])
+
+    def test_single_pass_keeps_aged_lease_until_completion(self):
+        async def scenario():
+            entered, release = asyncio.Event(), asyncio.Event()
+
+            async def held(*args):
+                entered.set()
+                await release.wait()
+                return {"terminal": False, "view": {}, "job_status": {}}
+
+            coord = self._coordinator(held)
+            pending = asyncio.create_task(coord.run_single("t28"))
+            await entered.wait()
+            conn = self.registry._get_connection()
+            with conn:
+                conn.execute("UPDATE run_state SET updated_utc=? WHERE task_id=?",
+                             ("2000-01-01T00:00:00Z", "t28"))
+            conn.close()
+            refused = coord.start("t28")
+            release.set()
+            completed = await pending
+            self.assertFalse(refused["ok"], refused)
+            self.assertTrue(completed["ok"], completed)
+            self.assertEqual(coord.status("t28")["state"], "PAUSED")
+            self.assertNotIn("t28", coord._direct)
+
+        self.loop.run_until_complete(scenario())
+
+    def test_cancelled_single_pass_requires_reconciliation(self):
+        async def scenario():
+            entered = asyncio.Event()
+
+            async def held(*args):
+                entered.set()
+                await asyncio.Event().wait()
+
+            coord = self._coordinator(held)
+            pending = asyncio.create_task(coord.run_single("t28"))
+            await entered.wait()
+            pending.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await pending
+            self.assertEqual(coord.status("t28")["state"], "RECONCILIATION_REQUIRED")
+            self.assertFalse(coord.start("t28")["ok"])
+            self.assertNotIn("t28", coord._direct)
+
+        self.loop.run_until_complete(scenario())
 
     def test_abandon_first_blocks_resolve(self):
         coord = self._coordinator(self._fake(terminal_after=1))

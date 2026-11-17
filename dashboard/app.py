@@ -736,7 +736,7 @@ async def run_task_endpoint(request: Request) -> Response:
         conn = task_registry._get_connection()
         try:
             existing = conn.execute(
-                "SELECT state, request_hash, response_json, error_message, task_id "
+                "SELECT state, request_hash, response_json, error_message, task_id, action_type "
                 "FROM action_log WHERE action_id = ?",
                 (action_id,),
             ).fetchone()
@@ -744,6 +744,8 @@ async def run_task_endpoint(request: Request) -> Response:
             conn.close()
         if existing and existing[4] != task_id:
             return JSONResponse({"detail": "action_id belongs to another task"}, status_code=409)
+        if existing and existing[5] != "run_direct":
+            return JSONResponse({"detail": "action_id belongs to another action type"}, status_code=409)
         if existing:
             ex_state, ex_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
             if ex_state == "COMPLETE":
@@ -1028,12 +1030,17 @@ async def run_start_endpoint(request: Request) -> Response:
     conn = task_registry._get_connection()
     try:
         existing = conn.execute(
-            "SELECT state, request_hash, response_json FROM action_log WHERE action_id = ?",
+            "SELECT state, request_hash, response_json, task_id, action_type "
+            "FROM action_log WHERE action_id = ?",
             (action_id,),
         ).fetchone()
     finally:
         conn.close()
     if existing:
+        if existing[3] != task_id or existing[4] != "run_start":
+            return JSONResponse(
+                {"detail": "action_id belongs to another task or action type"}, status_code=409,
+            )
         ex_state, ex_hash, ex_resp = existing[0], existing[1], existing[2]
         if ex_state == "COMPLETE":
             if ex_hash != request_hash:
