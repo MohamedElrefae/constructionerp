@@ -1,0 +1,40 @@
+[Unit]
+Description=Managed supervisor service candidate
+Requires=managed-t3-netns.service managed-t3.service managed-attestation-verifier.service systemd-tmpfiles-setup.service
+After=managed-t3-netns.service managed-t3.service managed-attestation-verifier.service systemd-tmpfiles-setup.service
+BindsTo=managed-t3.service managed-t3-netns.service managed-attestation-verifier.service
+PartOf=managed-t3.service managed-t3-netns.service
+ConditionPathExists=/etc/managed-supervisor/dispatch-reviewed.enable
+
+[Service]
+Type=exec
+User=managed-supervisor
+Group=managed-dashboard
+SupplementaryGroups=managed-supervisor
+RuntimeDirectory=managed-supervisor
+RuntimeDirectoryMode=2750
+StateDirectory=managed-supervisor
+StateDirectoryMode=0700
+NetworkNamespacePath=/run/netns/managed-t3
+UMask=0077
+Environment=NO_PROXY=localhost,127.0.0.1
+Environment=no_proxy=localhost,127.0.0.1
+UnsetEnvironment=HTTP_PROXY HTTPS_PROXY ALL_PROXY http_proxy https_proxy all_proxy
+ExecStart=/usr/bin/python3 /opt/managed-supervisor/orchestrator/managed_supervisor_service.py --dispatch-config=/etc/managed-supervisor/service.json
+ExecStartPost=+/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py --publish
+ExecStopPost=+/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_supervisor_attestation_hook.py --remove
+Restart=on-failure
+RestartSec=3s
+TimeoutStopSec=15s
+KillMode=control-group
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/run/managed-supervisor /run/managed-supervisor-attestation /var/lib/managed-supervisor
+ReadOnlyPaths=/etc/managed-supervisor /run/managed-attestation-verifier

@@ -6,14 +6,17 @@ Middleware order:
 2. OriginAndCSRFMiddleware (validates loopback Origin/Referer and double-submit CSRF)
 3. SessionAuthenticationMiddleware (authenticates session cookie)
 
-Strictly read-only workflow endpoints:
+Read-only projections plus explicit, fenced mutating actions:
+- bootstrap, adopt_scope, approve_plan and run (all session+CSRF+fence gated).
 - No pause, resume, reset_budget, or stage4 dispatching endpoints.
 """
 
 import fcntl
 import hashlib
 import json
+import logging
 import os
+import re
 import secrets
 import uuid
 from contextlib import asynccontextmanager
@@ -58,6 +61,7 @@ from dashboard.config import (
 from dashboard.coordinator import TaskCoordinator
 from dashboard.process import get_process_start_time, is_process_alive_with_start_time
 from dashboard.registry import TaskRegistry, validate_and_bind_canonical_registry
+from dashboard.run_coordinator import PASS_ACTION_PREFIX, RunBusy, RunCoordinator
 from dashboard.security import SecurityError, read_authoritative_stage4_manifest
 from dashboard.subprocess_client import (
     SubprocessClientError,
@@ -73,12 +77,15 @@ from dashboard.subprocess_client import (
     query_evidence_list,
     query_findings,
     query_settings,
+    query_supervisor_health,
+    run_action,
 )
 
 SERVER_INSTANCE_ID = f"inst-srv-{uuid.uuid4().hex[:8]}"
 
 task_registry = TaskRegistry()
 coordinator = TaskCoordinator(registry=task_registry)
+run_coordinator = RunCoordinator(task_registry, instance_id=SERVER_INSTANCE_ID)
 
 
 # ---------------------------------------------------------------------------
@@ -372,6 +379,16 @@ async def unregister_task(request: Request) -> Response:
         return auth_err
 
     task_id = request.path_params["task_id"]
+    run = run_coordinator.status(task_id)
+    if run["state"] in ("STARTING", "RUNNING", "RECONCILIATION_REQUIRED", "ABANDONED"):
+        return JSONResponse(
+            {"detail": f"Run is {run['state']}; resolve or stop it before unregistering", "run": run},
+            status_code=409,
+        )
+    try:
+        await run_coordinator.forget(task_id)
+    except RunBusy as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=409)
     if task_registry.unregister_task(task_id):
         return JSONResponse({"ok": True})
     return JSONResponse({"detail": "Task not found"}, status_code=404)
@@ -473,10 +490,16 @@ async def adopt_scope_endpoint(request: Request) -> Response:
         return JSONResponse({"detail": "scope and implementation_stages required"}, status_code=400)
 
     action_id = data.get("action_id") or f"act-adopt-{uuid.uuid4().hex[:8]}"
+    invalid = _validate_client_action_id(action_id)
+    if invalid:
+        return invalid
     request_hash = hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
     executor_instance_id = SERVER_INSTANCE_ID
     executor_pid = os.getpid()
     executor_start_time = get_process_start_time(executor_pid) or 0
+    # Self-issued fence: this endpoint writes the action_log row the engine then
+    # verifies. It is a dedup/consistency anchor within one trust domain, NOT an
+    # authorization boundary; authorization is session auth + CSRF above.
     fencing_token = 1
 
     lock_file = LOCKS_DIR / f"action_{action_id}.lock"
@@ -494,11 +517,14 @@ async def adopt_scope_endpoint(request: Request) -> Response:
         conn = task_registry._get_connection()
         try:
             existing = conn.execute(
-                "SELECT state, request_hash, response_json, error_message FROM action_log WHERE action_id = ?",
+                "SELECT state, request_hash, response_json, error_message, task_id, action_type "
+                "FROM action_log WHERE action_id = ?",
                 (action_id,),
             ).fetchone()
         finally:
             conn.close()
+        if existing and (existing[4] != task_id or existing[5] != "adopt_scope"):
+            return JSONResponse({"detail": "action_id belongs to another task or action"}, status_code=409)
 
         if existing:
             ex_state, ex_req_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
@@ -647,6 +673,584 @@ async def adopt_scope_endpoint(request: Request) -> Response:
                 pass
 
 
+def _validate_client_action_id(action_id) -> Response | None:
+    """Validate a client-supplied action id (charset + reserved prefix).
+
+    The coordinator owns the ``coord-`` namespace for pass ids; a client that
+    could pre-claim one would wedge that pass, so it is rejected everywhere a
+    client id is accepted.
+    """
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", str(action_id)):
+        return JSONResponse({"detail": "invalid action_id"}, status_code=400)
+    if str(action_id).startswith(PASS_ACTION_PREFIX):
+        return JSONResponse(
+            {"detail": f"action_id prefix {PASS_ACTION_PREFIX!r} is reserved for coordinator passes"},
+            status_code=400,
+        )
+    return None
+
+
+async def run_task_endpoint(request: Request) -> Response:
+    """Run one engine pass through the durable run lease.
+
+    The single-pass path uses the same ``run_state`` lease/fence as the
+    coordinator, so it cannot race a running, reconciliation-required or
+    abandoned run. A conflicting state returns 409; a duplicate action-id
+    replays the cached result.
+    """
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"detail": "Invalid JSON body"}, status_code=400)
+
+    action_id = data.get("action_id") or f"act-run-{uuid.uuid4().hex[:8]}"
+    invalid = _validate_client_action_id(action_id)
+    if invalid:
+        return invalid
+    request_hash = hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
+
+    lock_file = LOCKS_DIR / f"action_{action_id}.lock"
+    lock_fd = None
+    try:
+        lock_fd = os.open(str(lock_file), os.O_CREAT | os.O_RDWR, 0o600)
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return JSONResponse(
+                {"detail": f"Action {action_id} is currently executing on another worker"},
+                status_code=409,
+            )
+        conn = task_registry._get_connection()
+        try:
+            existing = conn.execute(
+                "SELECT state, request_hash, response_json, error_message, task_id, action_type "
+                "FROM action_log WHERE action_id = ?",
+                (action_id,),
+            ).fetchone()
+        finally:
+            conn.close()
+        if existing and existing[4] != task_id:
+            return JSONResponse({"detail": "action_id belongs to another task"}, status_code=409)
+        if existing and existing[5] != "run_direct":
+            return JSONResponse({"detail": "action_id belongs to another action type"}, status_code=409)
+        if existing:
+            ex_state, ex_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
+            if ex_state == "COMPLETE":
+                if ex_hash != request_hash:
+                    return JSONResponse(
+                        {"detail": "action_id reused with different request payload"}, status_code=409
+                    )
+                return JSONResponse({"ok": True, "result": json.loads(ex_resp) if ex_resp else {}})
+            if ex_state == "FAILED":
+                return JSONResponse({"detail": f"Action previously failed: {ex_err}"}, status_code=500)
+            return JSONResponse({"detail": f"Action {action_id} is currently in progress"}, status_code=409)
+
+        lease = run_coordinator.acquire_direct(task_id)
+        if not lease.get("ok"):
+            return JSONResponse(
+                {
+                    "detail": lease.get("detail") or "Run is active or awaiting reconciliation",
+                    "run": lease.get("run"),
+                },
+                status_code=409,
+            )
+        generation = int(lease["generation"])
+        now_iso = datetime.now(timezone.utc).isoformat()
+        conn = task_registry._get_connection()
+        try:
+            with conn:
+                conn.execute(
+                    "INSERT INTO action_log (action_id, task_id, action_type, state, idempotency_key, "
+                    "request_hash, manifest_json, response_json, correlation_id, executor_instance_id, "
+                    "executor_pid, executor_start_time, child_pid, child_pgid, child_start_time, "
+                    "fencing_token, heartbeat_utc, error_message, session_memory_entry, created_utc, updated_utc) "
+                    "VALUES (?,?,'run_direct','EXECUTING',?,?,?,NULL,?,?,?,?,NULL,NULL,NULL,?,?,NULL,NULL,?,?)",
+                    (
+                        action_id,
+                        task_id,
+                        action_id,
+                        request_hash,
+                        json.dumps({}),
+                        action_id,
+                        SERVER_INSTANCE_ID,
+                        os.getpid(),
+                        get_process_start_time(os.getpid()) or 0,
+                        generation,
+                        now_iso,
+                        now_iso,
+                        now_iso,
+                    ),
+                )
+        finally:
+            conn.close()
+
+        try:
+            res = await run_action(
+                task["worktree_path"],
+                "run",
+                payload={
+                    "action_id": action_id,
+                    "fencing_token": generation,
+                    "executor_instance_id": SERVER_INSTANCE_ID,
+                },
+                action_id=action_id,
+                fencing_token=generation,
+                executor_instance_id=SERVER_INSTANCE_ID,
+                lock_fd=lock_fd,
+            )
+            result = {
+                "view": res.get("view"),
+                "terminal": res.get("terminal"),
+                "job_status": res.get("job_status"),
+            }
+            run_coordinator.finalize_direct(task_id, generation, result=result)
+            conn = task_registry._get_connection()
+            try:
+                with conn:
+                    conn.execute(
+                        "UPDATE action_log SET state='COMPLETE', response_json=?, updated_utc=? "
+                        "WHERE action_id=? AND state='EXECUTING' AND fencing_token=?",
+                        (json.dumps(result), datetime.now(timezone.utc).isoformat(), action_id, generation),
+                    )
+            finally:
+                conn.close()
+            return JSONResponse({"ok": True, "result": result, "run": run_coordinator.status(task_id)})
+        except Exception as exc:
+            run_coordinator.finalize_direct(task_id, generation, error=str(exc))
+            conn = task_registry._get_connection()
+            try:
+                with conn:
+                    conn.execute(
+                        "UPDATE action_log SET state='FAILED', error_message=?, updated_utc=? "
+                        "WHERE action_id=? AND state='EXECUTING' AND fencing_token=?",
+                        (str(exc)[:500], datetime.now(timezone.utc).isoformat(), action_id, generation),
+                    )
+            finally:
+                conn.close()
+            return JSONResponse({"detail": f"Run failed: {exc}"}, status_code=500)
+    finally:
+        if lock_fd is not None:
+            try:
+                os.close(lock_fd)
+            except OSError:
+                pass
+
+
+async def get_commit_requirements(request: Request) -> Response:
+    """Surface the exact owner action required at the COMMIT gate (read-only)."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    try:
+        res = await run_action(task["worktree_path"], "commit_requirements")
+        return JSONResponse({"ok": True, **res})
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+
+
+async def verify_commit_endpoint(request: Request) -> Response:
+    """Read-only verification that the owner commit exists as required."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    try:
+        res = await run_action(task["worktree_path"], "verify_commit")
+        return JSONResponse({"ok": True, **res})
+    except SubprocessClientError as exc:
+        return JSONResponse({"detail": str(exc)}, status_code=502)
+
+
+async def _commit_action(request: Request, action: str, include_token: bool) -> Response:
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    try:
+        data = await request.json()
+    except Exception:
+        return JSONResponse({"detail": "Invalid JSON body"}, status_code=400)
+    token = data.get("token") or data.get("submitted_token")
+    if include_token and not isinstance(token, dict):
+        return JSONResponse({"detail": "owner COMMIT token required"}, status_code=400)
+    action_id = data.get("action_id") or f"{action}-{uuid.uuid4().hex[:8]}"
+    invalid = _validate_client_action_id(action_id)
+    if invalid:
+        return invalid
+    request_hash = hashlib.sha256(
+        json.dumps(
+            {"token": token, "action_id": action_id} if include_token else {"action_id": action_id},
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+    executor_instance_id = SERVER_INSTANCE_ID
+    fencing_token = 1
+    lock_file = LOCKS_DIR / f"action_{action_id}.lock"
+    lock_fd = None
+    try:
+        lock_fd = os.open(str(lock_file), os.O_CREAT | os.O_RDWR, 0o600)
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return JSONResponse({"detail": f"Action {action_id} is currently executing"}, status_code=409)
+        conn = task_registry._get_connection()
+        try:
+            existing = conn.execute(
+                "SELECT state, request_hash, response_json, task_id, action_type "
+                "FROM action_log WHERE action_id = ?",
+                (action_id,),
+            ).fetchone()
+        finally:
+            conn.close()
+        if existing:
+            if existing[3] != task_id or existing[4] != action:
+                return JSONResponse(
+                    {"detail": "action_id belongs to another task or action"}, status_code=409
+                )
+            if existing[0] == "COMPLETE" and existing[1] == request_hash:
+                response = {"ok": True, "result": json.loads(existing[2] or "{}"), "replayed": True}
+                if action == "record_commit":
+                    run = run_coordinator.start(task_id, handoff_action_id=action_id)
+                    response["run"] = run.get("run")
+                    if not run.get("ok"):
+                        response.update(
+                            ok=False, detail="Commit recorded; coordinator handoff requires attention"
+                        )
+                        return JSONResponse(response, status_code=409)
+                return JSONResponse(response)
+            return JSONResponse(
+                {"detail": "action_id already used with a different payload"}, status_code=409
+            )
+        now_iso = datetime.now(timezone.utc).isoformat()
+        conn = task_registry._get_connection()
+        try:
+            with conn:
+                conn.execute(
+                    "INSERT INTO action_log (action_id, task_id, action_type, state, "
+                    "idempotency_key, request_hash, manifest_json, response_json, correlation_id, "
+                    "executor_instance_id, executor_pid, executor_start_time, child_pid, child_pgid, "
+                    "child_start_time, fencing_token, heartbeat_utc, error_message, "
+                    "session_memory_entry, created_utc, updated_utc) "
+                    "VALUES (?,?,?,'EXECUTING',?,?,?,NULL,?,?,?,?,NULL,NULL,NULL,?,?,NULL,NULL,?,?)",
+                    (
+                        action_id,
+                        task_id,
+                        action,
+                        action_id,
+                        request_hash,
+                        json.dumps({}),
+                        action_id,
+                        executor_instance_id,
+                        os.getpid(),
+                        get_process_start_time(os.getpid()) or 0,
+                        fencing_token,
+                        now_iso,
+                        now_iso,
+                        now_iso,
+                    ),
+                )
+        finally:
+            conn.close()
+        payload = {
+            "action_id": action_id,
+            "fencing_token": fencing_token,
+            "executor_instance_id": executor_instance_id,
+        }
+        if include_token:
+            payload["token"] = token
+        try:
+            res = await run_action(
+                task["worktree_path"],
+                action,
+                payload=payload,
+                action_id=action_id,
+                fencing_token=fencing_token,
+                executor_instance_id=executor_instance_id,
+                lock_fd=lock_fd,
+            )
+            conn = task_registry._get_connection()
+            try:
+                with conn:
+                    conn.execute(
+                        "UPDATE action_log SET state='COMPLETE', response_json=?, updated_utc=? "
+                        "WHERE action_id=? AND state='EXECUTING' AND fencing_token=? AND executor_instance_id=?",
+                        (
+                            json.dumps(res),
+                            datetime.now(timezone.utc).isoformat(),
+                            action_id,
+                            fencing_token,
+                            executor_instance_id,
+                        ),
+                    )
+            finally:
+                conn.close()
+            if action == "record_commit":
+                run = run_coordinator.start(task_id, handoff_action_id=action_id)
+                return JSONResponse(
+                    {"ok": bool(run.get("ok")), "result": res, "run": run.get("run")},
+                    status_code=200 if run.get("ok") else 409,
+                )
+            return JSONResponse({"ok": True, "result": res})
+        except Exception as exc:
+            conn = task_registry._get_connection()
+            try:
+                with conn:
+                    conn.execute(
+                        "UPDATE action_log SET state='FAILED', error_message=?, updated_utc=? "
+                        "WHERE action_id=? AND state='EXECUTING' AND fencing_token=? AND executor_instance_id=?",
+                        (
+                            str(exc)[:500],
+                            datetime.now(timezone.utc).isoformat(),
+                            action_id,
+                            fencing_token,
+                            executor_instance_id,
+                        ),
+                    )
+            finally:
+                conn.close()
+            label = "Commit arm failed" if action == "arm_commit" else "Commit recording failed"
+            return JSONResponse({"detail": f"{label}: {exc}"}, status_code=400)
+    finally:
+        if lock_fd is not None:
+            try:
+                os.close(lock_fd)
+            except OSError:
+                pass
+
+
+async def arm_commit_endpoint(request: Request) -> Response:
+    """Submit the owner COMMIT token before the commit is made."""
+    return await _commit_action(request, "arm_commit", include_token=True)
+
+
+async def record_commit_endpoint(request: Request) -> Response:
+    """Record the verified owner commit and resume the coordinator."""
+    return await _commit_action(request, "record_commit", include_token=False)
+
+
+async def run_start_endpoint(request: Request) -> Response:
+    """Start a durable, server-side run for a task.
+
+    The browser only observes; the loop keeps running when the tab closes.
+    A duplicate start with the same action_id returns the cached response; a
+    competing start while a run is active returns 409 with the current state.
+    """
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    action_id = data.get("action_id") or f"start-{uuid.uuid4().hex[:8]}"
+    invalid = _validate_client_action_id(action_id)
+    if invalid:
+        return invalid
+    request_hash = hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
+
+    conn = task_registry._get_connection()
+    try:
+        existing = conn.execute(
+            "SELECT state, request_hash, response_json, task_id, action_type "
+            "FROM action_log WHERE action_id = ?",
+            (action_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+    if existing:
+        if existing[3] != task_id or existing[4] != "run_start":
+            return JSONResponse(
+                {"detail": "action_id belongs to another task or action type"},
+                status_code=409,
+            )
+        ex_state, ex_hash, ex_resp = existing[0], existing[1], existing[2]
+        if ex_state == "COMPLETE":
+            if ex_hash != request_hash:
+                return JSONResponse(
+                    {"detail": "action_id reused with different request payload"},
+                    status_code=409,
+                )
+            cached = json.loads(ex_resp) if ex_resp else {}
+            return JSONResponse({"ok": True, "run": cached, "replayed": True})
+        return JSONResponse({"detail": "start request is already in progress"}, status_code=409)
+
+    res = run_coordinator.start(task_id)
+    if not res.get("ok"):
+        # A competing start is not a successful action: do not cache it as
+        # COMPLETE, so a retry re-evaluates the lease instead of replaying a
+        # false success.
+        return JSONResponse(res, status_code=409)
+    now_iso = datetime.now(timezone.utc).isoformat()
+    conn = task_registry._get_connection()
+    try:
+        with conn:
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO action_log (
+                    action_id, task_id, action_type, state, idempotency_key,
+                    request_hash, manifest_json, response_json, correlation_id,
+                    executor_instance_id, executor_pid, executor_start_time,
+                    child_pid, child_pgid, child_start_time, fencing_token,
+                    heartbeat_utc, error_message, session_memory_entry,
+                    created_utc, updated_utc
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,0,?,NULL,NULL,?,?)
+                """,
+                (
+                    action_id,
+                    task_id,
+                    "run_start",
+                    "COMPLETE",
+                    action_id,
+                    request_hash,
+                    json.dumps({}),
+                    json.dumps(res["run"]),
+                    action_id,
+                    SERVER_INSTANCE_ID,
+                    os.getpid(),
+                    get_process_start_time(os.getpid()) or 0,
+                    now_iso,
+                    now_iso,
+                    now_iso,
+                ),
+            )
+    finally:
+        conn.close()
+    return JSONResponse(res)
+
+
+async def run_status_endpoint(request: Request) -> Response:
+    """Read durable run state. Closing the tab never affects this state."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    if not task_registry.get_task(task_id):
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    return JSONResponse(
+        {
+            "ok": True,
+            "run": run_coordinator.status(task_id),
+            "events": run_coordinator.events(task_id),
+        }
+    )
+
+
+async def run_resolve_endpoint(request: Request) -> Response:
+    """Authoritative reconciliation of an unknown pass outcome.
+
+    Runs one collect pass against the supervisor's durable ledger; never
+    deletes evidence and never starts a second launch for a launched job.
+    """
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    res = await run_coordinator.resolve(task_id)
+    status_code = 200 if res.get("ok") else 409
+    return JSONResponse(res, status_code=status_code)
+
+
+async def run_abandon_endpoint(request: Request) -> Response:
+    """Separately scoped manual abandonment (never asserts remote termination)."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    acknowledge = str(data.get("acknowledge") or "")
+    user = getattr(request.state, "user", "operator")
+    res = run_coordinator.abandon(task_id, user, acknowledge)
+    status_code = 200 if res.get("ok") else 400
+    return JSONResponse(res, status_code=status_code)
+
+
+async def run_stop_endpoint(request: Request) -> Response:
+    """Request STOP; a running loop stops after the in-flight pass."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    return JSONResponse(run_coordinator.request(task_id, "STOP"))
+
+
+async def run_pause_endpoint(request: Request) -> Response:
+    """Request PAUSE; a running loop pauses after the in-flight pass."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    task_id = request.path_params["task_id"]
+    task = task_registry.get_task(task_id)
+    if not task:
+        return JSONResponse({"detail": "Task not found"}, status_code=404)
+    stage4_err = _check_stage4_forbidden(task.get("work_item"))
+    if stage4_err:
+        return stage4_err
+    return JSONResponse(run_coordinator.request(task_id, "PAUSE"))
+
+
 async def create_review_endpoint(request: Request) -> Response:
     """Create a content-bound review record derived authoritatively server-side."""
     auth_err = _require_auth(request)
@@ -784,6 +1388,9 @@ async def approve_plan_endpoint(request: Request) -> Response:
         )
 
     action_id = data.get("action_id") or f"act-approve-{uuid.uuid4().hex[:8]}"
+    invalid = _validate_client_action_id(action_id)
+    if invalid:
+        return invalid
     now_iso = datetime.now(timezone.utc).isoformat()
     current_user = getattr(request.state, "user", "operator")
 
@@ -800,14 +1407,28 @@ async def approve_plan_endpoint(request: Request) -> Response:
         "repository_id": str(task["worktree_path"]),
         "branch": task["task_branch"],
         "status": "ISSUED",
-        "issued_by": current_user,
-        "issued_utc": now_iso,
+        "issuer": current_user,
+        "issued_utc": now_iso.replace("+00:00", "Z"),
     }
 
-    request_hash = hashlib.sha256(json.dumps(token, sort_keys=True).encode()).hexdigest()
+    # Bind retries to the reviewed approval, excluding freshly generated token
+    # IDs and timestamps so an identical request has a stable identity.
+    request_hash = hashlib.sha256(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "review_id": review_record["review_id"],
+                "token": {k: v for k, v in token.items() if k not in ("token_id", "issued_utc")},
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
     executor_instance_id = SERVER_INSTANCE_ID
     executor_pid = os.getpid()
     executor_start_time = get_process_start_time(executor_pid) or 0
+    # Self-issued fence: this endpoint writes the action_log row the engine then
+    # verifies. It is a dedup/consistency anchor within one trust domain, NOT an
+    # authorization boundary; authorization is session auth + CSRF above.
     fencing_token = 1
 
     lock_file = LOCKS_DIR / f"action_{action_id}.lock"
@@ -825,14 +1446,21 @@ async def approve_plan_endpoint(request: Request) -> Response:
         conn = task_registry._get_connection()
         try:
             existing = conn.execute(
-                "SELECT state, request_hash, response_json, error_message FROM action_log WHERE action_id = ?",
+                "SELECT state, request_hash, response_json, error_message, task_id, action_type "
+                "FROM action_log WHERE action_id = ?",
                 (action_id,),
             ).fetchone()
         finally:
             conn.close()
+        if existing and (existing[4] != task_id or existing[5] != "approve_plan"):
+            return JSONResponse({"detail": "action_id belongs to another task or action"}, status_code=409)
 
         if existing:
             ex_state, ex_req_hash, ex_resp, ex_err = existing[0], existing[1], existing[2], existing[3]
+            if ex_req_hash != request_hash:
+                return JSONResponse(
+                    {"detail": "action_id already used with a different payload"}, status_code=409
+                )
             if ex_state == "COMPLETE":
                 cached_res = json.loads(ex_resp) if ex_resp else {}
                 return JSONResponse({"ok": True, "result": cached_res})
@@ -1100,11 +1728,20 @@ async def lifespan(app: Starlette):
                 except Exception:
                     pass
 
+    # Resume or surface runs whose owner died with the previous process.
+    try:
+        run_coordinator.recover()
+    except Exception:
+        # Recovery failure must not take the whole dashboard down; the run rows
+        # stay visible via /run-status with an owner_lost state.
+        logging.getLogger(__name__).exception("run coordinator recovery failed")
+
     # Start coordinator background polling
     if not os.environ.get("DASHBOARD_DISABLE_COORDINATOR"):
         coordinator.start()
     yield
-    # Shutdown
+    # Shutdown: loops stop, durable state lets the next startup recover.
+    await run_coordinator.shutdown()
     if not os.environ.get("DASHBOARD_DISABLE_COORDINATOR"):
         await coordinator.stop()
 
@@ -1325,6 +1962,21 @@ async def get_erp_projection(request: Request) -> Response:
         return JSONResponse({"detail": f"Failed to read Stage 4 manifest: {exc}"}, status_code=500)
 
 
+async def get_supervisor_health_endpoint(request: Request) -> Response:
+    """Read-only status of the optional managed supervisor service."""
+    auth_err = _require_auth(request)
+    if auth_err:
+        return auth_err
+    try:
+        result = await query_supervisor_health()
+        return JSONResponse({"ok": True, "supervisor": result})
+    except SubprocessClientError as exc:
+        return JSONResponse({"ok": False, "detail": str(exc)}, status_code=503)
+    except Exception:
+        # Avoid leaking socket paths, token contents or low-level OS details.
+        return JSONResponse({"ok": False, "detail": "Managed supervisor unavailable"}, status_code=503)
+
+
 # ---------------------------------------------------------------------------
 # Application Initialization & Routes
 # ---------------------------------------------------------------------------
@@ -1346,6 +1998,17 @@ routes = [
     Route("/api/tasks/{task_id}/plan", endpoint=get_task_plan, methods=["GET"]),
     Route("/api/tasks/{task_id}/review-context", endpoint=get_task_review_context, methods=["GET"]),
     Route("/api/tasks/{task_id}/adopt-scope", endpoint=adopt_scope_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run", endpoint=run_task_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run-start", endpoint=run_start_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run-status", endpoint=run_status_endpoint, methods=["GET"]),
+    Route("/api/tasks/{task_id}/commit-requirements", endpoint=get_commit_requirements, methods=["GET"]),
+    Route("/api/tasks/{task_id}/commit-verify", endpoint=verify_commit_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/commit-arm", endpoint=arm_commit_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/commit-record", endpoint=record_commit_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run-resolve", endpoint=run_resolve_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run-abandon", endpoint=run_abandon_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run-stop", endpoint=run_stop_endpoint, methods=["POST"]),
+    Route("/api/tasks/{task_id}/run-pause", endpoint=run_pause_endpoint, methods=["POST"]),
     Route("/api/tasks/{task_id}/create-review", endpoint=create_review_endpoint, methods=["POST"]),
     Route("/api/tasks/{task_id}/approve-plan", endpoint=approve_plan_endpoint, methods=["POST"]),
     Route("/api/tasks/{task_id}/ai-context", endpoint=get_task_ai_context, methods=["GET"]),
@@ -1358,6 +2021,7 @@ routes = [
     Route("/api/tasks/{task_id}/export/state", endpoint=export_task_state, methods=["GET"]),
     Route("/api/tasks/{task_id}/export/reviews", endpoint=export_task_reviews, methods=["GET"]),
     Route("/api/erp/projection", endpoint=get_erp_projection, methods=["GET"]),
+    Route("/api/supervisor/health", endpoint=get_supervisor_health_endpoint, methods=["GET"]),
     Mount("/static", app=StaticFiles(directory=str(DASHBOARD_DIR / "static")), name="static"),
 ]
 

@@ -37,6 +37,7 @@ if str(_orchestrator_dir) not in sys.path:
     sys.path.insert(0, str(_orchestrator_dir))
 
 import engineering_startup
+from cli import make_engine
 from core import (
     DuplicateKeyConflict,
     GrantReconciliationRequired,
@@ -732,7 +733,14 @@ def verify_action_fence(
     fencing_token: int,
     executor_instance_id: str,
 ) -> None:
-    """Verify 4-tuple fence against canonical action_log table under lock."""
+    """Verify the action_log tuple the caller claims.
+
+    The row is written by the same trust domain (dashboard endpoint or run
+    coordinator) that then asks the engine to execute. It proves "this action id
+    was claimed with this token/instance and is still executing" — a
+    dedup/consistency anchor, not authorization. Authorization happens at the
+    HTTP boundary (session + CSRF); worker dispatch is gated separately.
+    """
     if not registry_db_path.exists():
         raise WorkflowError(f"Canonical registry database not found: {registry_db_path}")
     conn = sqlite3.connect(f"file:{registry_db_path}?mode=ro", uri=True)
@@ -1509,7 +1517,7 @@ def get_sanitized_audit_events(
             }
         total_count = conn.execute("SELECT COUNT(*) FROM workflow_events").fetchone()[0]
         cursor = conn.execute(
-            "SELECT seq, event_id, kind, timestamp, payload FROM workflow_events ORDER BY seq ASC"
+            "SELECT seq, event_id, kind, created_utc, payload FROM workflow_events ORDER BY seq ASC"
         )
         events = []
         emitted_bytes = 0
@@ -1567,10 +1575,135 @@ def get_sanitized_audit_events(
         conn.close()
 
 
-def execute_action(root: Path, action: str, payload: dict | None = None) -> dict:
+_TERMINAL_JOB_STATUSES = frozenset(
+    {"ACCEPTED", "RECONCILIATION_REQUIRED", "OWNER_RECONCILED", "LAUNCH_FAILED"}
+)
+
+
+def run_terminal(view: dict, statuses: dict) -> bool:
+    """Whether another `run` pass cannot make progress.
+
+    A repeated pass is only useful while a job is still dispatchable or in
+    flight. Terminal means: the view is paused/gated, there is nothing to
+    dispatch, or every dispatched job has settled. The UI uses this flag to
+    stop its bounded loop instead of guessing from the view status (which is
+    BUILD_IN_PROGRESS/DRAFT even after a job is ACCEPTED).
+    """
+    if view.get("status") == "PAUSED" or view.get("gate"):
+        return True
+    active = list(view.get("active_jobs") or [])
+    if not active:
+        return True
+    return all(statuses.get(job_id) in _TERMINAL_JOB_STATUSES for job_id in active)
+
+
+def _supervisor_engine(root: Path, socket_path: str, token_file: str):
+    from engine import Engine
+    from t3_supervisor_client import SupervisorLauncher, load_private_supervisor_token
+
+    token = load_private_supervisor_token(token_file)
+    policy_path = Path(root) / "orchestrator/launch_policy.json"
+    allowed = []
+    if policy_path.is_file():
+        allowed = list((json.loads(policy_path.read_text()) or {}).get("allowed_models") or [])
+    return Engine(root, launcher=SupervisorLauncher(root, socket_path, token, allowed_models=allowed))
+
+
+def _managed_supervisor_engine(root: Path, config_path: str):
+    """Build the explicitly enabled, dedicated-UID managed Engine route."""
+    from managed_supervisor_contract import ManagedSupervisorDispatchConfig
+    from t3_supervisor_client import ManagedSupervisorLauncher, load_private_supervisor_token
+
+    config = ManagedSupervisorDispatchConfig.from_file(config_path)
+    config.verify_socket()
+    policy_path = Path(root) / "orchestrator/launch_policy.json"
+    try:
+        fd = os.open(str(policy_path), os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | os.O_NOFOLLOW)
+    except OSError as exc:
+        raise WorkflowError(f"Engine launch policy unavailable: {type(exc).__name__}") from None
+    try:
+        metadata = os.fstat(fd)
+        if not stat.S_ISREG(metadata.st_mode) or metadata.st_size > 65536:
+            raise WorkflowError("Engine launch policy must be a bounded regular file")
+        with os.fdopen(fd, "r", encoding="utf-8", closefd=False) as stream:
+            policy = json.load(stream)
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise WorkflowError("Engine launch policy is invalid JSON") from None
+    finally:
+        os.close(fd)
+    policy_models = policy.get("allowed_models") if isinstance(policy, dict) else None
+    if (
+        not isinstance(policy_models, list)
+        or not policy_models
+        or any(not isinstance(model, str) or not model for model in policy_models)
+        or not set(config.allowed_models).issubset(set(policy_models))
+    ):
+        raise WorkflowError("managed supervisor model pins must be a nonempty subset of Engine launch policy")
+    token = load_private_supervisor_token(config.token_file)
+    launcher = ManagedSupervisorLauncher(
+        root,
+        config.socket_path,
+        token,
+        allowed_models=config.allowed_models,
+        expected_uid=config.expected_uid,
+        peer_verifier=config.peer_verifier(),
+        builder_enabled=config.builder_enabled,
+    )
+    return Engine(root, launcher=launcher)
+
+
+def execute_action(
+    root: Path,
+    action: str,
+    payload: dict | None = None,
+    *,
+    engine_factory=None,
+    supervisor_socket=None,
+    supervisor_token_file=None,
+    managed_supervisor_config=None,
+    managed_dispatch_config=None,
+    managed_dispatch_enabled=None,
+) -> dict:
     payload = payload or {}
     root = Path(root).resolve()
     runtime_path = root / "orchestrator/var"
+
+    if managed_dispatch_config is None:
+        managed_dispatch_config = os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None
+    if managed_dispatch_enabled is None:
+        managed_dispatch_enabled = os.environ.get("DASHBOARD_ENABLE_MANAGED_DISPATCH") == "1"
+    managed_dispatch_requested = bool(managed_dispatch_config or managed_dispatch_enabled)
+    # Dispatch is a test-harness capability only. The peer UID/cgroup checks
+    # below do not attest the T3 listener, service sandbox, or its network
+    # policy, so normal dashboard processes must never select this route.
+    if managed_dispatch_requested:
+        from managed_supervisor_contract import (
+            ManagedSupervisorConfigError,
+            require_test_only_dispatch,
+        )
+
+        try:
+            require_test_only_dispatch(os.environ.get("DASHBOARD_TEST_MODE") == "1")
+        except ManagedSupervisorConfigError as exc:
+            raise WorkflowError(str(exc)) from None
+    if action in ("run", "collect"):
+        if managed_dispatch_config and not managed_dispatch_enabled:
+            raise WorkflowError(
+                "managed supervisor dispatch is configured but the explicit process enable flag is off"
+            )
+        if managed_dispatch_enabled and not managed_dispatch_config:
+            raise WorkflowError("managed supervisor dispatch is enabled but no dispatch config is set")
+        if managed_dispatch_requested and engine_factory is not None:
+            raise WorkflowError("test engine factory cannot override the managed supervisor dispatch route")
+    elif managed_dispatch_requested:
+        raise WorkflowError("managed supervisor dispatch controls are valid only for run/collect actions")
+
+    if action == "supervisor_health":
+        if not managed_supervisor_config:
+            raise WorkflowError("managed supervisor health is not configured")
+        from managed_supervisor_contract import check_managed_supervisor_health
+
+        return check_managed_supervisor_health(managed_supervisor_config)
 
     # Read-only display actions do not acquire execution.lock and do not construct Engine
     if action == "state":
@@ -1609,6 +1742,62 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
             max_events=capped_events,
             max_bytes=capped_bytes,
         )
+
+    if action in ("commit_requirements", "verify_commit"):
+        engine = make_engine(root)
+        try:
+            view = engine.view()
+            gate = view.get("gate") or {}
+            if gate.get("scope") not in ("COMMIT", "OWNER_COMMIT"):
+                return {"pending": False, "gate": gate}
+            cfg = engine.config or {}
+            builder_job = None
+            for jid in list(view.get("completed_dependencies") or []) + list(view.get("active_jobs") or []):
+                rec = engine.store.job(jid)
+                if rec and rec.get("role") == "builder":
+                    builder_job = jid
+            requirements = {
+                "gate_id": gate.get("gate_id"),
+                "scope": gate.get("scope"),
+                "work_item": view.get("work_item"),
+                "candidate_id": view.get("candidate", {}).get("candidate_id"),
+                "manifest_hash": view.get("candidate", {}).get("manifest_hash"),
+                "repository_id": str(root),
+                "branch": cfg.get("branch"),
+                "expected_parent_sha": cfg.get("base_commit"),
+                "expected_tree_oid": view.get("candidate", {}).get("tree_oid"),
+                "job_id": builder_job,
+            }
+            if action == "commit_requirements":
+                return {
+                    "pending": True,
+                    "gate": gate,
+                    "requirements": requirements,
+                    "instructions": (
+                        "Create the owner commit yourself on the expected parent/tree "
+                        f"with a 'Workflow-Job: {builder_job}' trailer, then verify it "
+                        "and submit your owner COMMIT token. The dashboard never commits."
+                    ),
+                }
+            from candidates import verify_owner_commit
+
+            intent = {
+                "branch": requirements["branch"],
+                "expected_parent_sha": requirements["expected_parent_sha"],
+                "expected_tree_oid": requirements["expected_tree_oid"],
+                "job_id": requirements["job_id"],
+            }
+            try:
+                commit = verify_owner_commit(root, intent)
+                return {"verified": True, "commit": commit, "requirements": requirements}
+            except Exception as exc:
+                return {
+                    "verified": False,
+                    "detail": f"{type(exc).__name__}: {exc}",
+                    "requirements": requirements,
+                }
+        finally:
+            engine.close()
 
     lock_path = runtime_path / "execution.lock"
 
@@ -1731,7 +1920,14 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
                 raise PreconditionError(f"Dispatch preflight failed: {failed}")
 
         # 5. Initialize Engine for mutation
-        engine = Engine(root)
+        if engine_factory is not None:
+            engine = engine_factory(root)
+        elif action in ("run", "collect") and managed_dispatch_enabled:
+            engine = _managed_supervisor_engine(root, managed_dispatch_config)
+        elif action in ("run", "collect") and supervisor_socket and supervisor_token_file:
+            engine = _supervisor_engine(root, supervisor_socket, supervisor_token_file)
+        else:
+            engine = make_engine(root)
         try:
             # 6. Deduplication under lock
             token_id = payload.get("token_id")
@@ -1753,8 +1949,55 @@ def execute_action(root: Path, action: str, payload: dict | None = None) -> dict
             if action == "initialize":
                 config = payload["config"]
                 return engine.initialize(config)
-            elif action == "run":
-                return engine.run()
+            elif action in ("run", "collect"):
+                selected = None
+                if action == "collect":
+                    job_ids = payload.get("job_ids")
+                    if job_ids is not None and not isinstance(job_ids, list):
+                        raise CoreValidationError("job_ids must be a list")
+                    collected = engine.collect_only(job_ids=job_ids)
+                    view = collected["view"]
+                    selected = collected["selected"]
+                    statuses = {}
+                    for jid in selected:
+                        rec = engine.store.job(jid)
+                        if rec:
+                            statuses[jid] = rec["status"]
+                    # No correlated job selected means nothing was proven; never
+                    # report that as a terminal/completed state.
+                    terminal = bool(selected) and run_terminal(view, statuses)
+                    return {
+                        "view": view,
+                        "terminal": terminal,
+                        "job_status": statuses,
+                        "selected": selected,
+                        "accepted": collected["accepted"],
+                    }
+                view = engine.run()
+                statuses = {}
+                ids = list(view.get("active_jobs") or []) + list(view.get("completed_dependencies") or [])
+                for jid in ids:
+                    rec = engine.store.job(jid)
+                    if rec:
+                        statuses[jid] = rec["status"]
+                return {
+                    "view": view,
+                    "terminal": run_terminal(view, statuses),
+                    "job_status": statuses,
+                }
+            elif action == "arm_commit":
+                token = payload.get("token") or payload.get("submitted_token")
+                if not isinstance(token, dict):
+                    raise CoreValidationError("arm_commit requires the owner COMMIT token")
+                view = engine.approve(token)
+                return {"view": view, "gate": view.get("gate"), "status": view.get("status")}
+            elif action == "record_commit":
+                view = engine.record_owner_commit()
+                return {
+                    "view": view,
+                    "committed": bool(view.get("committed")),
+                    "status": view.get("status"),
+                }
             elif action == "approve_plan":
                 if not submitted_token:
                     raise CoreValidationError("approve_plan requires submitted_token or token in payload")
@@ -1827,6 +2070,16 @@ def main():
     parser.add_argument("--action-id", type=str, default=None, help="Action ID")
     parser.add_argument("--fencing-token", type=int, default=None, help="Fencing token")
     parser.add_argument("--executor-instance-id", type=str, default=None, help="Executor instance ID")
+    parser.add_argument(
+        "--supervisor-socket", type=str, default=None, help="Supervisor Unix socket (run action)"
+    )
+    parser.add_argument("--supervisor-token-file", type=str, default=None, help="Supervisor peer token file")
+    parser.add_argument(
+        "--managed-supervisor-config",
+        type=str,
+        default=None,
+        help="Read-only managed supervisor connection contract",
+    )
     args = parser.parse_args()
 
     payload = {}
@@ -1847,7 +2100,16 @@ def main():
         payload["executor_instance_id"] = args.executor_instance_id
 
     try:
-        res = execute_action(args.root, args.action, payload)
+        res = execute_action(
+            args.root,
+            args.action,
+            payload,
+            supervisor_socket=args.supervisor_socket,
+            supervisor_token_file=args.supervisor_token_file,
+            managed_supervisor_config=args.managed_supervisor_config,
+            managed_dispatch_config=os.environ.get("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG") or None,
+            managed_dispatch_enabled=(os.environ.get("DASHBOARD_ENABLE_MANAGED_DISPATCH") == "1"),
+        )
         output = {"ok": True, "result": res}
         print(json.dumps(output, default=str))
         sys.exit(0)

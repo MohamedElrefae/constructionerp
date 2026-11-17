@@ -10,6 +10,7 @@ import os
 import re
 import shutil
 import sqlite3
+import stat
 import subprocess
 import sys
 import uuid
@@ -24,12 +25,15 @@ from core import (
     DuplicateKeyConflict,
     GrantReconciliationRequired,
     PreconditionError,
+    ProvenNoLaunch,
     RecoveryError,
     WorkflowError,
     atomic_write,
     bytes_hash,
     canonical,
     digest,
+    require_host_execution,
+    require_native_dispatch,
     utc,
     within,
     write_json,
@@ -303,8 +307,710 @@ class Engine:
             )
             if candidate["candidate_id"] != expected_id:
                 raise WorkflowError("Stage 4 proposal candidate identity mismatch")
+        elif candidate.get("artifact_binding") is not None:
+            # Artifact provenance is not yet protected by a separate service.
+            # Only explicitly test-owned launchers may exercise this prototype.
+            if getattr(type(self.launcher), "allow_builder_for_tests", None) is not True:
+                raise WorkflowError("Artifact-backed candidates require a test-only launcher")
+            from builder_candidate_binding import recheck_engine_candidate
+
+            recheck_engine_candidate(candidate, self.root)
         elif "manifest" in candidate:
             recheck(self.root, candidate["manifest"], self.config["generated"])
+
+    def record_pending_builder_artifact(self, result, baseline_artifact):
+        """Record a detached builder artifact for review without promotion.
+
+        This append-only evidence event is deliberately separate from
+        ``view.candidate`` and cannot authorize verifier/release transitions.
+        Candidate application remains a distinct, owner-reviewed operation.
+        """
+        from pending_builder_artifact import record_pending_builder_artifact
+
+        evidence_dir = self._builder_artifact_directory() / "evidence"
+        if evidence_dir.is_symlink():
+            raise WorkflowError("Pending builder evidence directory cannot be a symlink")
+        evidence_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+        os.chmod(evidence_dir, 0o700)
+        info = evidence_dir.stat()
+        if not evidence_dir.is_dir() or info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise WorkflowError("Pending builder evidence directory permissions are unsafe")
+        return record_pending_builder_artifact(
+            store=self.store,
+            result=result,
+            source_root=self.root,
+            baseline_artifact=baseline_artifact,
+            evidence_directory=evidence_dir,
+        )
+
+    def _builder_artifact_directory(self):
+        """Return private persistent storage outside the project being snapshotted."""
+        identity = hashlib.sha256(str(self.root.resolve(strict=True)).encode()).hexdigest()[:20]
+        state = Path.home() / ".local" / "state" / "engine-builder-artifacts"
+        for directory in (Path.home() / ".local", Path.home() / ".local" / "state", state):
+            if directory.is_symlink():
+                raise WorkflowError("Builder artifact storage path cannot contain symlinks")
+            directory.mkdir(mode=0o700, exist_ok=True)
+            item = directory.stat()
+            if not directory.is_dir() or item.st_uid != os.getuid() or item.st_mode & 0o022:
+                raise WorkflowError("Builder artifact storage parent permissions are unsafe")
+        base = state / identity
+        if base.is_symlink():
+            raise WorkflowError("Builder artifact storage cannot be a symlink")
+        base.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(base, 0o700)
+        info = base.stat()
+        if not base.is_dir() or info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise WorkflowError("Builder artifact storage permissions are unsafe")
+        return base
+
+    def _capture_builder_baseline(self, job_id):
+        from builder_project_candidate import capture_baseline
+
+        base = self._builder_artifact_directory() / "baselines"
+        if base.is_symlink():
+            raise WorkflowError("Builder baseline directory cannot be a symlink")
+        base.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(base, 0o700)
+        artifact = base / (job_id + ".json")
+        if artifact.exists():
+            # Crash may occur after the immutable baseline is written but
+            # before the job record becomes durable. Reuse it only if its own
+            # digest validates, its generated exclusions still match config,
+            # and the current source tree rechecks byte-for-byte.
+            from builder_project_candidate import _load_baseline, _recheck_source
+
+            try:
+                prior = json.loads(artifact.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, ValueError) as exc:
+                raise WorkflowError("Orphaned builder baseline is malformed") from exc
+            if not isinstance(prior, dict) or not isinstance(prior.get("manifest_sha256"), str):
+                raise WorkflowError("Orphaned builder baseline has no digest")
+            baseline = _load_baseline(artifact, prior["manifest_sha256"])
+            if baseline["excluded_generated"] != sorted(set(self.config.get("generated", []))):
+                raise WorkflowError("Orphaned builder baseline generated exclusions changed")
+            _recheck_source(self.root, baseline)
+            return {
+                "artifact": str(artifact.resolve(strict=True)),
+                "manifest_sha256": baseline["manifest_sha256"],
+            }
+        captured = capture_baseline(self.root, artifact, generated=self.config.get("generated", []))
+        return {"artifact": captured["artifact"], "manifest_sha256": captured["manifest_sha256"]}
+
+    def _builder_candidate_parent(self):
+        return Path("/var/tmp") / ("engine-builder-candidates-" + str(os.getuid()))
+
+    def _intake_managed_builder_return(self, job, observation, task_id):
+        from builder_project_candidate import accept_t3_builder_return
+
+        baseline = job.get("spec", {}).get("builder_baseline")
+        from t3_supervisor_client import ManagedSupervisorLauncher
+
+        if not isinstance(self.launcher, ManagedSupervisorLauncher):
+            raise WorkflowError("RECONCILIATION_REQUIRED: managed supervisor is required for builder intake")
+        receipt = self.launcher.receipt_for(job)
+        if observation.get("supervisor_receipt") != receipt or receipt.get("task_id") != task_id:
+            raise WorkflowError("RECONCILIATION_REQUIRED: collected supervisor receipt changed")
+        if not isinstance(baseline, dict):
+            raise WorkflowError("RECONCILIATION_REQUIRED: builder has no pre-dispatch baseline")
+        candidate_parent = Path(self._builder_candidate_parent())
+        if candidate_parent.is_symlink():
+            raise WorkflowError("Builder candidate storage cannot be a symlink")
+        candidate_parent.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(candidate_parent, 0o700)
+        candidate_info = candidate_parent.stat()
+        if (
+            not candidate_parent.is_dir()
+            or candidate_info.st_uid != os.getuid()
+            or candidate_info.st_mode & 0o077
+        ):
+            raise WorkflowError("Builder candidate storage permissions are unsafe")
+        candidate_dir = candidate_parent / (
+            hashlib.sha256(str(self.root.resolve()).encode()).hexdigest()[:20] + "-" + job["job_id"]
+        )
+        # Persist the exact accepted receipt and validation contract before
+        # creating the detached workspace. On retry, only an identical receipt
+        # may resume; any leftover workspace is discarded and rebuilt from the
+        # independently fetched receipt, never treated as validated evidence.
+        envelope = job.get("spec", {}).get("envelope", {})
+        intake_binding = {
+            "schema": "engine-builder-intake/v1",
+            "job_id": job["job_id"],
+            "task_id": task_id,
+            "candidate_id": envelope.get("candidate_id"),
+            "plan_revision_hash": envelope.get("plan_revision_hash"),
+            "root": str(self.root.resolve(strict=True)),
+            "receipt_sha256": hashlib.sha256(canonical(receipt)).hexdigest(),
+            "baseline_manifest_sha256": baseline["manifest_sha256"],
+            "allowed_paths_sha256": hashlib.sha256(
+                canonical(self.config["scope"]["allowed_paths"])
+            ).hexdigest(),
+            "validation_commands_sha256": hashlib.sha256(
+                canonical(self.config["scope"]["validation_commands"])
+            ).hexdigest(),
+        }
+        journal_dir = self._builder_artifact_directory() / "intakes"
+        if journal_dir.is_symlink():
+            raise WorkflowError("Builder intake journal cannot be a symlink")
+        journal_dir.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(journal_dir, 0o700)
+        journal_info = journal_dir.stat()
+        if journal_info.st_uid != os.getuid() or journal_info.st_mode & 0o077:
+            raise WorkflowError("Builder intake journal permissions are unsafe")
+        journal_path = journal_dir / (
+            hashlib.sha256((str(self.root.resolve(strict=True)) + "\0" + job["job_id"]).encode()).hexdigest()
+            + ".json"
+        )
+        journal_bytes = canonical(intake_binding) + b"\n"
+        if journal_path.exists() or journal_path.is_symlink():
+            if (
+                journal_path.is_symlink()
+                or not journal_path.is_file()
+                or journal_path.read_bytes() != journal_bytes
+            ):
+                raise WorkflowError("Builder intake replay does not match its durable receipt binding")
+        else:
+            atomic_write(journal_path, journal_bytes, immutable=True)
+        if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
+            raise WorkflowError("Safe detached builder residue cleanup is unavailable")
+        parent_fd = os.open(candidate_parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+        try:
+            try:
+                residue = os.stat(candidate_dir.name, dir_fd=parent_fd, follow_symlinks=False)
+            except FileNotFoundError:
+                residue = None
+            if residue is not None:
+                if (
+                    not stat.S_ISDIR(residue.st_mode)
+                    or residue.st_uid != os.getuid()
+                    or residue.st_dev != candidate_info.st_dev
+                ):
+                    raise WorkflowError("Unverified detached builder residue is unsafe")
+                # Remove only the deterministic child under the already-open
+                # private parent; rmtree refuses symlink traversal on this path.
+                shutil.rmtree(candidate_dir.name, dir_fd=parent_fd)
+        finally:
+            os.close(parent_fd)
+        result = accept_t3_builder_return(
+            assistant_text=(receipt.get("summary") if isinstance(receipt, dict) else None),
+            job=job,
+            task_id=task_id,
+            supervisor_receipt=receipt,
+            source_root=self.root,
+            baseline_artifact=baseline["artifact"],
+            trusted_baseline_sha256=baseline["manifest_sha256"],
+            destination=candidate_dir,
+            allowed_paths=self.config["scope"]["allowed_paths"],
+            trusted_commands=self.config["scope"]["validation_commands"],
+            timeout_seconds=self.config.get("builder_validation_timeout", 60),
+            # User authorized use of the configured model. Preserve this weaker
+            # evidence class verbatim; the helper never promotes it to executed.
+            allow_configured_only=True,
+        )
+        # Bind the pending bundle to the exact managed receipt so replay can
+        # distinguish an already recorded result from a changed supervisor
+        # observation without dispatching or re-intaking the builder job.
+        result["builder_binding"]["supervisor_receipt_sha256"] = hashlib.sha256(
+            canonical(receipt)
+        ).hexdigest()
+        result["builder_binding_sha256"] = hashlib.sha256(canonical(result["builder_binding"])).hexdigest()
+        self.record_pending_builder_artifact(result, baseline["artifact"])
+        return result
+
+    def review_pending_builder_artifact(self, job_id, task_id, candidate_id, plan_revision_hash):
+        """Recheck a detached builder artifact for owner review; never apply it."""
+        from pending_builder_artifact import recheck_pending_builder_artifact
+
+        return recheck_pending_builder_artifact(
+            store=self.store,
+            job_id=job_id,
+            expected_task_id=task_id,
+            expected_candidate_id=candidate_id,
+            expected_plan_revision_hash=plan_revision_hash,
+        )
+
+    def _builder_application_directory(self, job_id):
+        identity = hashlib.sha256((str(self.root.resolve(strict=True)) + "\0" + job_id).encode()).hexdigest()
+        parent = self._builder_artifact_directory() / "applications"
+        if parent.is_symlink():
+            raise WorkflowError("Builder application journal directory cannot be a symlink")
+        parent.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(parent, 0o700)
+        info = parent.stat()
+        if info.st_uid != os.getuid() or info.st_mode & 0o077:
+            raise WorkflowError("Builder application journal permissions are unsafe")
+        directory = parent / identity
+        if directory.is_symlink():
+            raise WorkflowError("Builder application directory cannot be a symlink")
+        directory.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(directory, 0o700)
+        return directory
+
+    @staticmethod
+    def _builder_open_parent(root, relative_path, *, create=False):
+        """Open every target parent without following symlinks."""
+        flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+        fd = os.open(root, flags)
+        try:
+            parts = relative_path.split("/")[:-1]
+            for part in parts:
+                try:
+                    child = os.open(part, flags, dir_fd=fd)
+                except FileNotFoundError:
+                    if not create:
+                        raise
+                    os.mkdir(part, 0o755, dir_fd=fd)
+                    child = os.open(part, flags, dir_fd=fd)
+                os.close(fd)
+                fd = child
+            return fd, relative_path.split("/")[-1]
+        except Exception:
+            os.close(fd)
+            raise
+
+    def _builder_application_checkout_state(self):
+        root = self.root
+        if root.is_symlink() or not root.is_dir():
+            raise WorkflowError("Builder application requires a real task checkout")
+        info = root.stat()
+        if info.st_uid != os.getuid() or info.st_mode & 0o022:
+            raise WorkflowError("Builder task checkout ownership or permissions are unsafe")
+        git_meta = root / ".git"
+        # Automatic builder application is permitted only in an Engine-owned
+        # linked task worktree. A primary checkout has a .git directory and
+        # may be the user's live repository, even when it appears clean.
+        if git_meta.is_symlink() or not git_meta.is_file():
+            raise WorkflowError("Builder application requires a linked Git task worktree")
+
+        def safe_git(*args):
+            result = subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(root),
+                    "-c",
+                    "core.fsmonitor=false",
+                    "-c",
+                    "core.hooksPath=/dev/null",
+                    *args,
+                ],
+                capture_output=True,
+                check=False,
+                env={
+                    **os.environ,
+                    "GIT_OPTIONAL_LOCKS": "0",
+                    "GIT_CONFIG_NOSYSTEM": "1",
+                    "GIT_CONFIG_GLOBAL": "/dev/null",
+                },
+            )
+            if result.returncode:
+                raise WorkflowError("Builder task Git precondition failed")
+            return result.stdout.decode("utf-8", "strict").strip()
+
+        top = safe_git("rev-parse", "--show-toplevel")
+        head = safe_git("rev-parse", "HEAD")
+        branch = safe_git("branch", "--show-current")
+        staged = safe_git("diff", "--cached", "--name-only")
+        if staged:
+            raise WorkflowError("Builder task worktree has staged changes")
+        # Engine-owned generated files may change while a job is accepted.
+        # Keep all other changes subject to the clean-base and replay checks.
+        from candidates import allowed
+
+        status = [path for path in changed(root, head) if not allowed(path, self.config.get("generated", []))]
+        return Path(top).resolve(strict=True), head, branch, status
+
+    def _load_pending_builder_application_source(
+        self, job_id, task_id, candidate_id, plan_revision_hash, expected_evidence_sha256=None
+    ):
+        payload = self.store.pending_builder_artifact(job_id)
+        if (
+            not isinstance(payload, dict)
+            or payload.get("status") != "PENDING_OWNER_REVIEW"
+            or payload.get("job_id") != job_id
+            or payload.get("task_id") != task_id
+            or payload.get("candidate_id") != candidate_id
+            or payload.get("plan_revision_hash") != plan_revision_hash
+        ):
+            raise WorkflowError("Pending builder application identity mismatch")
+        evidence_path = Path(payload.get("evidence_path", ""))
+        if (
+            evidence_path.is_symlink()
+            or not evidence_path.is_file()
+            or evidence_path.stat().st_size > 2_000_000
+        ):
+            raise WorkflowError("Pending builder evidence is unavailable")
+        evidence_bytes = evidence_path.read_bytes()
+        evidence_sha = hashlib.sha256(evidence_bytes).hexdigest()
+        if evidence_sha != payload.get("evidence_sha256") or (
+            expected_evidence_sha256 and evidence_sha != expected_evidence_sha256
+        ):
+            raise WorkflowError("Pending builder evidence digest changed")
+        try:
+            evidence = json.loads(evidence_bytes)
+        except (UnicodeError, ValueError) as exc:
+            raise WorkflowError("Pending builder evidence is malformed") from exc
+        binding = evidence.get("builder_binding") if isinstance(evidence, dict) else None
+        if (
+            not isinstance(binding, dict)
+            or binding.get("job_id") != job_id
+            or binding.get("task_id") != task_id
+            or binding.get("candidate_id") != candidate_id
+            or binding.get("plan_revision_hash") != plan_revision_hash
+            or binding.get("candidate_snapshot_sha256") != payload.get("candidate_snapshot_sha256")
+            or not isinstance(binding.get("supervisor_receipt_sha256"), str)
+            or len(binding["supervisor_receipt_sha256"]) != 64
+            or evidence.get("builder_binding_sha256") != hashlib.sha256(canonical(binding)).hexdigest()
+            or evidence.get("validation_status") != "complete"
+            or evidence.get("validation_complete") is not True
+            or evidence.get("validation_passed") is not True
+        ):
+            raise WorkflowError("Pending builder evidence is not a completed passing artifact")
+        return payload, evidence, evidence_sha
+
+    def apply_pending_builder_candidate(self, job_id, task_id, candidate_id, plan_revision_hash):
+        """Apply a rechecked detached artifact to this task worktree and validate natively.
+
+        This is an explicit callable operation; the managed builder capability
+        must be enabled by the protected supervisor configuration.
+        The durable application plan permits retry after an interrupted file
+        replacement. It never claims success when native validation refuses or
+        fails, and it never resets the task worktree.
+        """
+        import base64
+        import time
+
+        from builder_artifact_contract import (
+            MAX_BUNDLE_FILE_BYTES,
+            MAX_BUNDLE_FILES,
+            MAX_BUNDLE_TOTAL_BYTES,
+        )
+        from builder_intake import MAX_FILE_BYTES as MAX_BASE_FILE_BYTES
+        from builder_intake import stage_bundle
+        from candidates import allowed
+        from validation_runner import run as run_validation
+
+        root, head, branch, status = self._builder_application_checkout_state()
+        if root != self.root.resolve(strict=True):
+            raise WorkflowError("Engine root must be the Git worktree root")
+        if head != self.config.get("base_commit") or branch != self.config.get("branch"):
+            raise WorkflowError("Builder task worktree base or branch changed")
+        directory = self._builder_application_directory(job_id)
+        plan_path = directory / "application-plan.json"
+        existing_plan = plan_path.exists() or plan_path.is_symlink()
+        if plan_path.is_symlink() or (existing_plan and not plan_path.is_file()):
+            raise WorkflowError("Builder application plan is not a regular file")
+
+        if existing_plan:
+            if plan_path.stat().st_size > 1_000_000:
+                raise WorkflowError("Builder application plan exceeds size bound")
+            try:
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, ValueError) as exc:
+                raise WorkflowError("Builder application plan is malformed") from exc
+            payload, evidence, evidence_sha = self._load_pending_builder_application_source(
+                job_id,
+                task_id,
+                candidate_id,
+                plan_revision_hash,
+                plan.get("evidence_sha256") if isinstance(plan, dict) else None,
+            )
+            if (
+                not isinstance(plan, dict)
+                or plan.get("schema") != "engine-builder-application/v2"
+                or plan.get("job_id") != job_id
+                or plan.get("task_id") != task_id
+                or plan.get("candidate_id") != candidate_id
+                or plan.get("plan_revision_hash") != plan_revision_hash
+                or plan.get("root") != str(root)
+                or plan.get("base_commit") != head
+                or plan.get("branch") != branch
+                or plan.get("evidence_sha256") != evidence_sha
+                or plan.get("allowed_paths_sha256")
+                != hashlib.sha256(canonical(self.config["scope"]["allowed_paths"])).hexdigest()
+                or plan.get("validation_commands_sha256")
+                != hashlib.sha256(canonical(self.config["scope"]["validation_commands"])).hexdigest()
+            ):
+                raise WorkflowError("Builder application plan binding changed")
+        else:
+            if status:
+                raise WorkflowError("Builder task worktree must be clean before application")
+            payload = self.review_pending_builder_artifact(job_id, task_id, candidate_id, plan_revision_hash)
+            payload, evidence, evidence_sha = self._load_pending_builder_application_source(
+                job_id, task_id, candidate_id, plan_revision_hash
+            )
+            candidate_root = Path(payload["candidate_root"])
+            if candidate_root.is_symlink() or not candidate_root.is_dir():
+                raise WorkflowError("Validated detached builder workspace is unavailable")
+            from builder_project_candidate import _candidate_hash
+
+            if _candidate_hash(candidate_root) != payload.get("candidate_snapshot_sha256"):
+                raise WorkflowError("Validated detached builder workspace changed")
+            staged_paths = evidence.get("staged_paths")
+            if not isinstance(staged_paths, list) or not staged_paths or len(staged_paths) > MAX_BUNDLE_FILES:
+                raise WorkflowError("Pending artifact has no bounded staged file list")
+            files = []
+            total_bytes = 0
+            from core import relative
+
+            for name in staged_paths:
+                relative(name)
+                if not any(allowed(name, [prefix]) for prefix in self.config["scope"]["allowed_paths"]):
+                    raise WorkflowError("Pending artifact path is outside current builder scope")
+                source = within(candidate_root, name)
+                if (
+                    source.is_symlink()
+                    or not source.is_file()
+                    or source.stat().st_size > MAX_BUNDLE_FILE_BYTES
+                ):
+                    raise WorkflowError("Pending artifact file is missing or outside size bounds")
+                data = source.read_bytes()
+                total_bytes += len(data)
+                if total_bytes > MAX_BUNDLE_TOTAL_BYTES:
+                    raise WorkflowError("Pending builder artifact exceeds total size bound")
+                target = within(root, name)
+                if target.is_symlink() or (target.exists() and not target.is_file()):
+                    raise WorkflowError("Builder application target is not a regular file")
+                base_data = target.read_bytes() if target.exists() else None
+                if base_data is not None and len(base_data) > MAX_BASE_FILE_BYTES:
+                    raise WorkflowError("Builder application base file exceeds size bound")
+                temp_name = (
+                    ".engine-builder-" + hashlib.sha256((job_id + "\0" + name).encode()).hexdigest()[:24]
+                )
+                files.append(
+                    {
+                        "path": name,
+                        "temp_name": temp_name,
+                        "base_sha256": hashlib.sha256(base_data).hexdigest()
+                        if base_data is not None
+                        else None,
+                        "content_base64": base64.b64encode(data).decode("ascii"),
+                        "content_sha256": hashlib.sha256(data).hexdigest(),
+                    }
+                )
+            plan = {
+                "schema": "engine-builder-application/v2",
+                "job_id": job_id,
+                "task_id": task_id,
+                "candidate_id": candidate_id,
+                "plan_revision_hash": plan_revision_hash,
+                "root": str(root),
+                "base_commit": head,
+                "branch": branch,
+                "evidence_sha256": evidence_sha,
+                "allowed_paths_sha256": hashlib.sha256(
+                    canonical(self.config["scope"]["allowed_paths"])
+                ).hexdigest(),
+                "validation_commands_sha256": hashlib.sha256(
+                    canonical(self.config["scope"]["validation_commands"])
+                ).hexdigest(),
+                "files": files,
+            }
+            atomic_write(plan_path, canonical(plan) + b"\n", immutable=True)
+
+        files = plan.get("files")
+        if not isinstance(files, list) or not files or len(files) > MAX_BUNDLE_FILES:
+            raise WorkflowError("Builder application plan has an invalid file list")
+        from core import relative
+
+        validated_paths = set()
+        for item in files:
+            if not isinstance(item, dict):
+                raise WorkflowError("Builder application plan contains an invalid entry")
+            name = item.get("path")
+            relative(name)
+            if (
+                name in validated_paths
+                or not any(allowed(name, [prefix]) for prefix in self.config["scope"]["allowed_paths"])
+                or item.get("temp_name")
+                != ".engine-builder-" + hashlib.sha256((job_id + "\0" + name).encode()).hexdigest()[:24]
+            ):
+                raise WorkflowError("Builder application plan path or temp binding changed")
+            validated_paths.add(name)
+            try:
+                content = base64.b64decode(item["content_base64"], validate=True)
+            except (KeyError, ValueError) as exc:
+                raise WorkflowError("Builder application plan content is malformed") from exc
+            if (
+                len(content) > MAX_BUNDLE_FILE_BYTES
+                or hashlib.sha256(content).hexdigest() != item.get("content_sha256")
+                or (
+                    item.get("base_sha256") is not None
+                    and (
+                        not isinstance(item["base_sha256"], str)
+                        or len(item["base_sha256"]) != 64
+                        or any(ch not in "0123456789abcdef" for ch in item["base_sha256"])
+                    )
+                )
+            ):
+                raise WorkflowError("Builder application plan content binding changed")
+        if sorted(validated_paths) != sorted(evidence.get("staged_paths", [])):
+            raise WorkflowError("Builder application plan paths differ from validated artifact evidence")
+        bundle = {"files": files}
+        # Intake rechecks path scope, content/base hashes and no-follow source
+        # access before creating an overlay. For replay, the overlay source is
+        # the already validated detached candidate, where the target bytes are
+        # themselves the expected source hashes.
+        candidate_root = Path(payload["candidate_root"])
+        if candidate_root.is_symlink() or not candidate_root.is_dir():
+            raise WorkflowError("Validated detached builder workspace is unavailable")
+        expected_parent = Path(self._builder_candidate_parent()).resolve(strict=True)
+        if candidate_root.resolve(strict=True).parent != expected_parent:
+            raise WorkflowError("Validated detached builder workspace is outside Engine candidate storage")
+        from builder_project_candidate import _candidate_hash
+
+        if _candidate_hash(candidate_root) != payload.get("candidate_snapshot_sha256"):
+            raise WorkflowError("Validated detached builder workspace changed")
+        staged_bundle = {"files": []}
+        total_bytes = 0
+        for item in files:
+            raw = base64.b64decode(item["content_base64"], validate=True)
+            total_bytes += len(raw)
+            if len(raw) > MAX_BUNDLE_FILE_BYTES or total_bytes > MAX_BUNDLE_TOTAL_BYTES:
+                raise WorkflowError("Builder application plan exceeds bundle size bounds")
+            staged_bundle["files"].append(
+                {
+                    "path": item["path"],
+                    "base_sha256": hashlib.sha256(raw).hexdigest(),
+                    "content_base64": item["content_base64"],
+                    "content_sha256": item["content_sha256"],
+                }
+            )
+        overlay = directory / "overlay"
+        if overlay.exists() or overlay.is_symlink():
+            if overlay.is_symlink() or not overlay.is_dir():
+                raise WorkflowError("Builder application overlay is unsafe")
+            shutil.rmtree(overlay)
+        temp_paths = {("/".join(item["path"].split("/")[:-1] + [item["temp_name"]])) for item in files}
+        if temp_paths & validated_paths:
+            raise WorkflowError("Builder application temp path collides with declared artifact")
+        current_changed = {
+            path for path in changed(root, head) if not allowed(path, self.config.get("generated", []))
+        }
+        expected_paths = {item["path"] for item in files}
+        if not current_changed.issubset(expected_paths | temp_paths):
+            raise WorkflowError("Builder application recovery found unrelated checkout changes")
+        stage_bundle(candidate_root, staged_bundle, overlay, self.config["scope"]["allowed_paths"])
+        try:
+            for item in files:
+                data = (overlay / item["path"]).read_bytes()
+                target_hash = hashlib.sha256(data).hexdigest()
+                parent_fd, leaf = self._builder_open_parent(root, item["path"], create=True)
+                temp_leaf = item["temp_name"]
+                try:
+
+                    def read_regular(name):
+                        try:
+                            read_fd = os.open(
+                                name, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent_fd
+                            )
+                        except FileNotFoundError:
+                            return None, None
+                        except OSError as exc:
+                            raise WorkflowError("Builder application path is not a regular file") from exc
+                        try:
+                            info = os.fstat(read_fd)
+                            if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid():
+                                raise WorkflowError("Builder application path ownership or type is unsafe")
+                            chunks = []
+                            while True:
+                                chunk = os.read(read_fd, MAX_BASE_FILE_BYTES + 1)
+                                if not chunk:
+                                    break
+                                chunks.append(chunk)
+                                if sum(map(len, chunks)) > MAX_BASE_FILE_BYTES:
+                                    raise WorkflowError("Builder application file exceeds size bound")
+                            return b"".join(chunks), stat.S_IMODE(info.st_mode)
+                        finally:
+                            os.close(read_fd)
+
+                    current, current_mode = read_regular(leaf)
+                    current_hash = hashlib.sha256(current).hexdigest() if current is not None else None
+                    stale_temp, _temp_mode = read_regular(temp_leaf)
+                    if current_hash not in (item["base_sha256"], target_hash):
+                        raise WorkflowError("Builder application recovery found unexpected file drift")
+                    if stale_temp is not None:
+                        if hashlib.sha256(stale_temp).hexdigest() == target_hash:
+                            os.replace(temp_leaf, leaf, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
+                            os.fsync(parent_fd)
+                            continue
+                        os.unlink(temp_leaf, dir_fd=parent_fd)
+                    if current_hash == target_hash:
+                        continue
+                    if current_hash != item["base_sha256"]:
+                        raise WorkflowError("Builder application recovery found unexpected file drift")
+                    mode = current_mode if current_mode is not None else 0o644
+                    write_fd = os.open(
+                        temp_leaf,
+                        os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
+                        0o600,
+                        dir_fd=parent_fd,
+                    )
+                    try:
+                        view = memoryview(data)
+                        while view:
+                            written = os.write(write_fd, view)
+                            view = view[written:]
+                        os.fchmod(write_fd, mode)
+                        os.fsync(write_fd)
+                    finally:
+                        os.close(write_fd)
+                    os.replace(temp_leaf, leaf, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
+                    os.fsync(parent_fd)
+                finally:
+                    os.close(parent_fd)
+        finally:
+            shutil.rmtree(overlay, ignore_errors=True)
+
+        changed_paths = {
+            path for path in changed(root, head) if not allowed(path, self.config.get("generated", []))
+        }
+        if changed_paths != expected_paths:
+            raise WorkflowError("Applied builder checkout differs from the declared artifact scope")
+        spec = {
+            "root": str(root),
+            "base_commit": head,
+            "branch": branch,
+            "allowed_paths": self.config["scope"]["allowed_paths"],
+            "generated": self.config["generated"],
+            "validation_commands": self.config["scope"]["validation_commands"],
+            "work_item_root": str(within(root, "docs/ai/work-items/" + self.config["work_item"])),
+            "control_root": str(self.runtime),
+        }
+        validation_root = directory / "native-validation"
+        if validation_root.is_symlink():
+            raise WorkflowError("Native validation evidence directory cannot be a symlink")
+        validation_root.mkdir(mode=0o700, exist_ok=True)
+        os.chmod(validation_root, 0o700)
+        validation_root_info = validation_root.stat()
+        if validation_root_info.st_uid != os.getuid() or validation_root_info.st_mode & 0o077:
+            raise WorkflowError("Native validation evidence directory permissions are unsafe")
+        # candidates.freeze writes immutable artifacts. Each replay therefore
+        # gets a fresh isolated attempt directory, retaining prior evidence
+        # without allowing archive byte/timestamp differences to collide.
+        validation_dir = validation_root / (str(time.time_ns()) + "-" + uuid.uuid4().hex)
+        validation_dir.mkdir(mode=0o700)
+        validation = run_validation(
+            spec,
+            validation_dir,
+            time.monotonic() + float(self.config.get("builder_validation_timeout", 60)),
+        )
+        if not validation.get("complete"):
+            raise WorkflowError(
+                "Native builder validation did not complete; application plan retained for retry"
+            )
+        binding_path = validation_dir / "tested-candidate" / "binding.json"
+        candidate = json.loads(binding_path.read_text(encoding="utf-8"))
+        self._recheck_candidate(candidate)
+        return candidate, validation
+
+    def _retain_blocked_builder_candidate(self, view):
+        """Carry findings from a blocked builder while retaining prior candidate."""
+        candidate = view.get("candidate")
+        if not isinstance(candidate, dict):
+            raise WorkflowError("Blocked builder has no existing candidate to retain")
+        self._recheck_candidate(candidate)
+        return candidate, {"complete": False, "passed": False, "mode": "builder-blocked"}
 
     def initialize(self, config):
         if self.config:
@@ -719,12 +1425,68 @@ class Engine:
                 continue
             destination = self.runtime / "jobs" / job_id
             destination.mkdir(parents=True, exist_ok=True)
+            builder_baseline = None
+            builder_source_packet = None
+            managed_builder_job = False
+            if role == "builder":
+                from t3_supervisor_client import ManagedSupervisorLauncher
+
+                if isinstance(self.launcher, ManagedSupervisorLauncher):
+                    managed_builder_job = True
+                    # Prepared for a future reviewed builder capability. The
+                    # current supervisor preflight allowlist still refuses
+                    # builder dispatch, so this does not enable production work.
+                    from builder_source_packet import build_builder_source_packet
+
+                    builder_source_packet = build_builder_source_packet(
+                        self.root, self.config["scope"]["allowed_paths"]
+                    )
+                    builder_baseline = self._capture_builder_baseline(job_id)
             role_name = role if role in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer"
             role_path = within(self.root, "docs/ai/roles/" + role_name + ".md")
             role_text = role_path.read_text()
             prompt_version = bytes_hash(role_path.read_bytes())
             if not self.launcher and prompt_version != pin.get("prompt_sha256"):
                 raise WorkflowError("Owner-approved role prompt changed")
+            if managed_builder_job and prompt_version != pin.get("prompt_sha256"):
+                raise WorkflowError("Managed builder role prompt differs from the owner-approved pin")
+            builder_plan_inline = None
+            builder_contract_inline = None
+            builder_contract_sha256 = None
+            if managed_builder_job:
+                plan_bytes = plan.read_bytes()
+                if bytes_hash(plan_bytes) != v["plan_revision_hash"] or len(plan_bytes) > 32_000:
+                    raise WorkflowError(
+                        "Approved builder plan is unavailable or exceeds inline context bounds"
+                    )
+                try:
+                    builder_plan_inline = plan_bytes.decode("utf-8")
+                except UnicodeDecodeError as exc:
+                    raise WorkflowError("Approved builder plan is not UTF-8 text") from exc
+                from t3_transport import redact_host_paths
+
+                if redact_host_paths(builder_plan_inline) != builder_plan_inline:
+                    raise WorkflowError("Approved builder plan would be altered by T3 path redaction")
+                contract = within(self.root, self.config["plan_path"])
+                if contract.is_symlink() or not contract.is_file():
+                    raise WorkflowError("Approved builder contract is unavailable")
+                contract_bytes = contract.read_bytes()
+                if len(contract_bytes) > 32_000:
+                    raise WorkflowError("Approved builder contract exceeds inline context bounds")
+                try:
+                    builder_contract_inline = contract_bytes.decode("utf-8")
+                except UnicodeDecodeError as exc:
+                    raise WorkflowError("Approved builder contract is not UTF-8 text") from exc
+                if redact_host_paths(builder_contract_inline) != builder_contract_inline:
+                    raise WorkflowError("Approved builder contract would be altered by T3 path redaction")
+                # The contract is approved by the configured base commit. A working-tree
+                # edit must not silently replace the context delivered to the builder.
+                approved_contract = git(
+                    self.root, "show", f"{self.config['base_commit']}:{self.config['plan_path']}"
+                )
+                if bytes_hash(approved_contract) != bytes_hash(contract_bytes):
+                    raise WorkflowError("Approved builder contract drift from base commit")
+                builder_contract_sha256 = bytes_hash(contract_bytes)
             expected_artifact_id = None
             expected_artifact_kind = None
             neutral_mounts = []
@@ -1019,10 +1781,17 @@ class Engine:
             if startup_ref:
                 read_artifacts.append(startup_ref["path"])
             read_artifact_refs = []
+            builder_read_only_context = []
+            builder_read_only_context_bytes = 0
             for cp in self.config.get("read_only_context_paths", []):
-                resolved_cp = self.root / cp
-                if not resolved_cp.is_file():
+                resolved_cp = within(self.root, cp)
+                if resolved_cp.is_symlink() or not resolved_cp.is_file():
                     continue
+                if (
+                    managed_builder_job
+                    and resolved_cp.stat().st_size > 32_000 - builder_read_only_context_bytes
+                ):
+                    raise WorkflowError("Approved builder read-only context exceeds inline bounds")
                 data = resolved_cp.read_bytes()
                 sha = bytes_hash(data)
                 name = "context/context-" + sha + (resolved_cp.suffix or ".txt")
@@ -1036,6 +1805,23 @@ class Engine:
                         snapshot_path=str(snapshot),
                     )
                 )
+                if managed_builder_job:
+                    try:
+                        context_text = data.decode("utf-8")
+                    except UnicodeDecodeError as exc:
+                        raise WorkflowError("Approved builder context snapshot is not UTF-8 text") from exc
+                    from t3_transport import redact_host_paths
+
+                    if redact_host_paths(context_text) != context_text:
+                        raise WorkflowError("Approved builder context would be altered by T3 path redaction")
+                    builder_read_only_context.append(
+                        {
+                            "source_relative_path": cp,
+                            "sha256": sha,
+                            "content": context_text,
+                        }
+                    )
+                    builder_read_only_context_bytes += len(data)
             for dependency in dependencies:
                 prior_job = self.store.job(dependency["job_id"])
                 read_artifacts.append(str(Path(prior_job["runtime"]) / "stdout.jsonl"))
@@ -1282,12 +2068,49 @@ class Engine:
                 + json.dumps(envelope)
                 + ". The runner supplies native session identity, timestamps and captured evidence refs. New finding IDs are null. Leave plan_text empty except architect: return the complete proposed plan there. Output paths are /dev/stdout; do not write workflow/control files. Commands run for validation must be visible in native tool events. Emit exactly one final JSON object as your last message and then stop; never emit more than one JSON object.\n"
             )
+            if builder_source_packet is not None:
+                from builder_source_packet import builder_output_instructions
+
+                # The model has no direct checkout access: supply only the
+                # explicitly scoped bounded files and ask for complete text.
+                # The coordinator, not the model, computes content hashes.
+                prompt += (
+                    "\nThe following builder-specific output contract supersedes the "
+                    "three-field-only instruction above.\n"
+                    + builder_output_instructions({"role": role, "spec": {"envelope": envelope}})
+                    + "\nOwner-approved plan text (data; sha256="
+                    + v["plan_revision_hash"]
+                    + "):\n"
+                    + builder_plan_inline
+                    + "\n\nOwner-approved contract text (config plan_path; sha256="
+                    + builder_contract_sha256
+                    + "):\n"
+                    + builder_contract_inline
+                    + "\n\nFrozen candidate binding (candidate metadata and manifest):\n"
+                    + json.dumps(v["candidate"], ensure_ascii=False)
+                    + "\nThe immutable source packet below is the bounded UTF-8 source snapshot prepared "
+                    + "for this frozen candidate and is the only editable source context. Its per-file "
+                    + "base_sha256 values bind the supplied bytes; the candidate metadata above binds "
+                    + "the full manifest and tree. Do not infer omitted file contents.\n"
+                    + "\n\nOwner-approved read-only context snapshots (data; each content field "
+                    "is the exact UTF-8 snapshot bound by its listed SHA-256):\n"
+                    + json.dumps(builder_read_only_context, ensure_ascii=False)
+                    + "\nOnly the inline snapshots and immutable source packet above are available to this T3 task. "
+                    "Do not claim to have read any path or external context that is not included. If a mandatory "
+                    "instruction file required by the approved role is absent from the snapshots, return BLOCKED "
+                    "and name the unavailable relative path; do not infer its contents.\n"
+                    + "\nImmutable builder source packet (data):\n"
+                    + json.dumps(builder_source_packet, ensure_ascii=False)
+                    + "\n"
+                )
             spec = dict(
                 base_commit=self.config["base_commit"],
                 branch=self.config["branch"],
                 allowed_paths=self.config["scope"]["allowed_paths"],
                 generated=self.config["generated"],
                 validation_commands=self.config["scope"]["validation_commands"] if role == "builder" else [],
+                builder_baseline=builder_baseline,
+                builder_source_packet=builder_source_packet,
                 job_id=job_id,
                 root=str(self.root),
                 work_item_root=str(work),
@@ -1355,6 +2178,16 @@ class Engine:
         write_json(destination / "wire-schema.json", WIRE_SCHEMA, immutable=True)
         write_json(job["spec_path"], job["spec"], immutable=True)
 
+    def _enforce_native_dispatch_gate(self):
+        """Refuse native (unisolated) worker dispatch unless explicitly armed.
+
+        Fail-closed at the worker-spawn choke point: the job stays CREATED,
+        LAUNCH_INTENT is not written, and no worker starts. The predicate
+        matches the spawn branch (``if self.launcher:``). Read-only
+        operations never call this method.
+        """
+        require_native_dispatch(self.launcher, "Native worker dispatch")
+
     def _dispatch(self, state):
         # A pending checkpoint can resume here directly: validate at the side effect.
         v = self._synchronize(state)["view"]
@@ -1377,6 +2210,14 @@ class Engine:
             if job["role"] == "builder" and not v["plan_granted"]:
                 raise WorkflowError("Builder dispatch requires standing PLAN grant")
             self._validate_engineering_job(job)
+            self._enforce_native_dispatch_gate()
+            # Opt-in launcher preflight (T3 backend): refuse BEFORE
+            # LAUNCH_INTENT, so a refused dispatch consumes no attempt and
+            # writes no launch state. Native launchers expose no preflight.
+            if self.launcher is not None:
+                _preflight = getattr(type(self.launcher), "preflight", None)
+                if _preflight is not None:
+                    _preflight(self.launcher, job)
             self.store.update_job(job_id, "LAUNCH_INTENT", launch_attempts=job["launch_attempts"] + 1)
             try:
                 if self.launcher:
@@ -1395,8 +2236,18 @@ class Engine:
                     self.store.update_job(
                         job_id, "RUNNING", worker_pid=process.pid, worker_start=process_identity(process.pid)
                     )
+            except ProvenNoLaunch:
+                if job["launch_attempts"] < 1:
+                    self.store.update_job(job_id, "CREATED", no_child=True)
+                else:
+                    self.store.update_job(job_id, "LAUNCH_FAILED", no_child=True)
+                    pause(v, "T3_UNAVAILABLE")
             except OSError:
-                # Popen failed before returning a process: one proven non-launch retry.
+                if self.launcher is not None:
+                    # A launcher may have started remote work before local I/O
+                    # failed. Keep LAUNCH_INTENT for reconciliation.
+                    raise WorkflowError("RECONCILIATION_REQUIRED: launcher I/O outcome is unknown") from None
+                # Native Popen failed before returning a process: one proven non-launch retry.
                 if job["launch_attempts"] < 1:
                     self.store.update_job(job_id, "CREATED", no_child=True)
                 else:
@@ -1443,6 +2294,34 @@ class Engine:
             terminal = destination / "terminal.json"
             if job["status"] == "ACCEPTED":
                 continue  # Its durable result event is replayed by synchronize.
+            # Opt-in launcher collection hook (T3 backend): let the launcher
+            # materialize terminal.json from its durable ledger. Native
+            # launchers expose no poll, so this is a no-op for them.
+            if (
+                job["status"] in ("RUNNING", "LAUNCH_INTENT")
+                and not terminal.exists()
+                and self.launcher is not None
+            ):
+                _poll = getattr(type(self.launcher), "poll", None)
+                if _poll is not None:
+                    try:
+                        _poll(self.launcher, job)
+                    except (
+                        WorkflowError,
+                        ValueError,
+                        JsonSchemaValidationError,
+                        OSError,
+                        TypeError,
+                        KeyError,
+                    ) as _exc:
+                        code = str(_exc).partition(":")[0] if isinstance(_exc, WorkflowError) else None
+                        self.store.update_job(
+                            job_id,
+                            "RECONCILIATION_REQUIRED",
+                            failure=code if code in FAILURES else type(_exc).__name__,
+                        )
+                        pause(v, "RECONCILIATION_REQUIRED")
+                        continue
             if terminal.exists():
                 try:
                     observation = json.loads(terminal.read_text())
@@ -2085,6 +2964,8 @@ class Engine:
             immutable=True,
         )
         event = dict(job_id=job["job_id"], role=job["role"], result=body)
+        if self.launcher and observation.get("model_evidence") in ("executed", "configured_only"):
+            event["model_evidence"] = observation["model_evidence"]
         if verified_private_ref:
             event["verified_private_artifacts"] = [verified_private_ref]
         if prop_meta:
@@ -2147,7 +3028,12 @@ class Engine:
                     event["scope_proposal"] = proposal
 
             elif job["role"] == "builder" and view["candidate"].get("kind") != "stage4-proposal":
-                if not self.launcher:
+                if body.get("verdict") == "BLOCKED":
+                    # A blocked builder has findings but no applicable candidate
+                    # delta. Preserve the current candidate and findings without
+                    # invoking artifact intake or manufacturing validation.
+                    event["candidate"], event["validation"] = self._retain_blocked_builder_candidate(view)
+                elif not self.launcher:
                     validation = json.loads((destination / "validation.json").read_text())
                     if not validation.get("complete"):
                         raise WorkflowError("Required validation did not complete")
@@ -2157,15 +3043,147 @@ class Engine:
                     self._recheck_candidate(event["candidate"])
                     event["validation"] = validation
                 else:
-                    event["candidate"] = freeze(
-                        self.root,
-                        self.config["base_commit"],
-                        self.config["branch"],
-                        self.config["scope"]["allowed_paths"],
-                        destination / "candidate",
-                        self.config["generated"],
-                    )
-                    event["validation"] = {"complete": True, "passed": True, "mode": "SYNTHETIC"}
+                    # T3 builder artifact intake is available only to an
+                    # explicitly test-owned SupervisorLauncher. Other T3
+                    # launchers remain refused. Legacy injected test launchers
+                    # keep their historical workflow, but their candidate is
+                    # credited only after Engine runs its real offline validator.
+                    if getattr(type(self.launcher), "accept_builder_artifacts_for_tests", None) is True:
+                        from builder_artifact_contract import accept_synthetic_t3_builder_candidate
+
+                        assistant_text = f"ENGINE-T3-RESULT {job['job_id']}\n" + json.dumps(
+                            wire, separators=(",", ":")
+                        )
+                        candidate, validation = accept_synthetic_t3_builder_candidate(
+                            launcher=self.launcher,
+                            assistant_text=assistant_text,
+                            job=job,
+                            task_id=session,
+                            executed_model=spec["model"],
+                            base_root=self.root,
+                            destination=destination,
+                            allowed_paths=self.config["scope"]["allowed_paths"],
+                            trusted_validation_commands=self.config["scope"]["validation_commands"],
+                            timeout_seconds=self.config.get("builder_validation_timeout", 60),
+                        )
+                        self._recheck_candidate(candidate)
+                        event["candidate"] = candidate
+                        event["validation"] = {
+                            "complete": validation["validation_complete"],
+                            "passed": validation["validation_passed"],
+                            "mode": "SYNTHETIC_BUBBLEWRAP",
+                            "candidate_snapshot_sha256": validation["candidate_snapshot_sha256"],
+                            "validation_artifact": candidate["artifact_binding"]["validation_artifact"],
+                        }
+                    else:
+                        from t3_dispatch import T3DispatchLauncher
+                        from t3_supervisor_client import ManagedSupervisorLauncher, SupervisorLauncher
+
+                        if isinstance(self.launcher, ManagedSupervisorLauncher):
+                            pending = self.store.pending_builder_artifact(job["job_id"])
+                            if pending is None:
+                                self._intake_managed_builder_return(job, observation, session)
+                            else:
+                                receipt = self.launcher.receipt_for(job)
+                                if (
+                                    not isinstance(receipt, dict)
+                                    or observation.get("supervisor_receipt") != receipt
+                                    or receipt.get("task_id") != session
+                                ):
+                                    raise WorkflowError(
+                                        "RECONCILIATION_REQUIRED: managed builder receipt changed"
+                                    )
+                                _payload, pending_evidence, _receipt_evidence = (
+                                    self._load_pending_builder_application_source(
+                                        job["job_id"],
+                                        session,
+                                        job["spec"]["envelope"]["candidate_id"],
+                                        job["spec"]["envelope"]["plan_revision_hash"],
+                                    )
+                                )
+                                if (
+                                    pending_evidence["builder_binding"].get("supervisor_receipt_sha256")
+                                    != hashlib.sha256(canonical(receipt)).hexdigest()
+                                ):
+                                    raise WorkflowError(
+                                        "RECONCILIATION_REQUIRED: stored builder receipt differs"
+                                    )
+                            if getattr(self.launcher, "builder_enabled", False) is True:
+                                candidate, validation = self.apply_pending_builder_candidate(
+                                    job["job_id"],
+                                    session,
+                                    job["spec"]["envelope"]["candidate_id"],
+                                    job["spec"]["envelope"]["plan_revision_hash"],
+                                )
+                                event["candidate"] = candidate
+                                event["validation"] = validation
+                            else:
+                                # Detached artifacts remain pending by default.
+                                # Keep application disabled when the managed
+                                # builder capability was not explicitly enabled.
+                                raise WorkflowError(
+                                    "RECONCILIATION_REQUIRED: detached builder artifact awaits owner application review"
+                                )
+                        elif isinstance(self.launcher, T3DispatchLauncher | SupervisorLauncher):
+                            if getattr(type(self.launcher), "allow_builder_for_tests", None) is not True:
+                                raise WorkflowError(
+                                    "T3 builder results require an explicit test-owned launcher"
+                                )
+                            if isinstance(self.launcher, SupervisorLauncher):
+                                # Preserve the historical synthetic fixture
+                                # semantics only for an explicitly test-owned
+                                # SupervisorLauncher. This mode is not real
+                                # validation evidence and cannot be selected by
+                                # production T3 launchers (whose class flag is
+                                # false). Artifact-backed test builders use the
+                                # separate path above, which runs real checks.
+                                event["candidate"] = freeze(
+                                    self.root,
+                                    self.config["base_commit"],
+                                    self.config["branch"],
+                                    self.config["scope"]["allowed_paths"],
+                                    destination / "candidate",
+                                    self.config["generated"],
+                                )
+                                self._recheck_candidate(event["candidate"])
+                                event["validation"] = {
+                                    "complete": True,
+                                    "passed": True,
+                                    "mode": "SYNTHETIC",
+                                }
+                            else:
+                                raise WorkflowError(
+                                    "T3 builder result lacks the test-only artifact acceptance contract"
+                                )
+                        else:
+                            import time
+
+                            from validation_runner import run as run_validation
+
+                            validation_spec = {
+                                "root": str(self.root),
+                                "base_commit": self.config["base_commit"],
+                                "branch": self.config["branch"],
+                                "allowed_paths": self.config["scope"]["allowed_paths"],
+                                "generated": self.config["generated"],
+                                "validation_commands": self.config["scope"]["validation_commands"],
+                                "work_item_root": str(
+                                    within(self.root, "docs/ai/work-items/" + view["work_item"])
+                                ),
+                                "control_root": str(self.runtime),
+                            }
+                            validation = run_validation(
+                                validation_spec,
+                                destination,
+                                time.monotonic() + float(self.config.get("builder_validation_timeout", 60)),
+                            )
+                            if not validation.get("complete"):
+                                raise WorkflowError("Required validation did not complete")
+                            event["candidate"] = json.loads(
+                                (destination / "tested-candidate/binding.json").read_text()
+                            )
+                            self._recheck_candidate(event["candidate"])
+                            event["validation"] = validation
             else:
                 self._recheck_candidate(view["candidate"])
                 if (
@@ -2205,6 +3223,51 @@ class Engine:
                 view = checkpoint.get("values", {}).get("view")
                 if view:
                     self._export_view(view)
+
+    def collect_only(self, job_ids=None):
+        """Collect/reconcile only the original, correlated jobs.
+
+        Without ``job_ids`` it selects the unsettled jobs (LAUNCH_INTENT/RUNNING)
+        that match the current plan revision and candidate — the jobs the
+        interrupted pass could have dispatched. With ``job_ids`` every id must
+        exist, be active, and match the same binding, otherwise the call is
+        refused. No job is created and no worker is started.
+        """
+        snapshot = self.graph.get_state(self.graph_config)
+        if not snapshot.values:
+            raise WorkflowError("No initialized checkpoint")
+        view = deepcopy(snapshot.values["view"])
+        active = list(view.get("active_jobs") or [])
+        plan_hash = view.get("plan_revision_hash")
+        candidate_id = (view.get("candidate") or {}).get("candidate_id")
+        if job_ids is not None:
+            if not isinstance(job_ids, list) or len(job_ids) > 50:
+                raise WorkflowError("job_ids must be a bounded list")
+            selected = []
+            for jid in dict.fromkeys(str(j) for j in job_ids):
+                rec = self.store.job(jid)
+                if not rec:
+                    raise WorkflowError(f"Unknown reconciliation job {jid}")
+                if jid not in active:
+                    raise WorkflowError(f"Job {jid} is not active for this run")
+                if rec.get("plan_revision_hash") != plan_hash or rec.get("candidate_id") != candidate_id:
+                    raise WorkflowError(f"Job {jid} does not match the original run binding")
+                selected.append(jid)
+        else:
+            selected = []
+            for jid in active:
+                rec = self.store.job(jid)
+                if not rec:
+                    continue
+                if rec.get("plan_revision_hash") != plan_hash or rec.get("candidate_id") != candidate_id:
+                    continue
+                if rec.get("status") in ("LAUNCH_INTENT", "RUNNING"):
+                    selected.append(jid)
+        view["active_jobs"] = selected
+        result = self._collect({"view": view})
+        self.export()
+        accepted = [jid for jid in selected if (self.store.job(jid) or {}).get("status") == "ACCEPTED"]
+        return {"view": result["view"], "selected": selected, "accepted": accepted}
 
     def run(self):
         if self.store.meta("recovery_required", False):
@@ -2481,6 +3544,13 @@ class Engine:
                 raise WorkflowError("PLAN binding mismatch")
         else:
             raise WorkflowError(f"Unsupported approval scope for grant_and_synchronize: {token['scope']}")
+
+        # Approval must bind the reviewed snapshot to the bytes still present.
+        # Callers hold the execution lock; this is a git-only recheck, not dispatch.
+        self._recheck_candidate(view["candidate"])
+        plan = within(self.root, self.store.meta("plan_artifact", self.config["plan_path"]))
+        if bytes_hash(plan.read_bytes()) != view["plan_revision_hash"]:
+            raise WorkflowError("Approved plan artifact drift before approval")
 
         self.store.grant(token)
         self.store.event("grant-" + token["token_id"], "grant", token)
@@ -2797,6 +3867,9 @@ class Engine:
         if not binary_path.exists() or not os.access(binary_path, os.X_OK):
             raise WorkflowError(f"Tool binary not found or not executable: {binary}")
 
+        # Pin the bytes we are about to execute, not whatever remains afterwards.
+        binary_sha = bytes_hash(binary_path.read_bytes())
+
         try:
             r = subprocess.run([str(binary_path), "--version"], capture_output=True, text=True, timeout=10)
             if r.returncode != 0:
@@ -2816,8 +3889,6 @@ class Engine:
                 )
         except (OSError, subprocess.TimeoutExpired) as exc:
             raise WorkflowError(f"Error inspecting binary {binary}: {exc}")
-
-        binary_sha = bytes_hash(binary_path.read_bytes())
 
         role_name = role if role in ("architect", "reviewer", "builder", "verifier") else "ai-reviewer"
         role_file = within(self.root, f"docs/ai/roles/{role_name}.md")
@@ -2933,6 +4004,7 @@ class Engine:
 
     def execute_dry_run(self):
         """Owner-authorized read-only ERP dry-run. Executes no agent and mutates nothing."""
+        require_host_execution("ERP dry-run")
         view = self.view()
         if view.get("sub_status") != "DRY_RUN":
             raise WorkflowError("Dry-run operation requires the DRY_RUN sub-status")
@@ -2970,6 +4042,7 @@ class Engine:
 
     def execute_import(self):
         """Owner-authorized ERP import: idempotent Arabic write with rollback export."""
+        require_host_execution("ERP import")
         view = self.view()
         if view.get("sub_status") != "IMPORT":
             raise WorkflowError("Import operation requires the IMPORT sub-status")

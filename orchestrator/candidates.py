@@ -21,8 +21,30 @@ def allowed(path, prefixes):
 
 
 def changed(root, base):
-    paths = git(root, "diff", "--name-only", "-z", base).split(b"\0")
-    paths += git(root, "ls-files", "--others", "--exclude-standard", "-z").split(b"\0")
+    # Name-only candidate comparison must not let repository Git configuration
+    # launch external programs. fsmonitor is a hook invoked by git diff; external
+    # diff drivers and textconv can also be configured via attributes/config.
+    # These switches do not change the path set, only forbid side effects.
+    paths = git(
+        root,
+        "-c",
+        "core.fsmonitor=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-textconv",
+        "--name-only",
+        "-z",
+        base,
+    ).split(b"\0")
+    paths += git(
+        root,
+        "-c",
+        "core.fsmonitor=false",
+        "ls-files",
+        "--others",
+        "--exclude-standard",
+        "-z",
+    ).split(b"\0")
     return sorted({p.decode("utf-8") for p in paths if p})
 
 

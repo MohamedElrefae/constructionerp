@@ -1,0 +1,12 @@
+[Unit]
+Description=Create the private loopback-only namespace for managed T3
+Before=managed-t3-egress.service managed-t3.service managed-supervisor.service
+StopWhenUnneeded=yes
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_netns.py create
+ExecStop=/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/managed_netns.py delete
+TimeoutStartSec=10s
+TimeoutStopSec=10s

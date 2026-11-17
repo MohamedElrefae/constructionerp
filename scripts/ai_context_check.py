@@ -306,12 +306,11 @@ def _js_regressions(root: Path) -> tuple[bool, list[str]]:
     if deferred:
         details.append(
             "deferred (prerequisite unavailable here; CI runs these in "
-            "'Run JS Property Tests'): "
-            + "; ".join(f"{p.name} [{', '.join(r)}]" for p, r in deferred)
+            "'Run JS Property Tests'): " + "; ".join(f"{p.name} [{', '.join(r)}]" for p, r in deferred)
         )
     if not runnable:
         details.append("no runnable unit tests after deferral")
-        return True, details   # nothing to run is not a failure of this check
+        return True, details  # nothing to run is not a failure of this check
 
     node = shutil.which("node")
     if node is None:
@@ -324,24 +323,19 @@ def _js_regressions(root: Path) -> tuple[bool, list[str]]:
 
     cmd = [node, "--test", *[str(p) for p, _ in runnable]]
     try:
-        proc = subprocess.run(
-            cmd, cwd=root, capture_output=True, text=True, timeout=300, check=False
-        )
+        proc = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=300, check=False)
     except subprocess.TimeoutExpired:
         return False, ["node --test timed out after 300s"]
 
     output = (proc.stdout or "") + (proc.stderr or "")
-    passed = re.search(r"^ℹ pass (\d+)", output, re.M)
-    failed = re.search(r"^ℹ fail (\d+)", output, re.M)
+    passed = re.search(r"^\u2139 pass (\d+)", output, re.M)
+    failed = re.search(r"^\u2139 fail (\d+)", output, re.M)
     n_pass = int(passed.group(1)) if passed else None
     n_fail = int(failed.group(1)) if failed else None
 
     details.insert(0, f"{len(runnable)} file(s) run via `node --test`")
     if excluded:
-        details.append(
-            "excluded browser tests (need a running bench + credentials): "
-            + ", ".join(excluded)
-        )
+        details.append("excluded browser tests (need a running bench + credentials): " + ", ".join(excluded))
     if n_pass is not None:
         details.append(f"{n_pass} passed")
     if n_fail is not None:

@@ -1,0 +1,2 @@
+# The runtime record is root-owned; dashboard may read it for per-request checks.
+d /run/managed-supervisor-attestation 0755 root root -

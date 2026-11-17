@@ -18,7 +18,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from core import WorkflowError, canonical, utc, write_json
+from core import WorkflowError, canonical, require_host_execution, utc, write_json
 
 # Runs inside `bench --site <site> console` in a single execution (no interactive loops).
 # Reads previous values, writes only account_name_ar, then reads back for reconciliation.
@@ -60,6 +60,8 @@ print("__IMPORT_REPORT__" + json.dumps(report, ensure_ascii=False))
 
 
 def _run_write_console(bench_root, site, planned, timeout=600):
+    # Gate at the side effect, not only at the CLI: library callers are covered too.
+    require_host_execution("ERP import")
     script = _WRITE_SCRIPT.replace("IMPORT_PLAN", json.dumps(json.dumps(planned)))
     bench = str(Path(bench_root) / "env" / "bin" / "bench")
     if not Path(bench).exists():

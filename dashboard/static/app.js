@@ -874,6 +874,9 @@ async function inspectTask(taskId) {
 
 	if (pollTimer) clearInterval(pollTimer);
 	pollTimer = setInterval(refreshTaskDetail, 3000);
+
+	// Reflect durable run state for this task (resumes the viewer after reload).
+	document.dispatchEvent(new CustomEvent("dashboard:task-inspected", { detail: { taskId } }));
 }
 
 async function refreshTaskDetail() {
@@ -1292,6 +1295,306 @@ document.addEventListener("DOMContentLoaded", async () => {
 				msgDiv.style.display = "block";
 			} finally {
 				adoptBtn.disabled = false;
+			}
+		});
+	}
+
+	// Durable server-side run. The browser only starts/observes/stops; the
+	// coordinator loop keeps running when this tab closes, and state survives a
+	// dashboard restart (see dashboard/run_coordinator.py).
+	const RUN_POLL_BASE_MS = 2000;
+	const RUN_POLL_CAP_MS = 10000;
+	let runPollTimer = null;
+	let runPollDelay = RUN_POLL_BASE_MS;
+	let runPollTaskId = null;
+	let lastRunActive = false;
+
+	document.addEventListener("dashboard:task-inspected", (event) => {
+		runPollDelay = RUN_POLL_BASE_MS;
+		pollRunStatus(event.detail.taskId);
+	});
+
+	function renderRunStatus(run) {
+		const msgDiv = document.getElementById("run-msg");
+		const startBtn = document.getElementById("run-start-btn");
+		const pauseBtn = document.getElementById("run-pause-btn");
+		const stopBtn = document.getElementById("run-stop-btn");
+		if (!msgDiv || !startBtn) return false;
+		const state = (run && run.state) || "IDLE";
+		const active = state === "STARTING" || state === "RUNNING";
+		msgDiv.style.display = "block";
+		if (state === "RECONCILIATION_REQUIRED") {
+			msgDiv.className = "alert alert-error";
+		} else if (active) {
+			msgDiv.className = "alert alert-info";
+		} else {
+			msgDiv.className = "alert alert-warning";
+		}
+		const parts = [`Run: ${state}`];
+		if (run && run.passes) parts.push(`passes ${run.passes}`);
+		if (run && run.pause_reason) parts.push(`(${run.pause_reason})`);
+		if (run && run.last_error) parts.push(`— ${run.last_error}`);
+		if (run && run.stop_requested) parts.push("(stop requested; outcome not verified)");
+		if (run && run.abandoned) parts.push("(abandoned; remote state unknown)");
+		msgDiv.textContent = parts.join(" ");
+		startBtn.disabled = active || state === "RECONCILIATION_REQUIRED" || state === "ABANDONED";
+		startBtn.style.display =
+			state === "RECONCILIATION_REQUIRED" || state === "ABANDONED" ? "none" : "inline-block";
+		startBtn.textContent = active ? "Running…" : "Start run";
+		if (!active && (state === "PAUSED" || state === "STOPPED")) {
+			startBtn.textContent = "Resume run";
+		}
+		if (pauseBtn) pauseBtn.style.display = active ? "inline-block" : "none";
+		if (stopBtn) stopBtn.style.display = active ? "inline-block" : "none";
+		const resolveBtn = document.getElementById("run-resolve-btn");
+		const abandonBtn = document.getElementById("run-abandon-btn");
+		const reconciling = state === "RECONCILIATION_REQUIRED";
+		if (resolveBtn) resolveBtn.style.display = reconciling ? "inline-block" : "none";
+		if (abandonBtn) abandonBtn.style.display = reconciling ? "inline-block" : "none";
+		renderCommitPanel(run);
+		lastRunActive = active;
+		return active;
+	}
+
+	async function pollRunStatus(taskId) {
+		if (runPollTimer) clearTimeout(runPollTimer);
+		runPollTimer = null;
+		runPollTaskId = taskId;
+		try {
+			const res = await apiFetch(`/api/tasks/${encodeURIComponent(taskId)}/run-status`);
+			if (!res.ok) {
+				if (runPollTaskId === taskId && lastRunActive) {
+					runPollTimer = setTimeout(() => pollRunStatus(taskId), RUN_POLL_CAP_MS);
+				}
+				return;
+			}
+			const data = await res.json();
+			const active = renderRunStatus(data.run);
+			if (runPollTaskId !== taskId) return;
+			if (active) {
+				runPollTimer = setTimeout(() => pollRunStatus(taskId), runPollDelay);
+				runPollDelay = Math.min(runPollDelay * 1.5, RUN_POLL_CAP_MS);
+			} else {
+				runPollDelay = RUN_POLL_BASE_MS;
+				await refreshTaskDetail();
+			}
+		} catch (err) {
+			console.error("Run status poll failed:", err);
+			if (runPollTaskId === taskId && lastRunActive) {
+				runPollTimer = setTimeout(() => pollRunStatus(taskId), RUN_POLL_CAP_MS);
+			}
+		}
+	}
+
+	async function runCommand(path, taskId, body) {
+		const res = await apiFetch(`/api/tasks/${encodeURIComponent(taskId)}/${path}`, {
+			method: "POST",
+			body: JSON.stringify(body || {}),
+		});
+		let data = {};
+		try {
+			data = await res.json();
+		} catch (err) {
+			data = {};
+		}
+		if (!res.ok && res.status !== 409) {
+			throw new Error(data.detail || "request failed");
+		}
+		return data;
+	}
+
+	function renderCommitPanel(run) {
+		const panel = document.getElementById("run-commit-panel");
+		const reqDiv = document.getElementById("commit-requirements");
+		if (!panel) return;
+		const view = (run && run.last_result && run.last_result.view) || {};
+		const gate = view.gate || {};
+		const isCommit = gate.scope === "COMMIT" || gate.scope === "OWNER_COMMIT";
+		panel.style.display = isCommit ? "block" : "none";
+		if (!isCommit) return;
+		if (reqDiv && reqDiv.dataset.task !== String(activeTaskId)) {
+			reqDiv.dataset.task = String(activeTaskId);
+			apiFetch(`/api/tasks/${encodeURIComponent(activeTaskId)}/commit-requirements`)
+				.then((r) => r.json())
+				.then((d) => {
+					const q = d.requirements || {};
+					reqDiv.textContent = d.pending
+						? `Gate ${q.gate_id} · branch ${q.branch} · parent ${
+								q.expected_parent_sha
+						  } · tree ${q.expected_tree_oid} · job ${q.job_id}. ${
+								d.instructions || ""
+						  }`
+						: "No pending commit gate.";
+				})
+				.catch(() => {});
+		}
+	}
+
+	const resolveBtn = document.getElementById("run-resolve-btn");
+	if (resolveBtn) {
+		resolveBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			if (!taskId) return;
+			await runCommand("run-resolve", taskId, {});
+			pollRunStatus(taskId);
+		});
+	}
+
+	const abandonBtn = document.getElementById("run-abandon-btn");
+	if (abandonBtn) {
+		abandonBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			if (!taskId) return;
+			const ack = window.prompt(
+				'This never asserts the remote job stopped. Type "remote state unknown" to abandon:'
+			);
+			if (ack !== "remote state unknown") return;
+			await runCommand("run-abandon", taskId, { acknowledge: ack });
+			pollRunStatus(taskId);
+		});
+	}
+
+	const commitArmBtn = document.getElementById("commit-arm-btn");
+	if (commitArmBtn) {
+		commitArmBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			const msg = document.getElementById("commit-msg");
+			let token;
+			try {
+				token = JSON.parse(document.getElementById("commit-token").value || "{}");
+			} catch (err) {
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Token is not valid JSON";
+				}
+				return;
+			}
+			try {
+				const data = await runCommand("commit-arm", taskId, {
+					token,
+					action_id: `arm-${Date.now()}`,
+				});
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-info";
+					msg.textContent = "Owner token accepted; make the commit, then verify.";
+				}
+			} catch (err) {
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Arm failed: " + (err.message || "error");
+				}
+			}
+		});
+	}
+
+	const commitVerifyBtn = document.getElementById("commit-verify-btn");
+	if (commitVerifyBtn) {
+		commitVerifyBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			const msg = document.getElementById("commit-msg");
+			try {
+				const data = await runCommand("commit-verify", taskId, {});
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = data.verified ? "alert alert-info" : "alert alert-warning";
+					msg.textContent = data.verified
+						? `Verified commit ${data.commit}`
+						: `Not verified: ${data.detail || "no commit"}`;
+				}
+			} catch (err) {
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Verify failed";
+				}
+			}
+		});
+	}
+
+	const commitRecordBtn = document.getElementById("commit-record-btn");
+	if (commitRecordBtn) {
+		commitRecordBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			const msg = document.getElementById("commit-msg");
+			try {
+				const data = await runCommand("commit-record", taskId, {
+					action_id: `commit-${Date.now()}`,
+				});
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-info";
+					msg.textContent = "Commit recorded; resuming.";
+				}
+				if (data.run) renderRunStatus(data.run);
+				pollRunStatus(taskId);
+			} catch (err) {
+				if (msg) {
+					msg.style.display = "block";
+					msg.className = "alert alert-error";
+					msg.textContent = "Record failed: " + (err.message || "error");
+				}
+			}
+		});
+	}
+
+	const runStartBtn = document.getElementById("run-start-btn");
+	if (runStartBtn) {
+		runStartBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			if (!taskId) return;
+			const msgDiv = document.getElementById("run-msg");
+			runStartBtn.disabled = true;
+			try {
+				const data = await runCommand("run-start", taskId, {
+					action_id: `start-${Date.now()}`,
+				});
+				if (!data.run) {
+					throw new Error("a run is already active for this task");
+				}
+				renderRunStatus(data.run);
+				runPollDelay = RUN_POLL_BASE_MS;
+				pollRunStatus(taskId);
+			} catch (err) {
+				if (msgDiv) {
+					msgDiv.style.display = "block";
+					msgDiv.className = "alert alert-error";
+					msgDiv.textContent =
+						"Start failed: " + (err && err.message ? err.message : "server error");
+				}
+				runStartBtn.disabled = false;
+			}
+		});
+	}
+
+	const runPauseBtn = document.getElementById("run-pause-btn");
+	if (runPauseBtn) {
+		runPauseBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			if (!taskId) return;
+			try {
+				const data = await runCommand("run-pause", taskId, {});
+				if (data.run) renderRunStatus(data.run);
+				pollRunStatus(taskId);
+			} catch (err) {
+				console.error("Pause failed:", err);
+			}
+		});
+	}
+
+	const runStopBtn = document.getElementById("run-stop-btn");
+	if (runStopBtn) {
+		runStopBtn.addEventListener("click", async () => {
+			const taskId = activeTaskId;
+			if (!taskId) return;
+			try {
+				const data = await runCommand("run-stop", taskId, {});
+				if (data.run) renderRunStatus(data.run);
+				pollRunStatus(taskId);
+			} catch (err) {
+				console.error("Stop failed:", err);
 			}
 		});
 	}

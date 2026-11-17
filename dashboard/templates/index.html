@@ -200,6 +200,24 @@
                 <div class="btn-group">
                   <button id="create-review-btn" class="btn btn-secondary" style="display: none;">Create Review Snapshot</button>
                   <button id="approve-plan-btn" class="btn btn-primary" style="display: none;">Approve Plan</button>
+                  <button id="run-start-btn" class="btn btn-primary" type="button">Start run</button>
+                  <button id="run-pause-btn" class="btn btn-secondary" type="button" style="display: none;">Pause</button>
+                  <button id="run-stop-btn" class="btn btn-secondary" type="button" style="display: none;">Stop</button>
+                  <button id="run-resolve-btn" class="btn btn-secondary" type="button" style="display: none;">Resolve outcome</button>
+                  <button id="run-abandon-btn" class="btn btn-secondary" type="button" style="display: none;">Abandon (unknown remote state)…</button>
+                  <div id="run-msg" class="alert" role="status" aria-live="polite" style="display: none; margin-top: 8px;"></div>
+                  <div id="run-commit-panel" class="subcard" style="display: none; margin-top: 8px;">
+                    <h4>Owner commit required</h4>
+                    <div id="commit-requirements" class="text-muted"></div>
+                    <label for="commit-token">Owner COMMIT token (JSON)</label>
+                    <textarea id="commit-token" rows="4" style="width: 100%;"></textarea>
+                    <div class="btn-group">
+                      <button id="commit-arm-btn" class="btn btn-secondary" type="button">1. Submit owner token</button>
+                      <button id="commit-verify-btn" class="btn btn-secondary" type="button">2. Verify commit</button>
+                      <button id="commit-record-btn" class="btn btn-primary" type="button">3. Record commit</button>
+                    </div>
+                    <div id="commit-msg" class="alert" role="status" aria-live="polite" style="display: none; margin-top: 8px;"></div>
+                  </div>
                 </div>
                 <div id="approval-msg" class="alert" style="display: none; margin-top: 8px;"></div>
               </div>

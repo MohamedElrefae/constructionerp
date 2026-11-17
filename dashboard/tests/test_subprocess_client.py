@@ -19,7 +19,8 @@ from dashboard.tests.test_registry import _setup_mock_worktree
 @pytest.mark.anyio
 async def test_action_allowlist_enforced(tmp_path):
     """Verify that only allowlisted actions are permitted."""
-    disallowed_actions = ["pause", "resume", "reset_budget", "run", "reconfigure_role", "eval", "unknown"]
+    disallowed_actions = ["pause", "resume", "reset_budget", "reconfigure_role", "eval", "unknown"]
+    assert "run" in ALLOWED_ACTIONS
     for action in disallowed_actions:
         with pytest.raises(ValueError, match=r"not permitted"):
             await run_action(tmp_path, action)

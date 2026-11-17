@@ -1,0 +1,30 @@
+[Unit]
+Description=Allowlisted HTTPS CONNECT broker for managed T3
+After=network-online.target
+Wants=network-online.target
+Requires=managed-t3-netns.service
+After=managed-t3-netns.service
+PartOf=managed-t3-netns.service
+
+[Service]
+Type=exec
+User=managed-egress
+Group=managed-t3-egress
+RuntimeDirectory=managed-t3-egress
+RuntimeDirectoryMode=0750
+UMask=0007
+ExecStart=/usr/bin/python3 /opt/managed-supervisor/orchestrator/systemd/https_connect_broker.py --socket=/run/managed-t3-egress/broker.sock --socket-group=managed-t3-egress --allow-host=opencode.ai
+Restart=on-failure
+RestartSec=2s
+TimeoutStopSec=10s
+KillMode=control-group
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/run/managed-t3-egress

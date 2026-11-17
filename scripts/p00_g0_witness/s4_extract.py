@@ -77,7 +77,7 @@ Row = Mapping[str, object]
 class Outcome:
     """A single classification outcome (code may be None when no class is emitted)."""
 
-    __slots__ = ("code", "status", "reason")
+    __slots__ = ("code", "reason", "status")
 
     def __init__(self, code: Optional[str], status: str, reason: str) -> None:
         if code is not None and code not in CODES:

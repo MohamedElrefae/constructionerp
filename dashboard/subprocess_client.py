@@ -5,9 +5,10 @@ Strict constraints:
 - Zero Python imports from orchestrator package.
 - Absolute Python executable path.
 - Fixed working directory.
-- Action allowlist: {"state", "plan", "review_context", "ai_context", "adopt_scope", "approve_plan", "initialize"}.
+- Action allowlist: see ALLOWED_ACTIONS (state, plan, review_context,
+  ai_context, adopt_scope, approve_plan, initialize, run, ...).
 - Concurrency bounded by asyncio.Semaphore(4).
-- Strict subprocess timeout (10.0 seconds).
+- Strict subprocess timeout (10.0 s; `run` gets at least 120 s).
 - Passes canonical registry in environment as consistency assertion.
 - Uses dashboard.process for parent-death signaling and lock inheritance.
 """
@@ -20,14 +21,21 @@ from typing import Any
 
 from dashboard.config import (
     CANONICAL_REGISTRY_PATH,
+    FORWARD_ENGINE_DISPATCH_ENV,
+    MANAGED_SUPERVISOR_CONFIG,
+    MANAGED_SUPERVISOR_DISPATCH_CONFIG,
+    MANAGED_SUPERVISOR_DISPATCH_ENABLED,
     MAX_CONCURRENT_SUBPROCESSES,
     ORCHESTRATOR_PYTHON,
     ORCHESTRATOR_ROOT,
     SUBPROCESS_TIMEOUT_SECONDS,
+    SUPERVISOR_SOCKET,
+    SUPERVISOR_TOKEN_FILE,
 )
 from dashboard.process import async_spawn_supervised_child
 
 ALLOWED_ACTIONS = {
+    "run",
     "state",
     "plan",
     "review_context",
@@ -41,6 +49,12 @@ ALLOWED_ACTIONS = {
     "diff",
     "settings",
     "audit",
+    "commit_requirements",
+    "verify_commit",
+    "record_commit",
+    "arm_commit",
+    "collect",
+    "supervisor_health",
 }
 
 _semaphore = asyncio.Semaphore(MAX_CONCURRENT_SUBPROCESSES)
@@ -48,6 +62,32 @@ _semaphore = asyncio.Semaphore(MAX_CONCURRENT_SUBPROCESSES)
 
 class SubprocessClientError(Exception):
     """Exception raised for errors executing subprocess commands."""
+
+
+def child_env(environ=None, forward_engine_dispatch=None, managed_dispatch=False):
+    """Environment for the engine subprocess.
+
+    A browser click must not implicitly inherit a host-level dispatch ack, so
+    ENGINE_NATIVE_DISPATCH / ENGINE_T3_BACKEND are dropped unless the operator
+    sets DASHBOARD_ALLOW_ENGINE_DISPATCH=1. Everything else is inherited.
+    """
+    env = dict(os.environ if environ is None else environ)
+    forward = FORWARD_ENGINE_DISPATCH_ENV if forward_engine_dispatch is None else forward_engine_dispatch
+    if not forward:
+        env.pop("ENGINE_NATIVE_DISPATCH", None)
+        env.pop("ENGINE_T3_BACKEND", None)
+    # Never pass inherited managed-dispatch controls through implicitly.
+    env.pop("DASHBOARD_ENABLE_MANAGED_DISPATCH", None)
+    env.pop("DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG", None)
+    if managed_dispatch:
+        if not MANAGED_SUPERVISOR_DISPATCH_ENABLED or not MANAGED_SUPERVISOR_DISPATCH_CONFIG:
+            raise SubprocessClientError("managed dispatch requires an explicit enable flag and config")
+        env["DASHBOARD_ENABLE_MANAGED_DISPATCH"] = "1"
+        env["DASHBOARD_MANAGED_SUPERVISOR_DISPATCH_CONFIG"] = str(MANAGED_SUPERVISOR_DISPATCH_CONFIG)
+    env["CANONICAL_DASHBOARD_REGISTRY"] = env.get(
+        "CANONICAL_DASHBOARD_REGISTRY", str(CANONICAL_REGISTRY_PATH)
+    )
+    return env
 
 
 async def run_action(
@@ -68,6 +108,18 @@ async def run_action(
     if not worktree.is_dir():
         raise FileNotFoundError(f"Worktree directory not found: {worktree}")
 
+    managed_setting_present = bool(MANAGED_SUPERVISOR_DISPATCH_CONFIG)
+    if action in ("run", "collect") and (managed_setting_present or MANAGED_SUPERVISOR_DISPATCH_ENABLED):
+        if not MANAGED_SUPERVISOR_DISPATCH_ENABLED:
+            raise SubprocessClientError("managed dispatch config is present but dispatch is disabled")
+        if not MANAGED_SUPERVISOR_DISPATCH_CONFIG:
+            raise SubprocessClientError("managed dispatch is enabled but its config path is missing")
+    managed_dispatch = (
+        action in ("run", "collect")
+        and MANAGED_SUPERVISOR_DISPATCH_ENABLED
+        and bool(MANAGED_SUPERVISOR_DISPATCH_CONFIG)
+    )
+
     cmd = [
         str(ORCHESTRATOR_PYTHON),
         "-m",
@@ -83,14 +135,19 @@ async def run_action(
         cmd.extend(["--fencing-token", str(fencing_token)])
     if executor_instance_id:
         cmd.extend(["--executor-instance-id", str(executor_instance_id)])
+    if SUPERVISOR_SOCKET:
+        cmd.extend(["--supervisor-socket", str(SUPERVISOR_SOCKET)])
+    if SUPERVISOR_TOKEN_FILE:
+        cmd.extend(["--supervisor-token-file", str(SUPERVISOR_TOKEN_FILE)])
+    if action == "supervisor_health" and MANAGED_SUPERVISOR_CONFIG:
+        cmd.extend(["--managed-supervisor-config", str(MANAGED_SUPERVISOR_CONFIG)])
     if payload:
         cmd.extend(["--payload", json.dumps(payload)])
 
-    env = dict(os.environ)
-    env["CANONICAL_DASHBOARD_REGISTRY"] = os.environ.get(
-        "CANONICAL_DASHBOARD_REGISTRY", str(CANONICAL_REGISTRY_PATH)
-    )
+    env = child_env(managed_dispatch=managed_dispatch)
 
+    if action == "run":
+        timeout = max(timeout, 120.0)
     async with _semaphore:
         proc = None
         try:
@@ -133,13 +190,14 @@ async def run_action(
 
         if proc.returncode != 0:
             err_msg = stderr_str or stdout_str or f"Subprocess exited with code {proc.returncode}"
+            err_msg = " ".join(err_msg.split())[:300]
             try:
                 err_json = json.loads(stdout_str)
                 if isinstance(err_json, dict) and "error" in err_json:
-                    err_msg = err_json["error"]
+                    err_msg = " ".join(str(err_json["error"]).split())[:300]
             except Exception:
                 pass
-            raise SubprocessClientError(f"Subprocess error: {err_msg} (stderr: {stderr_str})")
+            raise SubprocessClientError(f"Subprocess error: {err_msg} (stderr: {stderr_str[:800]})")
 
         try:
             res = json.loads(stdout_str)
@@ -273,6 +331,13 @@ async def query_diff(worktree_path: Path | str) -> dict[str, Any]:
 async def query_settings(worktree_path: Path | str) -> dict[str, Any]:
     """Retrieve read-only settings, role pins, and escalation counters."""
     return await run_action(worktree_path, "settings")
+
+
+async def query_supervisor_health() -> dict[str, Any]:
+    """Check the optional managed supervisor over its read-only Unix socket."""
+    if not MANAGED_SUPERVISOR_CONFIG:
+        raise SubprocessClientError("managed supervisor health is not configured")
+    return await run_action(ORCHESTRATOR_ROOT, "supervisor_health")
 
 
 async def query_audit_events(

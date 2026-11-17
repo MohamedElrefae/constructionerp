@@ -1,6 +1,7 @@
 """API endpoint integration tests verifying read-only scope, auth, and contract."""
 
 import ast
+import hashlib
 import json
 from pathlib import Path
 
@@ -11,6 +12,95 @@ from dashboard.app import app
 from dashboard.auth import auth_store, session_manager
 from dashboard.bootstrap import ENGINEERING_CONTEXT_PATHS, ENGINEERING_STARTUP_POLICY
 from dashboard.config import REPO_ROOT
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "endpoint,stored_type,stored_task,expected",
+    [
+        ("run-start", "run_start", "requested", 200),
+        ("run-start", "run_start", "other", 409),
+        ("run-start", "run_direct", "requested", 409),
+        ("run", "run_direct", "requested", 200),
+        ("run", "run_direct", "other", 409),
+        ("run", "run_start", "requested", 409),
+        ("commit-record", "record_commit", "requested", 200),
+        ("commit-record", "record_commit", "other", 409),
+        ("commit-record", "run_direct", "requested", 409),
+        ("adopt-scope", "adopt_scope", "requested", 200),
+        ("adopt-scope", "run_start", "requested", 409),
+        ("adopt-scope", "adopt_scope", "other", 409),
+    ],
+)
+async def test_cached_action_is_bound_to_task_and_action_type(
+    tmp_path,
+    monkeypatch,
+    auth_headers_and_cookies,
+    endpoint,
+    stored_type,
+    stored_task,
+    expected,
+):
+    import dashboard.app as appmod
+    from dashboard.registry import TaskRegistry
+
+    registry = TaskRegistry(tmp_path / "registry.db")
+    payload = {"action_id": "review-cached-action"}
+    if endpoint == "adopt-scope":
+        payload.update(scope={"paths": ["src/"]}, implementation_stages=["1"])
+    request_hash = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    conn = registry._get_connection()
+    with conn:
+        conn.execute(
+            "INSERT INTO registered_tasks (task_id, work_item, worktree_path, "
+            "task_branch, registered_utc) VALUES (?,?,?,?,?)",
+            ("requested", "synthetic-review", str(tmp_path / "root"), "test", "2026-11-17"),
+        )
+        conn.execute(
+            "INSERT INTO action_log (action_id, task_id, action_type, state, request_hash, "
+            "manifest_json, response_json, executor_instance_id, executor_pid, "
+            "executor_start_time, created_utc, updated_utc) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                payload["action_id"],
+                stored_task,
+                stored_type,
+                "COMPLETE",
+                request_hash,
+                "{}",
+                '{"generation":1}',
+                "synthetic",
+                1,
+                1,
+                "2026-11-17",
+                "2026-11-17",
+            ),
+        )
+    conn.close()
+    monkeypatch.setattr(appmod, "task_registry", registry)
+    from dashboard.run_coordinator import RunCoordinator
+
+    coordinator = RunCoordinator(registry, instance_id="synthetic-review", locks_dir=tmp_path / "locks")
+    launches = []
+    monkeypatch.setattr(coordinator, "_spawn", lambda task, generation: launches.append((task, generation)))
+    monkeypatch.setattr(appmod, "run_coordinator", coordinator)
+    headers, cookies = auth_headers_and_cookies
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(
+        transport=transport,
+        base_url="https://127.0.0.1:8080",
+        cookies=cookies,
+    ) as client:
+        response = await client.post(f"/api/tasks/requested/{endpoint}", json=payload, headers=headers)
+        if endpoint == "commit-record" and expected == 200:
+            retry = await client.post(f"/api/tasks/requested/{endpoint}", json=payload, headers=headers)
+            assert retry.status_code == 200, retry.text
+    assert response.status_code == expected, response.text
+    handoff_expected = endpoint == "commit-record" and expected == 200
+    assert launches == ([("requested", 1)] if handoff_expected else [])
+    conn = registry._get_connection()
+    assert conn.execute("SELECT COUNT(*) FROM run_state").fetchone()[0] == int(handoff_expected)
+    assert conn.execute("SELECT COUNT(*) FROM action_log").fetchone()[0] == 1
+    conn.close()
 
 
 def test_engineering_policy_constants_match_orchestrator_contract():
@@ -299,3 +389,104 @@ async def test_initial_password_session_blocked_from_task_apis(isolated_worktree
         resp = await client.delete("/api/tasks/task1", headers=headers)
         assert resp.status_code == 403
         assert resp.json()["detail"] == "Password setup required"
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "stored_type,stored_task,matching_hash,expected",
+    [
+        ("approve_plan", "requested", True, 200),
+        ("approve_plan", "other", True, 409),
+        ("record_commit", "requested", True, 409),
+        ("approve_plan", "requested", False, 409),
+    ],
+)
+async def test_approval_cache_requires_matching_context(
+    tmp_path, monkeypatch, auth_headers_and_cookies, stored_type, stored_task, matching_hash, expected
+):
+    import dashboard.app as appmod
+    from dashboard.registry import TaskRegistry
+
+    registry = TaskRegistry(tmp_path / "registry.db")
+    task_id = "requested"
+    gate_id = "gate-review"
+    conn = registry._get_connection()
+    with conn:
+        conn.execute(
+            "INSERT INTO registered_tasks (task_id, work_item, worktree_path, task_branch, registered_utc) "
+            "VALUES (?,?,?,?,?)",
+            (task_id, "synthetic-review", str(tmp_path / "root"), "test", "2026-11-17"),
+        )
+    conn.close()
+    record = registry.create_review_record(
+        task_id=task_id,
+        gate_id=gate_id,
+        plan_revision_hash="plan",
+        scope_hash="scope",
+        roles_hash="roles",
+        content_fingerprint="content",
+        reviewed_by="engineer",
+    )
+    stable_token = {
+        "schema_version": 2,
+        "gate_id": gate_id,
+        "work_item": "synthetic-review",
+        "scope": "PLAN",
+        "stages": ["1"],
+        "plan_revision_hash": "plan",
+        "scope_hash": "scope",
+        "roles_hash": "roles",
+        "repository_id": str(tmp_path / "root"),
+        "branch": "test",
+        "status": "ISSUED",
+        "issuer": "engineer",
+    }
+    digest = hashlib.sha256(
+        json.dumps(
+            {"task_id": task_id, "review_id": record["review_id"], "token": stable_token}, sort_keys=True
+        ).encode()
+    ).hexdigest()
+    conn = registry._get_connection()
+    with conn:
+        conn.execute(
+            "INSERT INTO action_log (action_id, task_id, action_type, state, request_hash, manifest_json, "
+            "response_json, executor_instance_id, executor_pid, executor_start_time, created_utc, updated_utc) "
+            "VALUES (?,?,?,'COMPLETE',?,'{}','{}','synthetic',1,1,?,?)",
+            (
+                "approval-replay",
+                stored_task,
+                stored_type,
+                digest if matching_hash else "different",
+                "2026-11-17",
+                "2026-11-17",
+            ),
+        )
+    conn.close()
+
+    async def context(_path):
+        return {
+            "gate": {"gate_id": gate_id, "scope": "PLAN"},
+            "plan_revision_hash": "plan",
+            "scope_hash": "scope",
+            "roles_hash": "roles",
+            "current_stage": "1",
+        }
+
+    async def unexpected_dispatch(*args, **kwargs):
+        pytest.fail("cached requests must not dispatch an approval")
+
+    monkeypatch.setattr(appmod, "task_registry", registry)
+    monkeypatch.setattr(appmod, "get_review_context", context)
+    monkeypatch.setattr(appmod, "approve_plan", unexpected_dispatch)
+    headers, cookies = auth_headers_and_cookies
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app),
+        base_url="https://127.0.0.1:8080",
+        cookies=cookies,
+    ) as client:
+        response = await client.post(
+            f"/api/tasks/{task_id}/approve-plan",
+            json={"action_id": "approval-replay"},
+            headers=headers,
+        )
+    assert response.status_code == expected, response.text

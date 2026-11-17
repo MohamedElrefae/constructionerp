@@ -575,9 +575,7 @@ class TestSaveMyNativeLayout(unittest.TestCase):
         payload = json.loads(rows[0]["sections_json"])
 
         self.assertEqual(payload["version"], 1)
-        self.assertEqual(
-            payload["sections"], [], "the sentinel must contain zero sections"
-        )
+        self.assertEqual(payload["sections"], [], "the sentinel must contain zero sections")
         # no field may be smuggled in through any other key
         self.assertNotIn("fields", payload)
 
@@ -606,9 +604,7 @@ class TestSaveMyNativeLayout(unittest.TestCase):
 
             after = get_active_layout(self.ALLOWED_DOCTYPE)
             self.assertIsNotNone(after)
-            self.assertNotEqual(
-                after["name"], default.name, "sentinel must win Step 1 over default"
-            )
+            self.assertNotEqual(after["name"], default.name, "sentinel must win Step 1 over default")
             self.assertEqual(after["sections"], [], "resolved layout must be empty/native")
         finally:
             frappe.set_user("Administrator")
@@ -651,9 +647,7 @@ class TestSaveMyNativeLayout(unittest.TestCase):
     def test_guard_still_blocks_role_profile_for_ordinary_user(self):
         frappe.set_user(self.READER)
         with self.assertRaises(frappe.PermissionError):
-            _create_profile(
-                doctype=self.ALLOWED_DOCTYPE, for_role="Projects User", for_user=self.READER
-            )
+            _create_profile(doctype=self.ALLOWED_DOCTYPE, for_role="Projects User", for_user=self.READER)
 
     def test_guard_still_blocks_profile_for_another_user(self):
         frappe.set_user(self.READER)

@@ -150,7 +150,8 @@ class ExtractorTests(unittest.TestCase):
     def test_integrity_failure_maps_to_fail(self):
         ex = S4Extractor(
             lambda q: [{"trx_is_read_only": 1, "trx_autocommit_non_locking": 0}],
-            clock=lambda: 10.0, sleeper=lambda s: None,
+            clock=lambda: 10.0,
+            sleeper=lambda s: None,
         )
         rec = ex.extract(integrity_failed=True)
         self.assertEqual(
@@ -160,10 +161,12 @@ class ExtractorTests(unittest.TestCase):
         self.assertEqual(rec["redaction_decision"], "withheld")
 
     def test_assess_conflicting_evidence_incomplete(self):
-        seq = iter([
-            {"trx_is_read_only": 1, "trx_autocommit_non_locking": 0},
-            {"trx_is_read_only": 0, "trx_autocommit_non_locking": 0},
-        ])
+        seq = iter(
+            [
+                {"trx_is_read_only": 1, "trx_autocommit_non_locking": 0},
+                {"trx_is_read_only": 0, "trx_autocommit_non_locking": 0},
+            ]
+        )
         times = iter([10.0, 10.0, 10.2])
         ex = S4Extractor(lambda q: [next(seq)], clock=lambda: next(times), sleeper=lambda s: None)
         rec = ex.assess(case_id="Q7-P1-03")
