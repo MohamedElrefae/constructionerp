@@ -9,3 +9,5 @@ A disposable demonstration successfully sent a small builder task through the da
 The Construction ERP repository already contains application work including BOQ, scope context, themes and form layouts. The integration work is a proposed enhancement to this existing application; this report does not certify those business areas as release ready.
 
 To finish, the development team needs to choose and verify a working provider and service boundary, connect and test the authenticated live dashboard flow in a disposable project, and complete security, recovery and release checks. The accompanying developer report identifies what is proven and what is not. Do not enter real customer work into this integration until it has been verified and deployed.
+
+The source is now consolidated into the existing Construction app. Retired debug folders and bench worktrees have been removed after verification, and the dashboard's scattered runtime folders have been replaced by one runtime directory. The dashboard is running and its accounts were preserved. This cleanup does not enable unfinished production builder dispatch.

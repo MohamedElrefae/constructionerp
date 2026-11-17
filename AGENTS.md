@@ -13,7 +13,7 @@
 ## 1. Project Identity
 - **Name:** Construction ERP (Frappe/ERPNext custom app)
 - **App name:** `construction` (used in imports: `from construction.xxx import yyy`)
-- **Repo root:** checkout-specific; resolve with `git rev-parse --show-toplevel`. For the T3 integration continuation, use the checkout tracking `t3-integration-review-20261117` and read `docs/ai/t3-integration-handover/README.md`. An installed bench checkout is a deployment location and may have separate local work.
+- **Repo root:** checkout-specific; resolve with `git rev-parse --show-toplevel`. For T3 integration, continue local work in the existing bench app checkout and read `docs/ai/t3-integration-handover/README.md`. The public `t3-integration-review-20261117` branch is the sanitized sharing branch; do not publish private local history or runtime state.
 - **Author:** Mohamed Elrefae (solo civil engineer developer)
 - **License:** MIT
 - **Current branch:** `develop`

@@ -1,30 +1,35 @@
 # Integration source consolidation
 
-Snapshot: 17 November 2026. The continuation branch is `t3-integration-review-20261117`. Use this repository checkout for future T3 integration source changes. Production dispatch remains disabled.
+Snapshot: 17 November 2026. Production builder dispatch remains disabled.
 
-## Clean source and Git boundary
+## One development checkout
 
-The canonical local checkout was cloned directly from this public branch with `--single-branch --depth 1`; private branches, dangling objects and unpushed local history from the bench repository were not copied. The working tree contains the app's published source plus the integration candidate. Installed Frappe sites, database files, credentials, captured conversations, copied T3 profiles, package caches and recovery archives are outside this source checkout. `.gitignore` excludes new local runtime, site and environment-secret files.
+The bench application's `apps/construction` checkout is the local source of truth. The reviewed public integration commits were merged into that app after a separate checkpoint preserved its existing application changes. The local continuation branch is `local/app-consolidated-20261117`. Dashboard and orchestrator source belong inside this app; they are functional components, not disposable duplicate folders.
 
-A tracked-text scan covered 2,501 text files. Its 54 matches were reviewed as test-only credential/token strings, credential-redaction assertions or translated/display labels. The patterns found no private keys or JWTs. This is a bounded source check, not a claim that pattern scanning proves absence of every possible sensitive value. Existing published binary assets and historical material are inherited from the app baseline; this task did not rewrite public history.
+The public `t3-integration-review-20261117` branch is the sanitized sharing branch for external agents. It excludes the app's private local commits and unrelated unpublished work. Do not push the local consolidation branch, its complete Git history, private archives, credentials or installed state to the public repository. The temporary publication clone is retired after synchronization; it is not a second development checkout.
 
-## Recovered earlier work
+## Runtime and cleanup
 
-The existing offline `orchestrator/engineering_control_contracts` package and seven associated test modules were recovered from the earlier integration worktree. They contain WP1 contract/store/provenance proof and WP2 enrollment/projection prototypes. They are standalone, test-only proof; this consolidation does not wire them into a production route.
+The five formerly scattered top-level T3 dashboard directories were consolidated into `runtime/dashboard` under the bench. This is installed runtime and private state, not an editable development checkout. Its immutable dashboard snapshot and canonical state remain in use. The merged app candidate has not been rebuilt and qualified as the live production release.
 
-Their verification reported **314 passed and 3 expected failures**. The three expected failures require the legacy `Engine.reconfigure_role_paused` API, absent from the current runtime. They remain strict expected failures limited to `AttributeError`; compatibility is unresolved and is not counted as passing. An earlier unknown-origin O04 guard file with known conflicts remains in the private recovery archive and is not adopted as an authoritative test.
+The startup supervisor, restart helper, catalogue publisher and credential-maintenance source now live in the app's `dashboard/operations`, with the shared allowlist file helper in `dashboard/catalog_files.py`. Their active services use that source. The obsolete alternate dashboard service and superseded tool copies were retired. No model was run during cleanup.
 
-The previously reviewed candidate also passed 80 focused supervisor/builder/attestation tests and 21 subtests (3 skips), 14 dashboard tests, 51 engine tests, and 40 service/verifier tests with 8 subtests. Those counts refer to the preceding review candidate; the recovered legacy modules were checked separately as stated above. No combined full-app or live production claim is made.
+An additional 27 role-debug folders and all ten working copies under the bench's `worktrees` directory were removed after a private archive verified 28,549 entries. Generated dependency environments and caches were excluded from that archive. One idle draft dashboard task referring to a retired worktree was unregistered; its history and pre-change registry were preserved. There were no executing or recovering dashboard actions. Account-file bytes were unchanged.
 
-## Local cleanup boundary
+Earlier cleanup retired 23 historical integration roots after verifying 58,542 archive entries. Another verified archive preserves the pre-relocation dashboard and service configuration (6,093 entries). Verified private Git bundles preserve original and consolidated local history. Recovery archives can contain secrets and private work: keep them outside Git and do not restore old runtime databases over current state.
 
-Twenty-three historical integration roots were retired after a private archive verified 58,542 retained entries against source checksums: working copies, inactive release/rehearsal directories, integration outputs, synthetic pilots and two inactive integration worktrees. A separate verified Git bundle preserves their shared repository history. Generated caches and sockets are omitted from the recovery archive.
+Frappe sites and customer databases, active credentials and unrelated hidden feature worktrees are outside this cleanup. Historical design documents describe earlier experiments; the current handover reports define the integration status. Preserving a document does not make it a second active plan.
 
-The currently running dashboard's installed releases, service configuration, credentials, canonical runtime state and bench application deployment remain operational. They are deployment dependencies, not development checkouts. Other worktrees for unrelated app tasks and unrelated uncommitted application changes are preserved. Do not delete sites, services or another task's working tree as routine source cleanup.
+## Verification
 
-## Next development session
+The merged actual app passed **86 focused engine/builder/result tests and two subtests**, plus five dashboard dispatch-control tests. Schema drift validation passed; the host context checker passed all 12 checks, including 183 JavaScript regressions. Its first restricted-sandbox invocation failed two subprocess-based test files; the host rerun passed without code changes. The relocated guarded startup was observed ready, the dashboard returned HTTP 200, and unauthenticated task access returned 401. The catalogue refresh and metadata-only expiry services completed successfully. Catalogue output allowlisting, private output permissions, the four expiry-warning levels and the relocated rotation-command path were checked. Credential issuance/rotation and a real reboot were not exercised by this cleanup.
 
-1. Check out this branch, read the owner/developer reports and the repository engineering instructions.
-2. Keep local runtime and credentials outside the checkout. Run source and relevant isolated tests with a disposable environment; do not copy a live database or authentication profile into Git.
-3. Resolve the working-provider/service boundary and authenticated real dashboard dispatch gaps identified in the developer report.
-4. Reconcile any needed changes from the separately preserved bench application work before a deployment. Never treat an installed checkout or a historical archive as a competing source of new integration edits.
+Previously recovered standalone WP1/WP2 contract, enrollment and projection tests reported 314 passed and three strict expected failures limited to the absent legacy `Engine.reconfigure_role_paused` API. These prototypes remain test-only. Earlier candidate test counts and real-model pilot limits remain in the developer report; they are not evidence of production isolation or authenticated live builder dispatch.
+
+## Sanitization boundary
+
+The earlier published source scan covered 2,501 text files and reviewed its matches as synthetic fixtures, redaction assertions or display labels. Added operational source contains no copied credential values or runtime records. Pattern scanning is bounded evidence, not proof that every possible sensitive value is absent. Existing published binary assets and public history were not comprehensively rewritten. The actual app's private local Git history remains private even though the sharing branch is sanitized.
+
+## Continue here
+
+Use the app checkout for local edits and this handover for current status. Use the public sharing branch for online agents. Follow the developer report's remaining provider/service-boundary and authenticated dashboard-dispatch checks before enabling production work. Keep private runtime outside versioned source; do not create another competing full app copy.
