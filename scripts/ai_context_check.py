@@ -150,6 +150,8 @@ def _registry(root: Path) -> tuple[bool, list[str]]:
         "construction_theme",
         "costitem",
         "direct_labor_designation",
+        "execution_breakdown_node",
+        "execution_code_counter",
         "form_layout_profile",
         "journal_entry",
         "modern_theme_settings",

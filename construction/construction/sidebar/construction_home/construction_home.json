@@ -290,6 +290,24 @@
    "parentfield": "items",
    "parenttype": "Sidebar",
    "type": "Link"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 31,
+   "label": "Execution",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Section Break"
+  },
+  {
+   "doctype": "Sidebar Item",
+   "idx": 32,
+   "label": "Execution Breakdown",
+   "link_to": "execution-breakdown",
+   "link_type": "Page",
+   "parentfield": "items",
+   "parenttype": "Sidebar",
+   "type": "Link"
   }
  ],
  "module": "construction",

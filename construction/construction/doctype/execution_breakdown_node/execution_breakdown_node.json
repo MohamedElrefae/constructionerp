@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_import": 0,
+ "allow_rename": 0,
+ "autoname": "format:EBN-{#####}",
+ "creation": "2026-11-18 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_identity",
+  "project",
+  "company",
+  "ebs_code",
+  "cb_identity",
+  "title",
+  "parent_node",
+  "is_group",
+  "disabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_identity",
+   "fieldtype": "Section Break",
+   "label": "Identity"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_standard_filter": 0,
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 0,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "ebs_code",
+   "fieldtype": "Data",
+   "label": "Execution Code",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "cb_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parent_node",
+   "fieldtype": "Link",
+   "label": "Parent Location",
+   "options": "Execution Breakdown Node",
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "max_attachments": 0,
+ "modified": "2026-11-18 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "construction",
+ "name": "Execution Breakdown Node",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "search_fields": "title,ebs_code,project",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}

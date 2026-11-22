@@ -169,7 +169,7 @@ app_include_js = [
     # v16 runtime safety net — no-op (CSS handles all styling)
     "/assets/construction/js/theme_loader_v16.js?v=2",
     # Scope Context — core class for managing user company/cost_center/project/dept scope
-    "/assets/construction/js/scope_context.js?v=3",
+    "/assets/construction/js/scope_context.js?v=4",
     # Frappe Desk compatibility fixes that must run before list views initialize
     "/assets/construction/js/frappe_compat_patches.js?v=2",
     # Scope Context — navbar UI selectors (cascading company/cost_center/project/dept dropdowns)
@@ -343,8 +343,12 @@ doc_events = {
         "validate": [
             "construction.services.bilingual_service.enforce_bilingual_arabic_policy",
             "construction.services.narrative_sanitizer.validate_narrative_fields",
-        ]
+            "construction.services.execution_tree.project_validate",
+        ],
+        "before_rename": "construction.services.execution_tree.project_before_rename",
+        "on_trash": "construction.services.execution_tree.project_on_trash",
     },
+    "DocShare": {"validate": "construction.services.execution_tree_access.reject_protected_share"},
     "Item Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Customer Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
     "Supplier Group": {"validate": "construction.services.bilingual_service.enforce_bilingual_arabic_policy"},
@@ -426,6 +430,12 @@ permission_query_conditions = {
 permission_query_conditions["Form Layout Profile"] = (
     "construction.overrides.layout_permissions.form_layout_profile_query_conditions"
 )
+permission_query_conditions["Execution Breakdown Node"] = (
+    "construction.services.execution_tree_access.protected_query_conditions"
+)
+permission_query_conditions["Execution Code Counter"] = (
+    "construction.services.execution_tree_access.protected_query_conditions"
+)
 
 has_permission = {
     doctype: "construction.overrides.boq_permissions.has_boq_parent_permission"
@@ -450,6 +460,20 @@ has_permission["File"] = "construction.overrides.file_permissions.has_file_paren
 has_permission["Form Layout Profile"] = (
     "construction.overrides.layout_permissions.has_form_layout_profile_permission"
 )
+has_permission["Execution Breakdown Node"] = (
+    "construction.services.execution_tree_access.has_protected_permission"
+)
+has_permission["Execution Code Counter"] = (
+    "construction.services.execution_tree_access.has_protected_permission"
+)
+
+before_install = [
+    "construction.setup.execution_tree_schema.preflight_install",
+]
+
+before_migrate = [
+    "construction.setup.execution_tree_schema.preflight_install",
+]
 
 # Fixtures - Phase 2: Construction Theme records
 fixtures = [
@@ -475,6 +499,7 @@ after_install = [
     "construction.install.setup_item_construction_fields",
     "construction.setup.bilingual_schema.ensure_bilingual_schema",
     "construction.setup.translation_catalog_fields.ensure_translation_identity",
+    "construction.setup.execution_tree_schema.ensure_execution_tree_schema",
     "construction.translation_service.import_released_overrides_hook",
 ]
 
@@ -498,6 +523,7 @@ after_migrate = [
     "construction.install.setup_item_construction_fields",
     "construction.setup.bilingual_schema.ensure_bilingual_schema",
     "construction.setup.translation_catalog_fields.ensure_translation_identity",
+    "construction.setup.execution_tree_schema.ensure_execution_tree_schema",
     "construction.translation_service.import_released_overrides_hook",
 ]
 
@@ -523,4 +549,6 @@ translated_doctypes = {
     "User Scope Context": ["ar"],
     "Variation Order": ["ar"],
     "VO Line": ["ar"],
+    "Execution Breakdown Node": ["ar"],
+    "Execution Code Counter": ["ar"],
 }

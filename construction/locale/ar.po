@@ -4449,3 +4449,251 @@ msgstr ""
 #: construction/services/timesheet_designation.py
 msgid "An active User Scope Context is required to select Employee {0}."
 msgstr ""
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Execution Breakdown"
+msgstr "تفصيل التنفيذ"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Execution locations"
+msgstr "مواقع التنفيذ"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Select a Project in the top bar to view its execution tree."
+msgstr "اختر مشروعًا من الشريط العلوي لعرض شجرة التنفيذ الخاصة به."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "The selected Project changed. Try again."
+msgstr "تغيّر المشروع المحدد. حاول مرة أخرى."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Retry scope save"
+msgstr "إعادة محاولة حفظ النطاق"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Could not confirm the scope. Retry or refresh the page."
+msgstr "تعذر تأكيد النطاق. أعد المحاولة أو حدّث الصفحة."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Saving scope…"
+msgstr "جارٍ حفظ النطاق…"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Loading…"
+msgstr "جارٍ التحميل…"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Not permitted."
+msgstr "غير مسموح."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "No execution locations yet."
+msgstr "لا توجد مواقع تنفيذ بعد."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Add root location"
+msgstr "إضافة موقع جذر"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Add child"
+msgstr "إضافة فرع"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Edit"
+msgstr "تعديل"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Move"
+msgstr "نقل"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Disable"
+msgstr "تعطيل"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Enable"
+msgstr "تمكين"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Delete"
+msgstr "حذف"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Disabled"
+msgstr "معطّل"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Is Group"
+msgstr "مجموعة"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Add execution location"
+msgstr "إضافة موقع تنفيذ"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Edit execution location"
+msgstr "تعديل موقع تنفيذ"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Move execution location"
+msgstr "نقل موقع تنفيذ"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Delete this execution location?"
+msgstr "هل تريد حذف موقع التنفيذ هذا؟"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Destination parent"
+msgstr "الموقع الأب المقصود"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Select a group in this Project."
+msgstr "اختر مجموعة داخل هذا المشروع."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Company"
+msgstr "الشركة"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Apply my selection"
+msgstr "طبق اختياري"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Use saved scope"
+msgstr "استخدم النطاق المحفوظ"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "The saved scope is now Project:"
+msgstr "النطاق المحفوظ هو الآن:"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Apply your selection or use the saved scope."
+msgstr "طبق اختيارك أو استخدم النطاق المحفوظ."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Another session changed the scope. Choose how to resolve it."
+msgstr "غيّرت جلسة أخرى النطاق. اختر كيفية حله."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Retrying scope save…"
+msgstr "جارٍ إعادة محاولة حفظ النطاق…"
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.json
+msgid "Execution Breakdown Node"
+msgstr "عقدة تفصيل التنفيذ"
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.json
+msgid "Execution Code"
+msgstr "رمز التنفيذ"
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.json
+msgid "Parent Location"
+msgstr "الموقع الأب"
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.json
+msgid "Execution Code Counter"
+msgstr "عدّاد رموز التنفيذ"
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.json
+msgid "Last Issued"
+msgstr "آخر رمز صادر"
+
+#: construction/services/execution_tree.py
+msgid "This record changed. Reload the tree and try again."
+msgstr "تغيّر هذا السجل. أعد تحميل الشجرة ثم حاول مجددًا."
+
+#: construction/services/execution_tree.py
+msgid "The execution tree exceeds its supported size."
+msgstr "تتجاوز شجرة التنفيذ الحجم المدعوم."
+
+#: construction/services/execution_tree.py
+msgid "The parent version is required."
+msgstr "إصدار الموقع الأب مطلوب."
+
+#: construction/services/execution_tree.py
+msgid "The destination parent version is required."
+msgstr "إصدار الموقع الأب المقصود مطلوب."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "A valid Project is required."
+msgstr "مشروع صالح مطلوب."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "A node cannot be its own parent."
+msgstr "لا يمكن أن تكون العقدة أبًا لنفسها."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "A valid same-Project parent is required."
+msgstr "موقع أب صالح داخل المشروع نفسه مطلوب."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "The parent must be a group."
+msgstr "يجب أن يكون الموقع الأب مجموعة."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "A node cannot move below its own subtree."
+msgstr "لا يمكن نقل العقدة أسفل شجرتها الفرعية."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "Execution tree nodes cannot be renamed."
+msgstr "لا يمكن إعادة تسمية عقد شجرة التنفيذ."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "A node with children cannot be deleted."
+msgstr "لا يمكن حذف عقدة لها فروع."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "The Company is derived from the Project."
+msgstr "تُشتق الشركة من المشروع."
+
+#: construction/construction/doctype/execution_breakdown_node/execution_breakdown_node.py
+msgid "Execution tree identity fields cannot be changed."
+msgstr "لا يمكن تغيير حقول هوية شجرة التنفيذ."
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.py
+msgid "The counter Project cannot be changed."
+msgstr "لا يمكن تغيير مشروع العدّاد."
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.py
+msgid "Execution code counters cannot be renamed."
+msgstr "لا يمكن إعادة تسمية عدّادات رموز التنفيذ."
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.py
+msgid "Execution code counters cannot be deleted."
+msgstr "لا يمكن حذف عدّادات رموز التنفيذ."
+
+#: construction/services/execution_tree.py
+msgid "The Project Company cannot change after the first execution code was issued."
+msgstr "لا يمكن تغيير شركة المشروع بعد إصدار أول رمز تنفيذ."
+
+#: construction/services/execution_tree.py
+msgid "Execution tree integrity failure: nodes exist without a counter."
+msgstr "خلل في سلامة شجرة التنفيذ: توجد عقد دون عدّاد."
+
+#: construction/services/execution_tree.py
+msgid "A Project with execution tree history cannot be renamed, merged or deleted."
+msgstr "لا يمكن إعادة تسمية أو دمج أو حذف مشروع له سجل شجرة تنفيذ."
+
+#: construction/services/execution_tree.py
+msgid "A Project with execution tree history cannot be deleted."
+msgstr "لا يمكن حذف مشروع له سجل شجرة تنفيذ."
+
+#: construction/services/execution_tree_access.py
+msgid "Sharing execution tree records is not permitted."
+msgstr "مشاركة سجلات شجرة التنفيذ غير مسموحة."
+
+#: construction/api/execution_tree_api.py
+msgid "Unknown request argument."
+msgstr "وسيط طلب غير معروف."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Expand children"
+msgstr "توسيع العناصر الفرعية"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Collapse children"
+msgstr "طي العناصر الفرعية"
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "Root (no parent)"
+msgstr "الجذر (دون عنصر أب)"

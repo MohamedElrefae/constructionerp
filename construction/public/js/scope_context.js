@@ -5,6 +5,7 @@
 	if (window.scopeContext) return;
 
 	var SCOPE_LS_KEY = "scope_context_current";
+	var SCOPE_DIMS = ["company", "cost_center", "project", "department"];
 
 	window.ScopeContext = class ScopeContext {
 		constructor() {
@@ -20,11 +21,26 @@
 			this._version = frappe.boot?.scope_context?._version;
 			this._selectors = {};
 			this._listeners = [];
+			this._savePending = false;
+			this._saveFailed = false;
+			this._saveQueued = null;
+			this._attemptedScope = null;
+			this._conflict = null;
+			this._retryGeneration = 0;
+			this._externalChangeGeneration = 0;
+			this.supportsSaveConfirmation = true;
 		}
 
 		init() {
 			if (!this.enabled) return;
+			var bootScope = this.getCurrentScope();
 			this._hydrateAndValidate();
+			var hydratedScope = this.getCurrentScope();
+			if (SCOPE_DIMS.some(function (key) {
+				return bootScope[key] !== hydratedScope[key];
+			})) {
+				this._saveFailed = true;
+			}
 			this._renderSelectors();
 			this._bindEvents();
 			this._setupMultiTabSync();
@@ -122,8 +138,54 @@
 		}
 
 		_saveToServer() {
-			var scope = this.getCurrentScope();
-			frappe.call({
+			this._retryGeneration += 1;
+			this._saveQueued = this.getCurrentScope();
+			this._saveFailed = false;
+			this._conflict = null;
+			if (this._savePending) return;
+			this._flushSave();
+		}
+
+		_flushSave() {
+			var scope = this._saveQueued;
+			if (!scope) return;
+			this._saveQueued = null;
+			this._savePending = true;
+			var self = this;
+			var generation = this._externalChangeGeneration;
+			var settled = false;
+			function finish(success, response) {
+				if (settled) return;
+				settled = true;
+				self._savePending = false;
+				if (generation !== self._externalChangeGeneration) {
+					self._saveQueued = null;
+					self._saveFailed = true;
+					self._attemptedScope = scope;
+					$(document).trigger("scope:save_failed");
+					return;
+				}
+				if (success) {
+					self._version = response.scope_version;
+				}
+				if (self._saveQueued) {
+					self._flushSave();
+					return;
+				}
+				var actual = success && response.current_scope;
+				var current = self.getCurrentScope();
+				var matches = actual && SCOPE_DIMS.every(function (key) {
+					return (actual[key] || null) === (scope[key] || null) && (current[key] || null) === (scope[key] || null);
+				});
+				self._saveFailed = !matches;
+				self._attemptedScope = matches ? null : scope;
+				if (matches) {
+					self._conflict = null;
+					self._persistToLocalStorage();
+				}
+				$(document).trigger(matches ? "scope:save_confirmed" : "scope:save_failed");
+			}
+			var request = frappe.call({
 				method: "construction.api.scope_context_api.set_scope_context",
 				args: {
 					company: scope.company,
@@ -131,14 +193,80 @@
 					project: scope.project,
 					department: scope.department,
 					source: "erpnext",
+					expected_scope_version: this._version || 0,
 				},
-				callback: function (r) {
-					if (r.message && r.message.scope_version) {
-						this._version = r.message.scope_version;
-						this._persistToLocalStorage();
-					}
-				}.bind(this),
+				callback: function (r) { finish(!!(r.message && r.message.success && r.message.scope_version), r.message); },
+				error: function () { finish(false); },
 			});
+			// Frappe handles some errors internally without calling opts.error.
+			if (request && typeof request.fail === "function") {
+				request.fail(function () { finish(false); });
+			}
+		}
+
+		retrySave() {
+			var self = this;
+			if (this._savePending || this._saveQueued || this._conflict) return;
+			var generation = ++self._retryGeneration;
+			var request = frappe.call({
+				method: "construction.api.scope_context_api.get_scope_context",
+				callback: function (r) {
+					if (generation !== self._retryGeneration) return;
+					var msg = (r && r.message) || {};
+					var authoritative = msg.scope || {};
+					self._version = msg.scope_version || 0;
+					var current = self.getCurrentScope();
+					var unchanged = SCOPE_DIMS.every(function (key) {
+						return (authoritative[key] || null) === (current[key] || null);
+					});
+					if (unchanged) {
+						// Re-apply the user's intent against the fresh version.
+						self._attemptedScope = null;
+						self._saveFailed = false;
+						self._saveToServer();
+					} else {
+						// The server holds a different Project. Ask the user to
+						// resolve it explicitly; never overwrite silently.
+						self._saveFailed = true;
+						self._conflict = { authoritative: authoritative };
+						$(document).trigger("scope:save_conflict");
+						$(document).trigger("scope:save_failed");
+					}
+				},
+			});
+			if (request && typeof request.fail === "function") {
+				request.fail(function () {
+					if (generation !== self._retryGeneration) return;
+					self._saveFailed = true;
+					$(document).trigger("scope:save_failed");
+				});
+			}
+		}
+
+		applySelection() {
+			// "Apply my selection": re-save the user's current selection
+			// against the freshly refreshed version.
+			if (!this._conflict || this._savePending || this._saveQueued) return;
+			this._conflict = null;
+			this._saveFailed = false;
+			this._saveToServer();
+		}
+
+		applySavedScope() {
+			// "Use saved scope": accept the authoritative saved Project —
+			// adopt it locally and let pages re-read it. No save is sent; the
+			// server scope is already authoritative.
+			var conflict = this._conflict;
+			if (!conflict || this._savePending || this._saveQueued) return;
+			this._retryGeneration += 1;
+			this._conflict = null;
+			this._saveFailed = false;
+			this.current.company = conflict.authoritative.company || null;
+			this.current.cost_center = conflict.authoritative.cost_center || null;
+			this.current.project = conflict.authoritative.project || null;
+			this.current.department = conflict.authoritative.department || null;
+			this._persistToLocalStorage();
+			this._emitChange();
 		}
 
 		_isCompanyValid(compName) {
@@ -289,10 +417,19 @@
 					if (parsed.site && parsed.site !== window.location.origin) {
 						return;
 					}
-					if (parsed.company) this.current.company = parsed.company;
-					if (parsed.cost_center) this.current.cost_center = parsed.cost_center;
-					if (parsed.project) this.current.project = parsed.project;
-					if (parsed.department) this.current.department = parsed.department;
+					this.current.company = parsed.company || null;
+					this.current.cost_center = parsed.cost_center || null;
+					this.current.project = parsed.project || null;
+					this.current.department = parsed.department || null;
+					if (Number.isInteger(parsed.version) && parsed.version >= 0) {
+						this._version = parsed.version;
+					}
+					// Another tab may have written before its server save completed.
+					this._externalChangeGeneration += 1;
+					this._saveQueued = null;
+					this._saveFailed = true;
+					this._conflict = null;
+					this._retryGeneration += 1;
 					this._sanitizeCurrentScope();
 				}
 			} catch (e) {

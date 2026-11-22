@@ -252,6 +252,24 @@ def invalidate_scope_cache(user=None):
 _UNSPECIFIED = object()
 
 
+def _locked_scope_for_save(user, expected_scope_version):
+    """Serialize a user's scope writes and reject a stale version when supplied."""
+    if not frappe.db.get_value("User", user, "name", for_update=True):
+        frappe.throw(_("User not found."), frappe.PermissionError)
+    existing_name = frappe.db.get_value("User Scope Context", {"user": user}, "name", for_update=True)
+    scope_doc = (
+        frappe.get_doc("User Scope Context", existing_name, for_update=True)
+        if existing_name
+        else frappe.new_doc("User Scope Context")
+    )
+    if expected_scope_version is not _UNSPECIFIED:
+        if isinstance(expected_scope_version, bool) or not str(expected_scope_version).isdigit():
+            frappe.throw(_("Invalid scope version."), frappe.ValidationError)
+        if int(expected_scope_version) != int(scope_doc.scope_version or 0):
+            frappe.throw(_("Scope changed in another session. Reload and try again."), frappe.TimestampMismatchError)
+    return scope_doc
+
+
 @frappe.whitelist()
 def set_scope_context(
     company=_UNSPECIFIED,
@@ -261,6 +279,7 @@ def set_scope_context(
     department=_UNSPECIFIED,
     source="erpnext",
     client_id=None,
+    expected_scope_version=_UNSPECIFIED,
 ):
     """
     Dual-write API: writes to User Scope Context DocType (canonical),
@@ -288,11 +307,8 @@ def set_scope_context(
     allowed_depts = allowed["department"]
 
     # 2. Get or create User Scope Context (CANONICAL STORE)
-    existing_name = frappe.db.get_value("User Scope Context", {"user": user})
-    if existing_name:
-        scope_doc = frappe.get_doc("User Scope Context", existing_name)
-    else:
-        scope_doc = frappe.new_doc("User Scope Context")
+    scope_doc = _locked_scope_for_save(user, expected_scope_version)
+    if scope_doc.is_new():
         scope_doc.user = user
 
     # 3. Resolve & update fields (supporting sentinel and form_dict fallback)
@@ -396,6 +412,36 @@ def set_scope_context(
         "success": True,
         "scope_version": scope_doc.scope_version,
         "source": source,
+        "current_scope": {
+            "company": scope_doc.company or None,
+            "cost_center": scope_doc.cost_center or None,
+            "project": scope_doc.project or None,
+            "department": scope_doc.department or None,
+        },
+    }
+
+
+@frappe.whitelist()
+def get_scope_context():
+    """
+    Read-only: return the user's authoritative saved scope and version.
+
+    Conflict-recovery read for failed versioned saves: the client refreshes
+    ``scope_version`` from this endpoint before retrying, so the retry sends a
+    fresh version instead of re-sending the stale one indefinitely. Returns
+    the same scope shape as ``set_scope_context``'s ``current_scope``, plus
+    ``scope_version``. Only the session user's OWN record is read.
+    """
+    scope_doc = get_user_scope_context()
+    scope = {
+        "company": (scope_doc.company or None) if scope_doc else None,
+        "cost_center": (scope_doc.cost_center or None) if scope_doc else None,
+        "project": (scope_doc.project or None) if scope_doc else None,
+        "department": (scope_doc.department or None) if scope_doc else None,
+    }
+    return {
+        "scope": scope,
+        "scope_version": (scope_doc.scope_version or 0) if scope_doc else 0,
     }
 
 

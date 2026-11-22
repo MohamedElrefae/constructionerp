@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_import": 0,
+ "allow_rename": 0,
+ "autoname": "field:project",
+ "creation": "2026-11-18 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "project",
+  "last_issued"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "last_issued",
+   "fieldtype": "Long Int",
+   "label": "Last Issued",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "max_attachments": 0,
+ "modified": "2026-11-18 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "construction",
+ "name": "Execution Code Counter",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "search_fields": "project",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

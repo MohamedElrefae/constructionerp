@@ -2,11 +2,11 @@
 
 > Generated from live DocType JSON by `scripts/schema_drift_checker.py --update`.
 > Do not hand-edit field tables. Update the DocType JSON, then regenerate this file.
-> Last verified: 2026-11-11
+> Last verified: 2026-11-18
 
 ## Summary
 
-- Schema-owning DocTypes: 21
+- Schema-owning DocTypes: 23
 - Override-only DocType folders: 1
 - Source path: `construction/construction/doctype/*/*.json`
 
@@ -24,6 +24,8 @@
 | `construction_theme` | Construction Theme | `construction_theme.json` | 94 |  |
 | `costitem` | CostItem | `cost_item.json` | 9 |  |
 | `direct_labor_designation` | Direct Labor Designation | `direct_labor_designation.json` | 2 | Child table |
+| `execution_breakdown_node` | Execution Breakdown Node | `execution_breakdown_node.json` | 9 |  |
+| `execution_code_counter` | Execution Code Counter | `execution_code_counter.json` | 2 |  |
 | `form_layout_profile` | Form Layout Profile | `form_layout_profile.json` | 13 |  |
 | `modern_theme_settings` | Modern Theme Settings | `modern_theme_settings.json` | 10 |  |
 | `plantresource` | PlantResource | `plant_resource.json` | 5 |  |
@@ -450,6 +452,27 @@
 |---|---|---|---|
 | `designation` | Link | Designation | reqd |
 | `boq_requirement` | Select | Mandatory / Optional / Not Applicable | reqd |
+
+### Execution Breakdown Node (`execution_breakdown_node/execution_breakdown_node.json`) - 9 fields
+
+| Field | Type | Options | Flags |
+|---|---|---|---|
+| `sb_identity` | Section Break |  |  |
+| `project` | Link | Project | reqd, read_only |
+| `company` | Link | Company | reqd, read_only |
+| `ebs_code` | Data |  | read_only |
+| `cb_identity` | Column Break |  |  |
+| `title` | Data |  | reqd |
+| `parent_node` | Link | Execution Breakdown Node |  |
+| `is_group` | Check |  |  |
+| `disabled` | Check |  |  |
+
+### Execution Code Counter (`execution_code_counter/execution_code_counter.json`) - 2 fields
+
+| Field | Type | Options | Flags |
+|---|---|---|---|
+| `project` | Link | Project | reqd, unique, read_only |
+| `last_issued` | Long Int |  | reqd, read_only |
 
 ### Form Layout Profile (`form_layout_profile/form_layout_profile.json`) - 13 fields
 

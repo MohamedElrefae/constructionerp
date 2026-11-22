@@ -176,6 +176,36 @@
    "only_for": null,
    "report_ref_doctype": null,
    "type": "Link"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Execution",
+   "link_count": 0,
+   "link_to": null,
+   "link_type": "DocType",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": null,
+   "description": null,
+   "hidden": 0,
+   "icon": null,
+   "is_query_report": 0,
+   "label": "Execution Breakdown",
+   "link_count": 0,
+   "link_to": "execution-breakdown",
+   "link_type": "Page",
+   "onboard": 0,
+   "only_for": null,
+   "report_ref_doctype": null,
+   "type": "Link"
   }
  ],
  "module": "construction",
