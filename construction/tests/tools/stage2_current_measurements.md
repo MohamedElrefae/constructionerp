@@ -245,8 +245,9 @@ the dry-run arithmetic or the pins, so those recorded values stand as recorded.
 **Consequence for the unexecuted full gate.** The full site-aware evidence
 gate (the `--skip-evidence` bootstrap capture plus the ten recorded envelopes)
 has **not** been re-executed against this candidate. A future capture of
-`full-gate.txt` must carry `extract.files=329`; a capture that carries `328` is
-**refused** by the current contract
+`full-gate.txt` must carry `extract.files=329` (superseded on 2026-11-22: the
+current requirement is `341` — see the last section); a capture that carries
+`328` or `329` is **refused** by the current contract
 (`evidence-schema: full-gate.txt file count differs from contract`). The
 historical 2026-09-29 envelope set is unaffected because it is validated
 through the explicit legacy path. The unexecuted full gate therefore still
@@ -256,3 +257,38 @@ reconciliation cannot and does not supply it.
 This is a technical, measured contract correction for technical review. It is
 **not** a release approval, **not** a native (site/bench) acceptance, **not** a
 business acceptance and **not** an F44 closure.
+
+---
+
+## 2026-11-22 — re-measurement after the P1 scope merge (M1C)
+
+The P1 execution-tree and scope-context merge added localizable strings and one
+production module, and the Arabic catalog moved with it. The contract was
+re-measured on the merged source and the seven strings the extraction reported
+missing were added to `construction/locale/ar.po`; three dynamic
+`frappe.throw(error.message)` sites were wrapped at construction.
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-22` |
+| gate | `catalog=1121 files=341 wrapped=914 json_labels=79 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-22-p1-current/m1_source_scan.txt` |
+| environment | develop `5e6fe93`, working tree with the 2026-11-22 fixes uncommitted at measurement time |
+
+The local scan reports one `vendor-delta` error because this bench's frappe HEAD
+is `2871914`, not the pinned private vendor `af440917`. CI checks out the pinned
+vendor and does not report it; the vendor check is independent of the counts
+recorded here.
+
+The 2026-10-22 block is preserved under
+`previous_frozen_contract_kept_as_history` (now a list of both superseded
+blocks). The 2026-09-29 historical expectation and its evidence set are
+untouched.
+
+**Review status: PENDING.** This is a builder re-measurement. No owner or tester
+review of the new contract has occurred, and this record does not claim one. The
+site-backed M3/M5 runs remain owed against the final qualified HEAD exactly as
+stated above.

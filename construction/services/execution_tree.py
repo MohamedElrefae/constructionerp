@@ -104,7 +104,7 @@ def _translate(error):
             frappe.ValidationError,
         )
     if isinstance(error, rules.RuleViolation):
-        frappe.throw(error.message, frappe.ValidationError)
+        frappe.throw(frappe._(error.message), frappe.ValidationError)
     raise error
 
 
@@ -481,7 +481,7 @@ def project_validate(doc, method=None):
         try:
             last_issued = rules.validate_counter_value(counter.get("last_issued"))
         except rules.RuleViolation as error:
-            frappe.throw(error.message, frappe.ValidationError)
+            frappe.throw(frappe._(error.message), frappe.ValidationError)
         if last_issued > 0 and (doc.company or None) != (previous_company or None):
             frappe.throw(
                 frappe._("The Project Company cannot change after the first execution code was issued."),

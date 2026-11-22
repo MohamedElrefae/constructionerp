@@ -4697,3 +4697,31 @@ msgstr "طي العناصر الفرعية"
 #: construction/construction/page/execution_breakdown/execution_breakdown.js
 msgid "Root (no parent)"
 msgstr "الجذر (دون عنصر أب)"
+
+#: construction/config/workspace_sidebar_items.json
+msgid "Execution"
+msgstr "التنفيذ"
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.py
+msgid "A new counter cannot continue an existing transition."
+msgstr "لا يمكن لعداد جديد أن يتابع انتقالاً قائماً."
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.py
+msgid "The counter must advance by exactly one."
+msgstr "يجب أن يتقدّم العداد بمقدار واحد فقط."
+
+#: construction/construction/doctype/execution_code_counter/execution_code_counter.py
+msgid "The counter transition is not the authorized transition."
+msgstr "انتقال العداد ليس الانتقال المصرّح به."
+
+#: construction/api/scope_context_api.py
+msgid "Invalid scope version."
+msgstr "إصدار النطاق غير صالح."
+
+#: construction/api/scope_context_api.py
+msgid "Scope changed in another session. Reload and try again."
+msgstr "تغيّر النطاق في جلسة أخرى. أعد التحميل وحاول مرة أخرى."
+
+#: construction/api/scope_context_api.py
+msgid "User not found."
+msgstr "لم يتم العثور على المستخدم."

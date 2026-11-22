@@ -12,7 +12,7 @@ def _finish(callable_, *args, **kwargs):
     try:
         return callable_(*args, **kwargs)
     except rules.RuleViolation as error:
-        frappe.throw(error.message, frappe.ValidationError)
+        frappe.throw(frappe._(error.message), frappe.ValidationError)
 
 
 _FRAMEWORK_ARGUMENTS = frozenset({"cmd", "_"})

@@ -1,9 +1,9 @@
 {
-  "basis": "Database identity was verified against the isolated target site configuration and found distinct from the protected v16.localhost and rehearsal site configurations. This classification applies only to the isolated foundation qualification site.",
+  "basis": "Re-recorded 2026-11-22. The previously classified site v16-correction.localhost is not present on this bench. The interim P1 development lab wbs-p1-lab.localhost is a non-production test site holding synthetic data; production mutation is not authorized. The re-collection reproduced the recorded runtime digest exactly. Owner review of this re-record is pending.",
   "classification": "non-production test",
   "production_mutation_authorized": false,
-  "recorded_by": "Codex consultant under owner technical delegation 2026-10-18",
-  "recorded_utc": "2026-10-18T01:00:06Z",
+  "recorded_by": "P1 builder re-record (agent), owner review pending",
+  "recorded_utc": "2026-11-22T14:00:00Z",
   "schema": "site-classification/v1",
-  "site": "v16-correction.localhost"
+  "site": "wbs-p1-lab.localhost"
 }

@@ -1596,7 +1596,21 @@ LEGACY_SOURCE_PINS = {}
 # The superseded 2026-10-20 contract (files=328) is preserved verbatim as
 # history in that same record; the 2026-09-29 historical contract and its
 # explicit --evidence-contract=legacy path are untouched.
-CURRENT_CONTRACT_ID = "stage2-current-contract/2026-10-22"
+# 2026-11-22 — re-measurement after the P1 scope merge.
+#
+# The P1 execution-tree and scope-context work added one production module and
+# seven localized strings, and the Arabic catalog moved with it. Re-measured on
+# the merged source (develop 5e6fe93) with:
+#
+#   GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only
+#   -> catalog=1121 files=341 wrapped=914 json_labels=79 missing=0 errors=0
+#      (the local bench reports a vendor-delta because its frappe HEAD is not the
+#      pinned private vendor; CI checks out the pinned vendor and does not.)
+#
+# Recorded as measurement M1C in stage2_current_measurements.json. Builder
+# re-measurement: the owner/tester review of this re-record is PENDING and must
+# be recorded before the contract is treated as reviewed.
+CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-22"
 CURRENT_EXPECTED_MODULES = [
     ("construction.searchable_dropdown.tests.test_search_api", 13),
     ("construction.searchable_dropdown.tests.test_integration", 6),
@@ -1611,15 +1625,15 @@ CURRENT_EXPECTED_MODULES = [
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
 CURRENT_EXPECTED_GATE = {
-    "catalog": 1052,
+    "catalog": 1121,
     # 329 is the measured extract file count of the reviewed candidate at
     # a7686c518ce7be7d91758a0cc8854199e1304e45 (measurement M1B). It was 328
     # at the 2026-10-20 measurement; one NEW production module was added
     # since. Every other value is unchanged. See the CURRENT_CONTRACT_ID
     # comment above and construction/tests/tools/stage2_current_measurements.json.
-    "files": 329,
-    "wrapped": 861,
-    "json_labels": 77,
+    "files": 341,
+    "wrapped": 914,
+    "json_labels": 79,
     "missing": 0,
 }
 # The current contract is tied to the real source artifacts the counts were
@@ -1627,12 +1641,12 @@ CURRENT_EXPECTED_GATE = {
 # trusted and the contract must be re-measured and re-reviewed. The checker
 # enforces this (fail closed) instead of accepting a drifted expectation.
 CURRENT_SOURCE_PINS = {
-    "construction/locale/ar.po": ("8b065ad4ae18b59421a24f230ce2069e94103a1b6f8249c87b06464fcb015c0b"),
+    "construction/locale/ar.po": ("a219eec6010c94deb4e324aa85855dee117fd3574196220c61c3159e418edc12"),
     "construction/data/translations/approved_ar_overrides.csv": (
         "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318"
     ),
     "construction/data/localization/localization_manifest.json": (
-        "816ccc57fb233a5ad95ea391c43bafba34809a5bc894cfe8a5cc3fe29d10b85e"
+        "031bae80e92df92f379836c1641920dd7af29e239bfaa0ebef50b3418535467f"
     ),
     "construction/data/localization/vendor_catalog_baseline.json": (
         # 2026-10-21: the reviewed controlled re-record of ONLY apps.frappe.commit
