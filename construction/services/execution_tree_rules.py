@@ -1678,3 +1678,55 @@ def validate_mapping_reason(action, reason):
     if action in REASON_REQUIRED_ACTIONS and not cleaned:
         raise RuleViolation("reason_required", f"A non-blank reason is required to {action} an execution location.")
     return cleaned
+
+
+def evaluate_stage_lock_conditions(stage_row, transaction_ref_doctypes=()):
+    """Return sorted active A1 execution-lock triggers from current persisted Stage state.
+
+    Evaluates current values ("while any execution-lock condition holds"):
+    - ``measured_executed_qty > 0`` -> ``"measured_qty"``
+    - ``certified_qty > 0`` -> ``"certified_qty"``
+    - ``stage_status == "Completed"`` -> ``"status_completed"``
+    - ``stage_status == "Certified"`` -> ``"status_certified"``
+    - Any existing transaction child row (Draft, Submitted, or Cancelled) ->
+      ``"transaction_ref:<ChildDocType>"``
+    """
+    triggers = []
+    if float(stage_row.get("measured_executed_qty") or 0) > 0:
+        triggers.append("measured_qty")
+    if float(stage_row.get("certified_qty") or 0) > 0:
+        triggers.append("certified_qty")
+    status = str(stage_row.get("stage_status") or "").strip()
+    if status == "Completed":
+        triggers.append("status_completed")
+    elif status == "Certified":
+        triggers.append("status_certified")
+    for child_dt in sorted({str(dt).strip() for dt in (transaction_ref_doctypes or ()) if str(dt).strip()}):
+        triggers.append(f"transaction_ref:{child_dt}")
+    return tuple(triggers)
+
+
+def classify_stage_mapping_transition(old_node, new_node, lock_triggers):
+    """Classify an existing-Stage location transition under Alternative B + A1.
+
+    Returns ``(action, is_historical_assignment)`` or ``(None, False)`` for a no-op.
+    Raises ``RuleViolation("execution_locked", ...)`` when relinking or clearing
+    while any execution-lock condition holds.
+    """
+    old_val = (str(old_node).strip() if old_node is not None else "") or None
+    new_val = (str(new_node).strip() if new_node is not None else "") or None
+    if old_val == new_val:
+        return None, False
+    triggers = tuple(lock_triggers or ())
+    if triggers:
+        if old_val is None and new_val is not None:
+            return "initial_historical_map", True
+        raise RuleViolation(
+            "execution_locked",
+            "Cannot change or clear Execution Location while an execution-lock condition holds.",
+        )
+    if old_val is None and new_val is not None:
+        return "set", False
+    if old_val is not None and new_val is None:
+        return "clear", False
+    return "change", False

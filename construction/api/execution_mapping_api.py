@@ -1,8 +1,4 @@
-"""Dedicated RPC surface for WBS P2 execution-location mapping (Slice 1).
-
-Existing-Stage mapping (``set_stage_execution_node``) is intentionally deferred
-to Slice 2 until execution-lock and transaction-reference guards are added.
-"""
+"""Dedicated RPC surface for WBS P2 execution-location mapping (Slices 1 & 2)."""
 
 from __future__ import annotations
 
@@ -68,6 +64,25 @@ def set_item_planned_execution_node(
     }
     rules.validate_request_size(payload)
     return _finish(service.set_item_planned_execution_node, **payload)
+
+
+@frappe.whitelist(methods=["POST"])
+def set_stage_execution_node(
+    boq_item_stage=None,
+    execution_node=None,
+    reason=None,
+    expected_modified=None,
+    **kwargs,
+):
+    _reject_extra(kwargs)
+    payload = {
+        "boq_item_stage": boq_item_stage,
+        "execution_node": execution_node,
+        "reason": reason,
+        "expected_modified": expected_modified,
+    }
+    rules.validate_request_size(payload)
+    return _finish(service.set_stage_execution_node, **payload)
 
 
 @frappe.whitelist(methods=["GET"])

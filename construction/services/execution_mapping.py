@@ -35,6 +35,7 @@ _AUDIT_INSERT_GUARD: contextvars.ContextVar[dict | None] = contextvars.ContextVa
 
 ALLOWED_TARGET_DOCTYPES = frozenset({"BOQ Item", "BOQ Item Stage"})
 ITEM_MAPPING_IGNORED_DIFF_FIELDS = frozenset({"planned_execution_node", "modified", "modified_by"})
+STAGE_MAPPING_IGNORED_DIFF_FIELDS = frozenset({"execution_node", "modified", "modified_by"})
 
 
 def _translate(error):
@@ -566,6 +567,207 @@ def set_item_planned_execution_node(boq_item, execution_node=None, reason=None, 
         "action": action,
         "boq_item": boq_item,
         "planned_execution_node": new_node,
+        "modified": str(after_row.get("modified")),
+        "audit_name": audit_name,
+        "node_summary": _build_node_display(nodes_by_name, new_node, project),
+    }
+
+
+def _find_stage_transaction_refs(stage_name):
+    """Fail-closed current locking reads across all 8 required BOQ transaction child tables.
+
+    All eight ERPNext BOQ-integrated child tables are required on a supported
+    installation (provisioned by ``setup_boq_integration``). A missing table or
+    ``boq_item_stage`` column aborts the mapping edit instead of silently
+    skipping reference checks. Counts any existing row (Draft, Submitted, or
+    Cancelled parent document), matching ``boq_lifecycle.before_delete_boq_item_stage``.
+    """
+    from construction.services.boq_lifecycle import TRANSACTION_CHILD_DOCTYPES
+
+    matched = []
+    for child_dt in TRANSACTION_CHILD_DOCTYPES:
+        if not frappe.db.table_exists(child_dt):
+            frappe.throw(
+                _("Execution mapping schema is incomplete: required transaction table {0} is missing.").format(
+                    child_dt
+                ),
+                frappe.ValidationError,
+            )
+        if not frappe.db.has_column(child_dt, "boq_item_stage"):
+            frappe.throw(
+                _("Execution mapping schema is incomplete: {0}.{1} is missing. Run bench migrate.").format(
+                    child_dt, "boq_item_stage"
+                ),
+                frappe.ValidationError,
+            )
+        rows = current_boq_sql(
+            f"SELECT 1 FROM `tab{child_dt}` WHERE boq_item_stage=%s LIMIT 1 LOCK IN SHARE MODE",
+            (stage_name,),
+        )
+        if rows:
+            matched.append(child_dt)
+    return tuple(matched)
+
+
+def evaluate_stage_execution_lock(stage_row):
+    """Evaluate active A1 execution-lock triggers from current persisted Stage state."""
+    tx_refs = _find_stage_transaction_refs(stage_row["name"])
+    return rules.evaluate_stage_lock_conditions(stage_row, transaction_ref_doctypes=tx_refs)
+
+
+def set_stage_execution_node(boq_item_stage, execution_node=None, reason=None, expected_modified=None):
+    """Narrow governed transaction to set, change, clear, or historically assign ``BOQ Item Stage.execution_node``.
+
+    Skips VO planned-distribution validation while proving exact equality of all
+    non-mapping persisted Stage columns (zero numeric tolerance). Enforces A1
+    execution-lock rules across measurement, certification, status, and all eight
+    transaction child types.
+    """
+    boq_item_stage = rules.validate_identifier(boq_item_stage, field="BOQ Item Stage")
+    try:
+        expected = rules.validate_expected_modified(expected_modified, required=True)
+    except rules.RuleViolation as error:
+        _translate(error)
+
+    new_node = None
+    if execution_node is not None and str(execution_node).strip():
+        try:
+            new_node = rules.validate_identifier(str(execution_node).strip(), field="Execution location")
+        except rules.RuleViolation as error:
+            _translate(error)
+
+    initial = frappe.db.get_value("BOQ Item Stage", boq_item_stage, ["name", "boq_item", "boq_header"], as_dict=True)
+    if not initial or not initial.boq_item:
+        frappe.throw(_("Not permitted."), frappe.PermissionError)
+    initial_header = frappe.db.get_value("BOQ Item", initial.boq_item, "boq_header") or initial.boq_header
+    initial_project = frappe.db.get_value("BOQ Header", initial_header, "project") if initial_header else None
+    if not initial_header or not initial_project:
+        frappe.throw(_("Not permitted."), frappe.PermissionError)
+
+    # Pre-lock authorization check prevents unauthorized callers from contending on locks.
+    _authorize_planner_mapping("BOQ Item Stage", boq_item_stage, initial_header, initial_project, is_new=False)
+
+    # Deterministic lock order:
+    # 1. tabProject (FOR UPDATE)
+    # 2. tabExecution Breakdown Node for project (ORDER BY name FOR UPDATE)
+    # 3. tabBOQ Item Stage (FOR UPDATE NOWAIT)
+    # 4. tabBOQ Item & tabBOQ Header (LOCK IN SHARE MODE re-read)
+    _lock_project(initial_project)
+    nodes = _lock_project_nodes(initial_project)
+    locked_rows = current_boq_sql(
+        "SELECT * FROM `tabBOQ Item Stage` WHERE name=%s FOR UPDATE NOWAIT",
+        (boq_item_stage,),
+        as_dict=True,
+    )
+    if not locked_rows:
+        frappe.throw(_("BOQ Item Stage {0} does not exist.").format(boq_item_stage), frappe.DoesNotExistError)
+    stage_row = locked_rows[0]
+
+    item_row, header_row = _reread_locked_stage_parent_context(stage_row.get("boq_item"), initial_project)
+    boq_item = item_row["name"]
+    boq_header = header_row["name"]
+    project = header_row["project"]
+
+    if rules.stale_version(stage_row.get("modified"), expected):
+        frappe.throw(_("This BOQ Item Stage changed. Reload and try again."), frappe.ValidationError)
+
+    # Re-verify unified permission gate under locks (identical for set, change, and clear).
+    _authorize_planner_mapping("BOQ Item Stage", boq_item_stage, boq_header, project, is_new=False)
+
+    old_node = stage_row.get("execution_node") or None
+    if old_node == new_node:
+        return {
+            "changed": False,
+            "action": None,
+            "is_historical_assignment": False,
+            "historical_trigger": "",
+            "boq_item_stage": boq_item_stage,
+            "execution_node": old_node,
+            "modified": str(stage_row.get("modified")),
+            "audit_name": None,
+        }
+
+    # Evaluate A1 current persisted execution-lock triggers (including 8 transaction child tables).
+    triggers = evaluate_stage_execution_lock(stage_row)
+    try:
+        action, is_historical = rules.classify_stage_mapping_transition(old_node, new_node, triggers)
+    except rules.RuleViolation as error:
+        if error.code == "execution_locked":
+            frappe.throw(
+                _(
+                    "Cannot change or clear Execution Location on BOQ Item Stage {0} while an execution-lock condition holds ({1})."
+                ).format(boq_item_stage, ", ".join(triggers)),
+                frappe.ValidationError,
+            )
+        _translate(error)
+
+    try:
+        cleaned_reason = rules.validate_mapping_reason(action, reason)
+    except rules.RuleViolation as error:
+        _translate(error)
+
+    nodes_by_name = rules.index_nodes_by_name(nodes)
+    if new_node is not None:
+        try:
+            rules.validate_eligible_execution_leaf(nodes_by_name, new_node, project=project)
+        except rules.RuleViolation as error:
+            _translate(error)
+
+    old_snap = _snapshot_node(nodes_by_name, old_node)
+    new_snap = _snapshot_node(nodes_by_name, new_node)
+    before_preserved = {
+        key: value for key, value in stage_row.items() if key not in STAGE_MAPPING_IGNORED_DIFF_FIELDS
+    }
+
+    now = now_datetime()
+    frappe.db.sql(
+        "UPDATE `tabBOQ Item Stage` SET execution_node=%s, modified=%s, modified_by=%s WHERE name=%s",
+        (new_node, now, frappe.session.user, boq_item_stage),
+    )
+
+    after_rows = current_boq_sql(
+        "SELECT * FROM `tabBOQ Item Stage` WHERE name=%s FOR UPDATE NOWAIT",
+        (boq_item_stage,),
+        as_dict=True,
+    )
+    if not after_rows:
+        frappe.throw(_("BOQ Item Stage disappeared during mapping update."), frappe.ValidationError)
+    after_row = after_rows[0]
+    after_preserved = {
+        key: value for key, value in after_row.items() if key not in STAGE_MAPPING_IGNORED_DIFF_FIELDS
+    }
+    if after_preserved != before_preserved:
+        frappe.throw(
+            _("Unexpected mutation detected on BOQ Item Stage fields; rolling back."),
+            frappe.ValidationError,
+        )
+
+    historical_trigger = ", ".join(triggers) if is_historical else ""
+    audit_name = _insert_audit_row(
+        target_doctype="BOQ Item Stage",
+        target_name=boq_item_stage,
+        project=project,
+        boq_header=boq_header,
+        boq_item=boq_item,
+        action=action,
+        old_snap=old_snap,
+        new_snap=new_snap,
+        reason=cleaned_reason,
+        is_historical_assignment=1 if is_historical else 0,
+        historical_trigger=historical_trigger,
+        stage_status_snapshot=stage_row.get("stage_status"),
+        measured_qty_snapshot=stage_row.get("measured_executed_qty"),
+        certified_qty_snapshot=stage_row.get("certified_qty"),
+        changed_on=now,
+    )
+
+    return {
+        "changed": True,
+        "action": action,
+        "is_historical_assignment": bool(is_historical),
+        "historical_trigger": historical_trigger,
+        "boq_item_stage": boq_item_stage,
+        "execution_node": new_node,
         "modified": str(after_row.get("modified")),
         "audit_name": audit_name,
         "node_summary": _build_node_display(nodes_by_name, new_node, project),

@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import contextlib
 import importlib.util
 import json
+import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -166,7 +169,79 @@ def test_schema_invariants_for_slice_1():
             assert f["fieldtype"] == "Data"
 
     api_text = (ROOT / "construction/api/execution_mapping_api.py").read_text(encoding="utf-8")
-    assert "def set_stage_execution_node" not in api_text
+    assert "def set_stage_execution_node" in api_text
+
+
+def test_stage_execution_lock_conditions_and_transitions_a1():
+    # Unlocked states (A1 current persisted values)
+    assert (
+        rules.evaluate_stage_lock_conditions(
+            {"stage_status": "Not Started", "measured_executed_qty": 0, "certified_qty": 0}
+        )
+        == ()
+    )
+    assert (
+        rules.evaluate_stage_lock_conditions(
+            {"stage_status": "In Progress", "measured_executed_qty": 0, "certified_qty": 0}
+        )
+        == ()
+    )
+    # Positive measurement locks; correcting back to zero unlocks (A1).
+    assert rules.evaluate_stage_lock_conditions(
+        {"stage_status": "In Progress", "measured_executed_qty": 10.0, "certified_qty": 0}
+    ) == ("measured_qty",)
+    assert (
+        rules.evaluate_stage_lock_conditions(
+            {"stage_status": "In Progress", "measured_executed_qty": 0.0, "certified_qty": 0}
+        )
+        == ()
+    )
+    # Partial certification (certified_qty > 0 while status In Progress).
+    assert rules.evaluate_stage_lock_conditions(
+        {"stage_status": "In Progress", "measured_executed_qty": 50.0, "certified_qty": 20.0}
+    ) == ("measured_qty", "certified_qty")
+    # Completed & Certified statuses.
+    assert rules.evaluate_stage_lock_conditions(
+        {"stage_status": "Completed", "measured_executed_qty": 0, "certified_qty": 0}
+    ) == ("status_completed",)
+    assert rules.evaluate_stage_lock_conditions(
+        {"stage_status": "Certified", "measured_executed_qty": 0, "certified_qty": 0}
+    ) == ("status_certified",)
+    # Zero-qty In Progress Stage linked to a Purchase Order Item (Draft or Cancelled counts).
+    assert rules.evaluate_stage_lock_conditions(
+        {"stage_status": "In Progress", "measured_executed_qty": 0, "certified_qty": 0},
+        transaction_ref_doctypes=("Purchase Order Item",),
+    ) == ("transaction_ref:Purchase Order Item",)
+
+    # Unlocked transitions
+    assert rules.classify_stage_mapping_transition(None, "EBN-0001", ()) == ("set", False)
+    assert rules.classify_stage_mapping_transition("EBN-0001", "EBN-0002", ()) == ("change", False)
+    assert rules.classify_stage_mapping_transition("EBN-0001", None, ()) == ("clear", False)
+    assert rules.classify_stage_mapping_transition("EBN-0001", "EBN-0001", ()) == (None, False)
+
+    # Execution-locked transitions (Alternative B + A1)
+    lock = ("transaction_ref:Purchase Order Item",)
+    assert rules.classify_stage_mapping_transition(None, "EBN-0001", lock) == ("initial_historical_map", True)
+    assert rules.classify_stage_mapping_transition("EBN-0001", "EBN-0001", lock) == (None, False)
+    for target in ("EBN-0002", None):
+        with pytest.raises(rules.RuleViolation) as exc_info:
+            rules.classify_stage_mapping_transition("EBN-0001", target, lock)
+        assert exc_info.value.code == "execution_locked"
+
+
+def test_slice2_transaction_lock_source_invariants():
+    acct_src = (ROOT / "construction/services/boq_accounting.py").read_text(encoding="utf-8")
+    assert "FROM `tabBOQ Item Stage` WHERE name = %s FOR UPDATE" in acct_src
+    mapping_src = (ROOT / "construction/services/execution_mapping.py").read_text(encoding="utf-8")
+    assert "TRANSACTION_CHILD_DOCTYPES" in mapping_src
+    assert "def set_stage_execution_node(" in mapping_src
+    # _find_stage_transaction_refs must fail closed on missing table/column (never continue).
+    fn_start = mapping_src.index("def _find_stage_transaction_refs(")
+    fn_end = mapping_src.index("def evaluate_stage_execution_lock(")
+    fn_block = mapping_src[fn_start:fn_end]
+    assert "continue" not in fn_block
+    assert "required transaction table {0} is missing." in fn_block
+    assert "{0}.{1} is missing. Run bench migrate." in fn_block
 
 
 def test_display_confidentiality_and_fail_closed_schema_source_invariants():
@@ -206,4 +281,108 @@ def test_display_confidentiality_and_fail_closed_schema_source_invariants():
     assert "def reconcile_audit_series_counter()" in mapping_src
     # Item reparent guard must inspect mapped child Stages when boq_header changes.
     assert "FROM `tabBOQ Item Stage` s" in mapping_src
+
+
+@contextlib.contextmanager
+def _load_execution_mapping_with_stubs(db_stub, sql_fn):
+    """Load execution_mapping.py in isolation without importing real Frappe."""
+    frappe_stub = types.ModuleType("frappe")
+    frappe_stub.ValidationError = type("ValidationError", (Exception,), {})
+    frappe_stub.PermissionError = type("PermissionError", (Exception,), {})
+    frappe_stub.DoesNotExistError = type("DoesNotExistError", (Exception,), {})
+    frappe_stub._ = lambda message: message
+    frappe_stub.db = db_stub
+
+    def _throw(message, exc=None):
+        raise (exc or frappe_stub.ValidationError)(message)
+
+    frappe_stub.throw = _throw
+
+    frappe_utils = types.ModuleType("frappe.utils")
+    frappe_utils.flt = lambda v: float(v or 0)
+    frappe_utils.now_datetime = lambda: "2026-11-24 00:00:00"
+
+    construction = types.ModuleType("construction")
+    construction.__path__ = []
+    services = types.ModuleType("construction.services")
+    services.__path__ = []
+    services.execution_tree_rules = rules
+    services.execution_tree_access = types.ModuleType("construction.services.execution_tree_access")
+
+    boq_transactions = types.ModuleType("construction.services.boq_transactions")
+    boq_transactions.current_boq_sql = sql_fn
+
+    boq_lifecycle = types.ModuleType("construction.services.boq_lifecycle")
+    boq_lifecycle.TRANSACTION_CHILD_DOCTYPES = (
+        "Purchase Order Item",
+        "Purchase Receipt Item",
+        "Purchase Invoice Item",
+        "Stock Entry Detail",
+        "Timesheet Detail",
+        "Journal Entry Account",
+        "Sales Invoice Item",
+        "Material Request Item",
+    )
+
+    stubs = {
+        "frappe": frappe_stub,
+        "frappe.utils": frappe_utils,
+        "construction": construction,
+        "construction.services": services,
+        "construction.services.execution_tree_rules": rules,
+        "construction.services.execution_tree_access": services.execution_tree_access,
+        "construction.services.boq_transactions": boq_transactions,
+        "construction.services.boq_lifecycle": boq_lifecycle,
+    }
+    previous = {k: sys.modules.get(k) for k in stubs}
+    try:
+        sys.modules.update(stubs)
+        spec = importlib.util.spec_from_file_location(
+            "execution_mapping_under_test", ROOT / "construction/services/execution_mapping.py"
+        )
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(mod)
+        yield mod, frappe_stub, boq_lifecycle.TRANSACTION_CHILD_DOCTYPES
+    finally:
+        for k, old in previous.items():
+            if old is None:
+                sys.modules.pop(k, None)
+            else:
+                sys.modules[k] = old
+
+
+def test_find_stage_transaction_refs_fails_closed_on_missing_schema():
+    queries = []
+
+    def _sql(query, params=()):
+        queries.append((query, params))
+        if "`tabPurchase Order Item`" in query:
+            return [(1,)]
+        return []
+
+    # 1. All 8 required tables & boq_item_stage columns present -> queries all 8 with LOCK IN SHARE MODE.
+    db_ok = types.SimpleNamespace(table_exists=lambda dt: True, has_column=lambda dt, col: True)
+    with _load_execution_mapping_with_stubs(db_ok, _sql) as (mod, _frappe, all_dts):
+        assert mod._find_stage_transaction_refs("BOQ-STG-00001") == ("Purchase Order Item",)
+        assert len(queries) == len(all_dts) == 8
+        assert all("LOCK IN SHARE MODE" in q for q, _p in queries)
+
+    # 2. Missing table among the 8 required child types -> fails closed with ValidationError.
+    db_missing_table = types.SimpleNamespace(
+        table_exists=lambda dt: dt != "Stock Entry Detail",
+        has_column=lambda dt, col: True,
+    )
+    with _load_execution_mapping_with_stubs(db_missing_table, _sql) as (mod, frappe_stub, _all_dts):
+        with pytest.raises(frappe_stub.ValidationError, match="Stock Entry Detail"):
+            mod._find_stage_transaction_refs("BOQ-STG-00001")
+
+    # 3. Missing boq_item_stage column on any of the 8 required child types -> fails closed with ValidationError.
+    db_missing_col = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: not (dt == "Material Request Item" and col == "boq_item_stage"),
+    )
+    with _load_execution_mapping_with_stubs(db_missing_col, _sql) as (mod, frappe_stub, _all_dts):
+        with pytest.raises(frappe_stub.ValidationError, match="Material Request Item.boq_item_stage"):
+            mod._find_stage_transaction_refs("BOQ-STG-00001")
 

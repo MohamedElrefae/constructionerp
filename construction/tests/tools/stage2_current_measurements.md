@@ -315,3 +315,26 @@ unchanged).
 
 The 2026-11-22 block is preserved verbatim under
 `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
+
+---
+
+## 2026-11-24 — re-measurement after WBS P2 Slice 2 (M1E)
+
+WBS P2 Slice 2 (on `develop` `a865bc4`) added `set_stage_execution_node`, A1
+execution-lock guards across all 8 required BOQ transaction child types, and 6
+localized strings to `construction/locale/ar.po`. Freshness evidence was
+re-collected on `wbs-p1-lab.localhost` (`packaged_rows=4337`, `runtime_digest`
+unchanged).
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-24-p2s2` |
+| gate | `catalog=1154 files=345 wrapped=947 json_labels=79 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-24-p2s2-current/m1_source_scan.txt` |
+| environment | develop `a865bc4`, working tree with the 2026-11-24 WBS P2 Slice 2 changes |
+
+The `stage2-current-contract/2026-11-24` (M1D) block is preserved verbatim under
+`previous_frozen_contract_kept_as_history`. **Review status: PENDING.**

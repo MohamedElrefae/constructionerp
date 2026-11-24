@@ -1,0 +1,17 @@
+# WBS P2 Slice 2 current-contract re-measurement (M1E), 2026-11-24
+# root: /home/mohamed/frappe-bench/apps/construction
+# source HEAD: a865bc42198c11e3e575274c18bbbd84156823f2 (develop)
+# working tree: 2026-11-24 WBS P2 Slice 2 execution-mapping + localization entries, UNCOMMITTED at measurement time
+# command: GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only
+# note: this bench vendor frappe HEAD is 2871914, not the pinned private vendor af440917.
+#       The local run therefore reports one vendor-delta error. CI checks out the pinned
+#       vendor and does not. Source-scan counts are the measurement recorded here.
+#
+SKIP construction/print_format/bilingual_material_request/bilingual_material_request.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_purchase_order/bilingual_purchase_order.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_sales_invoice/bilingual_sales_invoice.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/bilingual_stock_entry/bilingual_stock_entry.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/print_format/boq_print_format/boq_print_format.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+SKIP construction/workspace/construction/construction.json: markup/code blob excluded from string gate (print/CSS/seed-data; covered by bilingual-output waves + leak detection)
+FAIL vendor-delta: frappe HEAD 2871914b69b6e14a4b023d9b7cc52dc3e269cc1b != pinned af44091716ed4e9be32720483a27d3f1937ad7fd — run scripts/vendor_upgrade_delta.py, triage, re-record (reviewed)
+checked={"construction/locale/ar.po": 1154, "csv_rows": 4337, "extract": {"files": 345, "json_labels": 79, "missing": 0, "wrapped": 947}, "raw_text": {"files": 7, "missing": 0, "texts": 2}} errors=1

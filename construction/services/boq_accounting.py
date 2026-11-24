@@ -9,6 +9,7 @@ from construction.services.boq_lookups import (
     is_omitted_boq_item,
 )
 from construction.services.boq_scope_filters import ALLOWED_TRANSACTION_BOQ_STATUSES
+from construction.services.boq_transactions import current_boq_sql
 
 
 def _child_doctype_for(parent_doc, child_table_field):
@@ -130,7 +131,12 @@ def validate_transaction_row(row, parent_doc, child_table_field=None):
         )
 
     if row.get("boq_item_stage"):
-        stage_parent = frappe.db.get_value("BOQ Item Stage", row.boq_item_stage, "boq_item")
+        stage_rows = current_boq_sql(
+            "SELECT boq_item FROM `tabBOQ Item Stage` WHERE name = %s FOR UPDATE",
+            (row.boq_item_stage,),
+            as_dict=True,
+        )
+        stage_parent = stage_rows[0].get("boq_item") if stage_rows else None
         if stage_parent != row.boq_item:
             frappe.throw(
                 _("Row {0}: BOQ Item Stage {1} does not belong to selected BOQ Item {2}.").format(

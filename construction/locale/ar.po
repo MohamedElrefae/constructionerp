@@ -4833,3 +4833,27 @@ msgstr "استخدم إجراء موقع التنفيذ المصرّح به لت
 #: construction/services/execution_mapping.py
 msgid "unknown"
 msgstr "غير معروف"
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Item Stage disappeared during mapping update."
+msgstr "اختفت مرحلة بند جدول الكميات أثناء تحديث الربط."
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Item Stage {0} does not exist."
+msgstr "مرحلة بند جدول الكميات {0} غير موجودة."
+
+#: construction/services/execution_mapping.py
+msgid "Cannot change or clear Execution Location on BOQ Item Stage {0} while an execution-lock condition holds ({1})."
+msgstr "لا يمكن تغيير أو مسح موقع التنفيذ على مرحلة بند جدول الكميات {0} طالما أن شرط قفل التنفيذ قائم ({1})."
+
+#: construction/services/execution_mapping.py
+msgid "This BOQ Item Stage changed. Reload and try again."
+msgstr "تغيّرت مرحلة بند جدول الكميات هذه. أعد التحميل وحاول مرة أخرى."
+
+#: construction/services/execution_mapping.py
+msgid "Unexpected mutation detected on BOQ Item Stage fields; rolling back."
+msgstr "تم اكتشاف تعديل غير متوقّع على حقول مرحلة بند جدول الكميات؛ جارٍ التراجع عن المعاملة."
+
+#: construction/services/execution_mapping.py
+msgid "Execution mapping schema is incomplete: required transaction table {0} is missing."
+msgstr "مخطط ربط التنفيذ غير مكتمل: جدول المعاملة المطلوب {0} مفقود."

@@ -1620,7 +1620,17 @@ LEGACY_SOURCE_PINS = {}
 #   -> catalog=1148 files=345 wrapped=941 json_labels=79 missing=0
 #
 # Recorded as measurement M1D in stage2_current_measurements.json.
-CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-24"
+# 2026-11-24 — re-measurement after WBS P2 Slice 2 (on develop a865bc4).
+#
+# WBS P2 Slice 2 added set_stage_execution_node, A1 execution-lock guards across
+# all 8 transaction child types, and 6 localized strings to the Arabic catalog.
+# Re-measured with:
+#
+#   GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only
+#   -> catalog=1154 files=345 wrapped=947 json_labels=79 missing=0
+#
+# Recorded as measurement M1E in stage2_current_measurements.json.
+CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-24-p2s2"
 CURRENT_EXPECTED_MODULES = [
     ("construction.searchable_dropdown.tests.test_search_api", 13),
     ("construction.searchable_dropdown.tests.test_integration", 6),
@@ -1635,9 +1645,9 @@ CURRENT_EXPECTED_MODULES = [
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
 CURRENT_EXPECTED_GATE = {
-    "catalog": 1148,
+    "catalog": 1154,
     "files": 345,
-    "wrapped": 941,
+    "wrapped": 947,
     "json_labels": 79,
     "missing": 0,
 }
@@ -1646,12 +1656,12 @@ CURRENT_EXPECTED_GATE = {
 # trusted and the contract must be re-measured and re-reviewed. The checker
 # enforces this (fail closed) instead of accepting a drifted expectation.
 CURRENT_SOURCE_PINS = {
-    "construction/locale/ar.po": ("0de7c7afac6efe5478c385c1bc8e3f365181388cc3ca95fd63faccea26dd8bba"),
+    "construction/locale/ar.po": ("d1639ae1be1316328b24cb8918664875b091c47b5c1083ceeb9c4af17537a78b"),
     "construction/data/translations/approved_ar_overrides.csv": (
         "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318"
     ),
     "construction/data/localization/localization_manifest.json": (
-        "cf698e1b7df29bc955c6821b611fd964a6cb791374ec023eb7e4ed47383e4cf5"
+        "51c1edca34d6adcd09f03fa6bf6f6040c9f308797940c33f39985acf63308f69"
     ),
     "construction/data/localization/vendor_catalog_baseline.json": (
         # 2026-10-21: the reviewed controlled re-record of ONLY apps.frappe.commit
