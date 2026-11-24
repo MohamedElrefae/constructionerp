@@ -290,6 +290,54 @@ def create_node(project, title, is_group, parent_node=None, expected_parent_modi
         _translate(error)
 
 
+def _find_subtree_reference(subtree):
+    """Fail-closed current locking read for any BOQ Item default or Stage referencing ``subtree``."""
+    names = sorted(subtree)
+    if not names:
+        return None
+    from construction.services.execution_mapping import require_mapping_column
+
+    if require_mapping_column("BOQ Item", "planned_execution_node"):
+        item_ref = frappe.db.sql(
+            "SELECT name FROM `tabBOQ Item` WHERE planned_execution_node IN %s LIMIT 1 LOCK IN SHARE MODE",
+            (tuple(names),),
+            as_dict=True,
+        )
+        if item_ref:
+            return ("BOQ Item", item_ref[0]["name"])
+    if require_mapping_column("BOQ Item Stage", "execution_node"):
+        stage_ref = frappe.db.sql(
+            "SELECT name FROM `tabBOQ Item Stage` WHERE execution_node IN %s LIMIT 1 LOCK IN SHARE MODE",
+            (tuple(names),),
+            as_dict=True,
+        )
+        if stage_ref:
+            return ("BOQ Item Stage", stage_ref[0]["name"])
+    return None
+
+
+def _assert_subtree_unreferenced(nodes, name, operation):
+    subtree = rules.collect_subtree(nodes, name)
+    ref = _find_subtree_reference(subtree)
+    if not ref:
+        return
+    ref_doctype, _ref_name = ref
+    if operation == "delete":
+        raise rules.RuleViolation(
+            "referenced_node",
+            f"Cannot delete this execution location or branch because it is referenced by a {ref_doctype}.",
+        )
+    if operation == "move":
+        raise rules.RuleViolation(
+            "referenced_subtree",
+            f"Cannot move this execution location or branch because it is referenced by a {ref_doctype}.",
+        )
+    raise rules.RuleViolation(
+        "referenced_leaf",
+        f"Cannot convert this execution location into a group because it is referenced by a {ref_doctype}.",
+    )
+
+
 def update_node(project, name, expected_modified, title=None, is_group=None):
     project = rules.validate_identifier(project, field="Project")
     name = rules.validate_identifier(name, field="Node name")
@@ -304,6 +352,8 @@ def update_node(project, name, expected_modified, title=None, is_group=None):
             title = rules.validate_title(title)
         if is_group is not None:
             is_group = rules.validate_group_change(nodes, project=project, name=name, new_is_group=is_group)
+            if bool(is_group) and not bool(row.get("is_group")):
+                _assert_subtree_unreferenced(nodes, name, "convert")
         doc = frappe.get_doc(rules.NODE_DOCTYPE, name, for_update=True)
         if doc.project != project:
             raise access.IntegrityFailure("The node belongs to a different Project.")
@@ -343,6 +393,8 @@ def move_node(project, name, expected_modified, parent_node=None, expected_paren
         row = _load_node(project, name)
         _check_expected(row, expected_modified)
         rules.validate_move(nodes, project=project, name=name, new_parent=parent_node)
+        if (parent_node or None) != (row.get("parent_node") or None):
+            _assert_subtree_unreferenced(nodes, name, "move")
         if parent_node:
             parent = next((node for node in nodes if node["name"] == parent_node), None)
             if parent is None:
@@ -403,6 +455,7 @@ def delete_node(project, name, expected_modified):
         row = _load_node(project, name)
         _check_expected(row, expected_modified)
         rules.validate_delete(nodes, project=project, name=name)
+        _assert_subtree_unreferenced(nodes, name, "delete")
         doc = frappe.get_doc(rules.NODE_DOCTYPE, name, for_update=True)
         if doc.project != project:
             raise access.IntegrityFailure("The node belongs to a different Project.")

@@ -2,11 +2,11 @@
 
 > Generated from live DocType JSON by `scripts/schema_drift_checker.py --update`.
 > Do not hand-edit field tables. Update the DocType JSON, then regenerate this file.
-> Last verified: 2026-11-18
+> Last verified: 2026-11-24
 
 ## Summary
 
-- Schema-owning DocTypes: 23
+- Schema-owning DocTypes: 24
 - Override-only DocType folders: 1
 - Source path: `construction/construction/doctype/*/*.json`
 
@@ -16,8 +16,8 @@
 | `boq_cost_analysis_detail` | BOQ Cost Analysis Detail | `boq_cost_analysis_detail.json` | 11 | Child table |
 | `boq_header` | BOQ Header | `boq_header.json` | 12 |  |
 | `boq_import_batch` | BOQ Import Batch | `boq_import_batch.json` | 18 |  |
-| `boq_item` | BOQ Item | `boq_item.json` | 53 |  |
-| `boq_item_stage` | BOQ Item Stage | `boq_item_stage.json` | 16 |  |
+| `boq_item` | BOQ Item | `boq_item.json` | 54 |  |
+| `boq_item_stage` | BOQ Item Stage | `boq_item_stage.json` | 17 |  |
 | `boq_quantity_revision` | BOQ Quantity Revision | `boq_quantity_revision.json` | 37 |  |
 | `boq_structure` | BOQ Structure | `boq_structure.json` | 31 |  |
 | `construction_settings` | Construction Settings | `construction_settings.json` | 30 |  |
@@ -26,6 +26,7 @@
 | `direct_labor_designation` | Direct Labor Designation | `direct_labor_designation.json` | 2 | Child table |
 | `execution_breakdown_node` | Execution Breakdown Node | `execution_breakdown_node.json` | 9 |  |
 | `execution_code_counter` | Execution Code Counter | `execution_code_counter.json` | 2 |  |
+| `execution_mapping_audit` | Execution Mapping Audit | `execution_mapping_audit.json` | 29 |  |
 | `form_layout_profile` | Form Layout Profile | `form_layout_profile.json` | 13 |  |
 | `modern_theme_settings` | Modern Theme Settings | `modern_theme_settings.json` | 10 |  |
 | `plantresource` | PlantResource | `plant_resource.json` | 5 |  |
@@ -141,7 +142,7 @@
 | `warnings_json` | Long Text |  |  |
 | `preview_json` | Long Text |  |  |
 
-### BOQ Item (`boq_item/boq_item.json`) - 53 fields
+### BOQ Item (`boq_item/boq_item.json`) - 54 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -150,6 +151,7 @@
 | `boq_header` | Link | BOQ Header | reqd |
 | `item_type` | Select | Measured Work / Provisional Sum / Prime Cost / Daywork / Contingency / TBD |  |
 | `cost_item` | Data |  |  |
+| `planned_execution_node` | Link | Execution Breakdown Node | read_only |
 | `cb_identity` | Column Break |  |  |
 | `owner_page` | Data |  |  |
 | `owner_ref_no` | Data |  |  |
@@ -199,7 +201,7 @@
 | `active_cost_analysis` | Link | BOQ Cost Analysis | read_only |
 | `manual_cost_snapshot` | Long Text |  | hidden, read_only |
 
-### BOQ Item Stage (`boq_item_stage/boq_item_stage.json`) - 16 fields
+### BOQ Item Stage (`boq_item_stage/boq_item_stage.json`) - 17 fields
 
 | Field | Type | Options | Flags |
 |---|---|---|---|
@@ -212,6 +214,7 @@
 | `stage_code` | Data |  |  |
 | `stage_name` | Data |  | reqd |
 | `stage_status` | Select | Not Started / In Progress / Completed / Certified / On Hold | reqd |
+| `execution_node` | Link | Execution Breakdown Node | read_only |
 | `sb_quantities` | Section Break |  |  |
 | `planned_qty` | Float |  |  |
 | `measured_executed_qty` | Float |  |  |
@@ -473,6 +476,40 @@
 |---|---|---|---|
 | `project` | Link | Project | reqd, unique, read_only |
 | `last_issued` | Long Int |  | reqd, read_only |
+
+### Execution Mapping Audit (`execution_mapping_audit/execution_mapping_audit.json`) - 29 fields
+
+| Field | Type | Options | Flags |
+|---|---|---|---|
+| `sb_target` | Section Break |  |  |
+| `target_doctype` | Select | BOQ Item / BOQ Item Stage | reqd, read_only |
+| `target_name` | Data |  | reqd, read_only |
+| `project` | Link | Project | reqd, read_only |
+| `cb_target` | Column Break |  |  |
+| `boq_header` | Data |  | reqd, read_only |
+| `boq_item` | Data |  | reqd, read_only |
+| `action` | Select | set / change / clear / set_on_create / inherit_on_create / initial_historical_map | reqd, read_only |
+| `sb_historical` | Section Break |  |  |
+| `is_historical_assignment` | Check |  | read_only |
+| `historical_trigger` | Small Text |  | read_only |
+| `cb_historical` | Column Break |  |  |
+| `stage_status_snapshot` | Data |  | read_only |
+| `measured_qty_snapshot` | Float |  | read_only |
+| `certified_qty_snapshot` | Float |  | read_only |
+| `sb_transition` | Section Break |  |  |
+| `old_node` | Data |  | read_only |
+| `old_ebs_code` | Data |  | read_only |
+| `old_title` | Data |  | read_only |
+| `old_path_snapshot` | Small Text |  | read_only |
+| `cb_transition` | Column Break |  |  |
+| `new_node` | Data |  | read_only |
+| `new_ebs_code` | Data |  | read_only |
+| `new_title` | Data |  | read_only |
+| `new_path_snapshot` | Small Text |  | read_only |
+| `sb_actor` | Section Break |  |  |
+| `reason` | Small Text |  | read_only |
+| `changed_by` | Link | User | reqd, read_only |
+| `changed_on` | Datetime |  | reqd, read_only |
 
 ### Form Layout Profile (`form_layout_profile/form_layout_profile.json`) - 13 fields
 

@@ -15,6 +15,7 @@
     "stage_code",
     "stage_name",
     "stage_status",
+    "execution_node",
     "sb_quantities",
     "planned_qty",
     "measured_executed_qty",
@@ -98,6 +99,15 @@
       "label": "Stage Status",
       "options": "Not Started\nIn Progress\nCompleted\nCertified\nOn Hold",
       "reqd": 1
+    },
+    {
+      "fieldname": "execution_node",
+      "fieldtype": "Link",
+      "label": "Execution Location",
+      "options": "Execution Breakdown Node",
+      "read_only": 1,
+      "no_copy": 1,
+      "search_index": 1
     },
     {
       "fieldname": "sb_quantities",

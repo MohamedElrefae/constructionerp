@@ -20,6 +20,7 @@ MAX_REQUEST_BYTES = 16384
 
 NODE_DOCTYPE = "Execution Breakdown Node"
 COUNTER_DOCTYPE = "Execution Code Counter"
+AUDIT_DOCTYPE = "Execution Mapping Audit"
 PROTECTED_DOCTYPES = (NODE_DOCTYPE, COUNTER_DOCTYPE)
 
 NODE_NAME_PREFIX = "EBN-"
@@ -262,9 +263,20 @@ RELEVANT_HOOKS = (
 # by their pinned full-blob hook hashes.
 RELEVANT_DISPATCH_DOCTYPES = frozenset({"*", "DocShare"} | AUTHORITY_DOCTYPES)
 
-BROWSE_ROLES = frozenset({"Site Engineer", "Project Manager", "System Manager"})
+BROWSE_ROLES = frozenset({"Site Engineer", "Project Manager", "Construction Owner", "System Manager"})
 WRITE_ROLES = frozenset({"Project Manager", "System Manager"})
 DELETE_ROLES = frozenset({"System Manager"})
+MAPPING_PLANNER_ROLES = frozenset({"System Manager", "Construction Owner", "Project Manager"})
+MAPPING_ACTIONS = (
+    "set",
+    "change",
+    "clear",
+    "set_on_create",
+    "inherit_on_create",
+    "initial_historical_map",
+)
+REASON_REQUIRED_ACTIONS = frozenset({"change", "clear", "initial_historical_map"})
+MAX_REASON_LENGTH = 500
 
 OPERATIONS = ("read", "create", "update", "move", "set_disabled", "delete")
 MUTATION_OPERATIONS = frozenset({"create", "update", "move", "set_disabled", "delete"})
@@ -1547,3 +1559,122 @@ def validate_protected_definition(doctype, existing_meta, existing_fields, candi
     if actual_fields != expected_fields:
         raise RuleViolation("schema_collision", f"The existing {doctype} field definitions are incompatible.")
     return True
+
+
+def index_nodes_by_name(nodes):
+    """Build a name -> node mapping from an iterable of execution-tree node dicts."""
+    indexed = {}
+    for node in nodes:
+        name = node.get("name")
+        if name:
+            indexed[name] = node
+    return indexed
+
+
+def node_ancestor_chain(nodes_by_name, node_name):
+    """Return the root-to-node chain of node dicts for ``node_name``."""
+    if not node_name or node_name not in nodes_by_name:
+        raise RuleViolation("missing_node", "Execution location was not found.")
+    chain = []
+    seen = set()
+    cursor = node_name
+    while cursor:
+        if cursor in seen:
+            raise RuleViolation("cycle", "Execution tree contains a cycle.")
+        if cursor not in nodes_by_name:
+            raise RuleViolation("broken_parent", "Execution location has a missing ancestor.")
+        seen.add(cursor)
+        node = nodes_by_name[cursor]
+        chain.append(node)
+        cursor = node.get("parent_node") or None
+    chain.reverse()
+    return chain
+
+
+def disabled_state(nodes_by_name, node_name):
+    """Return ``(is_disabled, reason)`` checking both the node and every ancestor."""
+    if not node_name or node_name not in nodes_by_name:
+        return True, "missing"
+    chain = node_ancestor_chain(nodes_by_name, node_name)
+    node = chain[-1]
+    if int(node.get("disabled") or 0):
+        return True, "self"
+    for ancestor in chain[:-1]:
+        if int(ancestor.get("disabled") or 0):
+            return True, "ancestor"
+    return False, None
+
+
+def is_effectively_enabled(nodes_by_name, node_name):
+    """True only when ``node_name`` and all of its ancestors are enabled."""
+    is_disabled, _reason = disabled_state(nodes_by_name, node_name)
+    return not is_disabled
+
+
+def build_node_path(nodes_by_name, node_name, separator=" / "):
+    """Build the human-readable ancestor title path for ``node_name``."""
+    chain = node_ancestor_chain(nodes_by_name, node_name)
+    parts = [str(item.get("title") or item.get("ebs_code") or item.get("name") or "").strip() for item in chain]
+    return separator.join(part for part in parts if part)
+
+
+def validate_eligible_execution_leaf(nodes_by_name, node_name, *, project):
+    """Validate that ``node_name`` is a same-project, effectively-enabled leaf node."""
+    node_name = validate_identifier(node_name, field="Execution location")
+    project = validate_identifier(project, field="Project")
+    node = nodes_by_name.get(node_name)
+    if node is None:
+        raise RuleViolation("invalid_node", "Execution location does not exist in this Project.")
+    if node.get("project") != project:
+        raise RuleViolation("project_mismatch", "Execution location belongs to a different Project.")
+    if int(node.get("is_group") or 0):
+        raise RuleViolation("group_not_eligible", "Execution location must be a leaf node, not a group.")
+    is_disabled, reason = disabled_state(nodes_by_name, node_name)
+    if is_disabled:
+        if reason == "ancestor":
+            raise RuleViolation(
+                "disabled_ancestor",
+                "Execution location is under a disabled ancestor branch and cannot be assigned.",
+            )
+        raise RuleViolation("disabled_node", "Execution location is disabled and cannot be assigned.")
+    return node
+
+
+def is_eligible_execution_leaf(nodes_by_name, node_name, *, project):
+    """Non-throwing eligibility predicate returning ``(ok, code, message)``."""
+    try:
+        validate_eligible_execution_leaf(nodes_by_name, node_name, project=project)
+    except RuleViolation as error:
+        return False, error.code, error.message
+    return True, None, None
+
+
+def collect_subtree(nodes, root_name):
+    """Return ``frozenset`` of ``root_name`` and all of its transitive descendants."""
+    children_by_parent = {}
+    for node in nodes:
+        name = node.get("name")
+        parent = node.get("parent_node") or None
+        if name and parent:
+            children_by_parent.setdefault(parent, []).append(name)
+    subtree = set()
+    stack = [root_name]
+    while stack:
+        current = stack.pop()
+        if current in subtree:
+            continue
+        subtree.add(current)
+        stack.extend(children_by_parent.get(current, ()))
+    return frozenset(subtree)
+
+
+def validate_mapping_reason(action, reason):
+    """Normalize and enforce reason presence for mapping actions."""
+    if action not in MAPPING_ACTIONS:
+        raise RuleViolation("invalid_action", "Unsupported mapping action.")
+    cleaned = "" if reason is None else str(reason).strip()
+    if len(cleaned) > MAX_REASON_LENGTH:
+        raise RuleViolation("reason_too_long", f"Mapping reason cannot exceed {MAX_REASON_LENGTH} characters.")
+    if action in REASON_REQUIRED_ACTIONS and not cleaned:
+        raise RuleViolation("reason_required", f"A non-blank reason is required to {action} an execution location.")
+    return cleaned

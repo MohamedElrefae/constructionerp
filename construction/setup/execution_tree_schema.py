@@ -255,6 +255,10 @@ def ensure_execution_tree_schema():
     _ensure_unique(COUNTER_TABLE, COUNTER_PROJECT_INDEX, ("project",))
     _ensure_unique(NODE_TABLE, NODE_UNIQUE_INDEX, ("project", "ebs_code"))
     _ensure_index(NODE_TABLE, NODE_PARENT_INDEX, ("project", "parent_node"))
+    if _table_exists(f"tab{rules.AUDIT_DOCTYPE}"):
+        from construction.services.execution_mapping import reconcile_audit_series_counter
+
+        reconcile_audit_series_counter()
     return verify_execution_tree_schema(strict=False)
 
 

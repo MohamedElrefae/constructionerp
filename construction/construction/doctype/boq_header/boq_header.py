@@ -4,6 +4,7 @@ from frappe.model.document import Document
 
 from construction.api.scope_context_api import get_user_scope_context
 from construction.services.boq_transactions import lock_boq_header, read_boq_totals
+from construction.services.execution_mapping import enforce_boq_header_project_change_guard
 
 
 class BOQHeader(Document):
@@ -17,6 +18,7 @@ class BOQHeader(Document):
         self.validate_status_transition()
         self.sync_project_from_scope_context()
         self.sync_project_name()
+        enforce_boq_header_project_change_guard(self)
         self.calculate_total_value()
 
     def sync_project_from_scope_context(self):

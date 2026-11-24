@@ -1,0 +1,245 @@
+{
+ "actions": [],
+ "allow_import": 0,
+ "allow_rename": 0,
+ "autoname": "EMA-.#######",
+ "creation": "2026-11-24 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_target",
+  "target_doctype",
+  "target_name",
+  "project",
+  "cb_target",
+  "boq_header",
+  "boq_item",
+  "action",
+  "sb_historical",
+  "is_historical_assignment",
+  "historical_trigger",
+  "cb_historical",
+  "stage_status_snapshot",
+  "measured_qty_snapshot",
+  "certified_qty_snapshot",
+  "sb_transition",
+  "old_node",
+  "old_ebs_code",
+  "old_title",
+  "old_path_snapshot",
+  "cb_transition",
+  "new_node",
+  "new_ebs_code",
+  "new_title",
+  "new_path_snapshot",
+  "sb_actor",
+  "reason",
+  "changed_by",
+  "changed_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_target",
+   "fieldtype": "Section Break",
+   "label": "Target"
+  },
+  {
+   "fieldname": "target_doctype",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Target DocType",
+   "options": "BOQ Item\nBOQ Item Stage",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Target Name",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "cb_target",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "boq_header",
+   "fieldtype": "Data",
+   "label": "BOQ Header",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "boq_item",
+   "fieldtype": "Data",
+   "label": "BOQ Item",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action",
+   "options": "set\nchange\nclear\nset_on_create\ninherit_on_create\ninitial_historical_map",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "sb_historical",
+   "fieldtype": "Section Break",
+   "label": "Historical State Snapshot"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_historical_assignment",
+   "fieldtype": "Check",
+   "label": "Is Historical Assignment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "historical_trigger",
+   "fieldtype": "Small Text",
+   "label": "Historical Trigger",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_historical",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stage_status_snapshot",
+   "fieldtype": "Data",
+   "label": "Stage Status Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "measured_qty_snapshot",
+   "fieldtype": "Float",
+   "label": "Measured Qty Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "certified_qty_snapshot",
+   "fieldtype": "Float",
+   "label": "Certified Qty Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_transition",
+   "fieldtype": "Section Break",
+   "label": "Location Transition"
+  },
+  {
+   "fieldname": "old_node",
+   "fieldtype": "Data",
+   "label": "Previous Node",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_ebs_code",
+   "fieldtype": "Data",
+   "label": "Previous Execution Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_title",
+   "fieldtype": "Data",
+   "label": "Previous Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_path_snapshot",
+   "fieldtype": "Small Text",
+   "label": "Previous Path Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb_transition",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "new_node",
+   "fieldtype": "Data",
+   "label": "New Node",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_ebs_code",
+   "fieldtype": "Data",
+   "label": "New Execution Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_title",
+   "fieldtype": "Data",
+   "label": "New Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_path_snapshot",
+   "fieldtype": "Small Text",
+   "label": "New Path Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_actor",
+   "fieldtype": "Section Break",
+   "label": "Audit Trail"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "changed_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Changed By",
+   "options": "User",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "changed_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Changed On",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "max_attachments": 0,
+ "modified": "2026-11-24 21:52:00.000000",
+ "modified_by": "Administrator",
+ "module": "construction",
+ "name": "Execution Mapping Audit",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 0,
+ "row_format": "Dynamic",
+ "sort_field": "changed_on",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

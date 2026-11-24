@@ -1305,7 +1305,7 @@ def protected_query_conditions(user, doctype=None):
 
 
 def reject_protected_share(doc, method=None):
-    if doc.get("share_doctype") in rules.PROTECTED_DOCTYPES:
+    if doc.get("share_doctype") in rules.PROTECTED_DOCTYPES or doc.get("share_doctype") == rules.AUDIT_DOCTYPE:
         frappe.throw(
             frappe._("Sharing execution tree records is not permitted."),
             frappe.PermissionError,

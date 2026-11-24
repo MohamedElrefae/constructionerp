@@ -5,6 +5,10 @@ from frappe.utils import cint, flt
 
 from construction.api.scope_context_api import get_user_scope_context
 from construction.services.boq_operational import validate_stage_quantities
+from construction.services.execution_mapping import (
+    enforce_boq_stage_mapping_guard,
+    record_pending_mapping_audit,
+)
 
 
 class BOQItemStage(Document):
@@ -18,6 +22,7 @@ class BOQItemStage(Document):
             "stage_code",
             "stage_name",
             "planned_qty",
+            "execution_node",
         }
     )
     CERTIFIED_IMMUTABLE_FIELDS = frozenset(
@@ -34,6 +39,7 @@ class BOQItemStage(Document):
             "certified_qty",
             "percent_complete",
             "description",
+            "execution_node",
         }
     )
 
@@ -42,6 +48,7 @@ class BOQItemStage(Document):
         self.validate_selection_chain()
         self.fetch_parent_context()
         self.enforce_certification_role()
+        enforce_boq_stage_mapping_guard(self)
         self.enforce_stage_edit_policy()
         self.enforce_measurement_field_policy()
         validate_stage_quantities(self)
@@ -81,6 +88,9 @@ class BOQItemStage(Document):
             {"boq_item": self.boq_item, "stage_code": self.stage_code},
         ):
             frappe.throw(_("Stage code {0} already exists for this BOQ Item").format(self.stage_code))
+
+    def after_insert(self):
+        record_pending_mapping_audit(self)
 
     def on_trash(self):
         from construction.services.boq_lifecycle import before_delete_boq_item_stage
@@ -204,6 +214,7 @@ class BOQItemStage(Document):
                 "stage_code",
                 "stage_name",
                 "planned_qty",
+                "execution_node",
             )
             if self._field_changed(old_doc, fieldname)
         ]

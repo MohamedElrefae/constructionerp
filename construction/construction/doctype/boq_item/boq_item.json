@@ -11,6 +11,7 @@
     "boq_header",
     "item_type",
     "cost_item",
+    "planned_execution_node",
     "cb_identity",
     "owner_page",
     "owner_ref_no",
@@ -94,6 +95,16 @@
       "fieldtype": "Data",
       "label": "Cost Item (Placeholder)",
       "description": "Will be converted to Link field when CostItem DocType is deployed"
+    },
+    {
+      "fieldname": "planned_execution_node",
+      "fieldtype": "Link",
+      "label": "Planned Execution Location",
+      "options": "Execution Breakdown Node",
+      "read_only": 1,
+      "no_copy": 1,
+      "search_index": 1,
+      "description": "Planning default copied once to newly created BOQ Item Stages. Changing this affects future Stages only; existing Stage locations remain unchanged."
     },
     {
       "fieldname": "cb_identity",

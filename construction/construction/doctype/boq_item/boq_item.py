@@ -12,6 +12,10 @@ from construction.services.boq_pricing import (
     tender_amounts,
 )
 from construction.services.boq_transactions import current_boq_sql, lock_boq_header
+from construction.services.execution_mapping import (
+    enforce_boq_item_mapping_guard,
+    record_pending_mapping_audit,
+)
 
 
 class BOQItem(Document):
@@ -45,15 +49,22 @@ class BOQItem(Document):
     ]
 
     def validate(self):
+        if self.is_new():
+            enforce_boq_item_mapping_guard(self)
         previous = self.get_doc_before_save()
         headers = {self.boq_header}
         if previous:
             headers.add(previous.boq_header)
         for header in sorted(header for header in headers if header):
             lock_boq_header(header)
+        if not self.is_new():
+            enforce_boq_item_mapping_guard(self)
         self.validate_cost_provenance()
         for step in self.PHASE1_STEPS:
             getattr(self, step)()
+
+    def after_insert(self):
+        record_pending_mapping_audit(self)
 
     def on_update(self):
         self._trigger_header_rollup()
