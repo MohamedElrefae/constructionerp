@@ -279,11 +279,14 @@
 		// Native events synchronization
 		$select.on("change select-change", syncLabel);
 		$select.on("focus", function () {
-			openDropdown();
+			// Frappe focuses the first input automatically on new forms. Move
+			// focus to the visible control without opening the menu; only an
+			// explicit click (or keyboard activation) should open it.
+			$btn[0].focus();
 		});
 
-		// Hide native select visually
-		$select.css({
+		// Hide native select visually and keep keyboard focus on the visible control.
+		$select.attr("tabindex", "-1").css({
 			opacity: 0,
 			position: "absolute",
 			pointerEvents: "none",

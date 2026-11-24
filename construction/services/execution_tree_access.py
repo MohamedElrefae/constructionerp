@@ -42,7 +42,7 @@ IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _.-]*$")
 PINNED_HOOK_HASHES = {
     "frappe": "31eaac57b360a2f33d97bdaa2d30134d74d50fd532cab932d5b565d45b35d4fe",
     "erpnext": "28c286e338e7e28cdc8d23cc2168d52251da49c012c21de64d839d484be5c310",
-    "construction": "a8c0a85099afae4f2a0bed7f74e26bea5e40b54bad8e5662dbc15c7ed574f50d",
+    "construction": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766",
 }
 
 # The reader's reconnect behavior was reviewed against the installed mysqlclient

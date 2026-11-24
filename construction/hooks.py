@@ -154,7 +154,9 @@ app_include_js = [
     "/assets/construction/js/searchable_dropdown/searchable_dropdown.js?v=1",
     # Phase 2: Global ControlSelect override — searchable themed dropdown for all <select> fields
     # Replaces native HTML <select> app-wide (forms + report filters confirmed by diagnostic)
-    "/assets/construction/js/overrides/ct_select_control.js?v=3",
+    # v4: automatic first-field focus moves to the visible dropdown button
+    # without opening the menu; explicit activation still opens it.
+    "/assets/construction/js/overrides/ct_select_control.js?v=4",
     # Phase 3: Global ControlLink auto-enhancer — replaces 3 manual config files
     # Auto-applies SearchableDropdownEnhancer to all Link fields on every page
     # v20: the themed BOQ dropdown reads the BOQ Header of the CHILD ROW

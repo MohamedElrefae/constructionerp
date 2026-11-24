@@ -1,6 +1,6 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-10-06 (Sessions 3A/3B/3C unified and completed on develop; all 16 release gates qualified; release candidate finalized)
-**UPDATED BY:** opencode (Session 3A/3B/3C unification and RC finalization)
+**LAST UPDATED:** 2026-11-24 (Global Select auto-open defect fixed and verified on wbs-p1-lab.localhost)
+**UPDATED BY:** HungerG Free (dropdown focus regression)
 
 ---
 
@@ -80,6 +80,15 @@
 ---
 
 ## 3. In Progress (Active Work — Updated After Every Session)
+
+### Global Select auto-open defect — 2026-11-24
+- Owner reported dropdown menus opening automatically on new forms, reproduced on Resource Price History. Cause: Frappe's `form.js::focus_on_first_input()` focuses the first input, while the global Select override treated focus on the hidden native `<select>` as a request to open its themed menu.
+- Fix: native Select focus now moves to the visible dropdown button without opening the menu; the hidden Select is removed from tab order (`tabindex=-1`). Explicit click or keyboard activation still opens/closes the menu. Asset registration bumped `ct_select_control.js?v=3` → `v=4`.
+- Files read: `AGENTS.md`; `docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md`; `docs/ai/CONTEXT_INDEX.md`; `AGENT_WORKFLOW.md`; relevant `SESSION_MEMORY.md` and `docs/ai/SCHEMA_FACTS.md` sections; `construction/public/js/overrides/ct_select_control.js`; `construction/public/js/overrides/ct_link_control.js`; `construction/hooks.py`; Resource Price History JSON/controller; installed Frappe `form.js` and Link control; existing JS test harnesses.
+- Startup: clean `develop` @ `5b7ac588d4e15ca77e5135ba72c744af2a55733a`, `0 0` vs `origin/develop`; schema checker passed (24 schema owners + 1 override-only folder); context checker passed.
+- Verification: new focused regression `construction/tests/test_select_control_focus.js` failed-before (autofocus opened the menu) and passes 2/2 after the fix; full context/JS checker passes 183/183; `node --check`, `git diff --check` pass. On named local lab site `wbs-p1-lab.localhost`, ran `bench --site wbs-p1-lab.localhost clear-cache`, reloaded with cache bypass, confirmed served `v=4`, zero menus open on load, and click/Enter activation opens then closes the menu.
+- Coordinated seal renewal: `construction/services/execution_tree_access.py` now pins the actual `hooks.py` SHA-256 `d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766`; the three `construction/hooks.py` guard bindings and canonical source-manifest digests in `.github/security/semgrep_review_ledger.json` were renewed with truthful scope/verification metadata. Semgrep ledger tests pass (13 tests + 11 subtests); the construction hook-seal test passes (1 passed, 150 deselected). No independent review or new native REST/business acceptance is claimed.
+- MCP recall was unavailable (`pydantic_core._pydantic_core` import failure); this local session record is the fallback. No commit/push. Concurrent unrelated execution-mapping changes appeared during the session in `construction/api/execution_mapping_api.py`, `construction/services/boq_accounting.py`, `construction/services/execution_mapping.py`, `construction/services/execution_tree_rules.py`, and `tests_offline/test_execution_mapping_rules.py`; all were preserved untouched.
 
 ### Foundation finalization handover — 2026-10-15
 

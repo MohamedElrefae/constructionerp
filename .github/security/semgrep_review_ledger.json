@@ -75,7 +75,7 @@
         },
         {
           "path": "construction/hooks.py",
-          "sha256": "a8c0a85099afae4f2a0bed7f74e26bea5e40b54bad8e5662dbc15c7ed574f50d"
+          "sha256": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766"
         }
       ],
       "permission_record": {
@@ -171,7 +171,20 @@
           "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
           "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
         },
-        "reviewed_source_manifest_sha256": "0aa8d9be8bb6687cb4ddef8ba5e5d96aa751178dbb0031538b08d4c48edb5dbc"
+        "renewal_review_2026_11_24_select_autofocus": {
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766"
+          },
+          "renewed_on": "2026-11-24",
+          "reviewed_base_commit": "5b7ac588d4e15ca77e5135ba72c744af2a55733a",
+          "reviewed_patch_scope": "construction/hooks.py client asset registration only; security hook chains unchanged",
+          "reviewed_patch_sha256": "fd4f95d08e1621b64590dea298ce04ce69eafcd26b0275ac59117af3e96bcb28",
+          "review_note": "Implementing session compared the hooks.py diff with the base and confirmed the only change is the ct_select_control.js cache-version registration and its comment. The owner coordinated this seal renewal after live reproduction and verification of the auto-open fix. No independent review or new native REST/business acceptance is claimed.",
+          "scope": "Three hooks.py guard digests and their canonical source manifests only; finding identities, permission records, tests, decisions, statuses, history and strict failure controls unchanged.",
+          "verification": "wbs-p1-lab.localhost served ct_select_control.js v=4; zero menus open on form load; click and Enter activation verified; 183 JavaScript regression checks passed."
+        },
+        "reviewed_source_manifest_sha256": "9235c4912fb384f144ccea580b9ebf958ad1201d568f0945745a7a1cd64b7913"
       },
       "source_sha256": "c9887ae7b2d6c2db422135dc3f4ef8dba90f7cafedf18b68455cf2714ebf47cf",
       "status": "REVIEWED",
@@ -257,7 +270,7 @@
         },
         {
           "path": "construction/hooks.py",
-          "sha256": "a8c0a85099afae4f2a0bed7f74e26bea5e40b54bad8e5662dbc15c7ed574f50d"
+          "sha256": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766"
         }
       ],
       "permission_record": {
@@ -353,7 +366,20 @@
           "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
           "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
         },
-        "reviewed_source_manifest_sha256": "cc0e43e26ddafe9457c52164f8811999fbb9924ba7983f820f50de672d9470e9"
+        "renewal_review_2026_11_24_select_autofocus": {
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766"
+          },
+          "renewed_on": "2026-11-24",
+          "reviewed_base_commit": "5b7ac588d4e15ca77e5135ba72c744af2a55733a",
+          "reviewed_patch_scope": "construction/hooks.py client asset registration only; security hook chains unchanged",
+          "reviewed_patch_sha256": "fd4f95d08e1621b64590dea298ce04ce69eafcd26b0275ac59117af3e96bcb28",
+          "review_note": "Implementing session compared the hooks.py diff with the base and confirmed the only change is the ct_select_control.js cache-version registration and its comment. The owner coordinated this seal renewal after live reproduction and verification of the auto-open fix. No independent review or new native REST/business acceptance is claimed.",
+          "scope": "Three hooks.py guard digests and their canonical source manifests only; finding identities, permission records, tests, decisions, statuses, history and strict failure controls unchanged.",
+          "verification": "wbs-p1-lab.localhost served ct_select_control.js v=4; zero menus open on form load; click and Enter activation verified; 183 JavaScript regression checks passed."
+        },
+        "reviewed_source_manifest_sha256": "9be8f83d0c7ee57897d587b9b7f6a09f0a02df9154184f49064a82faa66ea205"
       },
       "source_sha256": "090006e01ba4b1e4fad6dea77543263b1507748129237c2f3d63a2d69b0dc023",
       "status": "REVIEWED",
@@ -391,7 +417,7 @@
         },
         {
           "path": "construction/hooks.py",
-          "sha256": "a8c0a85099afae4f2a0bed7f74e26bea5e40b54bad8e5662dbc15c7ed574f50d"
+          "sha256": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766"
         },
         {
           "path": "construction/construction/doctype/user_scope_context/user_scope_context.py",
@@ -495,7 +521,20 @@
           "reviewed_patch_sha256": "2913d380a93876df4c4fa27312841382d40ddb52a959acfea5b9b79b483a0799",
           "scope": "Only3hooks guard hashes + corresponding canonical manifests + truthful metadata; preserve all finding/source/permission/status/decision/test/history records."
         },
-        "reviewed_source_manifest_sha256": "f6c816bc195c4b14316311a0b97737dbe5e1cfe7b027599c6d3cd765928f80f5"
+        "renewal_review_2026_11_24_select_autofocus": {
+          "renewed_guard": {
+            "path": "construction/hooks.py",
+            "sha256": "d9be9643fae1be421f2e95ae8d7d1d0e250c2d0a8d85d5c58e350ebe45c74766"
+          },
+          "renewed_on": "2026-11-24",
+          "reviewed_base_commit": "5b7ac588d4e15ca77e5135ba72c744af2a55733a",
+          "reviewed_patch_scope": "construction/hooks.py client asset registration only; security hook chains unchanged",
+          "reviewed_patch_sha256": "fd4f95d08e1621b64590dea298ce04ce69eafcd26b0275ac59117af3e96bcb28",
+          "review_note": "Implementing session compared the hooks.py diff with the base and confirmed the only change is the ct_select_control.js cache-version registration and its comment. The owner coordinated this seal renewal after live reproduction and verification of the auto-open fix. No independent review or new native REST/business acceptance is claimed.",
+          "scope": "Three hooks.py guard digests and their canonical source manifests only; finding identities, permission records, tests, decisions, statuses, history and strict failure controls unchanged.",
+          "verification": "wbs-p1-lab.localhost served ct_select_control.js v=4; zero menus open on form load; click and Enter activation verified; 183 JavaScript regression checks passed."
+        },
+        "reviewed_source_manifest_sha256": "a2c163b54b9f21df111b9b02ddca3b9309cc0d5d7188ce0f36d6e8273c30ec9c"
       },
       "source_sha256": "054446a3f27f7d5b34cfd542cbc9536f6f6d559246c5888a40dd6bdb510b3b24",
       "status": "REVIEWED",
