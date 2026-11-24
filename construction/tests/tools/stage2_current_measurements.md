@@ -292,3 +292,26 @@ untouched.
 review of the new contract has occurred, and this record does not claim one. The
 site-backed M3/M5 runs remain owed against the final qualified HEAD exactly as
 stated above.
+
+---
+
+## 2026-11-24 — re-measurement after WBS P2 Slice 1 (M1D)
+
+WBS P2 Slice 1 (`98fd5a3`) added execution-location mapping modules and 27
+localized strings, which were added to `construction/locale/ar.po`, and wrapped
+the inheritance warning directly at `frappe.msgprint`. Freshness evidence was
+re-collected on `wbs-p1-lab.localhost` (`packaged_rows=4337`, `runtime_digest`
+unchanged).
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-24` |
+| gate | `catalog=1148 files=345 wrapped=941 json_labels=79 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-24-p2s1-current/m1_source_scan.txt` |
+| environment | develop `98fd5a3`, working tree with the 2026-11-24 P2 Slice 1 localization fixes |
+
+The 2026-11-22 block is preserved verbatim under
+`previous_frozen_contract_kept_as_history`. **Review status: PENDING.**

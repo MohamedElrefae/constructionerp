@@ -943,15 +943,25 @@ def enforce_boq_stage_mapping_guard(doc):
     snap = _snapshot_node(nodes_by_name, parent_default)
     label = snap.get("ebs_code") or parent_default
     if code == "disabled_ancestor":
-        warning = _(
+        doc.flags.execution_node_inheritance_warning = _(
             "The BOQ Item's planned execution location ({0}) is under a disabled ancestor branch and was not inherited. This stage was saved unmapped."
         ).format(label)
+        frappe.msgprint(
+            _(
+                "The BOQ Item's planned execution location ({0}) is under a disabled ancestor branch and was not inherited. This stage was saved unmapped."
+            ).format(label),
+            indicator="orange",
+        )
     else:
-        warning = _(
+        doc.flags.execution_node_inheritance_warning = _(
             "The BOQ Item's planned execution location ({0}) is disabled or ineligible and was not inherited. This stage was saved unmapped."
         ).format(label)
-    doc.flags.execution_node_inheritance_warning = warning
-    frappe.msgprint(warning, indicator="orange")
+        frappe.msgprint(
+            _(
+                "The BOQ Item's planned execution location ({0}) is disabled or ineligible and was not inherited. This stage was saved unmapped."
+            ).format(label),
+            indicator="orange",
+        )
 
 
 def record_pending_mapping_audit(doc):

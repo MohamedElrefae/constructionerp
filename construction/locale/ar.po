@@ -4725,3 +4725,111 @@ msgstr "تغيّر النطاق في جلسة أخرى. أعد التحميل و
 #: construction/api/scope_context_api.py
 msgid "User not found."
 msgstr "لم يتم العثور على المستخدم."
+
+#: construction/services/execution_mapping.py
+msgid "The BOQ Item's planned execution location ({0}) is disabled or ineligible and was not inherited. This stage was saved unmapped."
+msgstr "موقع التنفيذ المخطط لبند جدول الكميات ({0}) معطّل أو غير مؤهّل ولم يتم توريثه. تم حفظ هذه المرحلة غير مربوطة."
+
+#: construction/services/execution_mapping.py
+msgid "The BOQ Item's planned execution location ({0}) is under a disabled ancestor branch and was not inherited. This stage was saved unmapped."
+msgstr "موقع التنفيذ المخطط لبند جدول الكميات ({0}) يقع ضمن فرع أب معطّل ولم يتم توريثه. تم حفظ هذه المرحلة غير مربوطة."
+
+#: construction/services/execution_mapping.py
+msgid "A valid BOQ Header and Project are required."
+msgstr "يلزم تحديد ترويسة جدول كميات ومشروع صالحَين."
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Header for BOQ Item {0} does not exist."
+msgstr "ترويسة جدول الكميات الخاصة ببند جدول الكميات {0} غير موجودة."
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Header is required before setting Planned Execution Location."
+msgstr "يلزم تحديد ترويسة جدول الكميات قبل تعيين موقع التنفيذ المخطط."
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Header project changed concurrently. Reload and try again."
+msgstr "تغيّر مشروع ترويسة جدول الكميات بشكل متزامن. أعد التحميل وحاول مرة أخرى."
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Item disappeared during mapping update."
+msgstr "اختفى بند جدول الكميات أثناء تحديث الربط."
+
+#: construction/services/execution_mapping.py
+msgid "BOQ Item project changed concurrently. Reload and try again."
+msgstr "تغيّر مشروع بند جدول الكميات بشكل متزامن. أعد التحميل وحاول مرة أخرى."
+
+#: construction/services/execution_mapping.py
+msgid "Cannot change BOQ Header Project while BOQ Item Stage {0} has an Execution Location assigned."
+msgstr "لا يمكن تغيير مشروع ترويسة جدول الكميات طالما أن مرحلة بند جدول الكميات {0} مرتبطة بموقع تنفيذ."
+
+#: construction/services/execution_mapping.py
+msgid "Cannot change BOQ Header Project while BOQ Item {0} has a Planned Execution Location assigned."
+msgstr "لا يمكن تغيير مشروع ترويسة جدول الكميات طالما أن بند جدول الكميات {0} مرتبط بموقع تنفيذ مخطط."
+
+#: construction/services/execution_mapping.py
+msgid "Cannot move BOQ Item {0} to Project {1} because BOQ Item Stage {2} is mapped to an execution location in Project {3}."
+msgstr "لا يمكن نقل بند جدول الكميات {0} إلى المشروع {1} لأن مرحلة بند جدول الكميات {2} مرتبطة بموقع تنفيذ في المشروع {3}."
+
+#: construction/services/execution_mapping.py
+msgid "Execution Location {0} does not belong to Project {1}."
+msgstr "موقع التنفيذ {0} لا ينتمي إلى المشروع {1}."
+
+#: construction/services/execution_mapping.py
+msgid "Execution Mapping Audit guard mismatch."
+msgstr "عدم تطابق حارس سجل تدقيق ربط التنفيذ."
+
+#: construction/construction/doctype/execution_mapping_audit/execution_mapping_audit.py
+msgid "Execution Mapping Audit records are immutable."
+msgstr "سجلات تدقيق ربط التنفيذ غير قابلة للتعديل."
+
+#: construction/services/execution_mapping.py
+msgid "Execution Mapping Audit records can only be created by the mapping service."
+msgstr "لا يمكن إنشاء سجلات تدقيق ربط التنفيذ إلا عبر خدمة الربط."
+
+#: construction/construction/doctype/execution_mapping_audit/execution_mapping_audit.py
+msgid "Execution Mapping Audit records cannot be deleted."
+msgstr "لا يمكن حذف سجلات تدقيق ربط التنفيذ."
+
+#: construction/construction/doctype/execution_mapping_audit/execution_mapping_audit.py
+msgid "Execution Mapping Audit records cannot be renamed."
+msgstr "لا يمكن إعادة تسمية سجلات تدقيق ربط التنفيذ."
+
+#: construction/services/execution_mapping.py
+msgid "Execution mapping schema is incomplete: table for {0} is missing."
+msgstr "مخطط ربط التنفيذ غير مكتمل: جدول {0} مفقود."
+
+#: construction/services/execution_mapping.py
+msgid "Execution mapping schema is incomplete: {0}.{1} is missing. Run bench migrate."
+msgstr "مخطط ربط التنفيذ غير مكتمل: الحقل {0}.{1} مفقود. شغّل bench migrate."
+
+#: construction/services/execution_mapping.py
+msgid "Nested audit guards are not permitted."
+msgstr "حراس التدقيق المتداخلة غير مسموح بها."
+
+#: construction/services/execution_mapping.py
+msgid "Planned Execution Location {0} does not belong to Project {1}."
+msgstr "موقع التنفيذ المخطط {0} لا ينتمي إلى المشروع {1}."
+
+#: construction/services/execution_mapping.py
+msgid "This BOQ Item changed. Reload and try again."
+msgstr "تغيّر بند جدول الكميات هذا. أعد التحميل وحاول مرة أخرى."
+
+#: construction/services/execution_mapping.py
+msgid "Unexpected mutation detected on commercial BOQ Item fields; rolling back."
+msgstr "تم اكتشاف تعديل غير متوقّع على الحقول التجارية لبند جدول الكميات؛ جارٍ التراجع عن المعاملة."
+
+#: construction/services/execution_mapping.py
+msgid "Unsupported target document type."
+msgstr "نوع المستند المستهدف غير مدعوم."
+
+#: construction/services/execution_mapping.py
+msgid "Use the authorized Execution Location action to change Execution Location."
+msgstr "استخدم إجراء موقع التنفيذ المصرّح به لتغيير موقع التنفيذ."
+
+#: construction/services/execution_mapping.py
+msgid "Use the authorized Execution Location action to change Planned Execution Location."
+msgstr "استخدم إجراء موقع التنفيذ المصرّح به لتغيير موقع التنفيذ المخطط."
+
+#: construction/services/execution_mapping.py
+msgid "unknown"
+msgstr "غير معروف"
