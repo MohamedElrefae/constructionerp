@@ -9,7 +9,6 @@ from construction.services.boq_lookups import (
     is_omitted_boq_item,
 )
 from construction.services.boq_scope_filters import ALLOWED_TRANSACTION_BOQ_STATUSES
-from construction.services.boq_transactions import current_boq_sql
 
 
 def _child_doctype_for(parent_doc, child_table_field):
@@ -131,6 +130,8 @@ def validate_transaction_row(row, parent_doc, child_table_field=None):
         )
 
     if row.get("boq_item_stage"):
+        from construction.services.boq_transactions import current_boq_sql
+
         stage_rows = current_boq_sql(
             "SELECT boq_item FROM `tabBOQ Item Stage` WHERE name = %s FOR UPDATE",
             (row.boq_item_stage,),
