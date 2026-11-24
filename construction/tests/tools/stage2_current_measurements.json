@@ -8,7 +8,7 @@
     "reviewer": "F44 Qualified Successor <successor@f44.invalid>",
     "reviewed_utc": "2026-10-20T01:55:00Z",
     "latest_review_utc": "2026-10-22T05:57:37Z",
-    "contract_id": "stage2-current-contract/2026-11-24-p2s2",
+    "contract_id": "stage2-current-contract/2026-11-24-p2s3",
     "contract_constants": "scripts/check_localization_gates.py (CURRENT_EXPECTED_GATE, CURRENT_EXPECTED_MODULES, CURRENT_SOURCE_PINS)",
     "legacy_contract_preserved": "stage2-legacy-contract/2026-09-29 (LEGACY_EXPECTED_GATE, LEGACY_EXPECTED_MODULES)",
     "review_history": [
@@ -74,9 +74,22 @@
           "missing": 0
         },
         "note": "Re-measurement after WBS P2 Slice 2 (on develop a865bc4, measurement M1E). Six localized strings added to ar.po for set_stage_execution_node, A1 execution-lock guards, and fail-closed transaction-table schema checks."
+      },
+      {
+        "contract_id": "stage2-current-contract/2026-11-24-p2s3",
+        "reviewed_utc": null,
+        "review_status": "pending",
+        "frozen_gate": {
+          "catalog": 1204,
+          "files": 345,
+          "wrapped": 997,
+          "json_labels": 79,
+          "missing": 0
+        },
+        "note": "Re-measurement after WBS P2 Slice 3 (on develop cf42516, measurement M1F). 50 localized strings added to ar.po for bilingual EN/AR form UX on BOQ Item and BOQ Item Stage."
       }
     ],
-    "review_status": "PENDING — builder re-measurement recorded 2026-11-24 (M1E); no owner/tester review has occurred yet."
+    "review_status": "PENDING — builder re-measurement recorded 2026-11-24 (M1F); no owner/tester review has occurred yet."
   },
   "environment": {
     "working_directory": "/tmp/opencode/f44-bench/apps/construction",
@@ -435,14 +448,37 @@
         "errors_local_vendor_delta_only": 1
       },
       "raw_stdout_tail": "checked={\"construction/locale/ar.po\": 1154, \"csv_rows\": 4337, \"extract\": {\"files\": 345, \"json_labels\": 79, \"missing\": 0, \"wrapped\": 947}, \"raw_text\": {\"files\": 7, \"missing\": 0, \"texts\": 2}} errors=1"
+    },
+    {
+      "id": "M1F",
+      "name": "WBS P2 Slice 3 source-only localization gate scan",
+      "measured_utc": "2026-11-24T23:07:00Z",
+      "command": "GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only",
+      "artifact": "construction/tests/tools/measurements/2026-11-24-p2s3-current/m1_source_scan.txt",
+      "artifact_sha256": "75d94e5e21cb97f85d080cf78c4c57e6e597820401793894a6d7dc1f0eba2260",
+      "measured": {
+        "catalog": 1204,
+        "files": 345,
+        "wrapped": 997,
+        "json_labels": 79,
+        "missing": 0,
+        "csv_rows": 4337,
+        "raw_text": {
+          "files": 7,
+          "missing": 0,
+          "texts": 2
+        },
+        "errors_local_vendor_delta_only": 1
+      },
+      "raw_stdout_tail": "checked={\"construction/locale/ar.po\": 1204, \"csv_rows\": 4337, \"extract\": {\"files\": 345, \"json_labels\": 79, \"missing\": 0, \"wrapped\": 997}, \"raw_text\": {\"files\": 7, \"missing\": 0, \"texts\": 2}} errors=1"
     }
   ],
   "frozen_contract_from_these_measurements": {
-    "contract_id": "stage2-current-contract/2026-11-24-p2s2",
+    "contract_id": "stage2-current-contract/2026-11-24-p2s3",
     "gate": {
-      "catalog": 1154,
+      "catalog": 1204,
       "files": 345,
-      "wrapped": 947,
+      "wrapped": 997,
       "json_labels": 79,
       "missing": 0
     },
@@ -468,16 +504,16 @@
       "drift": 0
     },
     "source_pins": {
-      "construction/locale/ar.po": "d1639ae1be1316328b24cb8918664875b091c47b5c1083ceeb9c4af17537a78b",
+      "construction/locale/ar.po": "8c51780a6d88690342e568b0bcd02b8b10b808c46a71fb7416c17096d9d8715e",
       "construction/data/translations/approved_ar_overrides.csv": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
-      "construction/data/localization/localization_manifest.json": "51c1edca34d6adcd09f03fa6bf6f6040c9f308797940c33f39985acf63308f69",
+      "construction/data/localization/localization_manifest.json": "347d99ba3303f7de906bc986fb7e9fad40c97f5913ed3dd3cb411452afa62017",
       "construction/data/localization/vendor_catalog_baseline.json": "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69",
       "construction/data/localization/stage2_inventory_manifest.json": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
     },
     "pin_note": "The pins are the content digests of the source artifacts the counts were measured from. A drifted pin is refused by the checker (evidence-contract-source-drift), so the frozen counts can never be silently stale.",
     "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
-    "reconciled_utc": "2026-11-24T21:34:00Z",
-    "reconciliation_note": "Re-measured after WBS P2 Slice 2 (develop a865bc4 plus 2026-11-24 Slice 2 changes). catalog moved 1148 -> 1154, files stays 345, wrapped moved 941 -> 947, json_labels stays 79, missing stays 0. Source pins re-recorded for ar.po and localization_manifest.json only."
+    "reconciled_utc": "2026-11-24T23:07:00Z",
+    "reconciliation_note": "Re-measured after WBS P2 Slice 3 (develop cf42516 plus 2026-11-24 Slice 3 changes). catalog moved 1154 -> 1204, files stays 345, wrapped moved 947 -> 997, json_labels stays 79, missing stays 0. Source pins re-recorded for ar.po and localization_manifest.json only."
   },
   "previous_frozen_contract_kept_as_history": [
     {
@@ -647,6 +683,48 @@
       "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
       "reconciled_utc": "2026-11-24T20:28:00Z",
       "reconciliation_note": "Re-measured after WBS P2 Slice 1 (develop 98fd5a3 plus 2026-11-24 localization fixes). catalog moved 1121 -> 1148, files 341 -> 345, wrapped 914 -> 941, json_labels stays 79, missing stays 0. Source pins re-recorded for ar.po and localization_manifest.json only."
+    },
+    {
+      "contract_id": "stage2-current-contract/2026-11-24-p2s2",
+      "gate": {
+        "catalog": 1154,
+        "files": 345,
+        "wrapped": 947,
+        "json_labels": 79,
+        "missing": 0
+      },
+      "modules": {
+        "construction.searchable_dropdown.tests.test_search_api": 13,
+        "construction.searchable_dropdown.tests.test_integration": 6,
+        "construction.tests.test_bilingual_account_schema": 5,
+        "construction.tests.test_translation_catalog": 3,
+        "construction.tests.test_translation_stabilization_gates": 8,
+        "construction.tests.test_localization_gates": 101,
+        "construction.tests.test_bilingual_service": 38,
+        "construction.tests.test_bilingual_account_pilot": 53,
+        "construction.tests.test_stage4_account_language": 6,
+        "construction.tests.test_stage4_report_extension": 14,
+        "construction.tests.test_stage4_review_bundle": 36
+      },
+      "module_aggregate": 283,
+      "dryrun": {
+        "total": 4337,
+        "created": 0,
+        "updated": 0,
+        "skipped": 4337,
+        "drift": 0
+      },
+      "source_pins": {
+        "construction/locale/ar.po": "d1639ae1be1316328b24cb8918664875b091c47b5c1083ceeb9c4af17537a78b",
+        "construction/data/translations/approved_ar_overrides.csv": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
+        "construction/data/localization/localization_manifest.json": "51c1edca34d6adcd09f03fa6bf6f6040c9f308797940c33f39985acf63308f69",
+        "construction/data/localization/vendor_catalog_baseline.json": "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69",
+        "construction/data/localization/stage2_inventory_manifest.json": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
+      },
+      "pin_note": "The pins are the content digests of the source artifacts the counts were measured from. A drifted pin is refused by the checker (evidence-contract-source-drift), so the frozen counts can never be silently stale.",
+      "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
+      "reconciled_utc": "2026-11-24T21:34:00Z",
+      "reconciliation_note": "Re-measured after WBS P2 Slice 2 (develop a865bc4 plus 2026-11-24 Slice 2 changes). catalog moved 1148 -> 1154, files stays 345, wrapped moved 941 -> 947, json_labels stays 79, missing stays 0. Source pins re-recorded for ar.po and localization_manifest.json only."
     }
   ],
   "historical_expectation_kept_separate": {

@@ -1630,7 +1630,18 @@ LEGACY_SOURCE_PINS = {}
 #   -> catalog=1154 files=345 wrapped=947 json_labels=79 missing=0
 #
 # Recorded as measurement M1E in stage2_current_measurements.json.
-CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-24-p2s2"
+# 2026-11-24 — re-measurement after WBS P2 Slice 3 (on develop cf42516).
+#
+# WBS P2 Slice 3 added bilingual EN/AR form UX on BOQ Item and BOQ Item Stage
+# (read-only location banners, visible product rule, disabled-ancestor alerts,
+# new-Stage inheritance preview, authorized picker/clear dialogs, and accessible
+# audit history modals) plus 50 localized strings in ar.po. Re-measured with:
+#
+#   GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only
+#   -> catalog=1204 files=345 wrapped=997 json_labels=79 missing=0
+#
+# Recorded as measurement M1F in stage2_current_measurements.json.
+CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-24-p2s3"
 CURRENT_EXPECTED_MODULES = [
     ("construction.searchable_dropdown.tests.test_search_api", 13),
     ("construction.searchable_dropdown.tests.test_integration", 6),
@@ -1645,9 +1656,9 @@ CURRENT_EXPECTED_MODULES = [
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
 CURRENT_EXPECTED_GATE = {
-    "catalog": 1154,
+    "catalog": 1204,
     "files": 345,
-    "wrapped": 947,
+    "wrapped": 997,
     "json_labels": 79,
     "missing": 0,
 }
@@ -1656,12 +1667,12 @@ CURRENT_EXPECTED_GATE = {
 # trusted and the contract must be re-measured and re-reviewed. The checker
 # enforces this (fail closed) instead of accepting a drifted expectation.
 CURRENT_SOURCE_PINS = {
-    "construction/locale/ar.po": ("d1639ae1be1316328b24cb8918664875b091c47b5c1083ceeb9c4af17537a78b"),
+    "construction/locale/ar.po": ("8c51780a6d88690342e568b0bcd02b8b10b808c46a71fb7416c17096d9d8715e"),
     "construction/data/translations/approved_ar_overrides.csv": (
         "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318"
     ),
     "construction/data/localization/localization_manifest.json": (
-        "51c1edca34d6adcd09f03fa6bf6f6040c9f308797940c33f39985acf63308f69"
+        "347d99ba3303f7de906bc986fb7e9fad40c97f5913ed3dd3cb411452afa62017"
     ),
     "construction/data/localization/vendor_catalog_baseline.json": (
         # 2026-10-21: the reviewed controlled re-record of ONLY apps.frappe.commit

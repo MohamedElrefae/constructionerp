@@ -4857,3 +4857,203 @@ msgstr "تم اكتشاف تعديل غير متوقّع على حقول مرح�
 #: construction/services/execution_mapping.py
 msgid "Execution mapping schema is incomplete: required transaction table {0} is missing."
 msgstr "مخطط ربط التنفيذ غير مكتمل: جدول المعاملة المطلوب {0} مفقود."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Action"
+msgstr "الإجراء"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Are you sure you want to clear the execution location on this Stage?"
+msgstr "هل أنت متأكد من مسح موقع التنفيذ لهذه المرحلة؟"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Are you sure you want to clear the planned execution location? Existing Stage locations will remain unchanged."
+msgstr "هل أنت متأكد من مسح موقع التنفيذ المخطط؟ ستبقى مواقع المراحل الحالية دون تغيير."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Assigned on create"
+msgstr "تعيين عند الإنشاء"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Change Execution Location"
+msgstr "تغيير موقع التنفيذ"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Change Planned Location"
+msgstr "تغيير الموقع المخطط"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Changed"
+msgstr "تم التغيير"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Changed By"
+msgstr "عُدّل بواسطة"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Changing the BOQ Item's planned location affects future Stages only; existing Stage locations remain unchanged."
+msgstr "تغيير موقع التنفيذ المخطط لبند جدول الكميات يؤثر على المراحل المستقبلية فقط؛ وتبقى مواقع المراحل الحالية دون تغيير."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Clear"
+msgstr "مسح"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Clear Execution Location"
+msgstr "مسح موقع التنفيذ"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Clear Planned Location"
+msgstr "مسح الموقع المخطط"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Cleared"
+msgstr "تم المسح"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Date"
+msgstr "التاريخ"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Execution Location"
+msgstr "موقع التنفيذ"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Execution Mapping History"
+msgstr "سجل ربط موقع التنفيذ"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Execution location cleared."
+msgstr "تم مسح موقع التنفيذ."
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Execution location updated."
+msgstr "تم تحديث موقع التنفيذ."
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Explicit override selected for this new Stage: {0}"
+msgstr "تم اختيار تجاوز صريح لهذه المرحلة الجديدة: {0}"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "From"
+msgstr "من"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Historical assignment"
+msgstr "تعيين تاريخي"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Historical execution location assigned."
+msgstr "تم تعيين موقع التنفيذ التاريخي."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Inherited on create"
+msgstr "موروث عند الإنشاء"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Initial assignment"
+msgstr "تعيين أوّلي"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Linked execution location is disabled."
+msgstr "موقع التنفيذ المرتبط معطّل."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Linked execution location is under a disabled ancestor branch."
+msgstr "موقع التنفيذ المرتبط يقع تحت فرع أب معطّل."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Linked execution location no longer exists."
+msgstr "موقع التنفيذ المرتبط لم يعد موجوداً."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Mapped by {0}"
+msgstr "تم الربط بواسطة {0}"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "No changes detected."
+msgstr "لم يتم اكتشاف أي تغييرات."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "No eligible active leaf execution locations found for this project."
+msgstr "لا توجد مواقع تنفيذ طرفية نشطة ومؤهلة لهذا المشروع."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "No mapping history recorded yet."
+msgstr "لم يُسجّل أي سجل ربط حتى الآن."
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Parent BOQ Item default ({0}) is disabled and will not be inherited. Stage will save unmapped."
+msgstr "الموقع الافتراضي لبند جدول الكميات الأب ({0}) معطّل ولن يتم توريثه. ستُحفظ المرحلة دون ربط."
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Parent BOQ Item has no planned execution location. Stage will save unmapped."
+msgstr "لا يملك بند جدول الكميات الأب موقع تنفيذ مخططاً. ستُحفظ المرحلة دون ربط."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Planned Execution Location"
+msgstr "موقع التنفيذ المخطط"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Planned execution location cleared."
+msgstr "تم مسح موقع التنفيذ المخطط."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Planned execution location updated."
+msgstr "تم تحديث موقع التنفيذ المخطط."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Please select an execution location."
+msgstr "يرجى اختيار موقع تنفيذ."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Reason is required for this change."
+msgstr "السبب مطلوب لهذا التغيير."
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Select Execution Location"
+msgstr "اختيار موقع التنفيذ"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Set Execution Location"
+msgstr "تعيين موقع التنفيذ"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Set Planned Location"
+msgstr "تعيين الموقع المخطط"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "This Stage already has execution activity. Saving will record a Historical assignment (reason required)."
+msgstr "تحتوي هذه المرحلة بالفعل على نشاط تنفيذي. سيُسجّل الحفظ كتعيين تاريخي (السبب مطلوب)."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "To"
+msgstr "إلى"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Unmapped"
+msgstr "غير مرتبط"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Use Inherited Default"
+msgstr "استخدام الافتراضي الموروث"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "View Mapping History"
+msgstr "عرض سجل الربط"
+
+#: construction/construction/doctype/boq_item_stage/boq_item_stage.js
+msgid "Will inherit from BOQ Item on save: {0}"
+msgstr "سيتم التوريث من بند جدول الكميات عند الحفظ: {0}"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Please save or discard your unsaved form changes before updating the execution location."
+msgstr "يرجى حفظ التغييرات غير المحفوظة في النموذج أو تجاهلها قبل تحديث موقع التنفيذ."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Unsaved Changes"
+msgstr "تغييرات غير محفوظة"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Execution location was saved, but the form has unsaved edits. Save or discard your edits and reload."
+msgstr "تم حفظ موقع التنفيذ، ولكن توجد تعديلات غير محفوظة في النموذج. احفظ تعديلاتك أو تجاهلها ثم أعد التحميل."

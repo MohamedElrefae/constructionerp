@@ -338,3 +338,28 @@ unchanged).
 
 The `stage2-current-contract/2026-11-24` (M1D) block is preserved verbatim under
 `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
+
+---
+
+## 2026-11-24 — re-measurement after WBS P2 Slice 3 (M1F)
+
+WBS P2 Slice 3 (on `develop` `cf42516`) added bilingual EN/AR form UX on
+`BOQ Item` (`boq_item.js`) and `BOQ Item Stage` (`boq_item_stage.js`) with
+read-only location banners, visible product rule, disabled-ancestor alerts,
+new-Stage inheritance preview, authorized picker/clear dialogs, and accessible
+audit history modals, plus 50 localized strings in `construction/locale/ar.po`.
+Freshness evidence was re-collected on `wbs-p1-lab.localhost`
+(`packaged_rows=4337`, `runtime_digest` unchanged).
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-24-p2s3` |
+| gate | `catalog=1204 files=345 wrapped=997 json_labels=79 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-24-p2s3-current/m1_source_scan.txt` |
+| environment | develop `cf42516`, working tree with the 2026-11-24 WBS P2 Slice 3 changes |
+
+The `stage2-current-contract/2026-11-24-p2s2` (M1E) block is preserved verbatim
+under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
