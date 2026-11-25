@@ -60,11 +60,161 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 	}
 
 	function set_status(message, kind) {
+		const tone = kind || "alert-info";
+		const text = message || "";
 		$status
 			.removeClass("d-none alert-info alert-warning alert-danger")
-			.addClass(kind || "alert-info")
-			.text(message || "")
-			.toggleClass("d-none", !message);
+			.addClass(tone)
+			.text(text)
+			.toggleClass("d-none", !text);
+		if (typeof $status.attr === "function") {
+			if (!text || tone === "alert-info") {
+				$status.attr("aria-live", "off");
+				if (typeof $status.removeAttr === "function") {
+					$status.removeAttr("role");
+				} else {
+					$status.attr("role", "");
+				}
+			} else if (tone === "alert-danger") {
+				$status.attr("role", "alert").attr("aria-live", "assertive");
+			} else {
+				$status.attr("role", "status").attr("aria-live", "polite");
+			}
+		}
+	}
+
+	function parse_error_payload(error) {
+		if (!error || typeof error !== "object") {
+			return null;
+		}
+		if (error.responseJSON && typeof error.responseJSON === "object") {
+			return error.responseJSON;
+		}
+		if (typeof error.responseText === "string" && error.responseText.trim()) {
+			try {
+				const parsed = JSON.parse(error.responseText);
+				if (parsed && typeof parsed === "object") {
+					return parsed;
+				}
+			} catch {
+				return null;
+			}
+		}
+		return error;
+	}
+
+	function plain_error_text(value) {
+		if (value == null) {
+			return "";
+		}
+		return String(value)
+			.replace(/<br\s*\/?>/gi, " ")
+			.replace(/<[^>]*>/g, "")
+			.replace(/&nbsp;/gi, " ")
+			.replace(/&amp;/gi, "&")
+			.replace(/&lt;/gi, "<")
+			.replace(/&gt;/gi, ">")
+			.replace(/&quot;/gi, '"')
+			.replace(/&#39;/gi, "'")
+			.replace(/\s+/g, " ")
+			.trim();
+	}
+
+	function is_permission_error(error, payload) {
+		const status = error && typeof error.status === "number" ? error.status : null;
+		if (status === 401 || status === 403) {
+			return true;
+		}
+		const excType = payload && typeof payload.exc_type === "string" ? payload.exc_type : "";
+		return excType === "PermissionError" || excType === "AuthenticationError";
+	}
+
+	function is_validation_error(error, payload) {
+		const status = error && typeof error.status === "number" ? error.status : null;
+		if (status !== null && status >= 500) {
+			return false;
+		}
+		if (status === 400 || status === 409 || status === 417) {
+			return true;
+		}
+		const excType = payload && typeof payload.exc_type === "string" ? payload.exc_type : "";
+		return (
+			excType === "ValidationError" ||
+			excType === "TimestampMismatchError" ||
+			excType === "LinkExistsError" ||
+			excType === "MandatoryError" ||
+			excType === "DuplicateEntryError"
+		);
+	}
+
+	function extract_server_message(error, payload) {
+		if (payload && payload._server_messages) {
+			let items = payload._server_messages;
+			if (typeof items === "string") {
+				try {
+					items = JSON.parse(items);
+				} catch {
+					items = [items];
+				}
+			}
+			if (Array.isArray(items)) {
+				const messages = [];
+				items.forEach((entry) => {
+					let item = entry;
+					if (typeof item === "string") {
+						try {
+							const decoded = JSON.parse(item);
+							item = decoded && typeof decoded === "object" ? decoded : item;
+						} catch {
+							// Plain text server message
+						}
+					}
+					const raw =
+						item && typeof item === "object" && item.message != null
+							? item.message
+							: item;
+					const text = plain_error_text(raw);
+					if (text) {
+						messages.push(text);
+					}
+				});
+				if (messages.length) {
+					return messages.join(" ");
+				}
+			}
+		}
+		if (payload && typeof payload._error_message === "string") {
+			const text = plain_error_text(payload._error_message);
+			if (text) {
+				return text;
+			}
+		}
+		if (payload && typeof payload.exception === "string") {
+			const stripped = payload.exception.replace(/^[A-Za-z0-9_.]*Error:\s*/, "");
+			const text = plain_error_text(stripped);
+			if (text) {
+				return text;
+			}
+		}
+		return "";
+	}
+
+	function handle_mutation_error(error, project, generation) {
+		if (!is_current(project, generation)) {
+			return;
+		}
+		const payload = parse_error_payload(error);
+		if (is_permission_error(error, payload)) {
+			clear_tree();
+			set_status(__("Not permitted."), "alert-danger");
+			return;
+		}
+		if (is_validation_error(error, payload)) {
+			const message = extract_server_message(error, payload);
+			set_status(message || __("Validation failed."), "alert-danger");
+			return;
+		}
+		set_status(__("Error"), "alert-danger");
 	}
 
 	function clear_tree() {
@@ -429,11 +579,8 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 							load_tree(project);
 						}
 					})
-					.catch(() => {
-						if (is_current(project, generation)) {
-							clear_tree();
-							set_status(__("Not permitted."), "alert-danger");
-						}
+					.catch((error) => {
+						handle_mutation_error(error, project, generation);
 					});
 			},
 			__("Add execution location")
@@ -478,11 +625,8 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 							load_tree(project);
 						}
 					})
-					.catch(() => {
-						if (is_current(project, generation)) {
-							clear_tree();
-							set_status(__("Not permitted."), "alert-danger");
-						}
+					.catch((error) => {
+						handle_mutation_error(error, project, generation);
 					});
 			},
 			__("Edit execution location")
@@ -536,11 +680,8 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 							load_tree(project);
 						}
 					})
-					.catch(() => {
-						if (is_current(project, generation)) {
-							clear_tree();
-							set_status(__("Not permitted."), "alert-danger");
-						}
+					.catch((error) => {
+						handle_mutation_error(error, project, generation);
 					});
 			},
 			__("Move execution location")
@@ -561,11 +702,8 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 					load_tree(project);
 				}
 			})
-			.catch(() => {
-				if (is_current(project, generation)) {
-					clear_tree();
-					set_status(__("Not permitted."), "alert-danger");
-				}
+			.catch((error) => {
+				handle_mutation_error(error, project, generation);
 			});
 	}
 
@@ -589,11 +727,8 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 						load_tree(project);
 					}
 				})
-				.catch(() => {
-					if (is_current(project, generation)) {
-						clear_tree();
-						set_status(__("Not permitted."), "alert-danger");
-					}
+				.catch((error) => {
+					handle_mutation_error(error, project, generation);
 				});
 		});
 	}

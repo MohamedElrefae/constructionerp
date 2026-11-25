@@ -891,3 +891,287 @@ test("BOQ Structure filter selector scopes to readable structures, filters desce
 	assert.match(h.openedUrls[0], /boq_structure=STR-GRP-1.*export_format=csv/);
 	assert.match(h.openedUrls[1], /boq_structure=STR-GRP-1.*export_format=xlsx/);
 });
+
+test("F-P4-01: Execution Breakdown keeps tree visible and shows server validation message on blocked delete/move while 403 still fails closed", async () => {
+	const tick = () => new Promise((resolve) => setImmediate(resolve));
+	let clickHandler = null;
+	let scopeChangedHandler = null;
+	const requests = [];
+	let currentProject = "PROJ-10";
+	let nextPromptValues = null;
+
+	const nodes = [
+		{
+			name: "EBN-1",
+			title: "P4 Tower Main",
+			is_group: 1,
+			parent_node: null,
+			ebs_code: "EBS-0001",
+			modified: "2026-11-25 10:00:00",
+		},
+		{
+			name: "EBN-2",
+			title: "P4 Floor 1",
+			is_group: 0,
+			parent_node: "EBN-1",
+			ebs_code: "EBS-0002",
+			modified: "2026-11-25 10:00:00",
+		},
+		{
+			name: "EBN-3",
+			title: "P4 Wing B",
+			is_group: 1,
+			parent_node: null,
+			ebs_code: "EBS-0003",
+			modified: "2026-11-25 10:00:00",
+		},
+	];
+
+	function makeNode() {
+		return {
+			htmlValue: "",
+			textValue: "",
+			attrs: {},
+			found: {},
+			append() {
+				return this;
+			},
+			find(sel) {
+				if (!this.found[sel]) this.found[sel] = makeNode();
+				return this.found[sel];
+			},
+			on(ev, selOrFn, maybeFn) {
+				const fn = typeof selOrFn === "function" ? selOrFn : maybeFn;
+				if (ev === "click" && selOrFn === "[data-action]") {
+					clickHandler = fn;
+				}
+				if (typeof ev === "string" && ev.includes("scope:changed")) {
+					scopeChangedHandler = fn;
+				}
+				return this;
+			},
+			off() {
+				return this;
+			},
+			removeClass() {
+				return this;
+			},
+			addClass() {
+				return this;
+			},
+			toggleClass() {
+				return this;
+			},
+			text(val) {
+				if (val === undefined) return this.textValue;
+				this.textValue = String(val);
+				return this;
+			},
+			html(val) {
+				if (val === undefined) return this.htmlValue;
+				this.htmlValue = String(val);
+				return this;
+			},
+			empty() {
+				this.htmlValue = "";
+				this.textValue = "";
+				return this;
+			},
+			attr(k, v) {
+				if (v === undefined) return this.attrs[k];
+				this.attrs[k] = v;
+				return this;
+			},
+			removeAttr(k) {
+				delete this.attrs[k];
+				return this;
+			},
+			trigger() {
+				return this;
+			},
+		};
+	}
+
+	const rootNode = makeNode();
+	const docNode = makeNode();
+	const $ = (arg) => {
+		if (arg && typeof arg === "object" && arg._isBtn) {
+			return { attr: (k) => arg[k] };
+		}
+		if (arg === docNode) {
+			return docNode;
+		}
+		return rootNode;
+	};
+
+	const frappeStub = {
+		pages: { "execution-breakdown": {} },
+		ui: { make_app_page: () => ({ main: rootNode }) },
+		dom: { set_style: () => {} },
+		utils: { escape_html: (s) => String(s), icon: () => "", is_rtl: () => false },
+		confirm: (_msg, onYes) => onYes(),
+		prompt: (_fields, onSubmit) => onSubmit(nextPromptValues),
+		call(opts) {
+			let resolve, reject;
+			const promise = new Promise((res, rej) => {
+				resolve = res;
+				reject = rej;
+			});
+			requests.push({ opts, resolve, reject });
+			return promise;
+		},
+	};
+
+	const win = {
+		scopeContext: {
+			enabled: true,
+			supportsSaveConfirmation: true,
+			getValidatedCurrentScope: () => ({ project: currentProject }),
+		},
+	};
+	const ctx = vm.createContext({
+		window: win,
+		document: docNode,
+		frappe: frappeStub,
+		$: $,
+		__: (x) => x,
+		console,
+	});
+	const treeScript = path.join(
+		root,
+		"construction/construction/page/execution_breakdown/execution_breakdown.js"
+	);
+	vm.runInContext(fs.readFileSync(treeScript, "utf8"), ctx, { filename: treeScript });
+	frappeStub.pages["execution-breakdown"].on_page_load({});
+
+	// Initial load
+	requests.at(-1).resolve({
+		message: {
+			project: "PROJ-10",
+			company: "C",
+			actions: { create: true, update: true, move: true, set_disabled: true, delete: true },
+			nodes,
+		},
+	});
+	await tick();
+
+	const statusEl = rootNode.find('[data-role="status"]');
+	const treeEl = rootNode.find('[data-role="tree"]');
+	assert.equal(statusEl.attrs["aria-live"], "off");
+	assert.match(treeEl.htmlValue, /P4 Tower Main/);
+	assert.match(treeEl.htmlValue, /P4 Floor 1/);
+
+	// 1. Blocked delete (HTTP 417 ValidationError) keeps tree visible & shows actual validation text
+	clickHandler.call({ _isBtn: true, "data-action": "delete", "data-name": "EBN-2" });
+	assert.match(requests.at(-1).opts.method, /delete_node$/);
+	const validationText =
+		"Cannot delete this execution location or branch because it is referenced by a BOQ Item Stage.";
+	requests.at(-1).reject({
+		status: 417,
+		responseJSON: {
+			exc_type: "ValidationError",
+			_server_messages: JSON.stringify([JSON.stringify({ message: validationText })]),
+		},
+	});
+	await tick();
+
+	assert.equal(statusEl.textValue, validationText);
+	assert.equal(statusEl.attrs.role, "alert");
+	assert.equal(statusEl.attrs["aria-live"], "assertive");
+	assert.match(treeEl.htmlValue, /P4 Tower Main/);
+	assert.match(treeEl.htmlValue, /P4 Floor 1/);
+
+	// 2. Blocked move (HTTP 417 with HTML-wrapped message) strips HTML cleanly & keeps tree visible
+	nextPromptValues = { parent_node: "EBN-3" };
+	clickHandler.call({ _isBtn: true, "data-action": "move", "data-name": "EBN-2" });
+	assert.match(requests.at(-1).opts.method, /move_node$/);
+	requests.at(-1).reject({
+		status: 417,
+		responseJSON: {
+			exc_type: "ValidationError",
+			_server_messages: JSON.stringify([
+				JSON.stringify({
+					message: "<strong>Cannot move</strong> referenced &amp; active branch.",
+				}),
+			]),
+		},
+	});
+	await tick();
+
+	assert.equal(statusEl.textValue, "Cannot move referenced & active branch.");
+	assert.match(treeEl.htmlValue, /P4 Floor 1/);
+
+	// 3. Stale 417 failure from an earlier project must be ignored after project switch
+	clickHandler.call({ _isBtn: true, "data-action": "delete", "data-name": "EBN-2" });
+	const staleReq = requests.at(-1);
+	currentProject = "PROJ-11";
+	scopeChangedHandler();
+	requests.at(-1).resolve({
+		message: {
+			project: "PROJ-11",
+			company: "C",
+			actions: { delete: true },
+			nodes: [
+				{
+					name: "EBN-99",
+					title: "Other Project Node",
+					is_group: 0,
+					parent_node: null,
+					ebs_code: "EBS-0001",
+				},
+			],
+		},
+	});
+	await tick();
+	staleReq.reject({
+		status: 417,
+		responseJSON: {
+			exc_type: "ValidationError",
+			_server_messages: JSON.stringify([JSON.stringify({ message: "Stale error" })]),
+		},
+	});
+	await tick();
+	assert.equal(statusEl.textValue, "");
+	assert.match(treeEl.htmlValue, /Other Project Node/);
+
+	// 4. HTTP 500 server error with raw exception text must NOT leak raw details, must NOT clear tree, and must NOT say Not permitted
+	clickHandler.call({ _isBtn: true, "data-action": "delete", "data-name": "EBN-99" });
+	requests.at(-1).reject({
+		status: 500,
+		responseJSON: {
+			exc_type: "OperationalError",
+			exception: "pymysql.err.OperationalError: secret internal SQL trace",
+			_server_messages: JSON.stringify([
+				JSON.stringify({ message: "Internal SQL stack trace details" }),
+			]),
+		},
+	});
+	await tick();
+	assert.equal(statusEl.textValue, "Error");
+	assert.equal(statusEl.attrs.role, "alert");
+	assert.match(treeEl.htmlValue, /Other Project Node/);
+
+	// 5. Unexpected failure with no status/message keeps tree visible and shows generic Error (never Not permitted)
+	clickHandler.call({ _isBtn: true, "data-action": "delete", "data-name": "EBN-99" });
+	requests.at(-1).reject(new Error("socket hang up"));
+	await tick();
+	assert.equal(statusEl.textValue, "Error");
+	assert.match(treeEl.htmlValue, /Other Project Node/);
+
+	// 6. Recognized 417 ValidationError with empty body falls back to Validation failed. and keeps tree visible
+	clickHandler.call({ _isBtn: true, "data-action": "delete", "data-name": "EBN-99" });
+	requests.at(-1).reject({ status: 417, responseJSON: { exc_type: "ValidationError" } });
+	await tick();
+	assert.equal(statusEl.textValue, "Validation failed.");
+	assert.match(treeEl.htmlValue, /Other Project Node/);
+
+	// 7. Real HTTP 403 PermissionError on mutation still fails closed (clears tree + Not permitted.)
+	clickHandler.call({ _isBtn: true, "data-action": "delete", "data-name": "EBN-99" });
+	requests.at(-1).reject({
+		status: 403,
+		responseJSON: { exc_type: "PermissionError", _error_message: "Not permitted." },
+	});
+	await tick();
+	assert.equal(statusEl.textValue, "Not permitted.");
+	assert.equal(treeEl.htmlValue, "");
+});
