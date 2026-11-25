@@ -1030,6 +1030,60 @@ def test_typed_cosmetic_setter_is_applied():
     assert company["label"] == "Operating Company"
 
 
+def test_boq_user_permission_targets_do_not_block_project_read():
+    class _UpReader:
+        def __init__(self, rows):
+            self.rows = rows
+
+        def query(self, sql, params=()):
+            return list(self.rows)
+
+    # Non-Project BOQ User Permission (applicable_for None or BOQ Header) is ignored for Project auth
+    boq_rows = [
+        {
+            "allow": "BOQ Header",
+            "for_value": "BOQ-2026-0001",
+            "applicable_for": None,
+            "is_default": 0,
+            "hide_descendants": 0,
+        },
+        {
+            "allow": "BOQ Item Stage",
+            "for_value": "BOQ-STG-00001",
+            "applicable_for": "BOQ Item Stage",
+            "is_default": 0,
+            "hide_descendants": 0,
+        },
+    ]
+    assert access._read_user_permissions(_UpReader(boq_rows), "pm@example.com") == {}
+
+    # Explicitly targeting Project with a BOQ User Permission still fails closed
+    bad_applicable = [
+        {
+            "allow": "BOQ Header",
+            "for_value": "BOQ-2026-0001",
+            "applicable_for": "Project",
+            "is_default": 0,
+            "hide_descendants": 0,
+        }
+    ]
+    with pytest.raises(access.UnsupportedProfile):
+        access._read_user_permissions(_UpReader(bad_applicable), "pm@example.com")
+
+    # Arbitrary unsupported DocType targets still fail closed
+    unknown_target = [
+        {
+            "allow": "Warehouse",
+            "for_value": "Main Store",
+            "applicable_for": None,
+            "is_default": 0,
+            "hide_descendants": 0,
+        }
+    ]
+    with pytest.raises(access.UnsupportedProfile):
+        access._read_user_permissions(_UpReader(unknown_target), "pm@example.com")
+
+
 # ---------------------------------------------------------------------------
 # SCP-011 / SCP-017 / SCP-016: evaluation integrity
 # ---------------------------------------------------------------------------

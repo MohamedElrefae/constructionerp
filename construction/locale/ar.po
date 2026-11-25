@@ -5057,3 +5057,284 @@ msgstr "تغييرات غير محفوظة"
 #: construction/construction/doctype/boq_item/boq_item.js
 msgid "Execution location was saved, but the form has unsaved edits. Save or discard your edits and reload."
 msgstr "تم حفظ موقع التنفيذ، ولكن توجد تعديلات غير محفوظة في النموذج. احفظ تعديلاتك أو تجاهلها ثم أعد التحميل."
+
+
+#: construction/services/execution_coverage.py
+msgid "Broken Ancestor Link"
+msgstr "رابط أصل غير صالح"
+
+#: construction/services/execution_coverage.py
+msgid "Commercial WBS Code"
+msgstr "رمز هيكل جدول الكميات"
+
+#: construction/services/execution_coverage.py
+msgid "Disabled Ancestor"
+msgstr "فرع أصل معطّل"
+
+#: construction/services/execution_coverage.py
+msgid "Disabled Links"
+msgstr "روابط معطّلة"
+
+#: construction/services/execution_coverage.py
+msgid "Disabled Location"
+msgstr "موقع معطّل"
+
+#: construction/services/execution_coverage.py
+msgid "Execution Coverage"
+msgstr "تغطية التنفيذ"
+
+#: construction/services/execution_coverage.py
+msgid "Execution Path"
+msgstr "مسار التنفيذ"
+
+#: construction/services/execution_coverage.py
+msgid "Execution Tree Cycle"
+msgstr "حلقة دائرية في شجرة التنفيذ"
+
+#: construction/services/execution_coverage.py
+msgid "Execution location was not found in this Project."
+msgstr "لم يتم العثور على موقع التنفيذ في هذا المشروع."
+
+#: construction/services/execution_coverage.py
+msgid "Execution mapping schema is not installed. Run bench migrate."
+msgstr "مخطط ربط التنفيذ غير مثبّت. يرجى تشغيل bench migrate."
+
+#: construction/services/execution_coverage.py
+msgid "Execution tree schema is not installed. Run bench migrate."
+msgstr "مخطط شجرة التنفيذ غير مثبّت. يرجى تشغيل bench migrate."
+
+#: construction/services/execution_coverage.py
+msgid "Export capped at {0} rows; {1} additional matching rows were omitted. Narrow filters to export all rows."
+msgstr "تم تحديد حد التصدير عند {0} صف؛ وتم استبعاد {1} صف مطابق إضافي. ضيّق عوامل التصفية لتصدير جميع الصفوف."
+
+#: construction/services/execution_coverage.py
+msgid "Exported Rows"
+msgstr "الصفوف المصدّرة"
+
+#: construction/services/execution_coverage.py
+msgid "Filtering by both an Execution Location and Unmapped Stages cannot match any Stage because unmapped Stages have no Execution Location."
+msgstr "لا يمكن أن تطابق التصفية حسب موقع التنفيذ والمراحل غير المرتبطة معاً أي مرحلة لأن المراحل غير المرتبطة لا تملك موقع تنفيذ."
+
+#: construction/services/execution_coverage.py
+msgid "Full"
+msgstr "مكتمل"
+
+#: construction/services/execution_coverage.py
+msgid "Group Node Link"
+msgstr "رابط عقدة مجموعة"
+
+#: construction/services/execution_coverage.py
+msgid "Header Status"
+msgstr "حالة جدول الكميات"
+
+#: construction/services/execution_coverage.py
+msgid "Header Type"
+msgstr "نوع جدول الكميات"
+
+#: construction/services/execution_coverage.py
+msgid "Healthy Linked"
+msgstr "مرتبط بشكل سليم"
+
+#: construction/services/execution_coverage.py
+msgid "Integrity Issues"
+msgstr "مشكلات السلامة"
+
+#: construction/services/execution_coverage.py
+msgid "Invalid filter value."
+msgstr "قيمة تصفية غير صالحة."
+
+#: construction/services/execution_coverage.py
+msgid "Invalid request parameters."
+msgstr "معاملات الطلب غير صالحة."
+
+#: construction/services/execution_coverage.py
+msgid "Issue Detail"
+msgstr "تفصيل المشكلة"
+
+#: construction/services/execution_coverage.py
+msgid "Item Group"
+msgstr "مجموعة البند"
+
+#: construction/services/execution_coverage.py
+msgid "Item Planning Default"
+msgstr "الموقع المخطط الافتراضي للبند"
+
+#: construction/services/execution_coverage.py
+msgid "Item Qty"
+msgstr "كمية البند"
+
+#: construction/services/execution_coverage.py
+msgid "Item Title"
+msgstr "عنوان البند"
+
+#: construction/services/execution_coverage.py
+msgid "Items Summary"
+msgstr "ملخص البنود"
+
+#: construction/services/execution_coverage.py
+msgid "Mapping Status"
+msgstr "حالة الربط"
+
+#: construction/services/execution_coverage.py
+msgid "Mapping completeness reflects Stage-to-location link counts only — it does not represent quantity balance, physical execution, certification, or financial completion."
+msgstr "تعكس نسبة اكتمال الربط عدد المراحل المرتبطة بمواقع التنفيذ فقط — ولا تمثل توازن الكميات أو التنفيذ الفعلي أو الاعتماد أو الإنجاز المالي."
+
+#: construction/services/execution_coverage.py
+msgid "Matching Stages"
+msgstr "المراحل المطابقة"
+
+#: construction/services/execution_coverage.py
+msgid "Missing Location"
+msgstr "موقع مفقود"
+
+#: construction/services/execution_coverage.py
+msgid "Needs Review"
+msgstr "يحتاج مراجعة"
+
+#: construction/services/execution_coverage.py
+msgid "No Stages"
+msgstr "بلا مراحل"
+
+#: construction/services/execution_coverage.py
+msgid "No visible Stages"
+msgstr "لا توجد مراحل مرئية"
+
+#: construction/services/execution_coverage.py
+msgid "Notice"
+msgstr "ملاحظة"
+
+#: construction/services/execution_coverage.py
+msgid "Page and page size must be valid positive integers."
+msgstr "يجب أن يكون رقم الصفحة وحجم الصفحة أعداداً صحيحة موجبة صالحة."
+
+#: construction/services/execution_coverage.py
+msgid "Partial"
+msgstr "جزئي"
+
+#: construction/services/execution_coverage.py
+msgid "Planned Qty"
+msgstr "الكمية المخططة"
+
+#: construction/services/execution_coverage.py
+msgid "Project Mismatch"
+msgstr "عدم تطابق المشروع"
+
+#: construction/services/execution_coverage.py
+msgid "Report"
+msgstr "التقرير"
+
+#: construction/api/execution_coverage_api.py
+msgid "Request payload is too large."
+msgstr "حجم بيانات الطلب كبير جداً."
+
+#: construction/services/execution_coverage.py
+msgid "Request payload must be an object."
+msgstr "يجب أن تكون بيانات الطلب كائناً."
+
+#: construction/services/execution_coverage.py
+msgid "Stage"
+msgstr "المرحلة"
+
+#: construction/services/execution_coverage.py
+msgid "Stage Code"
+msgstr "رمز المرحلة"
+
+#: construction/services/execution_coverage.py
+msgid "Stage Name"
+msgstr "اسم المرحلة"
+
+#: construction/services/execution_coverage.py
+msgid "Stage Planned Qty Sum (Single Item)"
+msgstr "مجموع الكمية المخططة للمراحل (لبند واحد)"
+
+#: construction/services/execution_coverage.py
+msgid "Stage Status"
+msgstr "حالة المرحلة"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — BOQ Items in Scope"
+msgstr "ملخص — بنود جدول الكميات ضمن النطاق"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Disabled Links"
+msgstr "ملخص — الروابط المعطّلة"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Healthy Linked"
+msgstr "ملخص — المرتبطة بشكل سليم"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Integrity Issues"
+msgstr "ملخص — مشكلات السلامة"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Items With Zero Matching Stages"
+msgstr "ملخص — البنود ذات صفر مراحل مطابقة"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Items Without Stages"
+msgstr "ملخص — البنود بلا مراحل"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Mapping Completeness"
+msgstr "ملخص — اكتمال الربط"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Matching Stages"
+msgstr "ملخص — المراحل المطابقة"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Needs Review"
+msgstr "ملخص — يحتاج مراجعة"
+
+#: construction/services/execution_coverage.py
+msgid "Summary — Unmapped"
+msgstr "ملخص — غير المرتبطة"
+
+#: construction/services/execution_coverage.py
+msgid "Too many records match the current scope (more than {0}). Narrow the BOQ Header, BOQ Structure, or BOQ Item filter before exporting."
+msgstr "يطابق النطاق الحالي عدداً كبيراً جداً من السجلات (أكثر من {0}). ضيّق تصفية جدول الكميات أو الهيكل أو البند قبل التصدير."
+
+#: construction/services/execution_coverage.py
+msgid "Too many records match the current scope (more than {0}). Narrow the BOQ Header, BOQ Structure, or BOQ Item filter to view complete coverage."
+msgstr "يطابق النطاق الحالي عدداً كبيراً جداً من السجلات (أكثر من {0}). ضيّق تصفية جدول الكميات أو الهيكل أو البند لعرض تغطية مكتملة."
+
+#: construction/services/execution_coverage.py
+msgid "Total Item Stages"
+msgstr "إجمالي مراحل البند"
+
+#: construction/services/execution_coverage.py
+msgid "Total Matching Rows"
+msgstr "إجمالي الصفوف المطابقة"
+
+#: construction/services/execution_coverage.py
+msgid "Truncated"
+msgstr "مقتطع"
+
+#: construction/services/execution_coverage.py
+msgid "Truncation Notice"
+msgstr "إشعار الاقتطاع"
+
+#: construction/services/execution_coverage.py
+msgid "UOM"
+msgstr "وحدة القياس"
+
+#: construction/services/execution_coverage.py
+msgid "Unsupported export format."
+msgstr "صيغة التصدير غير مدعومة."
+
+#: construction/services/execution_coverage.py
+msgid "Unsupported mapping state filter."
+msgstr "تصفية حالة الربط غير مدعومة."
+
+#: construction/services/execution_coverage.py
+msgid "Unsupported stage status filter."
+msgstr "تصفية حالة المرحلة غير مدعومة."
+
+#: construction/services/execution_coverage.py
+msgid "Unsupported view mode."
+msgstr "وضع العرض غير مدعوم."
+
+#: construction/services/execution_coverage.py
+msgid "Zero Matching Stages"
+msgstr "صفر مراحل مطابقة"

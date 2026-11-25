@@ -1641,7 +1641,21 @@ LEGACY_SOURCE_PINS = {}
 #   -> catalog=1204 files=345 wrapped=997 json_labels=79 missing=0
 #
 # Recorded as measurement M1F in stage2_current_measurements.json.
-CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-24-p2s3"
+# 2026-11-25 — re-measurement after WBS P3 Slice 1 (on develop e5ba52e).
+#
+# WBS P3 Slice 1 added Execution Coverage pure rules, authorized read-only
+# coverage & streaming CSV/XLSX export service, read-only GET API endpoints
+# (3 new localizable Python files), and 70 localized strings in ar.po.
+# Freshness evidence was re-collected on disposable lab p3-lab.localhost
+# (/tmp/p3-isolated.pmpttI/sites) with genuine packaged override import dated
+# 2026-11-20 (zero drift across 4,337 packaged rows; runtime_digest unchanged).
+# Re-measured with:
+#
+#   GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only
+#   -> catalog=1274 files=348 wrapped=1068 json_labels=79 missing=0
+#
+# Recorded as measurement M1G in stage2_current_measurements.json.
+CURRENT_CONTRACT_ID = "stage2-current-contract/2026-11-25-p3s1"
 CURRENT_EXPECTED_MODULES = [
     ("construction.searchable_dropdown.tests.test_search_api", 13),
     ("construction.searchable_dropdown.tests.test_integration", 6),
@@ -1656,9 +1670,9 @@ CURRENT_EXPECTED_MODULES = [
     ("construction.tests.test_stage4_review_bundle", 36),
 ]
 CURRENT_EXPECTED_GATE = {
-    "catalog": 1204,
-    "files": 345,
-    "wrapped": 997,
+    "catalog": 1274,
+    "files": 348,
+    "wrapped": 1068,
     "json_labels": 79,
     "missing": 0,
 }
@@ -1667,12 +1681,12 @@ CURRENT_EXPECTED_GATE = {
 # trusted and the contract must be re-measured and re-reviewed. The checker
 # enforces this (fail closed) instead of accepting a drifted expectation.
 CURRENT_SOURCE_PINS = {
-    "construction/locale/ar.po": ("8c51780a6d88690342e568b0bcd02b8b10b808c46a71fb7416c17096d9d8715e"),
+    "construction/locale/ar.po": ("877c01dfee520ea48937d13518d0c4142f45d0161051e77d63ad6aa246a9a16b"),
     "construction/data/translations/approved_ar_overrides.csv": (
         "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318"
     ),
     "construction/data/localization/localization_manifest.json": (
-        "347d99ba3303f7de906bc986fb7e9fad40c97f5913ed3dd3cb411452afa62017"
+        "f84b81fc861d15d93194648668f884339cb0550c90684e3b784a2909a7d77654"
     ),
     "construction/data/localization/vendor_catalog_baseline.json": (
         # 2026-10-21: the reviewed controlled re-record of ONLY apps.frappe.commit

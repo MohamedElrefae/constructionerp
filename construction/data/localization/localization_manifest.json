@@ -1,5 +1,5 @@
 {
-  "construction_po_sha": "8c51780a6d88690342e568b0bcd02b8b10b808c46a71fb7416c17096d9d8715e",
+  "construction_po_sha": "877c01dfee520ea48937d13518d0c4142f45d0161051e77d63ad6aa246a9a16b",
   "critical": {
     "Desktop": "سطح المكتب",
     "Edit Sidebar": "تحرير الشريط الجانبي",
@@ -10,15 +10,15 @@
   },
   "decision_root": "07a492a2abf51e0e27cf9b8c4cf3b7159a1afc3f62f9eea35cc24ee1fa833278",
   "decisions_sha": "26844891fdc99314e0f7840fbfec971397bb1329eb0bcd29377b9516405ace67",
-  "freshness_sha": "8287abcab92a5a5285569861dab224b02b729ea4428ddb5312ba086e27024888",
-  "freshness_utc": "2026-11-24T23:06:54Z",
+  "freshness_sha": "310a543aa19d89623845d362bd744fbf51fac102b9fe3f4cf46d7feed43391f0",
+  "freshness_utc": "2026-11-25T09:36:03Z",
   "inventory_manifest_sha": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60",
   "inventory_merkle": "b61d1d6d995287a0b98b40c5780ef0ca096f22c009e50527147859f3c2d9205e",
   "inventory_rows": 22761,
   "packaged_rows": 4337,
   "payload_csv_sha": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
-  "recorded_utc": "2026-11-24T23:07:00Z",
+  "recorded_utc": "2026-11-25T09:37:00Z",
   "runtime_digest": "73c523938c92644ee301225c163046eeaacc48c675dd97ad058d2db05ea22646",
-  "site": "wbs-p1-lab.localhost",
-  "site_classification_sha": "70b7a8d7242fd7a989d2026cd0c4dfad20e76d52e0d9bc458767fef70a755c49"
+  "site": "p3-lab.localhost",
+  "site_classification_sha": "7e3526403bbecc8913abea6347443f6549b42575233c5fe905d2a05ae2beadce"
 }

@@ -207,6 +207,14 @@ SUPPORTED_USER_PERMISSION_TARGETS = frozenset(
     set(PROJECT_LINK_TARGETS.values()) | SUPPORTED_CUSTOM_LINK_TARGETS | {"Project", "Project User"}
 )
 
+# BOQ DocTypes are never Link targets of Project or Project User (whose fields
+# are pinned above). A User Permission restricting a user to specific BOQ
+# records governs native BOQ reads/writes and has zero effect on Project
+# permission unless explicitly scoped via applicable_for to Project/Project User.
+NON_PROJECT_BOQ_USER_PERMISSION_TARGETS = frozenset(
+    {"BOQ Header", "BOQ Structure", "BOQ Item", "BOQ Item Stage"}
+)
+
 SUPPORTED_SCALAR_FIELDTYPES = frozenset(
     {
         "Data",

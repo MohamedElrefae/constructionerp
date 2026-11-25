@@ -1014,6 +1014,11 @@ def _read_user_permissions(reader, user):
         if not allow:
             continue
         if allow not in rules.SUPPORTED_USER_PERMISSION_TARGETS:
+            if (
+                allow in rules.NON_PROJECT_BOQ_USER_PERMISSION_TARGETS
+                and row.get("applicable_for") not in ("Project", "Project User")
+            ):
+                continue
             raise UnsupportedProfile("A User Permission target is outside the supported profile.")
         values = [row.get("for_value")]
         if not int(row.get("hide_descendants") or 0):

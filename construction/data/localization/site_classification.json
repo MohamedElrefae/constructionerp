@@ -1,9 +1,9 @@
 {
-  "basis": "Re-recorded 2026-11-22. The previously classified site v16-correction.localhost is not present on this bench. The interim P1 development lab wbs-p1-lab.localhost is a non-production test site holding synthetic data; production mutation is not authorized. The re-collection reproduced the recorded runtime digest exactly. Owner review of this re-record is pending.",
+  "basis": "Re-recorded 2026-11-25 for WBS P3 Slice 1 (M1G). p3-lab.localhost is a disposable non-production test lab running on a private MariaDB instance with separate Redis under /tmp/p3-isolated.pmpttI/sites, restored from the archived non-production wbs-p1-lab backup (genuine packaged override import dated 2026-11-20; zero drift across 4,337 packaged rows; catalog synced +153 rows). Production mutation is not authorized, and v16.localhost was not modified during M1G collection. Re-collection reproduced the recorded runtime digest exactly (73c523938c92644ee301225c163046eeaacc48c675dd97ad058d2db05ea22646).",
   "classification": "non-production test",
   "production_mutation_authorized": false,
-  "recorded_by": "P1 builder re-record (agent), owner review pending",
-  "recorded_utc": "2026-11-22T14:00:00Z",
+  "recorded_by": "WBS P3 Slice 1 builder re-record (disposable lab p3-lab.localhost), reviewer sign-off pending",
+  "recorded_utc": "2026-11-25T09:37:00Z",
   "schema": "site-classification/v1",
-  "site": "wbs-p1-lab.localhost"
+  "site": "p3-lab.localhost"
 }

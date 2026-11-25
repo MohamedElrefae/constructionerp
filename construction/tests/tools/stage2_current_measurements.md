@@ -363,3 +363,32 @@ Freshness evidence was re-collected on `wbs-p1-lab.localhost`
 
 The `stage2-current-contract/2026-11-24-p2s2` (M1E) block is preserved verbatim
 under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
+
+
+---
+
+## 2026-11-25 — re-measurement after WBS P3 Slice 1 (M1G)
+
+WBS P3 Slice 1 (on `develop` `e5ba52e`) added the pure Execution Coverage rules
+(`execution_coverage_rules.py`), authorized read-only coverage & streaming
+CSV/XLSX export service (`execution_coverage.py`), and read-only GET API
+(`execution_coverage_api.py`), plus 70 localized strings in
+`construction/locale/ar.po`. Freshness evidence was re-collected on the
+disposable non-production lab `p3-lab.localhost` (`/tmp/p3-isolated.pmpttI/sites`,
+private MariaDB + separate Redis restored from the archived non-production
+`wbs-p1-lab` backup; catalog sync +153 rows, packaged override import verified
+`4337/0/0/4337/0` preserving the genuine `2026-11-20` packaged release import
+timestamp; `runtime_digest` unchanged; `v16.localhost` untouched).
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-25-p3s1` |
+| gate | `catalog=1274 files=348 wrapped=1068 json_labels=79 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-25-p3s1-current/m1_source_scan.txt` |
+| environment | develop `e5ba52e`, working tree with the 2026-11-25 WBS P3 Slice 1 changes |
+
+The `stage2-current-contract/2026-11-24-p2s3` (M1F) block is preserved verbatim
+under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
