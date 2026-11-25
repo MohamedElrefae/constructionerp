@@ -1,5 +1,5 @@
 {
-  "construction_po_sha": "a192a0cf50c30738bd71ee4baea00a5a00914b9b9bdc672f71d80a18c919a43a",
+  "construction_po_sha": "4bf60c06edf78e13e4ce1be7a9192c7d89153c9d55607042881c5dec6d41128a",
   "critical": {
     "Desktop": "سطح المكتب",
     "Edit Sidebar": "تحرير الشريط الجانبي",
@@ -10,14 +10,14 @@
   },
   "decision_root": "07a492a2abf51e0e27cf9b8c4cf3b7159a1afc3f62f9eea35cc24ee1fa833278",
   "decisions_sha": "26844891fdc99314e0f7840fbfec971397bb1329eb0bcd29377b9516405ace67",
-  "freshness_sha": "4a15978be85c3cb96f46f1d62ea9439d27281834a042751dbfa25c1caa12f2b6",
-  "freshness_utc": "2026-11-25T11:13:32Z",
+  "freshness_sha": "3f8bf7cc83249e5fc6582749dcf967681f5e0bc5182c133894c86d50566a8917",
+  "freshness_utc": "2026-11-25T16:49:43Z",
   "inventory_manifest_sha": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60",
   "inventory_merkle": "b61d1d6d995287a0b98b40c5780ef0ca096f22c009e50527147859f3c2d9205e",
   "inventory_rows": 22761,
   "packaged_rows": 4337,
   "payload_csv_sha": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
-  "recorded_utc": "2026-11-25T11:15:00Z",
+  "recorded_utc": "2026-11-25T16:50:00Z",
   "runtime_digest": "73c523938c92644ee301225c163046eeaacc48c675dd97ad058d2db05ea22646",
   "site": "p3-lab.localhost",
   "site_classification_sha": "7e3526403bbecc8913abea6347443f6549b42575233c5fe905d2a05ae2beadce"

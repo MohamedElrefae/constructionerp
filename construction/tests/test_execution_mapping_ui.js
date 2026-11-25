@@ -108,14 +108,14 @@ class MiniNode {
 
 	allText() {
 		if (!this.children.length) return this.textContent || "";
-		return (
-			(this.textContent || "") +
-			this.children.map((c) => c.allText()).join(" ")
-		).trim();
+		return ((this.textContent || "") + this.children.map((c) => c.allText()).join(" ")).trim();
 	}
 }
 
-function createHarness(scriptRelPath, { roles = [], callResponder = null, dbGetValue = null } = {}) {
+function createHarness(
+	scriptRelPath,
+	{ roles = [], callResponder = null, dbGetValue = null } = {}
+) {
 	const handlers = {};
 	const dialogs = [];
 	const calls = [];
@@ -185,10 +185,16 @@ function createHarness(scriptRelPath, { roles = [], callResponder = null, dbGetV
 			},
 		},
 		db: {
-			get_value: (...args) => (dbGetValue ? dbGetValue(...args) : Promise.resolve({ message: {} })),
+			get_value: (...args) =>
+				dbGetValue ? dbGetValue(...args) : Promise.resolve({ message: {} }),
 		},
 		call(opts) {
-			calls.push({ method: opts.method, type: opts.type, freeze: Boolean(opts.freeze), args: opts.args });
+			calls.push({
+				method: opts.method,
+				type: opts.type,
+				freeze: Boolean(opts.freeze),
+				args: opts.args,
+			});
 			if (callResponder) {
 				const resp = callResponder(opts);
 				if (resp !== undefined && typeof opts.callback === "function") {
@@ -294,7 +300,10 @@ test("BOQ Item: Accountant sees location, disabled-ancestor alert, product rule,
 	const h = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
 		roles: ["Accountant"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
 				return {
 					message: {
 						doctype: "BOQ Item",
@@ -334,7 +343,7 @@ test("BOQ Item: Accountant sees location, disabled-ancestor alert, product rule,
 	assert.match(text, /Building A \/ Floor 2/);
 	assert.match(
 		text,
-		/Changing the BOQ Item's planned location affects future Stages only; existing Stage locations remain unchanged\./
+		/Applies while this BOQ Item has no Stages\. Creating the first Stage inherits this location and clears the Item-level default so locations are managed per Stage\./
 	);
 
 	const alertEl = frm._container.querySelector(".ct-exec-loc-warning");
@@ -354,7 +363,10 @@ test("BOQ Item: Construction Owner can change location with mandatory reason and
 	const h = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
 		roles: ["Construction Owner"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
 				return {
 					message: {
 						doctype: "BOQ Item",
@@ -372,7 +384,10 @@ test("BOQ Item: Construction Owner can change location with mandatory reason and
 					},
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+			) {
 				return {
 					message: [
 						{ name: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
@@ -380,10 +395,16 @@ test("BOQ Item: Construction Owner can change location with mandatory reason and
 					],
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.set_item_planned_execution_node") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.set_item_planned_execution_node"
+			) {
 				return { message: { changed: true, action: "change" } };
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_execution_mapping_audit") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_execution_mapping_audit"
+			) {
 				return {
 					message: [
 						{
@@ -432,7 +453,8 @@ test("BOQ Item: Construction Owner can change location with mandatory reason and
 	// Submitting with a reason sends POST with expected_modified and reloads form.
 	pickerDlg.submit({ execution_node: "EBN-0002", reason: "Phase 2 shifts to B" });
 	const postCall = h.calls.find(
-		(c) => c.method === "construction.api.execution_mapping_api.set_item_planned_execution_node"
+		(c) =>
+			c.method === "construction.api.execution_mapping_api.set_item_planned_execution_node"
 	);
 	assert.equal(postCall.type, "POST");
 	assert.deepEqual(
@@ -468,7 +490,10 @@ test("BOQ Item Stage: Site Engineer on new Stage sees read-only inherited previe
 	const h = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
 		roles: ["Site Engineer"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_new_stage_default_preview") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_new_stage_default_preview"
+			) {
 				return {
 					message: {
 						boq_item: "BOQ-ITEM-001",
@@ -500,17 +525,17 @@ test("BOQ Item Stage: Site Engineer on new Stage sees read-only inherited previe
 		frm._container.allText(),
 		/Will inherit from BOQ Item on save: EBS-0001 — Site \/ Building A/
 	);
-	assert.equal(
-		frm._buttons.filter((b) => b.group === "Execution Location").length,
-		0
-	);
+	assert.equal(frm._buttons.filter((b) => b.group === "Execution Location").length, 0);
 });
 
 test("BOQ Item Stage: disabled parent default shows alert on new Stage; measured unmapped Stage requires reason for Historical assignment", () => {
 	const h = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
 		roles: ["Construction Owner"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_new_stage_default_preview") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_new_stage_default_preview"
+			) {
 				return {
 					message: {
 						boq_item: "BOQ-ITEM-001",
@@ -524,7 +549,10 @@ test("BOQ Item Stage: disabled parent default shows alert on new Stage; measured
 					},
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
 				return {
 					message: {
 						doctype: "BOQ Item Stage",
@@ -535,14 +563,19 @@ test("BOQ Item Stage: disabled parent default shows alert on new Stage; measured
 					},
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+			) {
 				return {
 					message: [
 						{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" },
 					],
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.set_stage_execution_node") {
+			if (
+				opts.method === "construction.api.execution_mapping_api.set_stage_execution_node"
+			) {
 				return {
 					message: {
 						changed: true,
@@ -602,35 +635,46 @@ test("BOQ Item Stage: disabled parent default shows alert on new Stage; measured
 
 test("BOQ Item Stage: Accountant sees Historical assignment badge with zero planner buttons; Planner can override on new Stage and reset to inherited default", () => {
 	// 1. Accountant on historically assigned Stage sees badge, zero buttons, zero audit/picker calls.
-	const hAcct = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
-		roles: ["Accountant"],
-		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
-				return {
-					message: {
-						doctype: "BOQ Item Stage",
-						name: "BOQ-STG-00011",
-						project: "PROJ-1",
-						assigned: {
-							node: "EBN-0001",
-							ebs_code: "EBS-0001",
-							full_path: "Site / Building A",
-							is_effectively_disabled: false,
-							disabled_reason: null,
+	const hAcct = createHarness(
+		"construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+		{
+			roles: ["Accountant"],
+			callResponder(opts) {
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_mapping_display_context"
+				) {
+					return {
+						message: {
+							doctype: "BOQ Item Stage",
+							name: "BOQ-STG-00011",
+							project: "PROJ-1",
+							assigned: {
+								node: "EBN-0001",
+								ebs_code: "EBS-0001",
+								full_path: "Site / Building A",
+								is_effectively_disabled: false,
+								disabled_reason: null,
+							},
+							attribution: {
+								action: "initial_historical_map",
+								is_historical_assignment: true,
+								mapped_by: "owner@example.test",
+								mapped_on: "2026-11-24 15:00:00",
+							},
 						},
-						attribution: {
-							action: "initial_historical_map",
-							is_historical_assignment: true,
-							mapped_by: "owner@example.test",
-							mapped_on: "2026-11-24 15:00:00",
-						},
-					},
-				};
-			}
-		},
-	});
+					};
+				}
+			},
+		}
+	);
 	const acctFrm = hAcct.makeFrm({
-		doc: { name: "BOQ-STG-00011", boq_item: "BOQ-ITEM-001", project: "PROJ-1", execution_node: "EBN-0001" },
+		doc: {
+			name: "BOQ-STG-00011",
+			boq_item: "BOQ-ITEM-001",
+			project: "PROJ-1",
+			execution_node: "EBN-0001",
+		},
 		isNew: false,
 		writePerm: false,
 		fieldname: "execution_node",
@@ -645,29 +689,50 @@ test("BOQ Item Stage: Accountant sees Historical assignment badge with zero plan
 	);
 
 	// 2. Planner on new Stage can select explicit override and revert to inherited default.
-	const hOwner = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
-		roles: ["Construction Owner"],
-		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_new_stage_default_preview") {
-				return {
-					message: {
-						boq_item: "BOQ-ITEM-001",
-						project: "PROJ-1",
-						will_inherit: true,
-						preview: { node: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
-					},
-				};
-			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return {
-					message: [
-						{ name: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
-						{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" },
-					],
-				};
-			}
-		},
-	});
+	const hOwner = createHarness(
+		"construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+		{
+			roles: ["Construction Owner"],
+			callResponder(opts) {
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_new_stage_default_preview"
+				) {
+					return {
+						message: {
+							boq_item: "BOQ-ITEM-001",
+							project: "PROJ-1",
+							will_inherit: true,
+							preview: {
+								node: "EBN-0001",
+								ebs_code: "EBS-0001",
+								full_path: "Site / Building A",
+							},
+						},
+					};
+				}
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+				) {
+					return {
+						message: [
+							{
+								name: "EBN-0001",
+								ebs_code: "EBS-0001",
+								full_path: "Site / Building A",
+							},
+							{
+								name: "EBN-0002",
+								ebs_code: "EBS-0002",
+								full_path: "Site / Building B",
+							},
+						],
+					};
+				}
+			},
+		}
+	);
 	const newFrm = hOwner.makeFrm({
 		doc: { boq_item: "BOQ-ITEM-001", project: "PROJ-1", execution_node: "" },
 		isNew: true,
@@ -680,7 +745,10 @@ test("BOQ Item Stage: Accountant sees Historical assignment badge with zero plan
 	selBtn.action();
 	hOwner.dialogs[0].submit({ execution_node: "EBN-0002" });
 	assert.equal(newFrm.doc.execution_node, "EBN-0002");
-	assert.match(newFrm._container.allText(), /Explicit override selected for this new Stage: EBS-0002 — Site \/ Building B/);
+	assert.match(
+		newFrm._container.allText(),
+		/Explicit override selected for this new Stage: EBS-0002 — Site \/ Building B/
+	);
 });
 
 test("Dirty form guard: blocks Item & Stage change/clear writes so unsaved edits are never discarded", () => {
@@ -688,24 +756,43 @@ test("Dirty form guard: blocks Item & Stage change/clear writes so unsaved edits
 	const hItem = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
 		roles: ["Construction Owner"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
 				return {
 					message: {
 						doctype: "BOQ Item",
 						name: "BOQ-ITEM-001",
 						project: "PROJ-1",
-						assigned: { node: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
+						assigned: {
+							node: "EBN-0001",
+							ebs_code: "EBS-0001",
+							full_path: "Site / Building A",
+						},
 						attribution: null,
 					},
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return { message: [{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" }] };
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+			) {
+				return {
+					message: [
+						{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" },
+					],
+				};
 			}
 		},
 	});
 	const itemFrm = hItem.makeFrm({
-		doc: { name: "BOQ-ITEM-001", boq_header: "BOQ-H-1", planned_execution_node: "EBN-0001", modified: "2026-11-24 10:00:00" },
+		doc: {
+			name: "BOQ-ITEM-001",
+			boq_header: "BOQ-H-1",
+			planned_execution_node: "EBN-0001",
+			modified: "2026-11-24 10:00:00",
+		},
 		isNew: false,
 		writePerm: true,
 		dirty: true,
@@ -720,32 +807,62 @@ test("Dirty form guard: blocks Item & Stage change/clear writes so unsaved edits
 	assert.equal(hItem.msgprints.length, 2);
 	assert.match(hItem.msgprints[0].message, /save or discard your unsaved form changes/);
 	assert.equal(
-		hItem.calls.filter((c) => c.method === "construction.api.execution_mapping_api.set_item_planned_execution_node").length,
+		hItem.calls.filter(
+			(c) =>
+				c.method ===
+				"construction.api.execution_mapping_api.set_item_planned_execution_node"
+		).length,
 		0
 	);
 
 	// 2. Dirty BOQ Item Stage blocks both Change and Clear, and also blocks submit if dirtied while dialog is open.
-	const hStage = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
-		roles: ["Construction Owner"],
-		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
-				return {
-					message: {
-						doctype: "BOQ Item Stage",
-						name: "BOQ-STG-00010",
-						project: "PROJ-1",
-						assigned: { node: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
-						attribution: null,
-					},
-				};
-			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return { message: [{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" }] };
-			}
-		},
-	});
+	const hStage = createHarness(
+		"construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+		{
+			roles: ["Construction Owner"],
+			callResponder(opts) {
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_mapping_display_context"
+				) {
+					return {
+						message: {
+							doctype: "BOQ Item Stage",
+							name: "BOQ-STG-00010",
+							project: "PROJ-1",
+							assigned: {
+								node: "EBN-0001",
+								ebs_code: "EBS-0001",
+								full_path: "Site / Building A",
+							},
+							attribution: null,
+						},
+					};
+				}
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+				) {
+					return {
+						message: [
+							{
+								name: "EBN-0002",
+								ebs_code: "EBS-0002",
+								full_path: "Site / Building B",
+							},
+						],
+					};
+				}
+			},
+		}
+	);
 	const stageFrm = hStage.makeFrm({
-		doc: { name: "BOQ-STG-00010", boq_item: "BOQ-ITEM-001", execution_node: "EBN-0001", modified: "2026-11-24 10:00:00" },
+		doc: {
+			name: "BOQ-STG-00010",
+			boq_item: "BOQ-ITEM-001",
+			execution_node: "EBN-0001",
+			modified: "2026-11-24 10:00:00",
+		},
 		isNew: false,
 		writePerm: true,
 		dirty: true,
@@ -767,7 +884,9 @@ test("Dirty form guard: blocks Item & Stage change/clear writes so unsaved edits
 	hStage.dialogs[0].submit({ reason: "Clear location" });
 	assert.equal(stageFrm._getReloaded(), 0);
 	assert.equal(
-		hStage.calls.filter((c) => c.method === "construction.api.execution_mapping_api.set_stage_execution_node").length,
+		hStage.calls.filter(
+			(c) => c.method === "construction.api.execution_mapping_api.set_stage_execution_node"
+		).length,
 		0
 	);
 });
@@ -781,11 +900,26 @@ test("Picker HTML boundary escaping: Select labels escape markup while preview k
 	const hItem = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
 		roles: ["Construction Owner"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
-				return { message: { doctype: "BOQ Item", name: "BOQ-ITEM-001", project: "PROJ-1", assigned: null } };
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
+				return {
+					message: {
+						doctype: "BOQ Item",
+						name: "BOQ-ITEM-001",
+						project: "PROJ-1",
+						assigned: null,
+					},
+				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return { message: [{ name: "EBN-0099", ebs_code: "EBS-0099", full_path: evilPath }] };
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+			) {
+				return {
+					message: [{ name: "EBN-0099", ebs_code: "EBS-0099", full_path: evilPath }],
+				};
 			}
 		},
 	});
@@ -797,21 +931,41 @@ test("Picker HTML boundary escaping: Select labels escape markup while preview k
 	});
 	hItem.handlers["BOQ Item"].refresh(itemFrm);
 	itemFrm._buttons.find((b) => b.label === "Set Planned Location").action();
-	const itemSelectOpts = hItem.dialogs[0].opts.fields.find((f) => f.fieldname === "execution_node").options;
+	const itemSelectOpts = hItem.dialogs[0].opts.fields.find(
+		(f) => f.fieldname === "execution_node"
+	).options;
 	assert.equal(itemSelectOpts[1].label, expectedEscaped);
 
 	// 2. BOQ Item Stage picker escapes Select option labels AND preserves raw literal text in preview banner.
-	const hStage = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
-		roles: ["Construction Owner"],
-		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_new_stage_default_preview") {
-				return { message: { boq_item: "BOQ-ITEM-001", project: "PROJ-1", will_inherit: false, preview: null } };
-			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return { message: [{ name: "EBN-0099", ebs_code: "EBS-0099", full_path: evilPath }] };
-			}
-		},
-	});
+	const hStage = createHarness(
+		"construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+		{
+			roles: ["Construction Owner"],
+			callResponder(opts) {
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_new_stage_default_preview"
+				) {
+					return {
+						message: {
+							boq_item: "BOQ-ITEM-001",
+							project: "PROJ-1",
+							will_inherit: false,
+							preview: null,
+						},
+					};
+				}
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+				) {
+					return {
+						message: [{ name: "EBN-0099", ebs_code: "EBS-0099", full_path: evilPath }],
+					};
+				}
+			},
+		}
+	);
 	const stageFrm = hStage.makeFrm({
 		doc: { boq_item: "BOQ-ITEM-001", project: "PROJ-1", execution_node: "" },
 		isNew: true,
@@ -820,7 +974,9 @@ test("Picker HTML boundary escaping: Select labels escape markup while preview k
 	});
 	hStage.handlers["BOQ Item Stage"].refresh(stageFrm);
 	stageFrm._buttons.find((b) => b.label === "Select Execution Location").action();
-	const stageSelectOpts = hStage.dialogs[0].opts.fields.find((f) => f.fieldname === "execution_node").options;
+	const stageSelectOpts = hStage.dialogs[0].opts.fields.find(
+		(f) => f.fieldname === "execution_node"
+	).options;
 	assert.equal(stageSelectOpts[1].label, expectedEscaped);
 
 	// Submitting override shows raw literal text in textContent preview (no double-escaping & no HTML elements).
@@ -834,14 +990,21 @@ test("New Stage override lifecycle: select -> Use Inherited Default without relo
 	const h = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
 		roles: ["Construction Owner"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_new_stage_default_preview") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_new_stage_default_preview"
+			) {
 				if (opts.args.boq_item === "BOQ-ITEM-1") {
 					return {
 						message: {
 							boq_item: "BOQ-ITEM-1",
 							project: "PROJ-1",
 							will_inherit: true,
-							preview: { node: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
+							preview: {
+								node: "EBN-0001",
+								ebs_code: "EBS-0001",
+								full_path: "Site / Building A",
+							},
 						},
 					};
 				}
@@ -850,11 +1013,18 @@ test("New Stage override lifecycle: select -> Use Inherited Default without relo
 						boq_item: "BOQ-ITEM-2",
 						project: "PROJ-1",
 						will_inherit: true,
-						preview: { node: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" },
+						preview: {
+							node: "EBN-0002",
+							ebs_code: "EBS-0002",
+							full_path: "Site / Building B",
+						},
 					},
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+			) {
 				return {
 					message: [
 						{ name: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
@@ -866,7 +1036,13 @@ test("New Stage override lifecycle: select -> Use Inherited Default without relo
 	});
 
 	const frm = h.makeFrm({
-		doc: { boq_item: "BOQ-ITEM-1", project: "PROJ-1", boq_header: "BOQ-H-1", boq_structure: "STR-1", execution_node: "" },
+		doc: {
+			boq_item: "BOQ-ITEM-1",
+			project: "PROJ-1",
+			boq_header: "BOQ-H-1",
+			boq_structure: "STR-1",
+			execution_node: "",
+		},
 		isNew: true,
 		writePerm: true,
 		fieldname: "execution_node",
@@ -891,7 +1067,10 @@ test("New Stage override lifecycle: select -> Use Inherited Default without relo
 	// Click Use Inherited Default -> returns immediately to inherited preview and removes Use Inherited Default!
 	frm._buttons.find((b) => b.label === "Use Inherited Default").action();
 	assert.equal(frm.doc.execution_node, "");
-	assert.match(frm._container.allText(), /Will inherit from BOQ Item on save: EBS-0001 — Site \/ Building A/);
+	assert.match(
+		frm._container.allText(),
+		/Will inherit from BOQ Item on save: EBS-0001 — Site \/ Building A/
+	);
 	assert.deepEqual(
 		frm._buttons.filter((b) => b.group === "Execution Location").map((b) => b.label),
 		["Select Execution Location"]
@@ -908,7 +1087,10 @@ test("New Stage override lifecycle: select -> Use Inherited Default without relo
 	await new Promise((resolve) => setImmediate(resolve));
 
 	assert.equal(frm.doc.execution_node, "");
-	assert.match(frm._container.allText(), /Will inherit from BOQ Item on save: EBS-0002 — Site \/ Building B/);
+	assert.match(
+		frm._container.allText(),
+		/Will inherit from BOQ Item on save: EBS-0002 — Site \/ Building B/
+	);
 	assert.deepEqual(
 		frm._buttons.filter((b) => b.group === "Execution Location").map((b) => b.label),
 		["Select Execution Location"]
@@ -922,21 +1104,38 @@ test("Delayed mapping POST response does not reload or discard edits made after 
 	const hItem = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
 		roles: ["Construction Owner"],
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
 				return {
 					message: {
 						doctype: "BOQ Item",
 						name: "BOQ-ITEM-001",
 						project: "PROJ-1",
-						assigned: { node: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
+						assigned: {
+							node: "EBN-0001",
+							ebs_code: "EBS-0001",
+							full_path: "Site / Building A",
+						},
 						attribution: null,
 					},
 				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return { message: [{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" }] };
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+			) {
+				return {
+					message: [
+						{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" },
+					],
+				};
 			}
-			if (opts.method === "construction.api.execution_mapping_api.set_item_planned_execution_node") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.set_item_planned_execution_node"
+			) {
 				pendingCallbacks.push(opts.callback);
 				return undefined; // Delay response!
 			}
@@ -981,29 +1180,53 @@ test("Delayed mapping POST response does not reload or discard edits made after 
 	assert.equal(hItem.alerts.at(-1).indicator, "orange");
 
 	// 2. BOQ Item Stage: delayed change & clear responses preserve post-submit edits and use freeze: true.
-	const hStage = createHarness("construction/construction/doctype/boq_item_stage/boq_item_stage.js", {
-		roles: ["Construction Owner"],
-		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_mapping_display_context") {
-				return {
-					message: {
-						doctype: "BOQ Item Stage",
-						name: "BOQ-STG-00010",
-						project: "PROJ-1",
-						assigned: { node: "EBN-0001", ebs_code: "EBS-0001", full_path: "Site / Building A" },
-						attribution: null,
-					},
-				};
-			}
-			if (opts.method === "construction.api.execution_mapping_api.get_eligible_execution_nodes") {
-				return { message: [{ name: "EBN-0002", ebs_code: "EBS-0002", full_path: "Site / Building B" }] };
-			}
-			if (opts.method === "construction.api.execution_mapping_api.set_stage_execution_node") {
-				pendingCallbacks.push(opts.callback);
-				return undefined; // Delay response!
-			}
-		},
-	});
+	const hStage = createHarness(
+		"construction/construction/doctype/boq_item_stage/boq_item_stage.js",
+		{
+			roles: ["Construction Owner"],
+			callResponder(opts) {
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_mapping_display_context"
+				) {
+					return {
+						message: {
+							doctype: "BOQ Item Stage",
+							name: "BOQ-STG-00010",
+							project: "PROJ-1",
+							assigned: {
+								node: "EBN-0001",
+								ebs_code: "EBS-0001",
+								full_path: "Site / Building A",
+							},
+							attribution: null,
+						},
+					};
+				}
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.get_eligible_execution_nodes"
+				) {
+					return {
+						message: [
+							{
+								name: "EBN-0002",
+								ebs_code: "EBS-0002",
+								full_path: "Site / Building B",
+							},
+						],
+					};
+				}
+				if (
+					opts.method ===
+					"construction.api.execution_mapping_api.set_stage_execution_node"
+				) {
+					pendingCallbacks.push(opts.callback);
+					return undefined; // Delay response!
+				}
+			},
+		}
+	);
 	const stageFrm = hStage.makeFrm({
 		doc: {
 			name: "BOQ-STG-00010",
@@ -1024,7 +1247,9 @@ test("Delayed mapping POST response does not reload or discard edits made after 
 	assert.equal(hStage.calls.at(-1).freeze, true);
 	stageFrm.doc.description = "Edited during slow stage change";
 	stageFrm.setDirty(true);
-	pendingCallbacks.pop()({ message: { changed: true, action: "change", is_historical_assignment: false } });
+	pendingCallbacks.pop()({
+		message: { changed: true, action: "change", is_historical_assignment: false },
+	});
 	assert.equal(stageFrm._getReloaded(), 0);
 	assert.equal(stageFrm.doc.description, "Edited during slow stage change");
 	assert.equal(hStage.alerts.at(-1).indicator, "orange");
@@ -1051,7 +1276,10 @@ test("New Stage rapid BOQ Item A -> B switch ignores late out-of-order lookup re
 			});
 		},
 		callResponder(opts) {
-			if (opts.method === "construction.api.execution_mapping_api.get_new_stage_default_preview") {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_new_stage_default_preview"
+			) {
 				const isB = opts.args.boq_item === "BOQ-ITEM-B";
 				return {
 					message: {
@@ -1068,7 +1296,13 @@ test("New Stage rapid BOQ Item A -> B switch ignores late out-of-order lookup re
 	});
 
 	const frm = h.makeFrm({
-		doc: { project: "PROJ-1", boq_header: "", boq_structure: "", boq_item: "", execution_node: "" },
+		doc: {
+			project: "PROJ-1",
+			boq_header: "",
+			boq_structure: "",
+			boq_item: "",
+			execution_node: "",
+		},
 		isNew: true,
 		writePerm: true,
 		fieldname: "execution_node",
@@ -1101,4 +1335,90 @@ test("New Stage rapid BOQ Item A -> B switch ignores late out-of-order lookup re
 	assert.equal(frm.doc.boq_structure, "STR-B");
 	assert.match(frm._container.allText(), /EBS-B — Site \/ Building B/);
 	assert.ok(!frm._container.allText().includes("Building A"));
+});
+
+test("D-A1 Option 3: BOQ Item with Stages shows Managed per Stage, hides Set/Change buttons, and keeps Clear only for legacy values", () => {
+	// 1. Clean Stage-managed Item (no Item-level location): Set/Change hidden, Managed per Stage shown, View Mapping History kept
+	const h1 = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
+		roles: ["Project Manager"],
+		callResponder(opts) {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
+				return {
+					message: {
+						doctype: "BOQ Item",
+						name: "BOQ-ITEM-STAGED",
+						project: "PROJ-1",
+						assigned: null,
+						attribution: null,
+						can_assign_location: false,
+						stage_managed: true,
+					},
+				};
+			}
+		},
+	});
+	const frm1 = h1.makeFrm({
+		doc: { name: "BOQ-ITEM-STAGED", boq_header: "BOQ-H-1", planned_execution_node: "" },
+		isNew: false,
+		writePerm: true,
+		fieldname: "planned_execution_node",
+	});
+	h1.handlers["BOQ Item"].refresh(frm1);
+
+	const text1 = frm1._container.allText();
+	assert.match(text1, /Managed per Stage/);
+	assert.match(text1, /Execution locations are managed on this BOQ Item's Stages/);
+	assert.ok(!text1.includes("Unmapped"));
+	const btns1 = frm1._buttons
+		.filter((b) => b.group === "Execution Location")
+		.map((b) => b.label);
+	assert.deepEqual(btns1, ["View Mapping History"]);
+
+	// 2. Legacy dual-mapped Item (stage_managed=true with existing planned_execution_node): Change hidden, Clear & History kept
+	const h2 = createHarness("construction/construction/doctype/boq_item/boq_item.js", {
+		roles: ["Project Manager"],
+		callResponder(opts) {
+			if (
+				opts.method ===
+				"construction.api.execution_mapping_api.get_mapping_display_context"
+			) {
+				return {
+					message: {
+						doctype: "BOQ Item",
+						name: "BOQ-ITEM-LEGACY",
+						project: "PROJ-1",
+						assigned: {
+							node: "EBN-0001",
+							ebs_code: "EBS-0001",
+							title: "Building A",
+							full_path: "Site / Building A",
+							is_effectively_disabled: false,
+							disabled_reason: null,
+						},
+						attribution: null,
+						can_assign_location: false,
+						stage_managed: true,
+					},
+				};
+			}
+		},
+	});
+	const frm2 = h2.makeFrm({
+		doc: {
+			name: "BOQ-ITEM-LEGACY",
+			boq_header: "BOQ-H-1",
+			planned_execution_node: "EBN-0001",
+		},
+		isNew: false,
+		writePerm: true,
+		fieldname: "planned_execution_node",
+	});
+	h2.handlers["BOQ Item"].refresh(frm2);
+	const btns2 = frm2._buttons
+		.filter((b) => b.group === "Execution Location")
+		.map((b) => b.label);
+	assert.deepEqual(btns2, ["Clear Planned Location", "View Mapping History"]);
 });

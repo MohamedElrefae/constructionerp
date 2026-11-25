@@ -308,6 +308,7 @@
 		statusRow.className = "ct-exec-loc-summary";
 
 		const assigned = ctx && ctx.assigned;
+		const stageManaged = Boolean(ctx && ctx.stage_managed);
 		if (assigned) {
 			if (assigned.ebs_code) {
 				statusRow.appendChild(
@@ -322,6 +323,14 @@
 			pathSpan.className = "ct-exec-loc-path";
 			pathSpan.textContent = assigned.full_path || assigned.title || assigned.node || "";
 			statusRow.appendChild(pathSpan);
+		} else if (!frm.is_new() && stageManaged) {
+			statusRow.appendChild(
+				createBadge(
+					__("Managed per Stage"),
+					"var(--bg-blue, rgba(37, 99, 235, 0.14))",
+					"var(--text-on-blue, #1d4ed8)"
+				)
+			);
 		} else if (!frm.is_new()) {
 			statusRow.appendChild(
 				createBadge(
@@ -371,9 +380,13 @@
 		ruleNote.style.marginBlockStart = "6px";
 		ruleNote.style.fontSize = "12px";
 		ruleNote.style.color = "var(--text-muted, #64748b)";
-		ruleNote.textContent = __(
-			"Changing the BOQ Item's planned location affects future Stages only; existing Stage locations remain unchanged."
-		);
+		ruleNote.textContent = stageManaged
+			? __(
+					"Execution locations are managed on this BOQ Item's Stages. Item-level mapping is only available when no Stages exist."
+			  )
+			: __(
+					"Applies while this BOQ Item has no Stages. Creating the first Stage inherits this location and clears the Item-level default so locations are managed per Stage."
+			  );
 		panel.appendChild(ruleNote);
 
 		mountExecutionPanel(host, "planned_execution_node", panel);
@@ -420,20 +433,15 @@
 		thead.style.background = "var(--card-bg, #ffffff)";
 
 		const headRow = document.createElement("tr");
-		[
-			__("Date"),
-			__("Action"),
-			__("From"),
-			__("To"),
-			__("Reason"),
-			__("Changed By"),
-		].forEach((label) => {
-			const th = document.createElement("th");
-			th.setAttribute("scope", "col");
-			th.style.whiteSpace = "nowrap";
-			th.textContent = label;
-			headRow.appendChild(th);
-		});
+		[__("Date"), __("Action"), __("From"), __("To"), __("Reason"), __("Changed By")].forEach(
+			(label) => {
+				const th = document.createElement("th");
+				th.setAttribute("scope", "col");
+				th.style.whiteSpace = "nowrap";
+				th.textContent = label;
+				headRow.appendChild(th);
+			}
+		);
 		thead.appendChild(headRow);
 		table.appendChild(thead);
 
@@ -503,7 +511,9 @@
 				const nodes = (r && r.message) || [];
 				if (!nodes.length) {
 					frappe.show_alert({
-						message: __("No eligible active leaf execution locations found for this project."),
+						message: __(
+							"No eligible active leaf execution locations found for this project."
+						),
 						indicator: "orange",
 					});
 					return;
@@ -599,7 +609,8 @@
 					},
 				});
 				d.show();
-				const ruleHost = d.fields_dict.rule_banner && d.fields_dict.rule_banner.$wrapper[0];
+				const ruleHost =
+					d.fields_dict.rule_banner && d.fields_dict.rule_banner.$wrapper[0];
 				if (ruleHost) {
 					const note = document.createElement("p");
 					note.className = "text-muted";
@@ -712,11 +723,14 @@
 					return;
 				}
 				const hasCurrent = Boolean(frm.doc.planned_execution_node);
-				frm.add_custom_button(
-					hasCurrent ? __("Change Planned Location") : __("Set Planned Location"),
-					() => openItemPickerDialog(frm, ctx.project, false),
-					__("Execution Location")
-				);
+				const canAssign = ctx.can_assign_location !== false && !ctx.stage_managed;
+				if (canAssign) {
+					frm.add_custom_button(
+						hasCurrent ? __("Change Planned Location") : __("Set Planned Location"),
+						() => openItemPickerDialog(frm, ctx.project, false),
+						__("Execution Location")
+					);
+				}
 				if (hasCurrent) {
 					frm.add_custom_button(
 						__("Clear Planned Location"),

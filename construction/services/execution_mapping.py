@@ -1,16 +1,21 @@
-"""Transactional WBS P2 execution-location mapping service (Slice 1).
+"""Transactional WBS P2 execution-location mapping service (with D-A1 Option 3).
 
-Implements Choice B:
-- ``BOQ Item.planned_execution_node`` is the planning default.
-- ``BOQ Item Stage.execution_node`` is the operational assignment.
-- One-time inheritance copies an eligible Item default onto newly created
-  Stages; changing the Item default never modifies existing Stages.
+Implements Strict Exclusivity (D-A1 Option 3 amending Choice B):
+- ``BOQ Item.planned_execution_node`` is an Item-level location available only
+  while the BOQ Item has no Stages.
+- ``BOQ Item Stage.execution_node`` is the operational Stage assignment.
+- Creating the first Stage on a BOQ Item inherits an eligible Item default (if
+  the Stage has no explicit location) and atomically clears
+  ``BOQ Item.planned_execution_node`` in the same transaction with an audit row,
+  so an Item and its Stages never simultaneously hold locations.
+- Setting or changing ``BOQ Item.planned_execution_node`` while Stages exist is
+  rejected; clearing a legacy Item default remains permitted.
 
 Lock order (aligned with ``execution_tree.py``):
 1. ``tabProject`` (``FOR UPDATE``)
 2. ``tabExecution Breakdown Node`` for the project (``ORDER BY name FOR UPDATE``)
-3. ``tabBOQ Item`` (``FOR UPDATE NOWAIT`` on write, ``LOCK IN SHARE MODE`` on
-   Stage inheritance)
+3. ``tabBOQ Item`` (``FOR UPDATE NOWAIT`` on Item write, ``FOR UPDATE`` on Stage
+   creation to serialize parent default clearing)
 """
 
 from __future__ import annotations
@@ -191,7 +196,10 @@ def _establish_audit_insert_guard(doc):
 def require_audit_insert_guard(doc):
     guard = _AUDIT_INSERT_GUARD.get()
     if guard is None:
-        frappe.throw(_("Execution Mapping Audit records can only be created by the mapping service."), frappe.PermissionError)
+        frappe.throw(
+            _("Execution Mapping Audit records can only be created by the mapping service."),
+            frappe.PermissionError,
+        )
     if guard["actor"] != frappe.session.user or guard["document"] is not doc:
         frappe.throw(_("Execution Mapping Audit guard mismatch."), frappe.PermissionError)
 
@@ -231,8 +239,12 @@ def _insert_audit_row(
             "is_historical_assignment": 1 if is_historical_assignment else 0,
             "historical_trigger": historical_trigger or "",
             "stage_status_snapshot": stage_status_snapshot or "",
-            "measured_qty_snapshot": flt(measured_qty_snapshot) if measured_qty_snapshot is not None else None,
-            "certified_qty_snapshot": flt(certified_qty_snapshot) if certified_qty_snapshot is not None else None,
+            "measured_qty_snapshot": flt(measured_qty_snapshot)
+            if measured_qty_snapshot is not None
+            else None,
+            "certified_qty_snapshot": flt(certified_qty_snapshot)
+            if certified_qty_snapshot is not None
+            else None,
             "old_node": old_snap.get("node") or "",
             "old_ebs_code": old_snap.get("ebs_code") or "",
             "old_title": old_snap.get("title") or "",
@@ -332,7 +344,9 @@ def _build_node_display(nodes_by_name, node_name, project):
     }
 
 
-DISPLAY_CONTEXT_FIELDS = frozenset({"doctype", "name", "project", "assigned", "attribution"})
+DISPLAY_CONTEXT_FIELDS = frozenset(
+    {"doctype", "name", "project", "assigned", "attribution", "can_assign_location", "stage_managed"}
+)
 DISPLAY_ATTRIBUTION_FIELDS = frozenset({"action", "is_historical_assignment", "mapped_by", "mapped_on"})
 
 
@@ -381,12 +395,27 @@ def get_mapping_display_context(doctype, name):
         project = frappe.db.get_value("BOQ Header", boq_header, "project") if boq_header else None
         assigned_node = (row.planned_execution_node or None) if row else None
         nodes_by_name = rules.index_nodes_by_name(_read_project_nodes_unlocked(project)) if project else {}
+        # Least-privilege eligibility: only query Stage existence for authorized planners
+        # who also have BOQ Item Stage read permission; never expose raw Stage counts.
+        can_assign_location = False
+        stage_managed = False
+        if _caller_is_mapping_planner() and frappe.has_permission("BOQ Item Stage", "read"):
+            has_stages = bool(
+                frappe.db.sql(
+                    "SELECT 1 FROM `tabBOQ Item Stage` WHERE boq_item=%s LIMIT 1",
+                    (name,),
+                )
+            )
+            stage_managed = has_stages
+            can_assign_location = not has_stages
         return {
             "doctype": doctype,
             "name": name,
             "project": project,
             "assigned": _build_node_display(nodes_by_name, assigned_node, project),
             "attribution": _display_attribution_summary(project, doctype, name) if project else None,
+            "can_assign_location": can_assign_location,
+            "stage_managed": stage_managed,
         }
 
     row = frappe.db.get_value(
@@ -424,7 +453,13 @@ def get_new_stage_default_preview(boq_item):
     project = frappe.db.get_value("BOQ Header", boq_header, "project") if boq_header else None
     default_node = (row.planned_execution_node or None) if row else None
     if not default_node or not project:
-        return {"boq_item": boq_item, "project": project, "will_inherit": False, "preview": None, "warning": None}
+        return {
+            "boq_item": boq_item,
+            "project": project,
+            "will_inherit": False,
+            "preview": None,
+            "warning": None,
+        }
     nodes_by_name = rules.index_nodes_by_name(_read_project_nodes_unlocked(project))
     display = _build_node_display(nodes_by_name, default_node, project)
     ok, _code, msg = rules.is_eligible_execution_leaf(nodes_by_name, default_node, project=project)
@@ -480,7 +515,9 @@ def set_item_planned_execution_node(boq_item, execution_node=None, reason=None, 
         as_dict=True,
     )
     if not header_rows or header_rows[0].get("project") != initial_project:
-        frappe.throw(_("BOQ Item project changed concurrently. Reload and try again."), frappe.ValidationError)
+        frappe.throw(
+            _("BOQ Item project changed concurrently. Reload and try again."), frappe.ValidationError
+        )
     boq_header = header_rows[0]["name"]
     project = header_rows[0]["project"]
 
@@ -490,7 +527,24 @@ def set_item_planned_execution_node(boq_item, execution_node=None, reason=None, 
     # Re-verify unified permission gate under locks.
     _authorize_planner_mapping("BOQ Item", boq_item, boq_header, project, is_new=False)
 
-    old_node = (item_row.get("planned_execution_node") or None)
+    # D-A1 Option 3 (Strict Exclusivity): reject setting or changing BOQ Item location while Stages exist.
+    # Clearing an existing legacy default (new_node is None) remains allowed.
+    if new_node is not None and require_mapping_table("BOQ Item Stage"):
+        has_stages = bool(
+            current_boq_sql(
+                "SELECT 1 FROM `tabBOQ Item Stage` WHERE boq_item=%s LIMIT 1 LOCK IN SHARE MODE",
+                (boq_item,),
+            )
+        )
+        if has_stages:
+            frappe.throw(
+                _(
+                    "Cannot set or change Planned Execution Location while Stages exist on this BOQ Item. Assign locations on its Stages instead."
+                ),
+                frappe.ValidationError,
+            )
+
+    old_node = item_row.get("planned_execution_node") or None
     if old_node == new_node:
         return {
             "changed": False,
@@ -588,9 +642,9 @@ def _find_stage_transaction_refs(stage_name):
     for child_dt in TRANSACTION_CHILD_DOCTYPES:
         if not frappe.db.table_exists(child_dt):
             frappe.throw(
-                _("Execution mapping schema is incomplete: required transaction table {0} is missing.").format(
-                    child_dt
-                ),
+                _(
+                    "Execution mapping schema is incomplete: required transaction table {0} is missing."
+                ).format(child_dt),
                 frappe.ValidationError,
             )
         if not frappe.db.has_column(child_dt, "boq_item_stage"):
@@ -636,7 +690,9 @@ def set_stage_execution_node(boq_item_stage, execution_node=None, reason=None, e
         except rules.RuleViolation as error:
             _translate(error)
 
-    initial = frappe.db.get_value("BOQ Item Stage", boq_item_stage, ["name", "boq_item", "boq_header"], as_dict=True)
+    initial = frappe.db.get_value(
+        "BOQ Item Stage", boq_item_stage, ["name", "boq_item", "boq_header"], as_dict=True
+    )
     if not initial or not initial.boq_item:
         frappe.throw(_("Not permitted."), frappe.PermissionError)
     initial_header = frappe.db.get_value("BOQ Item", initial.boq_item, "boq_header") or initial.boq_header
@@ -645,7 +701,9 @@ def set_stage_execution_node(boq_item_stage, execution_node=None, reason=None, e
         frappe.throw(_("Not permitted."), frappe.PermissionError)
 
     # Pre-lock authorization check prevents unauthorized callers from contending on locks.
-    _authorize_planner_mapping("BOQ Item Stage", boq_item_stage, initial_header, initial_project, is_new=False)
+    _authorize_planner_mapping(
+        "BOQ Item Stage", boq_item_stage, initial_header, initial_project, is_new=False
+    )
 
     # Deterministic lock order:
     # 1. tabProject (FOR UPDATE)
@@ -868,11 +926,12 @@ def enforce_boq_header_project_change_guard(doc):
             )
 
 
-def _reread_locked_stage_parent_context(boq_item, expected_project):
+def _reread_locked_stage_parent_context(boq_item, expected_project, *, for_update=False):
     """Re-read parent BOQ Item + BOQ Header + Project under lock to prevent drift."""
+    lock_clause = "FOR UPDATE" if for_update else "LOCK IN SHARE MODE"
     item_rows = current_boq_sql(
-        "SELECT name, boq_header, structure, planned_execution_node "
-        "FROM `tabBOQ Item` WHERE name=%s LOCK IN SHARE MODE",
+        f"SELECT name, boq_header, structure, planned_execution_node "
+        f"FROM `tabBOQ Item` WHERE name=%s {lock_clause}",
         (boq_item,),
         as_dict=True,
     )
@@ -885,7 +944,9 @@ def _reread_locked_stage_parent_context(boq_item, expected_project):
         as_dict=True,
     )
     if not header_rows or not header_rows[0].get("project"):
-        frappe.throw(_("BOQ Header for BOQ Item {0} does not exist.").format(boq_item), frappe.ValidationError)
+        frappe.throw(
+            _("BOQ Header for BOQ Item {0} does not exist.").format(boq_item), frappe.ValidationError
+        )
     header_row = header_rows[0]
     if header_row["project"] != expected_project:
         frappe.throw(
@@ -945,13 +1006,15 @@ def enforce_boq_item_mapping_guard(doc):
     if not doc.is_new():
         before = doc.get_doc_before_save()
         if before is not None:
-            old_val = (before.get("planned_execution_node") or None)
-            new_val = (doc.get("planned_execution_node") or None)
+            old_val = before.get("planned_execution_node") or None
+            new_val = doc.get("planned_execution_node") or None
             if old_val != new_val:
                 guard = _MAPPING_GUARD.get()
                 if guard is None or guard.get("document") is not doc:
                     frappe.throw(
-                        _("Use the authorized Execution Location action to change Planned Execution Location."),
+                        _(
+                            "Use the authorized Execution Location action to change Planned Execution Location."
+                        ),
                         frappe.PermissionError,
                     )
         # Resolve destination Header project under lock for reverse parent-chain checks.
@@ -1009,7 +1072,9 @@ def enforce_boq_item_mapping_guard(doc):
     if not chosen_node:
         return
     if not doc.boq_header:
-        frappe.throw(_("BOQ Header is required before setting Planned Execution Location."), frappe.ValidationError)
+        frappe.throw(
+            _("BOQ Header is required before setting Planned Execution Location."), frappe.ValidationError
+        )
     project = frappe.db.get_value("BOQ Header", doc.boq_header, "project")
     _authorize_planner_mapping("BOQ Item", None, doc.boq_header, project, is_new=True)
     _lock_project(project)
@@ -1020,7 +1085,9 @@ def enforce_boq_item_mapping_guard(doc):
         as_dict=True,
     )
     if not header_rows or header_rows[0].get("project") != project:
-        frappe.throw(_("BOQ Header project changed concurrently. Reload and try again."), frappe.ValidationError)
+        frappe.throw(
+            _("BOQ Header project changed concurrently. Reload and try again."), frappe.ValidationError
+        )
     nodes_by_name = rules.index_nodes_by_name(nodes)
     try:
         rules.validate_eligible_execution_leaf(nodes_by_name, chosen_node, project=project)
@@ -1044,8 +1111,8 @@ def enforce_boq_stage_mapping_guard(doc):
     if not doc.is_new():
         before = doc.get_doc_before_save()
         if before is not None:
-            old_val = (before.get("execution_node") or None)
-            new_val = (doc.get("execution_node") or None)
+            old_val = before.get("execution_node") or None
+            new_val = doc.get("execution_node") or None
             if old_val != new_val:
                 guard = _MAPPING_GUARD.get()
                 if guard is None or guard.get("document") is not doc:
@@ -1064,6 +1131,38 @@ def enforce_boq_stage_mapping_guard(doc):
                     ),
                     frappe.ValidationError,
                 )
+        # D-A1 Option 3 (Strict Exclusivity): if an existing Draft Stage is moved onto a
+        # different BOQ Item that still holds a planned_execution_node, atomically clear
+        # and audit the destination Item's default on save (on_update).
+        if (
+            before is not None
+            and (before.get("boq_item") or None) != (doc.get("boq_item") or None)
+            and doc.boq_item
+            and doc.project
+            and require_mapping_table(rules.NODE_DOCTYPE)
+            and require_mapping_column("BOQ Item", "planned_execution_node")
+        ):
+            _lock_project(doc.project)
+            nodes = _lock_project_nodes(doc.project)
+            item_row, header_row = _reread_locked_stage_parent_context(
+                doc.boq_item, doc.project, for_update=True
+            )
+            doc.boq_header = header_row["name"]
+            doc.boq_structure = item_row.get("structure") or doc.boq_structure
+            doc.project = header_row["project"]
+            dest_default = item_row.get("planned_execution_node") or None
+            if dest_default:
+                nodes_by_name = rules.index_nodes_by_name(nodes)
+                doc.flags._pending_parent_item_clear = {
+                    "boq_item": doc.boq_item,
+                    "project": doc.project,
+                    "boq_header": doc.boq_header,
+                    "old_snap": _snapshot_node(nodes_by_name, dest_default),
+                    "reason": (
+                        f"Cleared automatically when Stage {doc.name} was moved to this BOQ Item "
+                        "(Stage-level mapping active)."
+                    ),
+                }
         return
 
     # New BOQ Item Stage creation.
@@ -1076,10 +1175,10 @@ def enforce_boq_stage_mapping_guard(doc):
     if supplied_node:
         # Explicit node on Stage creation requires planner mapping authority (denies Site Engineer).
         _authorize_planner_mapping("BOQ Item Stage", None, doc.boq_header, doc.project, is_new=True)
-        # Same lock order: Project -> Execution Breakdown Nodes -> BOQ Item -> BOQ Header (re-read).
+        # Same lock order: Project -> Execution Breakdown Nodes -> BOQ Item (FOR UPDATE) -> BOQ Header.
         _lock_project(doc.project)
         nodes = _lock_project_nodes(doc.project)
-        item_row, header_row = _reread_locked_stage_parent_context(doc.boq_item, doc.project)
+        item_row, header_row = _reread_locked_stage_parent_context(doc.boq_item, doc.project, for_update=True)
         doc.boq_header = header_row["name"]
         doc.boq_structure = item_row.get("structure") or doc.boq_structure
         doc.project = header_row["project"]
@@ -1103,16 +1202,25 @@ def enforce_boq_stage_mapping_guard(doc):
             "measured_qty_snapshot": doc.measured_executed_qty,
             "certified_qty_snapshot": doc.certified_qty,
         }
+        parent_default = item_row.get("planned_execution_node") or None
+        if parent_default and require_mapping_column("BOQ Item", "planned_execution_node"):
+            doc.flags._pending_parent_item_clear = {
+                "boq_item": doc.boq_item,
+                "project": doc.project,
+                "boq_header": doc.boq_header,
+                "old_snap": _snapshot_node(nodes_by_name, parent_default),
+            }
         return
 
-    # Blank execution_node on creation -> one-time inheritance from BOQ Item.planned_execution_node.
+    # Blank execution_node on creation -> one-time inheritance from BOQ Item.planned_execution_node,
+    # followed by atomic parent Item default clear in after_insert (D-A1 Option 3 strict exclusivity).
     if not require_mapping_column("BOQ Item", "planned_execution_node"):
         return
 
-    # Same lock order: Project -> Execution Breakdown Nodes -> BOQ Item -> BOQ Header (re-read).
+    # Same lock order: Project -> Execution Breakdown Nodes -> BOQ Item (FOR UPDATE) -> BOQ Header.
     _lock_project(doc.project)
     nodes = _lock_project_nodes(doc.project)
-    item_row, header_row = _reread_locked_stage_parent_context(doc.boq_item, doc.project)
+    item_row, header_row = _reread_locked_stage_parent_context(doc.boq_item, doc.project, for_update=True)
     doc.boq_header = header_row["name"]
     doc.boq_structure = item_row.get("structure") or doc.boq_structure
     doc.project = header_row["project"]
@@ -1122,6 +1230,12 @@ def enforce_boq_stage_mapping_guard(doc):
         return
 
     nodes_by_name = rules.index_nodes_by_name(nodes)
+    doc.flags._pending_parent_item_clear = {
+        "boq_item": doc.boq_item,
+        "project": doc.project,
+        "boq_header": doc.boq_header,
+        "old_snap": _snapshot_node(nodes_by_name, parent_default),
+    }
     ok, code, _message = rules.is_eligible_execution_leaf(nodes_by_name, parent_default, project=doc.project)
     if ok:
         doc.execution_node = parent_default
@@ -1166,24 +1280,165 @@ def enforce_boq_stage_mapping_guard(doc):
         )
 
 
-def record_pending_mapping_audit(doc):
-    """Insert pending creation/inheritance audit row in the same transaction (``after_insert``)."""
-    pending = getattr(doc.flags, "_pending_mapping_audit", None)
-    if not pending:
-        return
-    doc.flags._pending_mapping_audit = None
-    boq_item = pending.get("boq_item") or (doc.name if pending["target_doctype"] == "BOQ Item" else doc.boq_item)
-    _insert_audit_row(
-        target_doctype=pending["target_doctype"],
-        target_name=doc.name,
-        project=pending["project"],
-        boq_header=pending["boq_header"],
-        boq_item=boq_item,
-        action=pending["action"],
-        old_snap=pending["old_snap"],
-        new_snap=pending["new_snap"],
-        reason=pending.get("reason") or "",
-        stage_status_snapshot=pending.get("stage_status_snapshot"),
-        measured_qty_snapshot=pending.get("measured_qty_snapshot"),
-        certified_qty_snapshot=pending.get("certified_qty_snapshot"),
+def _clear_parent_item_default_on_stage_insert(stage_name, pending_clear):
+    """Atomically clear parent BOQ Item.planned_execution_node when a Stage is inserted (D-A1 Option 3)."""
+    boq_item = pending_clear["boq_item"]
+    locked_rows = current_boq_sql(
+        "SELECT * FROM `tabBOQ Item` WHERE name=%s FOR UPDATE",
+        (boq_item,),
+        as_dict=True,
     )
+    if not locked_rows:
+        return None
+    item_row = locked_rows[0]
+    if not (item_row.get("planned_execution_node") or None):
+        return None
+
+    before_preserved = {
+        key: value for key, value in item_row.items() if key not in ITEM_MAPPING_IGNORED_DIFF_FIELDS
+    }
+    now = now_datetime()
+    frappe.db.sql(
+        "UPDATE `tabBOQ Item` SET planned_execution_node=NULL, modified=%s, modified_by=%s WHERE name=%s",
+        (now, frappe.session.user, boq_item),
+    )
+    after_rows = current_boq_sql(
+        "SELECT * FROM `tabBOQ Item` WHERE name=%s FOR UPDATE",
+        (boq_item,),
+        as_dict=True,
+    )
+    if not after_rows:
+        frappe.throw(_("BOQ Item disappeared during mapping update."), frappe.ValidationError)
+    after_preserved = {
+        key: value for key, value in after_rows[0].items() if key not in ITEM_MAPPING_IGNORED_DIFF_FIELDS
+    }
+    if after_preserved != before_preserved:
+        frappe.throw(
+            _("Unexpected mutation detected on commercial BOQ Item fields; rolling back."),
+            frappe.ValidationError,
+        )
+
+    return _insert_audit_row(
+        target_doctype="BOQ Item",
+        target_name=boq_item,
+        project=pending_clear["project"],
+        boq_header=pending_clear["boq_header"],
+        boq_item=boq_item,
+        action="clear",
+        old_snap=pending_clear["old_snap"],
+        new_snap=_snapshot_node({}, None),
+        reason=pending_clear.get("reason")
+        or f"Cleared automatically when Stage {stage_name} was created (Stage-level mapping active).",
+        changed_on=now,
+    )
+
+
+def record_pending_mapping_audit(doc):
+    """Insert pending creation/inheritance audit row and enforce D-A1 Option 3 parent clear (``after_insert``)."""
+    pending = getattr(doc.flags, "_pending_mapping_audit", None)
+    if pending:
+        doc.flags._pending_mapping_audit = None
+        boq_item = pending.get("boq_item") or (
+            doc.name if pending["target_doctype"] == "BOQ Item" else doc.boq_item
+        )
+        _insert_audit_row(
+            target_doctype=pending["target_doctype"],
+            target_name=doc.name,
+            project=pending["project"],
+            boq_header=pending["boq_header"],
+            boq_item=boq_item,
+            action=pending["action"],
+            old_snap=pending["old_snap"],
+            new_snap=pending["new_snap"],
+            reason=pending.get("reason") or "",
+            stage_status_snapshot=pending.get("stage_status_snapshot"),
+            measured_qty_snapshot=pending.get("measured_qty_snapshot"),
+            certified_qty_snapshot=pending.get("certified_qty_snapshot"),
+        )
+
+    pending_clear = getattr(doc.flags, "_pending_parent_item_clear", None)
+    if pending_clear:
+        doc.flags._pending_parent_item_clear = None
+        _clear_parent_item_default_on_stage_insert(doc.name, pending_clear)
+
+
+def clear_dual_mapped_boq_item_locations():
+    """Repeat-safe migration helper for D-A1 Option 3 (Strict Exclusivity).
+
+    Clears ``BOQ Item.planned_execution_node`` on any existing BOQ Item that
+    already has at least one ``BOQ Item Stage``, preserving every commercial
+    field and every Stage's ``execution_node`` untouched while recording an
+    immutable ``Execution Mapping Audit`` (``action='clear'``) row per cleared Item.
+    """
+    if (
+        not frappe.db.table_exists("BOQ Item")
+        or not frappe.db.table_exists("BOQ Item Stage")
+        or not frappe.db.has_column("BOQ Item", "planned_execution_node")
+    ):
+        return {"cleared": 0}
+
+    dual_rows = frappe.db.sql(
+        """
+        SELECT i.name, i.boq_header, h.project, i.planned_execution_node
+        FROM `tabBOQ Item` i
+        LEFT JOIN `tabBOQ Header` h ON h.name = i.boq_header
+        WHERE i.planned_execution_node IS NOT NULL
+          AND i.planned_execution_node != ''
+          AND EXISTS (
+              SELECT 1 FROM `tabBOQ Item Stage` s WHERE s.boq_item = i.name
+          )
+        ORDER BY i.name
+        """,
+        as_dict=True,
+    )
+    if not dual_rows:
+        return {"cleared": 0}
+
+    # Fail closed before updating any row so every cleanup clear is guaranteed an audit record.
+    if not frappe.db.table_exists(rules.AUDIT_DOCTYPE):
+        frappe.throw(
+            _("Execution mapping schema is incomplete: table for {0} is missing.").format(
+                rules.AUDIT_DOCTYPE
+            ),
+            frappe.ValidationError,
+        )
+    for row in dual_rows:
+        if not row.get("boq_header") or not row.get("project"):
+            frappe.throw(
+                _("A valid BOQ Header and Project are required."),
+                frappe.ValidationError,
+            )
+
+    nodes_cache: dict[str, dict] = {}
+    cleared = 0
+    now = now_datetime()
+
+    for row in dual_rows:
+        boq_item = row["name"]
+        project = row["project"]
+        boq_header = row["boq_header"]
+        old_node = row.get("planned_execution_node")
+
+        frappe.db.sql(
+            "UPDATE `tabBOQ Item` SET planned_execution_node=NULL, modified=%s, modified_by=%s WHERE name=%s",
+            (now, frappe.session.user or "Administrator", boq_item),
+        )
+        cleared += 1
+
+        if project not in nodes_cache:
+            nodes_cache[project] = rules.index_nodes_by_name(_read_project_nodes_unlocked(project))
+        old_snap = _snapshot_node(nodes_cache[project], old_node)
+        _insert_audit_row(
+            target_doctype="BOQ Item",
+            target_name=boq_item,
+            project=project,
+            boq_header=boq_header,
+            boq_item=boq_item,
+            action="clear",
+            old_snap=old_snap,
+            new_snap=_snapshot_node({}, None),
+            reason="Cleared automatically because Stages exist on this BOQ Item (D-A1 Option 3).",
+            changed_on=now,
+        )
+
+    return {"cleared": cleared}

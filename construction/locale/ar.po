@@ -5435,3 +5435,19 @@ msgstr "يطابق النطاق الحالي عدداً كبيراً جداً م
 #: construction/construction/page/execution_breakdown/execution_breakdown.js
 msgid "View Coverage"
 msgstr "عرض التغطية"
+
+#: construction/services/execution_mapping.py
+msgid "Cannot set or change Planned Execution Location while Stages exist on this BOQ Item. Assign locations on its Stages instead."
+msgstr "لا يمكن تعيين أو تغيير موقع التنفيذ المخطط بينما توجد مراحل على بند جدول الكميات هذا. قم بتعيين المواقع على مراحله بدلاً من ذلك."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Managed per Stage"
+msgstr "تُدار على مستوى المراحل"
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Execution locations are managed on this BOQ Item's Stages. Item-level mapping is only available when no Stages exist."
+msgstr "تُدار مواقع التنفيذ على مراحل بند جدول الكميات هذا. يتاح الربط على مستوى البند فقط عند عدم وجود مراحل."
+
+#: construction/construction/doctype/boq_item/boq_item.js
+msgid "Applies while this BOQ Item has no Stages. Creating the first Stage inherits this location and clears the Item-level default so locations are managed per Stage."
+msgstr "ينطبق هذا الموقع طالما لا توجد مراحل على بند جدول الكميات. عند إنشاء المرحلة الأولى ترث هذا الموقع ويُزال الافتراضي من مستوى البند لتُدار المواقع على مستوى المراحل."

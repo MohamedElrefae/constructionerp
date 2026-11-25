@@ -419,3 +419,30 @@ import timestamp; `runtime_digest` unchanged; `v16.localhost` untouched).
 
 The `stage2-current-contract/2026-11-25-p3s1` (M1G) block is preserved verbatim
 under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
+
+
+---
+
+## 2026-11-25 — re-measurement after D-A1 Option 3 Strict Exclusivity (M1I)
+
+Added Owner Decision D-A1 Option 3 strict exclusivity between `BOQ Item` and
+`BOQ Item Stage` locations (`execution_mapping.py`, `boq_item_stage.py`,
+`boq_item.js`, `patches.txt` on `develop` `83b2ed4`), adding 4 Arabic strings
+in `construction/locale/ar.po` (zero new scanned source files). Freshness
+evidence was re-collected on disposable non-production lab `p3-lab.localhost`
+(`/tmp/p3-isolated.pmpttI/sites`; packaged override import verified
+`4337/0/0/4337/0` preserving the genuine `2026-11-20` packaged release import
+timestamp; `runtime_digest` unchanged).
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-25-da1` |
+| gate | `catalog=1302 files=351 wrapped=1098 json_labels=80 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-25-da1-current/m1_source_scan.txt` |
+| environment | develop `83b2ed4`, working tree with the 2026-11-25 D-A1 Option 3 changes |
+
+The `stage2-current-contract/2026-11-25-p3s2` (M1H) block is preserved verbatim
+under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**

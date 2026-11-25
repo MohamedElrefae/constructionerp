@@ -92,6 +92,9 @@ class BOQItemStage(Document):
     def after_insert(self):
         record_pending_mapping_audit(self)
 
+    def on_update(self):
+        record_pending_mapping_audit(self)
+
     def on_trash(self):
         from construction.services.boq_lifecycle import before_delete_boq_item_stage
 

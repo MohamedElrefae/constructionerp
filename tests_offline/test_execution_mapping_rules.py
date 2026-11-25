@@ -247,9 +247,9 @@ def test_slice2_transaction_lock_source_invariants():
 def test_display_confidentiality_and_fail_closed_schema_source_invariants():
     mapping_src = (ROOT / "construction/services/execution_mapping.py").read_text(encoding="utf-8")
     tree_src = (ROOT / "construction/services/execution_tree.py").read_text(encoding="utf-8")
-    header_src = (
-        ROOT / "construction/construction/doctype/boq_header/boq_header.py"
-    ).read_text(encoding="utf-8")
+    header_src = (ROOT / "construction/construction/doctype/boq_header/boq_header.py").read_text(
+        encoding="utf-8"
+    )
 
     # Display endpoint must never expose audit reason/trigger/name or latest_audit key.
     assert '"latest_audit"' not in mapping_src
@@ -386,3 +386,402 @@ def test_find_stage_transaction_refs_fails_closed_on_missing_schema():
         with pytest.raises(frappe_stub.ValidationError, match="Material Request Item.boq_item_stage"):
             mod._find_stage_transaction_refs("BOQ-STG-00001")
 
+
+def test_option3_least_privilege_display_context_hides_stage_info_from_non_planners():
+    stage_queries = []
+
+    def _sql(query, params=(), as_dict=False):
+        if "`tabBOQ Item Stage`" in query:
+            stage_queries.append((query, params))
+            return [(1,)]
+        if "`tabExecution Breakdown Node`" in query:
+            return []
+        if "`tabExecution Mapping Audit`" in query:
+            return []
+        return []
+
+    class _Row(dict):
+        def __getattr__(self, key):
+            return self.get(key)
+
+    def _get_value(dt, name, field, as_dict=False):
+        if dt == "BOQ Item":
+            return _Row(name=name, boq_header="BOQ-H-1", planned_execution_node=None)
+        if dt == "BOQ Header":
+            return "PROJ-1"
+        return None
+
+    db_stub = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: True,
+        exists=lambda dt, name: True,
+        get_value=_get_value,
+        sql=_sql,
+    )
+
+    with _load_execution_mapping_with_stubs(db_stub, _sql) as (mod, frappe_stub, _all_dts):
+        # 1. Accountant (non-planner): must NEVER query tabBOQ Item Stage and never expose stage_count
+        frappe_stub.session = types.SimpleNamespace(user="acct@example.com")
+        frappe_stub.get_roles = lambda user: ["Accountant"]
+        frappe_stub.has_permission = lambda dt, ptype="read", doc=None: dt == "BOQ Item"
+
+        ctx_acct = mod.get_mapping_display_context("BOQ Item", "BOQ-ITEM-1")
+        assert stage_queries == [], "Non-planner must not trigger Stage existence query"
+        assert "stage_count" not in ctx_acct
+        assert ctx_acct["can_assign_location"] is False
+        assert ctx_acct["stage_managed"] is False
+
+        # 2. Planner without BOQ Item Stage read permission: must NOT query tabBOQ Item Stage
+        frappe_stub.session = types.SimpleNamespace(user="pm_nostage@example.com")
+        frappe_stub.get_roles = lambda user: ["Project Manager"]
+        frappe_stub.has_permission = lambda dt, ptype="read", doc=None: dt == "BOQ Item"
+
+        ctx_pm_no_read = mod.get_mapping_display_context("BOQ Item", "BOQ-ITEM-1")
+        assert stage_queries == [], "Planner without Stage read perm must not query Stage table"
+        assert ctx_pm_no_read["can_assign_location"] is False
+        assert ctx_pm_no_read["stage_managed"] is False
+
+        # 3. Authorized planner WITH BOQ Item Stage read permission: receives minimal booleans only
+        frappe_stub.has_permission = lambda dt, ptype="read", doc=None: dt in ("BOQ Item", "BOQ Item Stage")
+        ctx_pm = mod.get_mapping_display_context("BOQ Item", "BOQ-ITEM-1")
+        assert len(stage_queries) == 1
+        assert "stage_count" not in ctx_pm
+        assert ctx_pm["stage_managed"] is True
+        assert ctx_pm["can_assign_location"] is False
+
+
+def test_option3_set_item_rejects_set_and_change_when_stages_exist_but_allows_clear():
+    state = {"planned_execution_node": "EBN-0001", "has_stages": True, "updates": [], "audits": []}
+
+    def _sql(query, params=(), as_dict=False):
+        if "FROM `tabProject`" in query:
+            return [{"name": "PROJ-1", "company": "Co", "cost_center": None}]
+        if "FROM `tabExecution Breakdown Node`" in query:
+            return [make_node("EBN-0001", title="Floor 1"), make_node("EBN-0002", title="Floor 2")]
+        if "FROM `tabBOQ Item` WHERE name=%s" in query:
+            return [
+                {
+                    "name": "BOQ-ITEM-1",
+                    "boq_header": "BOQ-H-1",
+                    "quantity": 100.0,
+                    "planned_execution_node": state["planned_execution_node"],
+                    "modified": "2026-11-25 10:00:00",
+                    "modified_by": "Administrator",
+                }
+            ]
+        if "FROM `tabBOQ Header`" in query:
+            return [{"name": "BOQ-H-1", "project": "PROJ-1"}]
+        if "FROM `tabBOQ Item Stage`" in query:
+            return [(1,)] if state["has_stages"] else []
+        if query.startswith("UPDATE `tabBOQ Item`"):
+            state["planned_execution_node"] = params[0]
+            state["updates"].append(params)
+            return []
+        return []
+
+    class _Row(dict):
+        def __getattr__(self, key):
+            return self.get(key)
+
+    db_stub = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: True,
+        get_value=lambda dt, name, field, as_dict=False: (
+            _Row(name="BOQ-ITEM-1", boq_header="BOQ-H-1") if dt == "BOQ Item" else "PROJ-1"
+        ),
+        sql=_sql,
+    )
+
+    with _load_execution_mapping_with_stubs(db_stub, _sql) as (mod, frappe_stub, _all_dts):
+        frappe_stub.session = types.SimpleNamespace(user="Administrator")
+        frappe_stub.has_permission = lambda dt, ptype="read", doc=None: True
+        mod.access.authorize = lambda project, op: ({"project": project}, None)
+        mod._insert_audit_row = lambda **kw: (state["audits"].append(kw), "EMA-0000001")[1]
+
+        # Change rejected while Stages exist
+        with pytest.raises(frappe_stub.ValidationError, match="while Stages exist"):
+            mod.set_item_planned_execution_node(
+                boq_item="BOQ-ITEM-1",
+                execution_node="EBN-0002",
+                reason="Trying to change",
+                expected_modified="2026-11-25 10:00:00",
+            )
+        assert state["updates"] == []
+
+        # Clear allowed while Stages exist (with mandatory reason)
+        res = mod.set_item_planned_execution_node(
+            boq_item="BOQ-ITEM-1",
+            execution_node=None,
+            reason="Clear legacy parent default",
+            expected_modified="2026-11-25 10:00:00",
+        )
+        assert res["changed"] is True
+        assert res["action"] == "clear"
+        assert state["planned_execution_node"] is None
+
+        # Set rejected while Stages exist
+        with pytest.raises(frappe_stub.ValidationError, match="while Stages exist"):
+            mod.set_item_planned_execution_node(
+                boq_item="BOQ-ITEM-1",
+                execution_node="EBN-0001",
+                expected_modified="2026-11-25 10:00:00",
+            )
+
+
+def test_option3_stage_creation_inherits_and_atomically_clears_parent_item_default():
+    state = {"planned_execution_node": "EBN-0001", "audits": []}
+
+    def _sql(query, params=(), as_dict=False):
+        if "FROM `tabProject`" in query:
+            return [{"name": "PROJ-1", "company": "Co", "cost_center": None}]
+        if "FROM `tabExecution Breakdown Node`" in query:
+            return [make_node("EBN-0001", title="Floor 1")]
+        if "FROM `tabBOQ Item` WHERE name=%s" in query:
+            return [
+                {
+                    "name": "BOQ-ITEM-1",
+                    "boq_header": "BOQ-H-1",
+                    "structure": "STR-1",
+                    "quantity": 100.0,
+                    "planned_execution_node": state["planned_execution_node"],
+                    "modified": "2026-11-25 10:00:00",
+                    "modified_by": "Administrator",
+                }
+            ]
+        if "FROM `tabBOQ Header`" in query:
+            return [{"name": "BOQ-H-1", "project": "PROJ-1"}]
+        if query.startswith("UPDATE `tabBOQ Item` SET planned_execution_node=NULL"):
+            state["planned_execution_node"] = None
+            return []
+        return []
+
+    db_stub = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: True,
+        sql=_sql,
+    )
+
+    class _StageDoc:
+        def __init__(self):
+            self.name = "BOQ-STG-00001"
+            self.boq_item = "BOQ-ITEM-1"
+            self.boq_header = "BOQ-H-1"
+            self.boq_structure = "STR-1"
+            self.project = "PROJ-1"
+            self.execution_node = None
+            self.stage_status = "Not Started"
+            self.measured_executed_qty = 0
+            self.certified_qty = 0
+            self.flags = types.SimpleNamespace()
+
+        def is_new(self):
+            return True
+
+        def get(self, key):
+            return getattr(self, key, None)
+
+    with _load_execution_mapping_with_stubs(db_stub, _sql) as (mod, frappe_stub, _all_dts):
+        frappe_stub.session = types.SimpleNamespace(user="site_eng@example.com")
+        mod._insert_audit_row = lambda **kw: (state["audits"].append(kw), f"EMA-{len(state['audits']):07d}")[
+            1
+        ]
+
+        doc = _StageDoc()
+        mod.enforce_boq_stage_mapping_guard(doc)
+        assert doc.execution_node == "EBN-0001", "First Stage should inherit eligible Item default"
+        assert getattr(doc.flags, "_pending_parent_item_clear", None) is not None
+
+        mod.record_pending_mapping_audit(doc)
+        assert state["planned_execution_node"] is None, "Parent BOQ Item default must be cleared atomically"
+        assert len(state["audits"]) == 2
+        assert state["audits"][0]["target_doctype"] == "BOQ Item Stage"
+        assert state["audits"][0]["action"] == "inherit_on_create"
+        assert state["audits"][1]["target_doctype"] == "BOQ Item"
+        assert state["audits"][1]["action"] == "clear"
+        assert "BOQ-STG-00001" in state["audits"][1]["reason"]
+
+
+def test_option3_migration_cleanup_is_idempotent():
+    state = {
+        "items": [
+            {
+                "name": "BOQ-ITEM-DUAL",
+                "boq_header": "BOQ-H-1",
+                "project": "PROJ-1",
+                "planned_execution_node": "EBN-0001",
+            }
+        ],
+        "audits": [],
+    }
+
+    def _sql(query, params=(), as_dict=False):
+        if "EXISTS (" in query and "`tabBOQ Item Stage`" in query:
+            return [r for r in state["items"] if r["planned_execution_node"]]
+        if "FROM `tabExecution Breakdown Node`" in query:
+            return [make_node("EBN-0001", title="Floor 1")]
+        if query.startswith("UPDATE `tabBOQ Item` SET planned_execution_node=NULL"):
+            target = params[2]
+            for r in state["items"]:
+                if r["name"] == target:
+                    r["planned_execution_node"] = None
+            return []
+        return []
+
+    db_stub = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: True,
+        sql=_sql,
+    )
+
+    with _load_execution_mapping_with_stubs(db_stub, _sql) as (mod, frappe_stub, _all_dts):
+        frappe_stub.session = types.SimpleNamespace(user="Administrator")
+        mod._insert_audit_row = lambda **kw: (state["audits"].append(kw), "EMA-0000099")[1]
+
+        r1 = mod.clear_dual_mapped_boq_item_locations()
+        assert r1 == {"cleared": 1}
+        assert state["items"][0]["planned_execution_node"] is None
+        assert len(state["audits"]) == 1
+        assert state["audits"][0]["action"] == "clear"
+
+        # Second run must be a 0-row no-op
+        r2 = mod.clear_dual_mapped_boq_item_locations()
+        assert r2 == {"cleared": 0}
+        assert len(state["audits"]) == 1
+
+
+def test_option3_draft_stage_reparent_atomically_clears_destination_item_default():
+    state = {"dest_default": "EBN-0002", "audits": []}
+
+    def _sql(query, params=(), as_dict=False):
+        if "FROM `tabProject`" in query:
+            return [{"name": "PROJ-1", "company": "Co", "cost_center": None}]
+        if "FROM `tabExecution Breakdown Node`" in query:
+            return [make_node("EBN-0001", title="Floor 1"), make_node("EBN-0002", title="Floor 2")]
+        if "FROM `tabBOQ Item` WHERE name=%s" in query:
+            return [
+                {
+                    "name": "BOQ-ITEM-DEST",
+                    "boq_header": "BOQ-H-1",
+                    "structure": "STR-2",
+                    "quantity": 50.0,
+                    "planned_execution_node": state["dest_default"],
+                    "modified": "2026-11-25 10:00:00",
+                    "modified_by": "Administrator",
+                }
+            ]
+        if "FROM `tabBOQ Header`" in query:
+            return [{"name": "BOQ-H-1", "project": "PROJ-1"}]
+        if query.startswith("UPDATE `tabBOQ Item` SET planned_execution_node=NULL"):
+            state["dest_default"] = None
+            return []
+        return []
+
+    db_stub = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: True,
+        get_value=lambda dt, name, field, as_dict=False: "PROJ-1",
+        sql=_sql,
+    )
+
+    class _MovedStageDoc:
+        def __init__(self):
+            self.name = "BOQ-STG-00010"
+            self.boq_item = "BOQ-ITEM-DEST"
+            self.boq_header = "BOQ-H-1"
+            self.boq_structure = "STR-2"
+            self.project = "PROJ-1"
+            self.execution_node = "EBN-0001"
+            self.flags = types.SimpleNamespace()
+
+        def is_new(self):
+            return False
+
+        def get(self, key):
+            return getattr(self, key, None)
+
+        def get_doc_before_save(self):
+            return {"boq_item": "BOQ-ITEM-OLD", "execution_node": "EBN-0001"}
+
+    with _load_execution_mapping_with_stubs(db_stub, _sql) as (mod, frappe_stub, _all_dts):
+        frappe_stub.session = types.SimpleNamespace(user="Administrator")
+        mod._insert_audit_row = lambda **kw: (state["audits"].append(kw), "EMA-0000101")[1]
+
+        doc = _MovedStageDoc()
+        mod.enforce_boq_stage_mapping_guard(doc)
+        assert doc.execution_node == "EBN-0001", "Existing Stage's own location must stay unchanged"
+        assert getattr(doc.flags, "_pending_parent_item_clear", None) is not None
+
+        mod.record_pending_mapping_audit(doc)
+        assert state["dest_default"] is None, "Destination BOQ Item default must be cleared on reparent"
+        assert len(state["audits"]) == 1
+        assert state["audits"][0]["target_doctype"] == "BOQ Item"
+        assert state["audits"][0]["target_name"] == "BOQ-ITEM-DEST"
+        assert state["audits"][0]["action"] == "clear"
+        assert "moved to this BOQ Item" in state["audits"][0]["reason"]
+
+
+def test_option3_migration_cleanup_fails_closed_before_updating_without_audit_or_context():
+    updates = []
+
+    def _make_sql(rows):
+        def _sql(query, params=(), as_dict=False):
+            if "EXISTS (" in query and "`tabBOQ Item Stage`" in query:
+                return rows
+            if query.startswith("UPDATE `tabBOQ Item`"):
+                updates.append(params)
+                return []
+            return []
+
+        return _sql
+
+    # 1. Missing Execution Mapping Audit table -> fails BEFORE any UPDATE
+    rows_valid = [
+        {
+            "name": "BOQ-ITEM-DUAL",
+            "boq_header": "BOQ-H-1",
+            "project": "PROJ-1",
+            "planned_execution_node": "EBN-0001",
+        }
+    ]
+    db_no_audit = types.SimpleNamespace(
+        table_exists=lambda dt: dt != "Execution Mapping Audit",
+        has_column=lambda dt, col: True,
+        sql=_make_sql(rows_valid),
+    )
+    with _load_execution_mapping_with_stubs(db_no_audit, _make_sql(rows_valid)) as (
+        mod,
+        frappe_stub,
+        _all_dts,
+    ):
+        with pytest.raises(frappe_stub.ValidationError, match="Execution Mapping Audit"):
+            mod.clear_dual_mapped_boq_item_locations()
+        assert updates == [], "Must not update any BOQ Item if audit table is missing"
+
+    # 2. Missing BOQ Header / Project on ANY dual-mapped row -> fails BEFORE any UPDATE
+    rows_missing_ctx = [
+        {
+            "name": "BOQ-ITEM-OK",
+            "boq_header": "BOQ-H-1",
+            "project": "PROJ-1",
+            "planned_execution_node": "EBN-0001",
+        },
+        {
+            "name": "BOQ-ITEM-ORPHAN",
+            "boq_header": "BOQ-H-MISSING",
+            "project": None,
+            "planned_execution_node": "EBN-0001",
+        },
+    ]
+    db_ok = types.SimpleNamespace(
+        table_exists=lambda dt: True,
+        has_column=lambda dt, col: True,
+        sql=_make_sql(rows_missing_ctx),
+    )
+    with _load_execution_mapping_with_stubs(db_ok, _make_sql(rows_missing_ctx)) as (
+        mod,
+        frappe_stub,
+        _all_dts,
+    ):
+        with pytest.raises(frappe_stub.ValidationError, match="BOQ Header and Project"):
+            mod.clear_dual_mapped_boq_item_locations()
+        assert updates == [], "Must not partially update BOQ-ITEM-OK when BOQ-ITEM-ORPHAN lacks context"
