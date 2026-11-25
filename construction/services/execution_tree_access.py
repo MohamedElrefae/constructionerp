@@ -842,7 +842,9 @@ def _read_fields(reader, doctype):
             raise UnsupportedProfile("Duplicate or conflicting Property Setters are unsupported.")
         seen_setters.add(key)
         try:
-            field[prop] = rules.cast_property_setter(prop, setter.get("value"), setter.get("property_type"))
+            field[prop] = rules.cast_property_setter(
+                prop, setter.get("value"), setter.get("property_type"), fieldname=field_name
+            )
         except rules.RuleViolation as exc:
             raise UnsupportedProfile(str(exc.message)) from exc
     return fields

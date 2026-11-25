@@ -1,6 +1,5 @@
 # Session Memory — Construction ERP
-**LAST UPDATED:** 2026-11-24 (Global Select auto-open defect fixed and verified on wbs-p1-lab.localhost)
-**UPDATED BY:** HungerG Free (dropdown focus regression)
+**LAST UPDATED:** 2026-11-25 (execution-tree get_tree 403 root cause fixed + verified on v16.localhost)
 
 ---
 
@@ -80,6 +79,15 @@
 ---
 
 ## 3. In Progress (Active Work — Updated After Every Session)
+
+### Execution-tree `get_tree` 403 on Project — naming_series Property Setter (2026-11-25)
+- Root cause (investigated; error reproduced from the user's console traceback shape): every non-Administrator `construction.api.execution_tree_api.get_tree` read denied with `UnsupportedPropertySetter` → `PermissionError` because stock Frappe creates a `Project-naming_series-options` Property Setter (`tabProperty Setter` on `v16.localhost`: name `Project-naming_series-options`, field `naming_series`, property `options`, property_type `Text`, value `PROJ-.####`; created by stock `preserve_naming_series_options_in_property_setter` in `apps/frappe/frappe/core/doctype/doctype/doctype.py`). `cast_property_setter` in `construction/services/execution_tree_rules.py` denied any `options` property not in `SUPPORTED_FIELD_PROPERTY_SETTERS`, and `_read_fields` in `construction/services/execution_tree_access.py` fail-closed on that denial. Admin short-circuits before `_read_fields` (`authorize`, `actor == "Administrator"`), which is why the admin `get_tree` call succeeded on the live site while ordinary users got 403.
+- Fix (smallest correct): `SUPPORTED_FIELD_PROPERTY_SETTERS` now includes `"naming_series": "text"`; `cast_property_setter` translates the stock setter (`property == "options"` on field `naming_series`) to the supported key while the `options` property stays denied on every other field. `_read_fields` passes `fieldname=field_name`.
+- Regression tests: `tests_offline/test_execution_tree_rules.py::test_stock_naming_series_setter_is_accepted` (fail-before), `tests_offline/test_execution_tree_access_rules.py::test_stock_naming_series_options_setter_is_applied_on_project` (fail-before with `UnsupportedProfile: Unsupported Property Setter.`).
+- Verification: fail-before run of both new tests; after fix, both pass; `tests_offline` 344 passed + 85 subtests; `scripts/ai_context_check.py` passed (12/12); `git diff --check` clean. Live: `bench --site v16.localhost execute construction.api.execution_tree_api.get_tree --kwargs '{"project": "PROJ-0002"}'` OK as Administrator; live `FreshAuthorityReader` + `_read_fields(r, "Project")` (the exact failing frame) now succeeds on the site. No site data or permissions changed.
+- Files Read (startup): AGENTS.md; docs/ai/PROFESSIONAL_ENGINEERING_STANDARD.md; docs/ai/CONTEXT_INDEX.md; AGENT_WORKFLOW.md; SESSION_MEMORY.md; docs/ai/SCHEMA_FACTS.md; construction/services/execution_tree_access.py (lines ~136-176, 325-360, 790-849, 1160-1258, 1261-1275); construction/services/execution_tree_rules.py (lines 24, 83-188, 239-249, 1297-1339); construction/api/execution_tree_api.py (lines 1-60); apps/erpnext/erpnext/projects/doctype/project/project.json (naming_series field); apps/frappe/frappe/core/doctype/doctype/doctype.py (lines 763-804); tests_offline/test_execution_tree_rules.py; tests_offline/test_execution_tree_access_rules.py.
+- Startup commands: git rev-parse --show-toplevel (`/home/mohamed/frappe-bench/apps/construction`), git status --short (clean), git rev-parse --abbrev-ref HEAD (`develop`), git rev-parse --short HEAD (`559b763`), `python3 scripts/schema_drift_checker.py` (PASS), `python3 scripts/ai_context_check.py` (ALL CHECKS PASSED).
+- Next necessary action: none — fix is complete; the customer can retest with an ordinary user opening the execution tree for PROJ-0002. No commit/push made (uncommitted, consistent with local posture).
 
 ### Global Select auto-open defect — 2026-11-24
 - Owner reported dropdown menus opening automatically on new forms, reproduced on Resource Price History. Cause: Frappe's `form.js::focus_on_first_input()` focuses the first input, while the global Select override treated focus on the hidden native `<select>` as a request to open its themed menu.

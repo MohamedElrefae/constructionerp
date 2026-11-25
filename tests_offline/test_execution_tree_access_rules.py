@@ -998,6 +998,17 @@ def test_property_setter_with_missing_target_is_denied():
         access._read_fields(_metadata_reader(setters=[setter]), "Project")
 
 
+def test_stock_naming_series_options_setter_is_applied_on_project():
+    # Regression: every ordinary (non-Administrator) `get_tree` read hit the
+    # stock `Project-naming_series-options` Property Setter and denied with
+    # 403. The read profile accepts it because it pins the stock Project
+    # projection.
+    setter = _setter_row("naming_series", "options", "PROJ-.####", "Text")
+    fields = access._read_fields(_metadata_reader(setters=[setter]), "Project")
+    naming_series = next(field for field in fields if field["fieldname"] == "naming_series")
+    assert naming_series["options"] == "PROJ-.####"
+
+
 def test_permlevel_and_options_setters_are_denied():
     for prop, value, property_type in (
         ("permlevel", "0", "Int"),

@@ -246,6 +246,12 @@ SUPPORTED_FIELD_PROPERTY_SETTERS = {
     "columns": "int",
     "width": "width",
     "bold": "check",
+    # Stock Frappe preserves the `naming_series` options of DocTypes that have
+    # records (see `preserve_naming_series_options_in_property_setter` in
+    # frappe/core/doctype/doctype/doctype.py). The read profile already pins
+    # the stock Project fields, so the setter on `naming_series` is cosmetic
+    # for authorization while the same property stays denied elsewhere.
+    "naming_series": "text",
 }
 
 RELEVANT_HOOKS = (
@@ -1294,9 +1300,15 @@ def _validate_construction_events(doc_events, has_permission, query_conditions):
             )
 
 
-def cast_property_setter(property_name, value, property_type):
+def cast_property_setter(property_name, value, property_type, *, fieldname=None):
     """Validate and cast one supported cosmetic Property Setter value."""
 
+    if property_name == "options" and fieldname == "naming_series":
+        # Stock Frappe creates this setter on `naming_series` fields of
+        # DocTypes with records; the tree read profile accepts it because the
+        # stock Project projection is pinned. The property remains unsupported
+        # on every other field.
+        property_name = "naming_series"
     kind = SUPPORTED_FIELD_PROPERTY_SETTERS.get(property_name)
     if kind is None:
         raise RuleViolation("unsupported_setter", "Unsupported Property Setter.")

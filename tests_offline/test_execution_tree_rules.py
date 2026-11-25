@@ -311,6 +311,19 @@ def test_cosmetic_property_setter_allowlist_rejects_semantic_and_doctype_setters
             rules.cast_property_setter(prop, value, property_type)
 
 
+def test_stock_naming_series_setter_is_accepted():
+    # Stock Frappe preserves `naming_series` options on DocTypes that have
+    # records (frappe/core/doctype/doctype/doctype.py). The read profile pins
+    # the stock Project fields, so the setter on `naming_series` is cosmetic
+    # for authorization while the same property stays denied elsewhere.
+    assert (
+        rules.cast_property_setter("naming_series", "PROJ-.####", "Text", fieldname="naming_series")
+        == "PROJ-.####"
+    )
+    with pytest.raises(rules.RuleViolation):
+        rules.cast_property_setter("options", "Company", "Data", fieldname="company")
+
+
 def test_parse_installed_app_registry_rejects_duplicates_and_order_changes():
     assert rules.parse_installed_apps('["frappe", "erpnext", "construction"]') == (
         "frappe",
