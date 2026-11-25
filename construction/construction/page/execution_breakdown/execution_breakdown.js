@@ -19,11 +19,15 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 	$root.append(`
 		<div class="execution-breakdown pt-3">
 			<div class="alert alert-info d-none" data-role="status"></div>
-			<button class="btn btn-default btn-sm d-none" data-action="retry-scope">${__("Retry scope save")}</button>
+			<button class="btn btn-default btn-sm d-none" data-action="retry-scope">${__(
+				"Retry scope save"
+			)}</button>
 			<div class="alert alert-warning d-none" data-role="conflict">
 				<div data-role="conflict-message" class="mb-2"></div>
 				<div class="d-flex flex-wrap gap-1">
-					<button class="btn btn-primary btn-sm" data-action="apply-selection">${__("Apply my selection")}</button>
+					<button class="btn btn-primary btn-sm" data-action="apply-selection">${__(
+						"Apply my selection"
+					)}</button>
 					<button class="btn btn-default btn-sm" data-action="use-saved">${__("Use saved scope")}</button>
 				</div>
 			</div>
@@ -77,7 +81,10 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		if (!conflict) return "";
 		const saved = conflict.authoritative.project || __("none");
 		return (
-			__("The saved scope is now Project:") + " " + esc(saved) + " — " +
+			__("The saved scope is now Project:") +
+			" " +
+			esc(saved) +
+			" — " +
 			__("Apply your selection or use the saved scope.")
 		);
 	}
@@ -116,7 +123,10 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		clear_tree();
 		state.project = target;
 		if (!target) {
-			set_status(__("Select a Project in the top bar to view its execution tree."), "alert-info");
+			set_status(
+				__("Select a Project in the top bar to view its execution tree."),
+				"alert-info"
+			);
 			return Promise.resolve();
 		}
 		set_status(__("Loading…"), "alert-info");
@@ -162,7 +172,7 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 
 	function node_actions(node) {
 		const actions = state.actions || {};
-		let html = "";
+		let html = action_button(__("View Coverage"), "view-coverage", node);
 		if (actions.create && node.is_group) {
 			html += action_button(__("Add child"), "create-child", node);
 		}
@@ -182,7 +192,9 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 	}
 
 	function node_has_children(node) {
-		return (state.nodes || []).some((item) => (item.parent_node || null) === (node.name || null));
+		return (state.nodes || []).some(
+			(item) => (item.parent_node || null) === (node.name || null)
+		);
 	}
 
 	function toggle_expansion(node) {
@@ -198,14 +210,18 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		state.focused = name;
 		const $items = $tree.find('[role="treeitem"]');
 		$items.attr("tabindex", "-1");
-		$items.filter(function () {
-			return $(this).attr("data-name") === name;
-		}).attr("tabindex", "0").trigger("focus");
+		$items
+			.filter(function () {
+				return $(this).attr("data-name") === name;
+			})
+			.attr("tabindex", "0")
+			.trigger("focus");
 	}
 
 	function capture_tree_focus() {
 		const active = document.activeElement;
-		if (!active || !active.getAttribute || !$tree[0] || !$tree[0].contains(active)) return null;
+		if (!active || !active.getAttribute || !$tree[0] || !$tree[0].contains(active))
+			return null;
 		const isItem = active.getAttribute("role") === "treeitem";
 		const action = active.tagName === "BUTTON" ? active.getAttribute("data-action") : null;
 		if (!isItem && !action) return null;
@@ -224,20 +240,30 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 	function restore_tree_focus(snapshot) {
 		const visible = visible_nodes();
 		const visibleNames = new Set(visible.map((node) => node.name));
-		const fallback = snapshot.candidates.find((name) => visibleNames.has(name)) ||
+		const fallback =
+			snapshot.candidates.find((name) => visibleNames.has(name)) ||
 			(visible.length ? visible[0].name : null);
 		if (fallback) {
 			state.focused = fallback;
 			const $items = $tree.find('[role="treeitem"]');
 			$items.attr("tabindex", "-1");
-			$items.filter(function () { return $(this).attr("data-name") === fallback; }).attr("tabindex", "0");
+			$items
+				.filter(function () {
+					return $(this).attr("data-name") === fallback;
+				})
+				.attr("tabindex", "0");
 		}
 		if (snapshot.action && (!snapshot.name || visibleNames.has(snapshot.name))) {
 			const $action = $tree.find("[data-action]").filter(function () {
-				return $(this).attr("data-action") === snapshot.action &&
-					($(this).attr("data-name") || null) === snapshot.name;
+				return (
+					$(this).attr("data-action") === snapshot.action &&
+					($(this).attr("data-name") || null) === snapshot.name
+				);
 			});
-			if ($action.length) { $action.trigger("focus"); return; }
+			if ($action.length) {
+				$action.trigger("focus");
+				return;
+			}
 		}
 		if (fallback) focus_tree_node(fallback);
 		else $tree.attr("tabindex", "-1").trigger("focus");
@@ -277,12 +303,18 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 			const marker = node.disabled ? " · " + __("Disabled") : "";
 			const icon = has_children
 				? frappe.utils.icon(
-						expanded ? "chevron-down" : frappe.utils.is_rtl() ? "chevron-left" : "chevron-right",
+						expanded
+							? "chevron-down"
+							: frappe.utils.is_rtl()
+							? "chevron-left"
+							: "chevron-right",
 						"sm"
-					)
+				  )
 				: frappe.utils.icon("circle-small", "xs");
 			html +=
-				'<li class="tree-node" role="treeitem" tabindex="' + (state.focused === node.name ? '0' : '-1') + '"' +
+				'<li class="tree-node" role="treeitem" tabindex="' +
+				(state.focused === node.name ? "0" : "-1") +
+				'"' +
 				' aria-level="' +
 				level +
 				'"' +
@@ -332,7 +364,7 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		const visible = visible_nodes();
 		while (state.focused && !visible.some((node) => node.name === state.focused)) {
 			const node = find_node(state.focused);
-			state.focused = node && node.parent_node || null;
+			state.focused = (node && node.parent_node) || null;
 		}
 		if (!state.focused && visible.length) state.focused = visible[0].name;
 		const children = new Map();
@@ -574,7 +606,11 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		const action = $(this).attr("data-action");
 		const node = find_node($(this).attr("data-name"));
 		if (action === "retry-scope") {
-			if (window.scopeContext && window.scopeContext._saveFailed && !window.scopeContext._savePending) {
+			if (
+				window.scopeContext &&
+				window.scopeContext._saveFailed &&
+				!window.scopeContext._savePending
+			) {
 				set_status(__("Retrying scope save…"), "alert-info");
 				window.scopeContext.retrySave();
 			}
@@ -604,6 +640,14 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 			edit_node(node);
 		} else if (action === "move") {
 			move_node(node);
+		} else if (action === "view-coverage") {
+			frappe.route_options = {
+				project: state.project,
+				execution_node: node.name,
+			};
+			if (typeof frappe.set_route === "function") {
+				frappe.set_route("execution-coverage");
+			}
 		} else if (action === "toggle") {
 			toggle_node(node);
 		} else if (action === "delete") {
@@ -646,11 +690,28 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		state.focused = name;
 		const $items = $tree.find('[role="treeitem"]');
 		$items.attr("tabindex", "-1");
-		$items.filter(function () { return $(this).attr("data-name") === name; }).attr("tabindex", "0");
+		$items
+			.filter(function () {
+				return $(this).attr("data-name") === name;
+			})
+			.attr("tabindex", "0");
 	});
 
 	$root.on("keydown", "[role='treeitem']", function (e) {
-		if (!e || !["Enter", " ", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+		if (
+			!e ||
+			![
+				"Enter",
+				" ",
+				"ArrowDown",
+				"ArrowUp",
+				"ArrowLeft",
+				"ArrowRight",
+				"Home",
+				"End",
+			].includes(e.key)
+		)
+			return;
 		if (e.target && typeof $ === "function") {
 			const $target = $(e.target);
 			if ($target && typeof $target.closest === "function") {
@@ -679,11 +740,15 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		else if (e.key === "Home") target = visible[0];
 		else if (e.key === "End") target = visible[visible.length - 1];
 		else if (e.key === expandKey && node_has_children(node)) {
-			if (state.collapsed.has(node.name)) { toggle_expansion(node); target = node; }
-			else target = visible[index + 1];
+			if (state.collapsed.has(node.name)) {
+				toggle_expansion(node);
+				target = node;
+			} else target = visible[index + 1];
 		} else if (e.key === collapseKey) {
-			if (node_has_children(node) && !state.collapsed.has(node.name)) { toggle_expansion(node); target = node; }
-			else target = find_node(node.parent_node);
+			if (node_has_children(node) && !state.collapsed.has(node.name)) {
+				toggle_expansion(node);
+				target = node;
+			} else target = find_node(node.parent_node);
 		} else if ((e.key === "Enter" || e.key === " ") && node_has_children(node)) {
 			toggle_expansion(node);
 			target = node;
@@ -701,14 +766,26 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 			$conflict.toggleClass("d-none", true);
 			$root.find('[data-role="conflict-message"]').text("");
 		}
-		$retry_scope.toggleClass("d-none", !(scope && scope._saveFailed && !scope._savePending && !conflict));
-		if (scope && (!scope.supportsSaveConfirmation || scope._savePending || scope._saveQueued || scope._saveFailed)) {
+		$retry_scope.toggleClass(
+			"d-none",
+			!(scope && scope._saveFailed && !scope._savePending && !conflict)
+		);
+		if (
+			scope &&
+			(!scope.supportsSaveConfirmation ||
+				scope._savePending ||
+				scope._saveQueued ||
+				scope._saveFailed)
+		) {
 			++state.generation;
 			state.project = "";
 			clear_tree();
 			set_status(
-				conflict ? __("Another session changed the scope. Choose how to resolve it.") :
-					(scope._saveFailed ? __("Could not confirm the scope. Retry or refresh the page.") : __("Saving scope…")),
+				conflict
+					? __("Another session changed the scope. Choose how to resolve it.")
+					: scope._saveFailed
+					? __("Could not confirm the scope. Retry or refresh the page.")
+					: __("Saving scope…"),
 				"alert-info"
 			);
 			return;
@@ -717,7 +794,8 @@ frappe.pages["execution-breakdown"].on_page_load = function (wrapper) {
 		load_tree(current && current.project);
 	}
 
-	const events = "scope:changed.executionBreakdown scope:save_confirmed.executionBreakdown scope:save_failed.executionBreakdown scope:save_conflict.executionBreakdown";
+	const events =
+		"scope:changed.executionBreakdown scope:save_confirmed.executionBreakdown scope:save_failed.executionBreakdown scope:save_conflict.executionBreakdown";
 	function show_page() {
 		$(document).off(events).on(events, sync_scope);
 		sync_scope();

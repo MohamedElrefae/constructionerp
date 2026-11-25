@@ -8,7 +8,7 @@
     "reviewer": "F44 Qualified Successor <successor@f44.invalid>",
     "reviewed_utc": "2026-10-20T01:55:00Z",
     "latest_review_utc": "2026-10-22T05:57:37Z",
-    "contract_id": "stage2-current-contract/2026-11-25-p3s1",
+    "contract_id": "stage2-current-contract/2026-11-25-p3s2",
     "contract_constants": "scripts/check_localization_gates.py (CURRENT_EXPECTED_GATE, CURRENT_EXPECTED_MODULES, CURRENT_SOURCE_PINS)",
     "legacy_contract_preserved": "stage2-legacy-contract/2026-09-29 (LEGACY_EXPECTED_GATE, LEGACY_EXPECTED_MODULES)",
     "review_history": [
@@ -100,6 +100,19 @@
           "missing": 0
         },
         "note": "Re-measurement after WBS P3 Slice 1 (measurement M1G on develop e5ba52e). Three new localizable Python files (execution_coverage_rules.py, execution_coverage.py, execution_coverage_api.py) and 70 Arabic catalog strings were added. Freshness evidence was re-collected on disposable non-production lab p3-lab.localhost (/tmp/p3-isolated.pmpttI/sites) with zero drift across 4,337 packaged rows and preserved 2026-11-20 packaged release import timestamp. Builder re-measurement; reviewer sign-off pending."
+      },
+      {
+        "contract_id": "stage2-current-contract/2026-11-25-p3s2",
+        "reviewed_utc": null,
+        "review_status": "pending",
+        "frozen_gate": {
+          "catalog": 1298,
+          "files": 351,
+          "wrapped": 1094,
+          "json_labels": 80,
+          "missing": 0
+        },
+        "note": "Re-measurement after WBS P3 Slice 2 (measurement M1H on develop b76abbf). Added execution-coverage bilingual Frappe Page (with selectable BOQ Structure subtree filter), P1 execution_breakdown.js View Coverage drilldown, and 24 Arabic catalog entries. Freshness evidence re-collected on disposable non-production lab p3-lab.localhost (/tmp/p3-isolated.pmpttI/sites) with zero drift across 4,337 packaged rows and preserved 2026-11-20 packaged release import timestamp. Builder re-measurement; reviewer sign-off pending."
       }
     ],
     "review_status": "PENDING — builder re-measurement recorded 2026-11-24 (M1F); no owner/tester review has occurred yet."
@@ -507,15 +520,38 @@
         "errors_local_vendor_delta_only": 1
       },
       "raw_stdout_tail": "checked={\"construction/locale/ar.po\": 1274, \"csv_rows\": 4337, \"extract\": {\"files\": 348, \"json_labels\": 79, \"missing\": 0, \"wrapped\": 1068}, \"raw_text\": {\"files\": 7, \"missing\": 0, \"texts\": 2}} errors=1"
+    },
+    {
+      "id": "M1H",
+      "name": "WBS P3 Slice 2 source-only localization gate scan",
+      "measured_utc": "2026-11-25T11:15:00Z",
+      "command": "GITHUB_ACTIONS=true python3 scripts/check_localization_gates.py --ci-source-only",
+      "artifact": "construction/tests/tools/measurements/2026-11-25-p3s2-current/m1_source_scan.txt",
+      "artifact_sha256": "281a136f2e5cab270daff5d3a95ccf086ba21d7df48e38c4a4759958e3b76952",
+      "measured": {
+        "catalog": 1298,
+        "files": 351,
+        "wrapped": 1094,
+        "json_labels": 80,
+        "missing": 0,
+        "csv_rows": 4337,
+        "raw_text": {
+          "files": 7,
+          "missing": 0,
+          "texts": 2
+        },
+        "errors_local_vendor_delta_only": 1
+      },
+      "raw_stdout_tail": "checked={\"construction/locale/ar.po\": 1298, \"csv_rows\": 4337, \"extract\": {\"files\": 351, \"json_labels\": 80, \"missing\": 0, \"wrapped\": 1094}, \"raw_text\": {\"files\": 7, \"missing\": 0, \"texts\": 2}} errors=1"
     }
   ],
   "frozen_contract_from_these_measurements": {
-    "contract_id": "stage2-current-contract/2026-11-25-p3s1",
+    "contract_id": "stage2-current-contract/2026-11-25-p3s2",
     "gate": {
-      "catalog": 1274,
-      "files": 348,
-      "wrapped": 1068,
-      "json_labels": 79,
+      "catalog": 1298,
+      "files": 351,
+      "wrapped": 1094,
+      "json_labels": 80,
       "missing": 0
     },
     "modules": {
@@ -540,16 +576,16 @@
       "drift": 0
     },
     "source_pins": {
-      "construction/locale/ar.po": "877c01dfee520ea48937d13518d0c4142f45d0161051e77d63ad6aa246a9a16b",
+      "construction/locale/ar.po": "a192a0cf50c30738bd71ee4baea00a5a00914b9b9bdc672f71d80a18c919a43a",
       "construction/data/translations/approved_ar_overrides.csv": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
-      "construction/data/localization/localization_manifest.json": "f84b81fc861d15d93194648668f884339cb0550c90684e3b784a2909a7d77654",
+      "construction/data/localization/localization_manifest.json": "5c4e5bc3e3f5f182172d03f05cf2c570812b37f911a4fbfc114e250269fd3f56",
       "construction/data/localization/vendor_catalog_baseline.json": "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69",
       "construction/data/localization/stage2_inventory_manifest.json": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
     },
     "pin_note": "The pins are the content digests of the source artifacts the counts were measured from. A drifted pin is refused by the checker (evidence-contract-source-drift), so the frozen counts can never be silently stale.",
     "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
-    "reconciled_utc": "2026-11-25T09:38:00Z",
-    "reconciliation_note": "Re-measured after WBS P3 Slice 1 (develop e5ba52e plus 2026-11-25 Slice 1 changes). catalog moved 1204 -> 1274, files moved 345 -> 348, wrapped moved 997 -> 1068, json_labels stays 79, missing stays 0. Freshness evidence collected on disposable non-production lab p3-lab.localhost (/tmp/p3-isolated.pmpttI/sites). Source pins re-recorded for ar.po and localization_manifest.json only."
+    "reconciled_utc": "2026-11-25T11:15:00Z",
+    "reconciliation_note": "Re-measured after WBS P3 Slice 2 (with selectable BOQ Structure subtree filter and P1 View Coverage navigation on develop b76abbf). catalog moved 1274 -> 1298, files moved 348 -> 351, wrapped moved 1068 -> 1094, json_labels moved 79 -> 80, missing stays 0. Freshness evidence collected on disposable non-production lab p3-lab.localhost (/tmp/p3-isolated.pmpttI/sites). Source pins re-recorded for ar.po and localization_manifest.json only."
   },
   "previous_frozen_contract_kept_as_history": [
     {
@@ -803,6 +839,48 @@
       "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
       "reconciled_utc": "2026-11-24T23:07:00Z",
       "reconciliation_note": "Re-measured after WBS P2 Slice 3 (develop cf42516 plus 2026-11-24 Slice 3 changes). catalog moved 1154 -> 1204, files stays 345, wrapped moved 947 -> 997, json_labels stays 79, missing stays 0. Source pins re-recorded for ar.po and localization_manifest.json only."
+    },
+    {
+      "contract_id": "stage2-current-contract/2026-11-25-p3s1",
+      "gate": {
+        "catalog": 1274,
+        "files": 348,
+        "wrapped": 1068,
+        "json_labels": 79,
+        "missing": 0
+      },
+      "modules": {
+        "construction.searchable_dropdown.tests.test_search_api": 13,
+        "construction.searchable_dropdown.tests.test_integration": 6,
+        "construction.tests.test_bilingual_account_schema": 5,
+        "construction.tests.test_translation_catalog": 3,
+        "construction.tests.test_translation_stabilization_gates": 8,
+        "construction.tests.test_localization_gates": 101,
+        "construction.tests.test_bilingual_service": 38,
+        "construction.tests.test_bilingual_account_pilot": 53,
+        "construction.tests.test_stage4_account_language": 6,
+        "construction.tests.test_stage4_report_extension": 14,
+        "construction.tests.test_stage4_review_bundle": 36
+      },
+      "module_aggregate": 283,
+      "dryrun": {
+        "total": 4337,
+        "created": 0,
+        "updated": 0,
+        "skipped": 4337,
+        "drift": 0
+      },
+      "source_pins": {
+        "construction/locale/ar.po": "df15adbbea06d5bc49c4a1f5b4f457ebffa06370568ff321a659331af9d7efd2",
+        "construction/data/translations/approved_ar_overrides.csv": "845ab43ea0bef6d7db9f3875b8ceadafa0c923934c69607e6d6ceda715262318",
+        "construction/data/localization/localization_manifest.json": "1cce961cb0bac86d46d773034d3fdab47e09d94f54ec36983f2f7590fe88c758",
+        "construction/data/localization/vendor_catalog_baseline.json": "8407099579b8f99a1ed04258ae2df70021d2c4205aad149c8d43dffec531fd69",
+        "construction/data/localization/stage2_inventory_manifest.json": "7e639ec8182f14aaa7f1c23a71519100f789c6ec05d20d83cbe4d4335e051d60"
+      },
+      "pin_note": "The pins are the content digests of the source artifacts the counts were measured from. A drifted pin is refused by the checker (evidence-contract-source-drift), so the frozen counts can never be silently stale.",
+      "source_pin_follow_up": "2026-10-21 P13-CI-003: the vendor_catalog_baseline.json content digest was re-recorded after the reviewed scoped one-field apps.frappe.commit re-record (2871914b -> af4409) in that same file. No measured count changed; the vendor catalog bytes are identical (only the recorded commit identity moved). Coordinator technical review of an owner-approved private isolated candidate, not human approval.",
+      "reconciled_utc": "2026-11-25T09:38:00Z",
+      "reconciliation_note": "Re-measured after WBS P3 Slice 1 (develop e5ba52e plus 2026-11-25 Slice 1 changes). catalog moved 1204 -> 1274, files moved 345 -> 348, wrapped moved 997 -> 1068, json_labels stays 79, missing stays 0. Freshness evidence collected on disposable non-production lab p3-lab.localhost (/tmp/p3-isolated.pmpttI/sites). Source pins re-recorded for ar.po and localization_manifest.json only."
     }
   ],
   "historical_expectation_kept_separate": {

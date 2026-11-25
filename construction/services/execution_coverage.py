@@ -259,9 +259,7 @@ def _authorize_explicit_filters(norm_filters, project_nodes_by_name):
     execution_node = norm_filters["execution_node"]
 
     if boq_header:
-        header_row = frappe.db.get_value(
-            "BOQ Header", boq_header, ["name", "project"], as_dict=True
-        )
+        header_row = frappe.db.get_value("BOQ Header", boq_header, ["name", "project"], as_dict=True)
         if not header_row or header_row.project != project:
             frappe.throw(_("Not permitted."), frappe.PermissionError)
         if not frappe.has_permission("BOQ Header", "read", doc=boq_header):
@@ -341,7 +339,53 @@ def _limit_exceeded_payload(limit_type, limit_value, norm_filters, labels):
     }
 
 
-def _compute_authorized_coverage(norm_filters):
+def _build_structure_options(headers_by_name):
+    """Return authorized BOQ Structure dropdown options ordered by NestedSet lft/rgt."""
+    if not headers_by_name:
+        return []
+    raw_rows = frappe.get_list(
+        "BOQ Structure",
+        filters={"boq_header": ["in", sorted(headers_by_name)]},
+        fields=["name", "title", "wbs_code", "boq_header", "is_group", "lft", "rgt"],
+        order_by="boq_header asc, lft asc, name asc",
+        limit_page_length=MAX_POPULATION_STRUCTURES,
+    )
+    authorized = [
+        row
+        for row in raw_rows
+        if row.get("name")
+        and row.get("boq_header") in headers_by_name
+        and frappe.has_permission("BOQ Structure", "read", doc=row["name"])
+    ]
+    # Compute hierarchy depth per boq_header from NestedSet (lft, rgt)
+    options = []
+    stacks = {}
+    for row in authorized:
+        hdr_name = row["boq_header"]
+        lft = int(row.get("lft") or 0)
+        rgt = int(row.get("rgt") or 0)
+        stack = stacks.setdefault(hdr_name, [])
+        while stack and not (lft > stack[-1][0] and rgt < stack[-1][1]):
+            stack.pop()
+        depth = len(stack) + 1
+        if rgt > lft:
+            stack.append((lft, rgt))
+        hdr = headers_by_name[hdr_name]
+        options.append(
+            {
+                "name": row["name"],
+                "title": row.get("title") or row["name"],
+                "wbs_code": row.get("wbs_code") or "",
+                "boq_header": hdr_name,
+                "header_title": hdr.get("title") or hdr_name,
+                "is_group": bool(int(row.get("is_group") or 0)),
+                "depth": depth,
+            }
+        )
+    return options
+
+
+def _compute_authorized_coverage(norm_filters, *, include_filter_options=False):
     """Run the full authorized coverage pipeline shared by view and export."""
     _require_schema_ready()
 
@@ -364,25 +408,21 @@ def _compute_authorized_coverage(norm_filters):
     rejected_by_has_permission = False
 
     # 1. Authorized BOQ Headers in project (Decision #3: all readable headers across statuses & types)
-    header_filters = {"project": project}
-    if norm_filters["boq_header"]:
-        header_filters["name"] = norm_filters["boq_header"]
-
-    raw_headers = frappe.get_list(
+    all_raw_headers = frappe.get_list(
         "BOQ Header",
-        filters=header_filters,
+        filters={"project": project},
         fields=["name", "title", "boq_type", "status", "project"],
         order_by="name asc",
         limit_page_length=MAX_POPULATION_HEADERS + 1,
     )
-    if len(raw_headers) > MAX_POPULATION_HEADERS:
+    if len(all_raw_headers) > MAX_POPULATION_HEADERS:
         return _limit_exceeded_payload("headers", MAX_POPULATION_HEADERS, norm_filters, labels)
 
-    headers_by_name = {}
-    for row in raw_headers:
+    all_headers_by_name = {}
+    for row in all_raw_headers:
         name = row.get("name")
         if name and frappe.has_permission("BOQ Header", "read", doc=name):
-            headers_by_name[name] = row
+            all_headers_by_name[name] = row
         else:
             rejected_by_has_permission = True
 
@@ -393,8 +433,14 @@ def _compute_authorized_coverage(norm_filters):
             "boq_type": row.get("boq_type") or "",
             "status": row.get("status") or "",
         }
-        for row in headers_by_name.values()
+        for row in all_headers_by_name.values()
     ]
+
+    if norm_filters["boq_header"]:
+        selected_hdr = all_headers_by_name.get(norm_filters["boq_header"])
+        headers_by_name = {norm_filters["boq_header"]: selected_hdr} if selected_hdr else {}
+    else:
+        headers_by_name = all_headers_by_name
 
     # 2. Optional BOQ Structure subtree resolution (NestedSet lft/rgt)
     allowed_structure_names = None
@@ -415,9 +461,7 @@ def _compute_authorized_coverage(norm_filters):
                 limit_page_length=MAX_POPULATION_STRUCTURES + 1,
             )
             if len(subtree_structures) > MAX_POPULATION_STRUCTURES:
-                return _limit_exceeded_payload(
-                    "structures", MAX_POPULATION_STRUCTURES, norm_filters, labels
-                )
+                return _limit_exceeded_payload("structures", MAX_POPULATION_STRUCTURES, norm_filters, labels)
             allowed_structure_names = [
                 row["name"]
                 for row in subtree_structures
@@ -547,9 +591,7 @@ def _compute_authorized_coverage(norm_filters):
             referenced_external_nodes.add(exec_node)
 
     extra_nodes = _read_cross_project_node_stubs(referenced_external_nodes, project)
-    partial_visibility = _has_partial_visibility(
-        user, rejected_by_has_permission=rejected_by_has_permission
-    )
+    partial_visibility = _has_partial_visibility(user, rejected_by_has_permission=rejected_by_has_permission)
 
     result = coverage_rules.evaluate_coverage(
         project=project,
@@ -562,6 +604,8 @@ def _compute_authorized_coverage(norm_filters):
         labels=labels,
     )
     result["headers"] = header_options
+    if include_filter_options:
+        result["structures"] = _build_structure_options(headers_by_name)
     return result
 
 
@@ -597,7 +641,7 @@ def get_execution_coverage(
     except coverage_rules.CoverageRuleViolation as error:
         _raise_rule_violation(error)
 
-    result = _compute_authorized_coverage(norm_filters)
+    result = _compute_authorized_coverage(norm_filters, include_filter_options=True)
     # Strip internal unpaginated lists before returning JSON response
     result.pop("_all_stage_rows", None)
     result.pop("_all_item_rows", None)

@@ -392,3 +392,30 @@ timestamp; `runtime_digest` unchanged; `v16.localhost` untouched).
 
 The `stage2-current-contract/2026-11-24-p2s3` (M1F) block is preserved verbatim
 under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**
+
+
+---
+
+## 2026-11-25 — re-measurement after WBS P3 Slice 2 (M1H)
+
+Added WBS P3 Slice 2 bilingual EN/AR `execution-coverage` Frappe Page (with
+selectable `BOQ Structure` subtree filter) and P1 `execution_breakdown.js`
+**View Coverage** navigation (on `develop` `b76abbf`), adding 3 localizable
+files, 1 UI JSON title, and 24 Arabic strings in `construction/locale/ar.po`.
+Freshness evidence was re-collected on disposable non-production lab
+`p3-lab.localhost` (`/tmp/p3-isolated.pmpttI/sites`; packaged override import
+verified `4337/0/0/4337/0` preserving the genuine `2026-11-20` packaged release
+import timestamp; `runtime_digest` unchanged; `v16.localhost` untouched).
+
+| item | value |
+|---|---|
+| contract | `stage2-current-contract/2026-11-25-p3s2` |
+| gate | `catalog=1298 files=351 wrapped=1094 json_labels=80 missing=0` (csv_rows 4337, raw_text 7/0/2) |
+| module set, module counts, aggregate, dry-run | unchanged (283; 4337/0/0/4337/0) |
+| source pins re-recorded | `construction/locale/ar.po`, `construction/data/localization/localization_manifest.json` |
+| source pins unchanged | approved CSV, vendor catalog baseline, inventory manifest |
+| raw artifact | `construction/tests/tools/measurements/2026-11-25-p3s2-current/m1_source_scan.txt` |
+| environment | develop `b76abbf`, working tree with the 2026-11-25 WBS P3 Slice 2 changes |
+
+The `stage2-current-contract/2026-11-25-p3s1` (M1G) block is preserved verbatim
+under `previous_frozen_contract_kept_as_history`. **Review status: PENDING.**

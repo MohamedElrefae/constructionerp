@@ -5338,3 +5338,100 @@ msgstr "وضع العرض غير مدعوم."
 #: construction/services/execution_coverage.py
 msgid "Zero Matching Stages"
 msgstr "صفر مراحل مطابقة"
+
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "All BOQ Headers"
+msgstr "جميع جداول الكميات"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "All Execution Locations"
+msgstr "جميع مواقع التنفيذ"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "BOQ Items in Scope"
+msgstr "بنود جدول الكميات ضمن النطاق"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Clear Location Filter"
+msgstr "مسح تصفية الموقع"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Clear filter"
+msgstr "مسح التصفية"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Download CSV"
+msgstr "تنزيل CSV"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Download Excel"
+msgstr "تنزيل إكسل"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Execution Coverage Views"
+msgstr "عروض تغطية التنفيذ"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Execution Tree"
+msgstr "شجرة التنفيذ"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Mapping Completeness"
+msgstr "اكتمال الربط"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Narrow filters before exporting."
+msgstr "ضيّق عوامل التصفية قبل التصدير."
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Next"
+msgstr "التالي"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "No matching records found for the current filters."
+msgstr "لا توجد سجلات مطابقة لعوامل التصفية الحالية."
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Page {0} of {1} ({2} rows)"
+msgstr "الصفحة {0} من {1} ({2} صف)"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Previous"
+msgstr "السابق"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Reset Filters"
+msgstr "إعادة تعيين التصفيات"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Select a Project in the top bar before exporting."
+msgstr "اختر مشروعاً من الشريط العلوي قبل التصدير."
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Select a Project in the top bar to view execution coverage."
+msgstr "اختر مشروعاً من الشريط العلوي لعرض تغطية التنفيذ."
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Show All Mapping Statuses"
+msgstr "عرض جميع حالات الربط"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Stage, BOQ Item, WBS, or Location..."
+msgstr "المرحلة أو بند جدول الكميات أو WBS أو الموقع..."
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "All BOQ Structures"
+msgstr "جميع هياكل جدول الكميات"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Group"
+msgstr "مجموعة"
+
+#: construction/construction/page/execution_coverage/execution_coverage.js
+msgid "Too many records match the current scope. Narrow filters."
+msgstr "يطابق النطاق الحالي عدداً كبيراً جداً من السجلات. ضيّق عوامل التصفية."
+
+#: construction/construction/page/execution_breakdown/execution_breakdown.js
+msgid "View Coverage"
+msgstr "عرض التغطية"
